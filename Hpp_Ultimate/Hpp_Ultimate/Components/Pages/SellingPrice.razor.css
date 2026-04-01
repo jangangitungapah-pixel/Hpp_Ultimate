@@ -1,0 +1,304 @@
+.pricing-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 1.2rem;
+}
+
+.pricing-toolbar,
+.simulator-card,
+.scenario-card,
+.comparison-card,
+.summary-grid article,
+.simulation-card {
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.66));
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(18px);
+}
+
+.pricing-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.2rem;
+    border-radius: 1.6rem;
+}
+
+.pricing-toolbar span,
+.section-head span {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #b45309;
+}
+
+.pricing-toolbar h1,
+.section-head h2 {
+    margin: 0.42rem 0 0;
+    color: #0f172a;
+}
+
+.pricing-toolbar h1 {
+    font-size: clamp(1.8rem, 4vw, 2.7rem);
+    line-height: 1.02;
+}
+
+.toolbar-stack {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.period-switch,
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.period-switch button,
+.ghost-button {
+    border: 0;
+    font: inherit;
+    padding: 0.74rem 0.9rem;
+    border-radius: 0.95rem;
+    background: rgba(255, 255, 255, 0.82);
+    color: #334155;
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.92);
+}
+
+.period-switch button.active {
+    background: linear-gradient(135deg, #f97316, #fb7185);
+    color: white;
+    box-shadow: 0 14px 28px rgba(249, 115, 22, 0.22);
+}
+
+.filter-row select,
+.date-input,
+.input-grid input,
+.input-grid select {
+    min-height: 2.95rem;
+    padding: 0.78rem 0.9rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(203, 213, 225, 0.95);
+    background: rgba(255, 255, 255, 0.92);
+    color: #0f172a;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.summary-grid article {
+    padding: 1rem;
+    border-radius: 1.2rem;
+}
+
+.summary-grid small,
+.comparison-grid small,
+.simulation-card small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #b45309;
+}
+
+.summary-grid strong,
+.comparison-grid strong,
+.simulation-card strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+.pricing-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(22rem, 0.95fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.side-stack {
+    display: grid;
+    gap: 1rem;
+}
+
+.simulator-card,
+.scenario-card,
+.comparison-card {
+    padding: 1.1rem;
+    border-radius: 1.45rem;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: start;
+}
+
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.85rem;
+    padding: 0.72rem 0.92rem;
+    border-radius: 999px;
+    background: rgba(255, 247, 237, 0.9);
+    color: #c2410c;
+    font-weight: 700;
+}
+
+.input-grid,
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1rem;
+}
+
+.input-grid label {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.input-grid label span {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.simulation-grid,
+.scenario-list,
+.alert-list {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.simulation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.simulation-card {
+    padding: 0.95rem;
+    border-radius: 1rem;
+}
+
+.simulation-card span,
+.simulation-card em,
+.scenario-item small {
+    display: block;
+    margin-top: 0.3rem;
+    color: #64748b;
+    font-style: normal;
+}
+
+.scenario-item,
+.alert-list article,
+.comparison-grid article {
+    padding: 0.95rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.scenario-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.scenario-meta {
+    text-align: right;
+}
+
+.scenario-item strong,
+.comparison-grid strong {
+    color: #0f172a;
+}
+
+.alert-list article {
+    color: #b45309;
+}
+
+.simulation-card.is-success,
+.scenario-item.is-success {
+    background: rgba(220, 252, 231, 0.58);
+}
+
+.simulation-card.is-warning,
+.scenario-item.is-warning {
+    background: rgba(254, 249, 195, 0.65);
+}
+
+.simulation-card.is-danger,
+.scenario-item.is-danger {
+    background: rgba(254, 226, 226, 0.75);
+}
+
+.simulation-card.is-accent,
+.scenario-item.is-accent {
+    background: rgba(255, 237, 213, 0.78);
+}
+
+.profit-text {
+    color: #15803d;
+}
+
+.loss-text {
+    color: #dc2626;
+}
+
+.skeleton-card {
+    min-height: 28rem;
+    border-radius: 1.2rem;
+    background: linear-gradient(90deg, rgba(241, 245, 249, 0.9), rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.9));
+    background-size: 200% 100%;
+    animation: shimmer 1.25s infinite linear;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@media (max-width: 1260px) {
+    .pricing-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid,
+    .input-grid,
+    .comparison-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .pricing-toolbar,
+    .section-head,
+    .scenario-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .summary-grid,
+    .input-grid,
+    .comparison-grid,
+    .simulation-grid {
+        grid-template-columns: 1fr;
+    }
+}

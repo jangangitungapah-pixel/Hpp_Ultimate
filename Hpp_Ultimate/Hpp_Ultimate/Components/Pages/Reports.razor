@@ -1,0 +1,363 @@
+@page "/laporan"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject ReportService ReportService
+@inject IBusinessDataStore DataStore
+
+<PageTitle>Laporan | HPP Ultimate</PageTitle>
+
+<section class="reports-page">
+    <div class="reports-toolbar">
+        <div>
+            <span>Business reporting</span>
+            <h1>Laporan HPP, produksi, dan laba rugi dari data operasional yang sama.</h1>
+        </div>
+
+        <div class="toolbar-stack">
+            <div class="report-switch">
+                @foreach (var kind in ReportKinds)
+                {
+                    <button type="button"
+                            class="@(kind == _kind ? "active" : null)"
+                            @onclick="() => ChangeKindAsync(kind)">
+                        @GetKindLabel(kind)
+                    </button>
+                }
+            </div>
+
+            <div class="filter-row">
+                <div class="period-switch">
+                    @foreach (var preset in Presets)
+                    {
+                        <button type="button"
+                                class="@(preset == _preset ? "active" : null)"
+                                @onclick="() => ApplyPresetAsync(preset)">
+                            @GetPresetLabel(preset)
+                        </button>
+                    }
+                </div>
+
+                <select value="@(_selectedProductId?.ToString() ?? string.Empty)" @onchange="OnProductChangedAsync">
+                    <option value="">Semua produk</option>
+                    @foreach (var product in _snapshot?.Products ?? Array.Empty<ProductFilterOption>())
+                    {
+                        <option value="@product.Id">@product.Name</option>
+                    }
+                </select>
+
+                @if (_preset == DashboardPeriodPreset.Custom)
+                {
+                    <InputDate @bind-Value="_customFrom" class="date-input" />
+                    <InputDate @bind-Value="_customTo" class="date-input" />
+                    <button type="button" class="ghost-button" @onclick="ApplyCustomRangeAsync">Terapkan</button>
+                }
+
+                <a class="primary-button" href="@CsvDownloadHref" download="@($"{_snapshot?.ExportFileName}.csv")">Export CSV</a>
+                <a class="ghost-button" href="@HtmlDownloadHref" download="@($"{_snapshot?.ExportFileName}.html")">Export HTML</a>
+            </div>
+        </div>
+    </div>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="skeleton-card"></div>
+    }
+    else if (_snapshot is not null)
+    {
+        <div class="metrics-grid">
+            @foreach (var metric in _snapshot.Metrics)
+            {
+                <article class="@GetMetricClass(metric.Tone)">
+                    <small>@metric.Label</small>
+                    <strong>@metric.Value</strong>
+                    <span>@metric.Caption</span>
+                </article>
+            }
+        </div>
+
+        <div class="reports-layout">
+            <section class="table-card">
+                <div class="section-head">
+                    <div>
+                        <span>Preview laporan</span>
+                        <h2>@GetReportHeadline()</h2>
+                    </div>
+                    <div class="status-chip">@_snapshot.Range.Label</div>
+                </div>
+
+                <div class="table-wrap">
+                    @switch (_kind)
+                    {
+                        case ReportKind.Production:
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Batch</th>
+                                        <th>Tanggal</th>
+                                        <th>Produk</th>
+                                        <th>Qty</th>
+                                        <th>Bahan</th>
+                                        <th>Tenaga Kerja</th>
+                                        <th>Overhead</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (_snapshot.ProductionRows.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="8" class="empty-row">Belum ada data produksi pada filter ini.</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var row in _snapshot.ProductionRows)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <strong>@row.BatchCode</strong>
+                                                    <small>@FormatCurrency(row.CostPerUnit)/unit</small>
+                                                </td>
+                                                <td>@row.ProducedAt.ToString("dd MMM yyyy")</td>
+                                                <td>
+                                                    <strong>@row.ProductName</strong>
+                                                    <small>@row.ProductCode</small>
+                                                </td>
+                                                <td>@row.QuantityProduced.ToString("N0") unit</td>
+                                                <td>@FormatCurrency(row.MaterialCost)</td>
+                                                <td>@FormatCurrency(row.LaborCost)</td>
+                                                <td>@FormatCurrency(row.OverheadCost)</td>
+                                                <td>@FormatCurrency(row.TotalCost)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            break;
+                        case ReportKind.ProfitLoss:
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Produksi</th>
+                                        <th>Revenue</th>
+                                        <th>Total Biaya</th>
+                                        <th>Laba Kotor</th>
+                                        <th>Margin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (_snapshot.ProfitLossRows.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="empty-row">Belum ada data laba rugi pada filter ini.</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var row in _snapshot.ProfitLossRows)
+                                        {
+                                            <tr>
+                                                <td><strong>@row.ProductName</strong></td>
+                                                <td>@row.TotalProduction.ToString("N0") unit</td>
+                                                <td>@FormatCurrency(row.Revenue)</td>
+                                                <td>@FormatCurrency(row.TotalCost)</td>
+                                                <td class="@(row.GrossProfit >= 0 ? "profit-text" : "loss-text")">@FormatCurrency(row.GrossProfit)</td>
+                                                <td class="@(row.MarginPercentage >= 10m ? "profit-text" : "loss-text")">@row.MarginPercentage.ToString("0.0")%</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            break;
+                        default:
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Kode</th>
+                                        <th>Produk</th>
+                                        <th>Kategori</th>
+                                        <th>Produksi</th>
+                                        <th>HPP / Unit</th>
+                                        <th>Harga Jual</th>
+                                        <th>Profit / Unit</th>
+                                        <th>Total Profit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (_snapshot.HppRows.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="8" class="empty-row">Belum ada data HPP pada filter ini.</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var row in _snapshot.HppRows)
+                                        {
+                                            <tr>
+                                                <td><strong>@row.ProductCode</strong></td>
+                                                <td>@row.ProductName</td>
+                                                <td>@row.Category</td>
+                                                <td>@row.TotalProduction.ToString("N0") unit</td>
+                                                <td>@FormatCurrency(row.HppPerUnit)</td>
+                                                <td>@FormatCurrency(row.SellingPrice)</td>
+                                                <td class="@(row.ProfitPerUnit >= 0 ? "profit-text" : "loss-text")">@FormatCurrency(row.ProfitPerUnit)</td>
+                                                <td class="@(row.TotalProfit >= 0 ? "profit-text" : "loss-text")">@FormatCurrency(row.TotalProfit)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            break;
+                    }
+                </div>
+            </section>
+
+            <aside class="side-card">
+                <div class="section-head">
+                    <div>
+                        <span>Insight laporan</span>
+                        <h2>Catatan cepat untuk owner dan operasional</h2>
+                    </div>
+                </div>
+
+                <div class="insight-list">
+                    @foreach (var insight in _snapshot.Insights)
+                    {
+                        <article>@insight</article>
+                    }
+                </div>
+
+                <div class="export-card">
+                    <small>File export aktif</small>
+                    <strong>@_snapshot.ExportFileName</strong>
+                    <span>CSV cocok dibuka di Excel. HTML cocok diprint ke PDF dari browser.</span>
+                </div>
+            </aside>
+        </div>
+    }
+</section>
+
+@code {
+    private readonly DashboardPeriodPreset[] Presets =
+    [
+        DashboardPeriodPreset.Today,
+        DashboardPeriodPreset.ThisWeek,
+        DashboardPeriodPreset.ThisMonth,
+        DashboardPeriodPreset.Custom
+    ];
+
+    private readonly ReportKind[] ReportKinds =
+    [
+        ReportKind.Hpp,
+        ReportKind.Production,
+        ReportKind.ProfitLoss
+    ];
+
+    private ReportSnapshot? _snapshot;
+    private bool _isLoading = true;
+    private ReportKind _kind = ReportKind.Hpp;
+    private DashboardPeriodPreset _preset = DashboardPeriodPreset.ThisMonth;
+    private Guid? _selectedProductId;
+    private DateOnly? _customFrom = DateOnly.FromDateTime(DateTime.Today.AddDays(-29));
+    private DateOnly? _customTo = DateOnly.FromDateTime(DateTime.Today);
+
+    private string CsvDownloadHref => _snapshot is null
+        ? string.Empty
+        : $"data:text/csv;charset=utf-8,{Uri.EscapeDataString(_snapshot.ExportCsv)}";
+
+    private string HtmlDownloadHref => _snapshot is null
+        ? string.Empty
+        : $"data:text/html;charset=utf-8,{Uri.EscapeDataString(_snapshot.ExportHtml)}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataStore.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        _snapshot = await ReportService.GetSnapshotAsync(new ReportsQuery(_selectedProductId, _preset, _customFrom, _customTo, _kind));
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ChangeKindAsync(ReportKind kind)
+    {
+        _kind = kind;
+        await LoadAsync();
+    }
+
+    private async Task ApplyPresetAsync(DashboardPeriodPreset preset)
+    {
+        _preset = preset;
+        if (preset != DashboardPeriodPreset.Custom)
+        {
+            _customFrom = null;
+            _customTo = null;
+        }
+
+        await LoadAsync();
+    }
+
+    private async Task ApplyCustomRangeAsync()
+    {
+        _preset = DashboardPeriodPreset.Custom;
+        await LoadAsync();
+    }
+
+    private async Task OnProductChangedAsync(ChangeEventArgs args)
+    {
+        _selectedProductId = Guid.TryParse(args.Value?.ToString(), out var parsed) ? parsed : null;
+        await LoadAsync();
+    }
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(async () => await LoadAsync());
+    }
+
+    private string GetReportHeadline() => _kind switch
+    {
+        ReportKind.Production => "Laporan produksi per batch",
+        ReportKind.ProfitLoss => "Laporan laba rugi sederhana",
+        _ => "Laporan HPP per produk"
+    };
+
+    private static string GetKindLabel(ReportKind kind) => kind switch
+    {
+        ReportKind.Hpp => "HPP",
+        ReportKind.Production => "Produksi",
+        ReportKind.ProfitLoss => "Laba Rugi",
+        _ => kind.ToString()
+    };
+
+    private static string GetPresetLabel(DashboardPeriodPreset preset) => preset switch
+    {
+        DashboardPeriodPreset.Today => "Hari ini",
+        DashboardPeriodPreset.ThisWeek => "Minggu ini",
+        DashboardPeriodPreset.ThisMonth => "Bulan ini",
+        DashboardPeriodPreset.Custom => "Custom",
+        _ => preset.ToString()
+    };
+
+    private static string GetMetricClass(string tone) => tone switch
+    {
+        "success" => "metric-success",
+        "danger" => "metric-danger",
+        "warning" => "metric-warning",
+        _ => string.Empty
+    };
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    public ValueTask DisposeAsync()
+    {
+        DataStore.Changed -= HandleStoreChanged;
+        return ValueTask.CompletedTask;
+    }
+}

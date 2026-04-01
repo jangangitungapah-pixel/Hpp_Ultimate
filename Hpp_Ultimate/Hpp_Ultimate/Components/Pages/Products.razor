@@ -1,0 +1,789 @@
+@page "/produk"
+@rendermode InteractiveServer
+@implements IDisposable
+@using Microsoft.AspNetCore.Components.Forms
+@inject RawMaterialCatalogService RawMaterialCatalogService
+
+<PageTitle>Katalog Material | HPP Ultimate</PageTitle>
+
+<section class="materials-page">
+    <div class="materials-toolbar">
+        <div>
+            <span>Master material</span>
+            <h1>Katalog Material</h1>
+            <p>Simpan bahan baku, netto pack, harga, dan unit konversi tanpa menyimpan stok. Data ini menjadi referensi Gudang, Resep, dan HPP.</p>
+        </div>
+
+        <div class="toolbar-actions">
+            <a href="/api/bahan-baku-template" class="ghost-link" target="_blank">Template Import</a>
+            <a href="/api/bahan-baku-export" class="ghost-link" target="_blank">Export CSV</a>
+            <button type="button" class="ghost-button" @onclick="OpenImportModal">Import Excel</button>
+            <button type="button" class="primary-button" @onclick="OpenCreateModalAsync">+ Tambah Material</button>
+        </div>
+    </div>
+
+    <div class="materials-layout">
+        <section class="materials-table-card">
+            <div class="table-toolbar">
+                <input value="@_searchText" @oninput="OnSearchChanged" placeholder="Cari nama material atau merk" />
+
+                <select value="@_selectedStatus" @onchange="OnStatusChangedAsync">
+                    <option value="">Semua status</option>
+                    <option value="active">Aktif</option>
+                    <option value="inactive">Nonaktif</option>
+                </select>
+
+                <div class="status-chip">@_statusMessage</div>
+            </div>
+
+            @if (_isLoading && _result is null)
+            {
+                <div class="table-skeleton"></div>
+            }
+            else
+            {
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><button type="button" @onclick='() => SortByAsync("name")'>Nama Material</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("brand")'>Merk</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("net")'>Netto</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("price")'>Harga / Pack</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("cost")'>Modal / Unit</button></th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ((_result?.Items.Count ?? 0) == 0)
+                            {
+                                <tr>
+                                    <td colspan="6" class="empty-row">Belum ada material yang sesuai filter.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var material in _result!.Items)
+                                {
+                                    <tr class="@GetSelectedRowClass(material.Id)" @onclick="() => SelectDetailAsync(material.Id)">
+                                        <td>
+                                            <strong>@material.Name</strong>
+                                            <small>@material.Code</small>
+                                        </td>
+                                        <td>@(string.IsNullOrWhiteSpace(material.Brand) ? "-" : material.Brand)</td>
+                                        <td>
+                                            <strong>@material.NetQuantity.ToString("0.####")</strong>
+                                            <small>@material.NetUnit</small>
+                                        </td>
+                                        <td>@FormatCurrency(material.PricePerPack)</td>
+                                        <td>
+                                            <strong>@FormatCurrency(material.CostPerUnit)</strong>
+                                            <small>per @material.BaseUnit</small>
+                                        </td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button type="button" class="icon-button" @onclick:stopPropagation="true" @onclick="() => OpenEditModalAsync(material.Id)">Edit</button>
+                                                <button type="button" class="icon-button danger" @onclick:stopPropagation="true" @onclick="() => AskDelete(material)">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <small>@(_result?.TotalCount ?? 0) material</small>
+                    <div class="pager">
+                        <button type="button" @onclick="PrevPageAsync" disabled="@(_page <= 1)">Prev</button>
+                        <span>Halaman @_page / @TotalPages</span>
+                        <button type="button" @onclick="NextPageAsync" disabled="@(_page >= TotalPages)">Next</button>
+                    </div>
+                </div>
+            }
+        </section>
+
+        <aside class="detail-card">
+            @if (_detail is null)
+            {
+                <div class="detail-empty">
+                    <span>Detail material</span>
+                    <h2>Pilih material untuk melihat konversi, histori harga, dan relasi modul.</h2>
+                </div>
+            }
+            else
+            {
+                <div class="detail-head">
+                    <div>
+                        <span>@_detail.Material.Code</span>
+                        <h2>@_detail.Material.Name</h2>
+                        <small>@(_detail.Material.Brand ?? "Tanpa merk")</small>
+                    </div>
+
+                    <span class="badge @(_detail.Material.Status == MaterialStatus.Active ? "active" : "inactive")">
+                        @(_detail.Material.Status == MaterialStatus.Active ? "Aktif" : "Nonaktif")
+                    </span>
+                </div>
+
+                <div class="detail-grid">
+                    <article>
+                        <small>Base Unit</small>
+                        <strong>@_detail.Material.BaseUnit</strong>
+                    </article>
+                    <article>
+                        <small>Netto</small>
+                        <strong>@_detail.Material.NetQuantity.ToString("0.####") @_detail.Material.NetUnit</strong>
+                    </article>
+                    <article>
+                        <small>Harga / Pack</small>
+                        <strong>@FormatCurrency(_detail.Material.PricePerPack)</strong>
+                    </article>
+                    <article>
+                        <small>Modal / Unit</small>
+                        <strong>@FormatCurrency(_detail.Material.CostPerBaseUnit) / @_detail.Material.BaseUnit</strong>
+                    </article>
+                </div>
+
+                <div class="detail-section">
+                    <span>Unit Konversi</span>
+                    <div class="tag-list">
+                        @if (_detail.Material.UnitConversions.Count == 0)
+                        {
+                            <small class="muted">Belum ada unit tambahan. Gudang nanti tetap bisa memakai base unit ini.</small>
+                        }
+                        else
+                        {
+                            @foreach (var unit in _detail.Material.UnitConversions)
+                            {
+                                <strong>@unit.UnitName = @unit.ConversionQuantity.ToString("0.####") @_detail.Material.BaseUnit</strong>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <span>Relasi Modul</span>
+                    <ul>
+                        <li class="@(_detail.UsedInBom ? "ok" : "warn")">@(_detail.UsedInBom ? "Sudah dipakai di Resep/BOM." : "Belum dipakai di Resep/BOM.")</li>
+                        <li class="@(_detail.UsedInProduction ? "ok" : "warn")">@(_detail.UsedInProduction ? "Sudah memengaruhi histori produksi/HPP." : "Belum dipakai di produksi/HPP.")</li>
+                        <li>Master ini tidak menyimpan stok. Pengelolaan stok dipindah ke halaman Gudang.</li>
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <span>Produk Terkait</span>
+                    <div class="tag-list">
+                        @if (_detail.BomProducts.Count == 0)
+                        {
+                            <small class="muted">Belum ada produk yang memakai material ini.</small>
+                        }
+                        else
+                        {
+                            @foreach (var product in _detail.BomProducts)
+                            {
+                                <strong>@product</strong>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <span>Histori Harga</span>
+                    <div class="history-list">
+                        @if (_detail.PriceHistory.Count == 0)
+                        {
+                            <small class="muted">Belum ada histori harga.</small>
+                        }
+                        else
+                        {
+                            @foreach (var item in _detail.PriceHistory)
+                            {
+                                <article>
+                                    <strong>@item.ChangedAt.ToString("dd MMM yyyy")</strong>
+                                    <small>@FormatCurrency(item.PricePerPack) per pack</small>
+                                    <span>@FormatCurrency(item.CostPerUnit) / @_detail.Material.BaseUnit | @item.NetQuantity.ToString("0.####") @item.NetUnit</span>
+                                </article>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </aside>
+    </div>
+</section>
+
+@if (_showFormModal)
+{
+    <div class="overlay" @onclick="CloseFormModal">
+        <div class="modal-card" @onclick:stopPropagation="true">
+            <div class="modal-head">
+                <div>
+                    <span>@(_editingId is null ? "Tambah material" : "Edit material")</span>
+                    <h2>@(_editingId is null ? "Buat master material baru" : "Perbarui master material")</h2>
+                </div>
+
+                <button type="button" class="close-button" @onclick="CloseFormModal">x</button>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_formMessage))
+            {
+                <div class="form-message">@_formMessage</div>
+            }
+
+            <EditForm Model="_formModel" OnValidSubmit="SubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-grid">
+                    <label>
+                        <span>Nama Material</span>
+                        <InputText @bind-Value="_formModel.Name" />
+                        <ValidationMessage For="@(() => _formModel.Name)" />
+                    </label>
+
+                    <label>
+                        <span>Merk</span>
+                        <InputText @bind-Value="_formModel.Brand" />
+                    </label>
+
+                    <label>
+                        <span>Base Unit</span>
+                        <select value="@_formModel.BaseUnit" @onchange="OnBaseUnitChanged">
+                            <option value="">Pilih base unit</option>
+                            @foreach (var unit in RawMaterialCatalogService.BaseUnits)
+                            {
+                                <option value="@unit.Value">@unit.Label</option>
+                            }
+                        </select>
+                        <ValidationMessage For="@(() => _formModel.BaseUnit)" />
+                    </label>
+
+                    <label>
+                        <span>Netto Qty</span>
+                        <InputNumber @bind-Value="_formModel.NetQuantity" />
+                        <ValidationMessage For="@(() => _formModel.NetQuantity)" />
+                    </label>
+
+                    <label>
+                        <span>Netto Unit</span>
+                        <select @bind="_formModel.NetUnit">
+                            <option value="">Pilih netto unit</option>
+                            @foreach (var unit in CompatibleUnits)
+                            {
+                                <option value="@unit.Value">@unit.Label</option>
+                            }
+                        </select>
+                        <ValidationMessage For="@(() => _formModel.NetUnit)" />
+                    </label>
+
+                    <label>
+                        <span>Harga per Pack</span>
+                        <InputNumber @bind-Value="_formModel.PricePerPack" />
+                        <ValidationMessage For="@(() => _formModel.PricePerPack)" />
+                    </label>
+
+                    <label class="readonly-card">
+                        <span>Modal / Unit</span>
+                        <strong>@FormatCurrency(CurrentCostPerUnit)</strong>
+                        <small>Terhitung otomatis per @(_formModel.BaseUnit == string.Empty ? "base unit" : _formModel.BaseUnit)</small>
+                    </label>
+
+                    <label class="full">
+                        <span>Deskripsi</span>
+                        <InputTextArea @bind-Value="_formModel.Description" />
+                    </label>
+
+                    <div class="full conversion-section">
+                        <div class="section-inline-head">
+                            <div>
+                                <span>Unit Konversi Tambahan</span>
+                                <p>Contoh: `pack = 1000 gr`, `karung = 25000 gr`.</p>
+                            </div>
+                            <button type="button" class="ghost-button" @onclick="AddConversionRow">+ Tambah Unit</button>
+                        </div>
+
+                        @if (_formModel.UnitConversions.Count == 0)
+                        {
+                            <div class="empty-conversion">Belum ada unit tambahan.</div>
+                        }
+                        else
+                        {
+                            @for (var index = 0; index < _formModel.UnitConversions.Count; index++)
+                            {
+                                var item = _formModel.UnitConversions[index];
+                                <div class="conversion-row">
+                                    <InputText @bind-Value="item.UnitName" placeholder="Nama unit, mis. pack" />
+                                    <InputNumber @bind-Value="item.ConversionQuantity" placeholder="Nilai konversi ke base unit" />
+                                    <button type="button" class="icon-button danger" @onclick="() => RemoveConversionRow(index)">Hapus</button>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <label class="toggle-row">
+                        <span>Status Aktif</span>
+                        <InputCheckbox @bind-Value="_isActiveToggle" />
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="ghost-button" @onclick="CloseFormModal">Batal</button>
+                    <button type="submit" class="primary-button">@(_editingId is null ? "Simpan Material" : "Update Material")</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@if (_showImportModal)
+{
+    <div class="overlay" @onclick="CloseImportModal">
+        <div class="modal-card import-card" @onclick:stopPropagation="true">
+            <div class="modal-head">
+                <div>
+                    <span>Import material</span>
+                    <h2>Upload CSV atau Excel lalu review preview sebelum commit</h2>
+                </div>
+
+                <button type="button" class="close-button" @onclick="CloseImportModal">x</button>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_importMessage))
+            {
+                <div class="form-message">@_importMessage</div>
+            }
+
+            <div class="import-toolbar">
+                <label class="upload-box">
+                    <span>Pilih file `.csv` atau `.xlsx`</span>
+                    <InputFile OnChange="HandleImportFileAsync" accept=".csv,.xlsx" />
+                </label>
+
+                <label class="toggle-row compact">
+                    <span>Skip row error saat import</span>
+                    <InputCheckbox @bind-Value="_skipInvalidRows" />
+                </label>
+            </div>
+
+            @if (_importPreview is null)
+            {
+                <div class="empty-import">File belum dipilih. Template tersedia dari tombol `Template Import` di toolbar utama.</div>
+            }
+            else
+            {
+                <div class="import-summary">
+                    <article>
+                        <small>File</small>
+                        <strong>@_importPreview.FileName</strong>
+                    </article>
+                    <article>
+                        <small>Valid</small>
+                        <strong>@_importPreview.ValidRowCount baris</strong>
+                    </article>
+                    <article>
+                        <small>Error</small>
+                        <strong>@_importPreview.ErrorRowCount baris</strong>
+                    </article>
+                </div>
+
+                <div class="table-wrap import-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Row</th>
+                                <th>Nama</th>
+                                <th>Merk</th>
+                                <th>Base</th>
+                                <th>Netto</th>
+                                <th>Harga / Pack</th>
+                                <th>Modal / Unit</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in _importPreview.Rows)
+                            {
+                                <tr class="@(row.IsValid ? string.Empty : "import-error-row")">
+                                    <td>@row.RowNumber</td>
+                                    <td>@row.Name</td>
+                                    <td>@(row.Brand ?? "-")</td>
+                                    <td>@row.BaseUnit</td>
+                                    <td>@(row.NetQuantity?.ToString("0.####") ?? "-") | @row.NetUnit</td>
+                                    <td>@(row.PricePerPack is null ? "-" : FormatCurrency(row.PricePerPack.Value))</td>
+                                    <td>@(row.IsValid ? FormatCurrency(row.CostPerUnit) : "-")</td>
+                                    <td>
+                                        @if (row.IsValid)
+                                        {
+                                            <span class="badge active">Valid</span>
+                                        }
+                                        else
+                                        {
+                                            <div class="error-bundle">
+                                                <span class="badge inactive">Error</span>
+                                                @foreach (var error in row.Errors)
+                                                {
+                                                    <small>@error</small>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="modal-actions">
+                <button type="button" class="ghost-button" @onclick="CloseImportModal">Tutup</button>
+                <button type="button" class="primary-button" disabled="@(_importPreview is null || _isImporting)" @onclick="CommitImportAsync">
+                    @(_isImporting ? "Mengimport..." : "Import Sekarang")
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (_pendingDelete is not null)
+{
+    <div class="overlay" @onclick="CancelDelete">
+        <div class="confirm-card" @onclick:stopPropagation="true">
+            <span>Konfirmasi</span>
+            <h2>Hapus material ini?</h2>
+            <p>@_pendingDelete.Name akan dihapus. Jika material sudah dipakai di BOM atau histori produksi, sistem akan mengubahnya menjadi nonaktif agar referensi tetap aman.</p>
+
+            <div class="modal-actions">
+                <button type="button" class="ghost-button" @onclick="CancelDelete">Batal</button>
+                <button type="button" class="danger-button" @onclick="DeleteAsync">Ya, lanjutkan</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private RawMaterialQueryResult? _result;
+    private RawMaterialDetail? _detail;
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat data...";
+    private string _searchText = string.Empty;
+    private string _selectedStatus = string.Empty;
+    private string _sortBy = "updated";
+    private bool _sortDescending = true;
+    private int _page = 1;
+    private CancellationTokenSource? _searchDebounce;
+
+    private bool _showFormModal;
+    private Guid? _editingId;
+    private RawMaterialUpsertRequest _formModel = new();
+    private string _formMessage = string.Empty;
+    private bool _isActiveToggle = true;
+
+    private bool _showImportModal;
+    private RawMaterialImportPreviewResult? _importPreview;
+    private string _importMessage = string.Empty;
+    private bool _isImporting;
+    private bool _skipInvalidRows = true;
+
+    private RawMaterialListItem? _pendingDelete;
+
+    private int TotalPages => Math.Max(1, (int)Math.Ceiling((_result?.TotalCount ?? 0) / (double)Math.Max(1, _result?.PageSize ?? 10)));
+    private IReadOnlyList<MaterialUnitOption> CompatibleUnits => string.IsNullOrWhiteSpace(_formModel.BaseUnit)
+        ? Array.Empty<MaterialUnitOption>()
+        : RawMaterialCatalogService.GetCompatibleUnits(_formModel.BaseUnit);
+    private decimal CurrentCostPerUnit => MaterialUnitCatalog.AreCompatible(_formModel.BaseUnit, _formModel.NetUnit)
+        ? CalculateCostPerUnit(_formModel.PricePerPack, _formModel.NetQuantity, _formModel.NetUnit, _formModel.BaseUnit)
+        : 0m;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync(bool keepDetail = true)
+    {
+        _isLoading = true;
+        _statusMessage = "Memuat data...";
+
+        _result = await RawMaterialCatalogService.QueryAsync(new RawMaterialQuery(
+            _searchText,
+            ParseStatus(_selectedStatus),
+            _sortBy,
+            _sortDescending,
+            _page,
+            10));
+
+        _statusMessage = $"{_result.TotalCount} material ditemukan";
+        _isLoading = false;
+
+        if (_result.Items.Count == 0)
+        {
+            _detail = null;
+        }
+        else if (!keepDetail || _detail is null || !_result.Items.Any(item => item.Id == _detail.Material.Id))
+        {
+            await SelectDetailAsync(_result.Items[0].Id);
+        }
+    }
+
+    private async Task SelectDetailAsync(Guid id)
+    {
+        _detail = await RawMaterialCatalogService.GetDetailAsync(id);
+        StateHasChanged();
+    }
+
+    private async Task OnSearchChanged(ChangeEventArgs args)
+    {
+        _searchText = args.Value?.ToString() ?? string.Empty;
+        _page = 1;
+
+        _searchDebounce?.Cancel();
+        _searchDebounce?.Dispose();
+        _searchDebounce = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(300, _searchDebounce.Token);
+            await LoadAsync(false);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    private async Task OnStatusChangedAsync(ChangeEventArgs args)
+    {
+        _selectedStatus = args.Value?.ToString() ?? string.Empty;
+        _page = 1;
+        await LoadAsync(false);
+    }
+
+    private async Task SortByAsync(string column)
+    {
+        if (_sortBy.Equals(column, StringComparison.OrdinalIgnoreCase))
+        {
+            _sortDescending = !_sortDescending;
+        }
+        else
+        {
+            _sortBy = column;
+            _sortDescending = false;
+        }
+
+        await LoadAsync();
+    }
+
+    private async Task PrevPageAsync()
+    {
+        _page = Math.Max(1, _page - 1);
+        await LoadAsync(false);
+    }
+
+    private async Task NextPageAsync()
+    {
+        _page = Math.Min(TotalPages, _page + 1);
+        await LoadAsync(false);
+    }
+
+    private async Task OpenCreateModalAsync()
+    {
+        _editingId = null;
+        _formMessage = string.Empty;
+        _isActiveToggle = true;
+        _formModel = new RawMaterialUpsertRequest
+        {
+            Code = await RawMaterialCatalogService.GenerateNextCodeAsync(),
+            BaseUnit = "gr",
+            NetUnit = "gr",
+            Status = MaterialStatus.Active
+        };
+        _showFormModal = true;
+    }
+
+    private async Task OpenEditModalAsync(Guid id)
+    {
+        var detail = await RawMaterialCatalogService.GetDetailAsync(id);
+        if (detail is null)
+        {
+            return;
+        }
+
+        _editingId = id;
+        _formMessage = string.Empty;
+        _isActiveToggle = detail.Material.Status == MaterialStatus.Active;
+        _formModel = new RawMaterialUpsertRequest
+        {
+            Id = detail.Material.Id,
+            Code = detail.Material.Code,
+            Name = detail.Material.Name,
+            Brand = detail.Material.Brand,
+            BaseUnit = detail.Material.BaseUnit,
+            NetQuantity = detail.Material.NetQuantity,
+            NetUnit = detail.Material.NetUnit,
+            PricePerPack = detail.Material.PricePerPack,
+            Description = detail.Material.Description,
+            Status = detail.Material.Status,
+            UnitConversions = detail.Material.UnitConversions
+                .Select(item => new RawMaterialUnitConversionInput
+                {
+                    UnitName = item.UnitName,
+                    ConversionQuantity = item.ConversionQuantity
+                })
+                .ToList()
+        };
+
+        _showFormModal = true;
+    }
+
+    private void CloseFormModal()
+    {
+        _showFormModal = false;
+    }
+
+    private void AddConversionRow()
+    {
+        _formModel.UnitConversions.Add(new RawMaterialUnitConversionInput());
+    }
+
+    private void RemoveConversionRow(int index)
+    {
+        if (index >= 0 && index < _formModel.UnitConversions.Count)
+        {
+            _formModel.UnitConversions.RemoveAt(index);
+        }
+    }
+
+    private void OnBaseUnitChanged(ChangeEventArgs args)
+    {
+        _formModel.BaseUnit = args.Value?.ToString() ?? string.Empty;
+        if (!MaterialUnitCatalog.AreCompatible(_formModel.BaseUnit, _formModel.NetUnit))
+        {
+            _formModel.NetUnit = _formModel.BaseUnit;
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        _formModel.Status = _isActiveToggle ? MaterialStatus.Active : MaterialStatus.Inactive;
+        var result = _editingId is null
+            ? await RawMaterialCatalogService.CreateAsync(_formModel)
+            : await RawMaterialCatalogService.UpdateAsync(_editingId.Value, _formModel);
+
+        _formMessage = result.Message;
+        if (!result.Success)
+        {
+            return;
+        }
+
+        _showFormModal = false;
+        await LoadAsync(false);
+        if (result.Material is not null)
+        {
+            await SelectDetailAsync(result.Material.Id);
+        }
+    }
+
+    private void OpenImportModal()
+    {
+        _importMessage = string.Empty;
+        _showImportModal = true;
+    }
+
+    private void CloseImportModal()
+    {
+        _showImportModal = false;
+    }
+
+    private async Task HandleImportFileAsync(InputFileChangeEventArgs args)
+    {
+        var file = args.File;
+        if (file is null)
+        {
+            return;
+        }
+
+        await using var stream = file.OpenReadStream(5 * 1024 * 1024);
+        _importPreview = await RawMaterialCatalogService.PreviewImportAsync(file.Name, stream);
+        _importMessage = $"{_importPreview.ValidRowCount} baris valid, {_importPreview.ErrorRowCount} baris perlu perbaikan.";
+    }
+
+    private async Task CommitImportAsync()
+    {
+        if (_importPreview is null)
+        {
+            return;
+        }
+
+        _isImporting = true;
+        var result = await RawMaterialCatalogService.CommitImportAsync(new RawMaterialImportCommitRequest
+        {
+            Rows = _importPreview.Rows.ToList(),
+            SkipInvalidRows = _skipInvalidRows
+        });
+        _isImporting = false;
+
+        _importMessage = result.Errors.Count == 0
+            ? result.Message
+            : $"{result.Message} {string.Join(" ", result.Errors.Take(3))}";
+
+        if (!result.Success)
+        {
+            return;
+        }
+
+        await LoadAsync(false);
+    }
+
+    private void AskDelete(RawMaterialListItem material)
+    {
+        _pendingDelete = material;
+    }
+
+    private void CancelDelete()
+    {
+        _pendingDelete = null;
+    }
+
+    private async Task DeleteAsync()
+    {
+        if (_pendingDelete is null)
+        {
+            return;
+        }
+
+        var result = await RawMaterialCatalogService.DeleteAsync(_pendingDelete.Id);
+        _statusMessage = result.Message;
+        _pendingDelete = null;
+        await LoadAsync(false);
+    }
+
+    private string GetSelectedRowClass(Guid id) => _detail?.Material.Id == id ? "selected-row" : string.Empty;
+
+    private static MaterialStatus? ParseStatus(string value) => value switch
+    {
+        "active" => MaterialStatus.Active,
+        "inactive" => MaterialStatus.Inactive,
+        _ => null
+    };
+
+    private static decimal CalculateCostPerUnit(decimal pricePerPack, decimal netQty, string netUnit, string baseUnit)
+    {
+        if (!MaterialUnitCatalog.AreCompatible(baseUnit, netUnit) || netQty <= 0)
+        {
+            return 0m;
+        }
+
+        var normalizedQty = MaterialUnitCatalog.Convert(netQty, netUnit, baseUnit);
+        return normalizedQty <= 0 ? 0m : pricePerPack / normalizedQty;
+    }
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    public void Dispose()
+    {
+        _searchDebounce?.Cancel();
+        _searchDebounce?.Dispose();
+    }
+}
+

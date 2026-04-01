@@ -1,0 +1,703 @@
+@page "/biaya-produksi"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject ProductionCostService ProductionCostService
+@inject IBusinessDataStore DataStore
+
+<PageTitle>Biaya Produksi | HPP Ultimate</PageTitle>
+
+<section class="production-page">
+    <div class="production-toolbar">
+        <div>
+            <span>Production cost control</span>
+            <h1>Catat biaya tenaga kerja dan overhead per batch produksi.</h1>
+        </div>
+
+        <div class="toolbar-stack">
+            <div class="period-switch">
+                @foreach (var preset in Presets)
+                {
+                    <button type="button"
+                            class="@(preset == _preset ? "active" : null)"
+                            @onclick="() => ApplyPresetAsync(preset)">
+                        @GetPresetLabel(preset)
+                    </button>
+                }
+            </div>
+
+            <div class="filter-row">
+                <input value="@_searchText" @oninput="OnSearchChanged" placeholder="Cari batch, produk, atau kode" />
+
+                <select value="@(_selectedProductId?.ToString() ?? string.Empty)" @onchange="OnProductChangedAsync">
+                    <option value="">Semua produk</option>
+                    @foreach (var product in _result?.Products ?? Array.Empty<ProductFilterOption>())
+                    {
+                        <option value="@product.Id">@product.Name</option>
+                    }
+                </select>
+
+                @if (_preset == DashboardPeriodPreset.Custom)
+                {
+                    <InputDate @bind-Value="_customFrom" class="date-input" />
+                    <InputDate @bind-Value="_customTo" class="date-input" />
+                    <button type="button" class="ghost-button" @onclick="ApplyCustomRangeAsync">Terapkan</button>
+                }
+
+                <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    @if (_isLoading && _result is null)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else if (_result is not null)
+    {
+        <div class="summary-grid">
+            <article>
+                <small>Bahan baku</small>
+                <strong>@FormatCurrency(_result.Summary.MaterialCost)</strong>
+            </article>
+            <article>
+                <small>Tenaga kerja</small>
+                <strong>@FormatCurrency(_result.Summary.LaborCost)</strong>
+            </article>
+            <article>
+                <small>Overhead</small>
+                <strong>@FormatCurrency(_result.Summary.OverheadCost)</strong>
+            </article>
+            <article>
+                <small>Total biaya</small>
+                <strong>@FormatCurrency(_result.Summary.TotalCost)</strong>
+            </article>
+            <article>
+                <small>Rata-rata / unit</small>
+                <strong>@FormatCurrency(_result.Summary.AverageCostPerUnit)</strong>
+            </article>
+        </div>
+
+        <div class="production-layout">
+            <section class="table-card">
+                <div class="table-head">
+                    <div>
+                        <span>Batch produksi</span>
+                        <h2>Biaya per batch untuk @_result.Range.Label.ToLowerInvariant()</h2>
+                    </div>
+
+                    <div class="status-chip">@_statusMessage</div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><button type="button" @onclick='() => SortByAsync("batch")'>Batch</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("product")'>Produk</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("date")'>Tanggal</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("qty")'>Qty</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("material")'>Bahan</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("labor")'>Tenaga Kerja</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("overhead")'>Overhead</button></th>
+                                <th><button type="button" @onclick='() => SortByAsync("total")'>Total</button></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (PagedItems.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="8" class="empty-row">Belum ada batch sesuai filter.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var item in PagedItems)
+                                {
+                                    <tr class="@GetRowClass(item)" @onclick="() => SelectBatchAsync(item.BatchId)">
+                                        <td>
+                                            <strong>@item.BatchCode</strong>
+                                            @if (item.MissingLabor || item.MissingOverhead)
+                                            {
+                                                <small class="warn-text">Biaya belum lengkap</small>
+                                            }
+                                        </td>
+                                        <td>
+                                            <strong>@item.ProductName</strong>
+                                            <small>@item.ProductCode</small>
+                                        </td>
+                                        <td>@item.ProducedAt.ToString("dd MMM yyyy")</td>
+                                        <td>@item.QuantityProduced.ToString("N0") unit</td>
+                                        <td>@FormatCurrency(item.MaterialCost)</td>
+                                        <td class="@(item.MissingLabor ? "warn-text" : string.Empty)">@FormatCurrency(item.LaborCost)</td>
+                                        <td class="@(item.MissingOverhead ? "warn-text" : string.Empty)">@FormatCurrency(item.OverheadCost)</td>
+                                        <td>
+                                            <strong>@FormatCurrency(item.TotalCost)</strong>
+                                            <small>@FormatCurrency(item.CostPerUnit)/unit</small>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <small>@(_result.Summary.BatchCount) batch - @_result.Summary.TotalUnits.ToString("N0") unit</small>
+
+                    <div class="pager">
+                        <button type="button" @onclick="PrevPageAsync" disabled="@(_page <= 1)">Prev</button>
+                        <span>Halaman @_page / @TotalPages</span>
+                        <button type="button" @onclick="NextPageAsync" disabled="@(_page >= TotalPages)">Next</button>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="detail-stack">
+                <section class="detail-card">
+                    @if (_detail is null)
+                    {
+                        <div class="detail-empty">
+                            <span>Detail batch</span>
+                            <h2>Pilih batch produksi untuk melihat struktur biaya.</h2>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="detail-head">
+                            <div>
+                                <span>@_detail.Batch.BatchCode</span>
+                                <h2>@_detail.Product.Name</h2>
+                                <small>@_detail.Batch.ProducedAt.ToString("dd MMM yyyy HH:mm") - @_detail.Batch.QuantityProduced.ToString("N0") unit</small>
+                            </div>
+
+                            <div class="detail-actions">
+                                <button type="button" class="ghost-button" @onclick="() => OpenCreateModal(ProductionCostEntryType.Labor)">+ Tenaga Kerja</button>
+                                <button type="button" class="primary-button" @onclick="() => OpenCreateModal(ProductionCostEntryType.Overhead)">+ Overhead</button>
+                            </div>
+                        </div>
+
+                        <div class="detail-grid">
+                            <article>
+                                <small>Biaya bahan</small>
+                                <strong>@FormatCurrency(_detail.MaterialCost)</strong>
+                            </article>
+                            <article>
+                                <small>Tenaga kerja</small>
+                                <strong>@FormatCurrency(_detail.LaborCost)</strong>
+                            </article>
+                            <article>
+                                <small>Overhead</small>
+                                <strong>@FormatCurrency(_detail.OverheadCost)</strong>
+                            </article>
+                            <article>
+                                <small>HPP / Unit</small>
+                                <strong>@FormatCurrency(_detail.CostPerUnit)</strong>
+                            </article>
+                            <article>
+                                <small>Estimasi revenue</small>
+                                <strong>@FormatCurrency(_detail.EstimatedRevenue)</strong>
+                            </article>
+                            <article>
+                                <small>Estimasi profit</small>
+                                <strong class="@(_detail.EstimatedProfit >= 0 ? "profit-text" : "loss-text")">@FormatCurrency(_detail.EstimatedProfit)</strong>
+                            </article>
+                        </div>
+
+                        @if (_detail.Alerts.Count > 0)
+                        {
+                            <div class="alert-list">
+                                @foreach (var alert in _detail.Alerts)
+                                {
+                                    <article>@alert</article>
+                                }
+                            </div>
+                        }
+
+                        <div class="entry-section">
+                            <div class="section-head">
+                                <div>
+                                    <span>Tenaga kerja</span>
+                                    <h3>Input biaya operator dan tim produksi</h3>
+                                </div>
+                                <strong>@FormatCurrency(_detail.LaborCost)</strong>
+                            </div>
+
+                            <div class="entry-list">
+                                @if (_detail.LaborEntries.Count == 0)
+                                {
+                                    <div class="empty-entry">Belum ada biaya tenaga kerja.</div>
+                                }
+                                else
+                                {
+                                    @foreach (var entry in _detail.LaborEntries)
+                                    {
+                                        <article>
+                                            <div>
+                                                <strong>@entry.Note</strong>
+                                                <small>@entry.UpdatedAt.ToString("dd MMM yyyy HH:mm")</small>
+                                            </div>
+                                            <div class="entry-meta">
+                                                <strong>@FormatCurrency(entry.Amount)</strong>
+                                                <div class="row-actions">
+                                                    <button type="button" class="icon-button" @onclick="() => OpenEditModal(ProductionCostEntryType.Labor, entry)">Edit</button>
+                                                    <button type="button" class="icon-button danger" @onclick="() => AskDelete(ProductionCostEntryType.Labor, entry.Id, entry.Note)">Hapus</button>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                        <div class="entry-section">
+                            <div class="section-head">
+                                <div>
+                                    <span>Overhead</span>
+                                    <h3>Input listrik, gas, sewa, dan utilitas lain</h3>
+                                </div>
+                                <strong>@FormatCurrency(_detail.OverheadCost)</strong>
+                            </div>
+
+                            <div class="entry-list">
+                                @if (_detail.OverheadEntries.Count == 0)
+                                {
+                                    <div class="empty-entry">Belum ada biaya overhead.</div>
+                                }
+                                else
+                                {
+                                    @foreach (var entry in _detail.OverheadEntries)
+                                    {
+                                        <article>
+                                            <div>
+                                                <strong>@entry.Note</strong>
+                                                <small>@entry.UpdatedAt.ToString("dd MMM yyyy HH:mm")</small>
+                                            </div>
+                                            <div class="entry-meta">
+                                                <strong>@FormatCurrency(entry.Amount)</strong>
+                                                <div class="row-actions">
+                                                    <button type="button" class="icon-button" @onclick="() => OpenEditModal(ProductionCostEntryType.Overhead, entry)">Edit</button>
+                                                    <button type="button" class="icon-button danger" @onclick="() => AskDelete(ProductionCostEntryType.Overhead, entry.Id, entry.Note)">Hapus</button>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </section>
+
+                <section class="insight-card">
+                    <div class="table-head">
+                        <div>
+                            <span>Insight biaya</span>
+                            <h2>Peringatan cepat untuk periode aktif</h2>
+                        </div>
+                    </div>
+
+                    <div class="insight-list">
+                        @foreach (var insight in _result.Insights)
+                        {
+                            <article class="insight-item @GetInsightClass(insight.Tone)">
+                                <strong>@insight.Title</strong>
+                                <small>@insight.Detail</small>
+                            </article>
+                        }
+                    </div>
+                </section>
+            </aside>
+        </div>
+    }
+</section>
+
+@if (_showFormModal && _editingType is not null)
+{
+    <div class="overlay" @onclick="CloseFormModal">
+        <div class="modal-card" @onclick:stopPropagation="true">
+            <div class="modal-head">
+                <div>
+                    <span>@(_editingEntryId is null ? "Tambah biaya" : "Edit biaya")</span>
+                    <h2>@(_editingEntryId is null ? $"Input {GetEntryTypeLabel(_editingType.Value)}" : $"Perbarui {GetEntryTypeLabel(_editingType.Value)}")</h2>
+                </div>
+
+                <button type="button" class="close-button" @onclick="CloseFormModal">x</button>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_formMessage))
+            {
+                <div class="form-message">@_formMessage</div>
+            }
+
+            <EditForm Model="_entryForm" OnValidSubmit="SaveEntryAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-grid">
+                    <label>
+                        <span>Batch Produksi</span>
+                        <select @bind="_selectedBatchText">
+                            <option value="">Pilih batch</option>
+                            @foreach (var batch in _result?.Items ?? Array.Empty<ProductionCostBatchListItem>())
+                            {
+                                <option value="@batch.BatchId.ToString()">@batch.BatchCode - @batch.ProductName</option>
+                            }
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Nominal Biaya</span>
+                        <InputNumber @bind-Value="_entryForm.Amount" />
+                        <ValidationMessage For="@(() => _entryForm.Amount)" />
+                    </label>
+
+                    <label class="full">
+                        <span>Catatan</span>
+                        <InputTextArea @bind-Value="_entryForm.Note" />
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="ghost-button" @onclick="CloseFormModal">Batal</button>
+                    <button type="submit" class="primary-button">@(_editingEntryId is null ? "Simpan Biaya" : "Update Biaya")</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@if (_pendingDeleteId is not null && _pendingDeleteType is not null)
+{
+    <div class="overlay" @onclick="CancelDelete">
+        <div class="confirm-card" @onclick:stopPropagation="true">
+            <span>Konfirmasi</span>
+            <h2>Hapus biaya ini?</h2>
+            <p>@_pendingDeleteLabel akan dihapus dari @GetEntryTypeLabel(_pendingDeleteType.Value).</p>
+
+            <div class="modal-actions">
+                <button type="button" class="ghost-button" @onclick="CancelDelete">Batal</button>
+                <button type="button" class="danger-button" @onclick="DeleteEntryAsync">Ya, hapus</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private readonly DashboardPeriodPreset[] Presets =
+    [
+        DashboardPeriodPreset.Today,
+        DashboardPeriodPreset.ThisWeek,
+        DashboardPeriodPreset.ThisMonth,
+        DashboardPeriodPreset.Custom
+    ];
+
+    private const int PageSize = 8;
+
+    private ProductionCostQueryResult? _result;
+    private ProductionCostDetail? _detail;
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat data...";
+    private string _searchText = string.Empty;
+    private Guid? _selectedProductId;
+    private DashboardPeriodPreset _preset = DashboardPeriodPreset.ThisMonth;
+    private DateOnly? _customFrom = DateOnly.FromDateTime(DateTime.Today.AddDays(-29));
+    private DateOnly? _customTo = DateOnly.FromDateTime(DateTime.Today);
+    private string _sortBy = "date";
+    private bool _sortDescending = true;
+    private int _page = 1;
+    private CancellationTokenSource? _searchDebounce;
+
+    private bool _showFormModal;
+    private ProductionCostEntryType? _editingType;
+    private Guid? _editingEntryId;
+    private ProductionCostEntryRequest _entryForm = new();
+    private string _selectedBatchText = string.Empty;
+    private string _formMessage = string.Empty;
+
+    private ProductionCostEntryType? _pendingDeleteType;
+    private Guid? _pendingDeleteId;
+    private string _pendingDeleteLabel = string.Empty;
+
+    private IReadOnlyList<ProductionCostBatchListItem> PagedItems =>
+        (_result?.Items ?? Array.Empty<ProductionCostBatchListItem>())
+            .Skip((_page - 1) * PageSize)
+            .Take(PageSize)
+            .ToArray();
+
+    private int TotalPages => Math.Max(1, (int)Math.Ceiling((_result?.Items.Count ?? 0) / (double)PageSize));
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataStore.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync(bool keepDetail = true, Guid? preferredBatchId = null)
+    {
+        _isLoading = true;
+        _result = await ProductionCostService.QueryAsync(new ProductionCostQuery(
+            _searchText,
+            _selectedProductId,
+            _preset,
+            _customFrom,
+            _customTo,
+            _sortBy,
+            _sortDescending));
+
+        _statusMessage = $"{_result.Items.Count} batch - {_result.Range.Label}";
+        _isLoading = false;
+
+        if (_page > TotalPages)
+        {
+            _page = TotalPages;
+        }
+
+        if (_result.Items.Count == 0)
+        {
+            _detail = null;
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        var targetBatchId = preferredBatchId
+            ?? (keepDetail && _detail is not null && _result.Items.Any(item => item.BatchId == _detail.Batch.Id)
+                ? _detail.Batch.Id
+                : _result.Items[0].BatchId);
+
+        await SelectBatchAsync(targetBatchId);
+    }
+
+    private async Task ReloadAsync()
+        => await LoadAsync();
+
+    private async Task SelectBatchAsync(Guid batchId)
+    {
+        _detail = await ProductionCostService.GetDetailAsync(batchId);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ApplyPresetAsync(DashboardPeriodPreset preset)
+    {
+        _preset = preset;
+        if (preset != DashboardPeriodPreset.Custom)
+        {
+            _customFrom = null;
+            _customTo = null;
+        }
+
+        _page = 1;
+        await LoadAsync(false);
+    }
+
+    private async Task ApplyCustomRangeAsync()
+    {
+        _preset = DashboardPeriodPreset.Custom;
+        _page = 1;
+        await LoadAsync(false);
+    }
+
+    private async Task OnProductChangedAsync(ChangeEventArgs args)
+    {
+        _selectedProductId = Guid.TryParse(args.Value?.ToString(), out var parsed) ? parsed : null;
+        _page = 1;
+        await LoadAsync(false);
+    }
+
+    private async Task OnSearchChanged(ChangeEventArgs args)
+    {
+        _searchText = args.Value?.ToString() ?? string.Empty;
+        _page = 1;
+        _searchDebounce?.Cancel();
+        _searchDebounce?.Dispose();
+        _searchDebounce = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(350, _searchDebounce.Token);
+            await LoadAsync(false);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    private async Task SortByAsync(string column)
+    {
+        if (_sortBy.Equals(column, StringComparison.OrdinalIgnoreCase))
+        {
+            _sortDescending = !_sortDescending;
+        }
+        else
+        {
+            _sortBy = column;
+            _sortDescending = column is "date" or "total" or "unit";
+        }
+
+        await LoadAsync();
+    }
+
+    private async Task PrevPageAsync()
+    {
+        _page = Math.Max(1, _page - 1);
+        await LoadAsync();
+    }
+
+    private async Task NextPageAsync()
+    {
+        _page = Math.Min(TotalPages, _page + 1);
+        await LoadAsync();
+    }
+
+    private void OpenCreateModal(ProductionCostEntryType type)
+    {
+        var batchId = _detail?.Batch.Id ?? _result?.Items.FirstOrDefault()?.BatchId;
+        if (batchId is null || batchId == Guid.Empty)
+        {
+            return;
+        }
+
+        _editingType = type;
+        _editingEntryId = null;
+        _formMessage = string.Empty;
+        _selectedBatchText = batchId.Value.ToString();
+        _entryForm = new ProductionCostEntryRequest
+        {
+            BatchId = batchId,
+            Amount = 0,
+            Note = type == ProductionCostEntryType.Labor ? "Biaya tenaga kerja" : "Biaya overhead"
+        };
+        _showFormModal = true;
+    }
+
+    private void OpenEditModal(ProductionCostEntryType type, ProductionCostEntryView entry)
+    {
+        _editingType = type;
+        _editingEntryId = entry.Id;
+        _formMessage = string.Empty;
+        _selectedBatchText = entry.BatchId.ToString();
+        _entryForm = new ProductionCostEntryRequest
+        {
+            Id = entry.Id,
+            BatchId = entry.BatchId,
+            Amount = entry.Amount,
+            Note = entry.Note
+        };
+        _showFormModal = true;
+    }
+
+    private void CloseFormModal()
+    {
+        _showFormModal = false;
+        _editingType = null;
+        _editingEntryId = null;
+        _formMessage = string.Empty;
+    }
+
+    private async Task SaveEntryAsync()
+    {
+        if (_editingType is null)
+        {
+            return;
+        }
+
+        _entryForm.Id = _editingEntryId;
+        _entryForm.BatchId = Guid.TryParse(_selectedBatchText, out var batchId) ? batchId : null;
+        var result = await ProductionCostService.SaveEntryAsync(_editingType.Value, _entryForm);
+        _formMessage = result.Message;
+
+        if (!result.Success)
+        {
+            return;
+        }
+
+        CloseFormModal();
+        await LoadAsync(false, result.BatchId);
+    }
+
+    private void AskDelete(ProductionCostEntryType type, Guid id, string label)
+    {
+        _pendingDeleteType = type;
+        _pendingDeleteId = id;
+        _pendingDeleteLabel = label;
+    }
+
+    private void CancelDelete()
+    {
+        _pendingDeleteType = null;
+        _pendingDeleteId = null;
+        _pendingDeleteLabel = string.Empty;
+    }
+
+    private async Task DeleteEntryAsync()
+    {
+        if (_pendingDeleteType is null || _pendingDeleteId is null)
+        {
+            return;
+        }
+
+        var selectedBatchId = _detail?.Batch.Id;
+        var result = await ProductionCostService.DeleteEntryAsync(_pendingDeleteType.Value, _pendingDeleteId.Value);
+        _statusMessage = result.Message;
+        CancelDelete();
+        await LoadAsync(false, selectedBatchId);
+    }
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(async () => await LoadAsync());
+    }
+
+    private string GetRowClass(ProductionCostBatchListItem item)
+    {
+        var classes = new List<string>();
+        if (_detail?.Batch.Id == item.BatchId)
+        {
+            classes.Add("selected-row");
+        }
+
+        if (item.MissingLabor || item.MissingOverhead)
+        {
+            classes.Add("warn-row");
+        }
+
+        return string.Join(" ", classes);
+    }
+
+    private static string GetPresetLabel(DashboardPeriodPreset preset) => preset switch
+    {
+        DashboardPeriodPreset.Today => "Hari ini",
+        DashboardPeriodPreset.ThisWeek => "Minggu ini",
+        DashboardPeriodPreset.ThisMonth => "Bulan ini",
+        DashboardPeriodPreset.Custom => "Custom",
+        _ => preset.ToString()
+    };
+
+    private static string GetEntryTypeLabel(ProductionCostEntryType type) => type switch
+    {
+        ProductionCostEntryType.Labor => "biaya tenaga kerja",
+        ProductionCostEntryType.Overhead => "biaya overhead",
+        _ => "biaya"
+    };
+
+    private static string GetInsightClass(string tone) => tone switch
+    {
+        "success" => "is-success",
+        "danger" => "is-danger",
+        _ => "is-warning"
+    };
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    public ValueTask DisposeAsync()
+    {
+        DataStore.Changed -= HandleStoreChanged;
+
+        if (_searchDebounce is not null)
+        {
+            _searchDebounce.Cancel();
+            _searchDebounce.Dispose();
+        }
+
+        return ValueTask.CompletedTask;
+    }
+}

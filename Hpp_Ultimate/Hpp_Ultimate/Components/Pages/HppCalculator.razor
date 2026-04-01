@@ -1,0 +1,362 @@
+@page "/kalkulator-hpp"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject HppCalculatorService HppCalculatorService
+@inject IBusinessDataStore DataStore
+
+<PageTitle>Kalkulator HPP | HPP Ultimate</PageTitle>
+
+<section class="hpp-page">
+    <div class="hpp-toolbar">
+        <div>
+            <span>HPP engine</span>
+            <h1>Hitung HPP final per produk dari BOM, batch, dan biaya produksi.</h1>
+        </div>
+
+        <div class="toolbar-stack">
+            <div class="period-switch">
+                @foreach (var preset in Presets)
+                {
+                    <button type="button"
+                            class="@(preset == _preset ? "active" : null)"
+                            @onclick="() => ApplyPresetAsync(preset)">
+                        @GetPresetLabel(preset)
+                    </button>
+                }
+            </div>
+
+            <div class="filter-row">
+                <select value="@(_selectedProductId?.ToString() ?? string.Empty)" @onchange="OnProductChangedAsync">
+                    <option value="">Pilih produk</option>
+                    @foreach (var product in _snapshot?.Products ?? Array.Empty<ProductFilterOption>())
+                    {
+                        <option value="@product.Id">@product.Name</option>
+                    }
+                </select>
+
+                <select value="@(_selectedBatchId?.ToString() ?? string.Empty)" @onchange="OnBatchChangedAsync">
+                    <option value="">Semua batch pada periode</option>
+                    @foreach (var batch in _snapshot?.Batches ?? Array.Empty<HppBatchOption>())
+                    {
+                        <option value="@batch.Id">@batch.BatchCode (@batch.QuantityProduced.ToString("N0") unit)</option>
+                    }
+                </select>
+
+                @if (_preset == DashboardPeriodPreset.Custom)
+                {
+                    <InputDate @bind-Value="_customFrom" class="date-input" />
+                    <InputDate @bind-Value="_customTo" class="date-input" />
+                    <button type="button" class="ghost-button" @onclick="ApplyCustomRangeAsync">Terapkan</button>
+                }
+
+                <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="skeleton-card"></div>
+    }
+    else if (_snapshot is not null)
+    {
+        <div class="summary-grid">
+            <article>
+                <small>Basis hitung</small>
+                <strong>@_snapshot.Summary.BasisLabel</strong>
+            </article>
+            <article>
+                <small>Output</small>
+                <strong>@FormatQuantity(_snapshot.Summary.OutputQuantity)</strong>
+            </article>
+            <article>
+                <small>Total biaya</small>
+                <strong>@FormatCurrency(_snapshot.Summary.TotalCost)</strong>
+            </article>
+            <article>
+                <small>HPP / Unit</small>
+                <strong>@FormatCurrency(_snapshot.Summary.HppPerUnit)</strong>
+            </article>
+            <article>
+                <small>Profit / Unit</small>
+                <strong class="@(_snapshot.Summary.ProfitPerUnit >= 0 ? "profit-text" : "loss-text")">@FormatCurrency(_snapshot.Summary.ProfitPerUnit)</strong>
+            </article>
+            <article>
+                <small>Margin</small>
+                <strong class="@(_snapshot.Summary.MarginPercentage >= 10m ? "profit-text" : "loss-text")">@_snapshot.Summary.MarginPercentage.ToString("0.0")%</strong>
+            </article>
+        </div>
+
+        <div class="hpp-layout">
+            <section class="breakdown-card">
+                <div class="section-head">
+                    <div>
+                        <span>Breakdown bahan</span>
+                        <h2>Komponen biaya langsung dari BOM</h2>
+                    </div>
+                    <div class="status-chip">@GetStatusLabel()</div>
+                </div>
+
+                @if (_snapshot.Materials.Count == 0)
+                {
+                    <div class="empty-state">
+                        <span>BOM kosong</span>
+                        <h3>Produk ini belum punya komposisi bahan.</h3>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bahan</th>
+                                    <th>Qty / Unit</th>
+                                    <th>Total Qty</th>
+                                    <th>Harga</th>
+                                    <th>Biaya</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in _snapshot.Materials)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@item.MaterialName</strong>
+                                            <small>@item.MaterialCode</small>
+                                        </td>
+                                        <td>@item.QuantityPerUnit.ToString("N2") @item.Unit</td>
+                                        <td>@item.TotalQuantity.ToString("N2") @item.Unit</td>
+                                        <td>@FormatCurrency(item.UnitPrice)</td>
+                                        <td>@FormatCurrency(item.LineCost)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+
+            <aside class="side-stack">
+                <section class="result-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Ringkasan hasil</span>
+                            <h2>@(_snapshot.Product?.Name ?? "Belum ada produk")</h2>
+                        </div>
+                    </div>
+
+                    <div class="recipe-grid">
+                        <article>
+                            <small>Kode produk</small>
+                            <strong>@(_snapshot.Product?.Code ?? "-")</strong>
+                        </article>
+                        <article>
+                            <small>Harga jual</small>
+                            <strong>@FormatCurrency(_snapshot.Summary.SellingPrice)</strong>
+                        </article>
+                        <article>
+                            <small>Output resep</small>
+                            <strong>@(_snapshot.Recipe is null ? "-" : $"{_snapshot.Recipe.BatchOutputQuantity:N0} {_snapshot.Product?.Unit}")</strong>
+                        </article>
+                        <article>
+                            <small>Yield</small>
+                            <strong>@(_snapshot.Recipe is null ? "-" : $"{_snapshot.Recipe.YieldPercentage:0.#}%")</strong>
+                        </article>
+                    </div>
+
+                    <div class="share-list">
+                        @foreach (var share in _snapshot.CostShares)
+                        {
+                            <article>
+                                <div class="share-head">
+                                    <strong>@share.Label</strong>
+                                    <span>@share.Percentage.ToString("0.0")%</span>
+                                </div>
+                                <div class="share-bar">
+                                    <span class="@GetShareFillClass(share.Tone)" style="@($"width:{Math.Clamp(share.Percentage, 0m, 100m).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}%;")"></span>
+                                </div>
+                                <small>@FormatCurrency(share.Amount)</small>
+                            </article>
+                        }
+                    </div>
+
+                    <div class="alert-list">
+                        @foreach (var alert in _snapshot.Alerts)
+                        {
+                            <article>@alert</article>
+                        }
+                    </div>
+                </section>
+
+                <section class="history-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Perbandingan batch</span>
+                            <h2>Batch terbaru untuk produk ini</h2>
+                        </div>
+                    </div>
+
+                    @if (_snapshot.RecentBatches.Count == 0)
+                    {
+                        <div class="empty-state compact">
+                            <span>Belum ada histori</span>
+                            <h3>Produksi belum pernah dicatat untuk produk ini.</h3>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="history-list">
+                            @foreach (var batch in _snapshot.RecentBatches)
+                            {
+                                <button type="button" class="history-item @(batch.BatchId == _selectedBatchId ? "selected" : null)" @onclick="() => SelectComparisonBatchAsync(batch.BatchId)">
+                                    <div>
+                                        <strong>@batch.BatchCode</strong>
+                                        <small>@batch.ProducedAt.ToString("dd MMM yyyy") - @batch.QuantityProduced.ToString("N0") unit</small>
+                                    </div>
+                                    <div class="history-meta">
+                                        <strong>@FormatCurrency(batch.HppPerUnit)</strong>
+                                        <small>Total @FormatCurrency(batch.TotalCost)</small>
+                                    </div>
+                                </button>
+                            }
+                        </div>
+                    }
+                </section>
+            </aside>
+        </div>
+    }
+</section>
+
+@code {
+    private readonly DashboardPeriodPreset[] Presets =
+    [
+        DashboardPeriodPreset.Today,
+        DashboardPeriodPreset.ThisWeek,
+        DashboardPeriodPreset.ThisMonth,
+        DashboardPeriodPreset.Custom
+    ];
+
+    private HppCalculatorSnapshot? _snapshot;
+    private bool _isLoading = true;
+    private Guid? _selectedProductId;
+    private Guid? _selectedBatchId;
+    private DashboardPeriodPreset _preset = DashboardPeriodPreset.ThisMonth;
+    private DateOnly? _customFrom = DateOnly.FromDateTime(DateTime.Today.AddDays(-29));
+    private DateOnly? _customTo = DateOnly.FromDateTime(DateTime.Today);
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataStore.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync(bool keepSelection = true)
+    {
+        _isLoading = true;
+        var snapshot = await HppCalculatorService.GetSnapshotAsync(new HppCalculatorQuery(_selectedProductId, _selectedBatchId, _preset, _customFrom, _customTo));
+
+        _snapshot = snapshot;
+        _selectedProductId = snapshot.Product?.Id;
+
+        if (!keepSelection || _selectedBatchId is not null && !snapshot.Batches.Any(item => item.Id == _selectedBatchId))
+        {
+            _selectedBatchId = null;
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ReloadAsync()
+        => await LoadAsync();
+
+    private async Task ApplyPresetAsync(DashboardPeriodPreset preset)
+    {
+        _preset = preset;
+        _selectedBatchId = null;
+
+        if (preset != DashboardPeriodPreset.Custom)
+        {
+            _customFrom = null;
+            _customTo = null;
+        }
+
+        await LoadAsync(false);
+    }
+
+    private async Task ApplyCustomRangeAsync()
+    {
+        _preset = DashboardPeriodPreset.Custom;
+        _selectedBatchId = null;
+        await LoadAsync(false);
+    }
+
+    private async Task OnProductChangedAsync(ChangeEventArgs args)
+    {
+        _selectedProductId = Guid.TryParse(args.Value?.ToString(), out var parsed) ? parsed : null;
+        _selectedBatchId = null;
+        await LoadAsync(false);
+    }
+
+    private async Task OnBatchChangedAsync(ChangeEventArgs args)
+    {
+        _selectedBatchId = Guid.TryParse(args.Value?.ToString(), out var parsed) ? parsed : null;
+        await LoadAsync();
+    }
+
+    private async Task SelectComparisonBatchAsync(Guid batchId)
+    {
+        _selectedBatchId = batchId;
+        await LoadAsync();
+    }
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(async () => await LoadAsync());
+    }
+
+    private string GetStatusLabel()
+    {
+        if (_snapshot is null)
+        {
+            return "Memuat...";
+        }
+
+        return _snapshot.Summary.Basis switch
+        {
+            HppCalculationBasis.BatchActual => "Basis batch aktual",
+            HppCalculationBasis.AggregatedPeriod => "Basis agregasi periode",
+            HppCalculationBasis.SimulatedRecipe => "Basis simulasi resep",
+            _ => "Kalkulasi aktif"
+        };
+    }
+
+    private static string GetShareFillClass(string tone) => tone switch
+    {
+        "ocean" => "fill-ocean",
+        "warning" => "fill-warning",
+        _ => "fill-accent"
+    };
+
+    private static string GetPresetLabel(DashboardPeriodPreset preset) => preset switch
+    {
+        DashboardPeriodPreset.Today => "Hari ini",
+        DashboardPeriodPreset.ThisWeek => "Minggu ini",
+        DashboardPeriodPreset.ThisMonth => "Bulan ini",
+        DashboardPeriodPreset.Custom => "Custom",
+        _ => preset.ToString()
+    };
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    private string FormatQuantity(decimal value)
+        => _snapshot?.Product is null ? $"{value:N0}" : $"{value:N0} {_snapshot.Product.Unit}";
+
+    public ValueTask DisposeAsync()
+    {
+        DataStore.Changed -= HandleStoreChanged;
+        return ValueTask.CompletedTask;
+    }
+}

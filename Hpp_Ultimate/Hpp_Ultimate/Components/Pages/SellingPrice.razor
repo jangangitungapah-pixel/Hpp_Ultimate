@@ -1,0 +1,367 @@
+@page "/harga-jual"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject SellingPriceService SellingPriceService
+@inject IBusinessDataStore DataStore
+
+<PageTitle>Harga Jual | HPP Ultimate</PageTitle>
+
+<section class="pricing-page">
+    <div class="pricing-toolbar">
+        <div>
+            <span>Pricing studio</span>
+            <h1>Tentukan harga jual dari HPP aktual, target margin, dan simulasi profit.</h1>
+        </div>
+
+        <div class="toolbar-stack">
+            <div class="period-switch">
+                @foreach (var preset in Presets)
+                {
+                    <button type="button"
+                            class="@(preset == _preset ? "active" : null)"
+                            @onclick="() => ApplyPresetAsync(preset)">
+                        @GetPresetLabel(preset)
+                    </button>
+                }
+            </div>
+
+            <div class="filter-row">
+                <select value="@(_selectedProductId?.ToString() ?? string.Empty)" @onchange="OnProductChangedAsync">
+                    <option value="">Pilih produk</option>
+                    @foreach (var product in _snapshot?.Products ?? Array.Empty<ProductFilterOption>())
+                    {
+                        <option value="@product.Id">@product.Name</option>
+                    }
+                </select>
+
+                <select value="@(_selectedBatchId?.ToString() ?? string.Empty)" @onchange="OnBatchChangedAsync">
+                    <option value="">Semua batch pada periode</option>
+                    @foreach (var batch in _snapshot?.Batches ?? Array.Empty<HppBatchOption>())
+                    {
+                        <option value="@batch.Id">@batch.BatchCode (@batch.QuantityProduced.ToString("N0") unit)</option>
+                    }
+                </select>
+
+                @if (_preset == DashboardPeriodPreset.Custom)
+                {
+                    <InputDate @bind-Value="_customFrom" class="date-input" />
+                    <InputDate @bind-Value="_customTo" class="date-input" />
+                    <button type="button" class="ghost-button" @onclick="ApplyCustomRangeAsync">Terapkan</button>
+                }
+
+                <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="skeleton-card"></div>
+    }
+    else if (_snapshot is not null)
+    {
+        <div class="summary-grid">
+            <article>
+                <small>HPP / Unit</small>
+                <strong>@FormatCurrency(_snapshot.Summary.HppPerUnit)</strong>
+            </article>
+            <article>
+                <small>Harga Saat Ini</small>
+                <strong>@FormatCurrency(_snapshot.Summary.CurrentPrice)</strong>
+            </article>
+            <article>
+                <small>Break-even</small>
+                <strong>@FormatCurrency(_snapshot.Summary.BreakEvenPrice)</strong>
+            </article>
+            <article>
+                <small>Harga Aman</small>
+                <strong>@FormatCurrency(_snapshot.Summary.MinimumSafePrice)</strong>
+            </article>
+            <article>
+                <small>Profit / Unit Saat Ini</small>
+                <strong class="@(_snapshot.Summary.CurrentProfitPerUnit >= 0 ? "profit-text" : "loss-text")">@FormatCurrency(_snapshot.Summary.CurrentProfitPerUnit)</strong>
+            </article>
+            <article>
+                <small>Margin Saat Ini</small>
+                <strong class="@(_snapshot.Summary.CurrentMarginPercentage >= 10m ? "profit-text" : "loss-text")">@_snapshot.Summary.CurrentMarginPercentage.ToString("0.0")%</strong>
+            </article>
+        </div>
+
+        <div class="pricing-layout">
+            <section class="simulator-card">
+                <div class="section-head">
+                    <div>
+                        <span>Simulator harga</span>
+                        <h2>Bangun harga rekomendasi dari target bisnis</h2>
+                    </div>
+                    <div class="status-chip">@_snapshot.Summary.BasisLabel</div>
+                </div>
+
+                <div class="input-grid">
+                    <label>
+                        <span>Target margin %</span>
+                        <InputNumber @bind-Value="_targetMarginPercent" />
+                    </label>
+                    <label>
+                        <span>Target profit / unit</span>
+                        <InputNumber @bind-Value="_targetProfitNominal" />
+                    </label>
+                    <label>
+                        <span>Pajak %</span>
+                        <InputNumber @bind-Value="_taxPercent" />
+                    </label>
+                    <label>
+                        <span>Diskon / reseller %</span>
+                        <InputNumber @bind-Value="_discountPercent" />
+                    </label>
+                    <label>
+                        <span>Kelipatan pembulatan</span>
+                        <select @bind="_roundingStep">
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="simulation-grid">
+                    @foreach (var card in SimulationCards)
+                    {
+                        <article class="simulation-card @GetToneClass(card.Tone)">
+                            <small>@card.Label</small>
+                            <strong>@FormatCurrency(card.Price)</strong>
+                            <span>@card.Caption</span>
+                            <em>Profit @FormatCurrency(card.ProfitPerUnit) / unit</em>
+                            <em>Margin @card.MarginPercentage.ToString("0.0")%</em>
+                            <em>Estimasi profit @FormatCurrency(card.ExpectedProfit)</em>
+                        </article>
+                    }
+                </div>
+            </section>
+
+            <aside class="side-stack">
+                <section class="scenario-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Patokan cepat</span>
+                            <h2>Skenario default dari service pricing</h2>
+                        </div>
+                    </div>
+
+                    <div class="scenario-list">
+                        @foreach (var scenario in _snapshot.DefaultScenarios)
+                        {
+                            <article class="scenario-item @GetToneClass(scenario.Tone)">
+                                <div>
+                                    <strong>@scenario.Label</strong>
+                                    <small>@scenario.Caption</small>
+                                </div>
+                                <div class="scenario-meta">
+                                    <strong>@FormatCurrency(scenario.Price)</strong>
+                                    <small>Margin @scenario.MarginPercentage.ToString("0.0")%</small>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </section>
+
+                <section class="comparison-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Perbandingan</span>
+                            <h2>Posisi harga terhadap target</h2>
+                        </div>
+                    </div>
+
+                    <div class="comparison-grid">
+                        <article>
+                            <small>Gap vs harga saat ini</small>
+                            <strong class="@(RecommendedRoundedPrice >= _snapshot.Summary.CurrentPrice ? "profit-text" : "loss-text")">@FormatCurrency(RecommendedRoundedPrice - _snapshot.Summary.CurrentPrice)</strong>
+                        </article>
+                        <article>
+                            <small>Harga final rekomendasi</small>
+                            <strong>@FormatCurrency(RecommendedRoundedPrice)</strong>
+                        </article>
+                        <article>
+                            <small>Harga setelah diskon</small>
+                            <strong class="@(DiscountedPrice >= _snapshot.Summary.BreakEvenPrice ? "profit-text" : "loss-text")">@FormatCurrency(DiscountedPrice)</strong>
+                        </article>
+                        <article>
+                            <small>Profit setelah diskon</small>
+                            <strong class="@(DiscountedProfitPerUnit >= 0 ? "profit-text" : "loss-text")">@FormatCurrency(DiscountedProfitPerUnit)</strong>
+                        </article>
+                    </div>
+
+                    <div class="alert-list">
+                        @foreach (var alert in _snapshot.Alerts)
+                        {
+                            <article>@alert</article>
+                        }
+                    </div>
+                </section>
+            </aside>
+        </div>
+    }
+</section>
+
+@code {
+    private readonly DashboardPeriodPreset[] Presets =
+    [
+        DashboardPeriodPreset.Today,
+        DashboardPeriodPreset.ThisWeek,
+        DashboardPeriodPreset.ThisMonth,
+        DashboardPeriodPreset.Custom
+    ];
+
+    private SellingPriceSnapshot? _snapshot;
+    private bool _isLoading = true;
+    private Guid? _selectedProductId;
+    private Guid? _selectedBatchId;
+    private DashboardPeriodPreset _preset = DashboardPeriodPreset.ThisMonth;
+    private DateOnly? _customFrom = DateOnly.FromDateTime(DateTime.Today.AddDays(-29));
+    private DateOnly? _customTo = DateOnly.FromDateTime(DateTime.Today);
+
+    private decimal _targetMarginPercent = 25m;
+    private decimal _targetProfitNominal = 5000m;
+    private decimal _taxPercent;
+    private decimal _discountPercent;
+    private int _roundingStep = 100;
+
+    private decimal MarginBasedPrice => SellingPriceService.ComputePriceByMargin(_snapshot?.Summary.HppPerUnit ?? 0m, Math.Clamp(_targetMarginPercent, 0m, 95m));
+    private decimal ProfitBasedPrice => Math.Max(0m, (_snapshot?.Summary.HppPerUnit ?? 0m) + Math.Max(0m, _targetProfitNominal));
+    private decimal BaseRecommendation => Math.Max(MarginBasedPrice, ProfitBasedPrice);
+    private decimal TaxedRecommendation => BaseRecommendation * (1m + (Math.Max(0m, _taxPercent) / 100m));
+    private decimal RecommendedRoundedPrice => RoundUp(TaxedRecommendation, Math.Max(1, _roundingStep));
+    private decimal DiscountedPrice => RecommendedRoundedPrice * (1m - (Math.Clamp(_discountPercent, 0m, 95m) / 100m));
+    private decimal DiscountedProfitPerUnit => DiscountedPrice - (_snapshot?.Summary.HppPerUnit ?? 0m);
+    private decimal DiscountedMargin => DiscountedPrice <= 0 ? 0m : (DiscountedProfitPerUnit / DiscountedPrice) * 100m;
+
+    private IReadOnlyList<SellingPriceScenario> SimulationCards => BuildSimulationCards();
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataStore.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync(bool keepSelection = true)
+    {
+        _isLoading = true;
+        var snapshot = await SellingPriceService.GetSnapshotAsync(new SellingPriceQuery(_selectedProductId, _selectedBatchId, _preset, _customFrom, _customTo));
+        _snapshot = snapshot;
+        _selectedProductId = snapshot.Product?.Id;
+
+        if (!keepSelection || _selectedBatchId is not null && !snapshot.Batches.Any(item => item.Id == _selectedBatchId))
+        {
+            _selectedBatchId = null;
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ReloadAsync()
+        => await LoadAsync();
+
+    private async Task ApplyPresetAsync(DashboardPeriodPreset preset)
+    {
+        _preset = preset;
+        _selectedBatchId = null;
+
+        if (preset != DashboardPeriodPreset.Custom)
+        {
+            _customFrom = null;
+            _customTo = null;
+        }
+
+        await LoadAsync(false);
+    }
+
+    private async Task ApplyCustomRangeAsync()
+    {
+        _preset = DashboardPeriodPreset.Custom;
+        _selectedBatchId = null;
+        await LoadAsync(false);
+    }
+
+    private async Task OnProductChangedAsync(ChangeEventArgs args)
+    {
+        _selectedProductId = Guid.TryParse(args.Value?.ToString(), out var parsed) ? parsed : null;
+        _selectedBatchId = null;
+        await LoadAsync(false);
+    }
+
+    private async Task OnBatchChangedAsync(ChangeEventArgs args)
+    {
+        _selectedBatchId = Guid.TryParse(args.Value?.ToString(), out var parsed) ? parsed : null;
+        await LoadAsync();
+    }
+
+    private IReadOnlyList<SellingPriceScenario> BuildSimulationCards()
+    {
+        if (_snapshot is null)
+        {
+            return Array.Empty<SellingPriceScenario>();
+        }
+
+        var qty = _snapshot.Summary.QuantityBasis;
+        return
+        [
+            BuildScenario("Berdasar Margin", MarginBasedPrice, qty, "Memenuhi target margin yang diminta.", MarginBasedPrice >= _snapshot.Summary.MinimumSafePrice ? "success" : "warning"),
+            BuildScenario("Berdasar Profit", ProfitBasedPrice, qty, "Menjamin nominal profit per unit.", ProfitBasedPrice >= _snapshot.Summary.BreakEvenPrice ? "accent" : "danger"),
+            BuildScenario("Harga Final", RecommendedRoundedPrice, qty, "Harga rekomendasi setelah pajak dan pembulatan.", RecommendedRoundedPrice >= _snapshot.Summary.HealthyPrice ? "success" : "warning"),
+            BuildScenario("Setelah Diskon", DiscountedPrice, qty, "Simulasi harga promo atau reseller.", DiscountedPrice >= _snapshot.Summary.BreakEvenPrice ? "warning" : "danger")
+        ];
+    }
+
+    private SellingPriceScenario BuildScenario(string label, decimal price, decimal quantityBasis, string caption, string tone)
+    {
+        var hpp = _snapshot?.Summary.HppPerUnit ?? 0m;
+        var profitPerUnit = price - hpp;
+        var margin = price <= 0 ? 0m : (profitPerUnit / price) * 100m;
+        return new SellingPriceScenario(label, price, profitPerUnit, margin, profitPerUnit * quantityBasis, caption, tone);
+    }
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(async () => await LoadAsync());
+    }
+
+    private static decimal RoundUp(decimal value, int step)
+    {
+        if (value <= 0 || step <= 0)
+        {
+            return 0m;
+        }
+
+        return Math.Ceiling(value / step) * step;
+    }
+
+    private static string GetPresetLabel(DashboardPeriodPreset preset) => preset switch
+    {
+        DashboardPeriodPreset.Today => "Hari ini",
+        DashboardPeriodPreset.ThisWeek => "Minggu ini",
+        DashboardPeriodPreset.ThisMonth => "Bulan ini",
+        DashboardPeriodPreset.Custom => "Custom",
+        _ => preset.ToString()
+    };
+
+    private static string GetToneClass(string tone) => tone switch
+    {
+        "success" => "is-success",
+        "danger" => "is-danger",
+        "warning" => "is-warning",
+        "accent" => "is-accent",
+        _ => "is-neutral"
+    };
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    public ValueTask DisposeAsync()
+    {
+        DataStore.Changed -= HandleStoreChanged;
+        return ValueTask.CompletedTask;
+    }
+}

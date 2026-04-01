@@ -1,0 +1,478 @@
+@page "/bom"
+@rendermode InteractiveServer
+@implements IDisposable
+@inject BomCatalogService BomCatalogService
+@inject RawMaterialCatalogService RawMaterialCatalogService
+
+<PageTitle>Resep / BOM | HPP Ultimate</PageTitle>
+
+<section class="bom-page">
+    <div class="bom-toolbar">
+        <div>
+            <span>Bill of materials</span>
+            <h1>Rakit resep produk, hitung biaya langsung, dan pantau warning bahan.</h1>
+        </div>
+
+        <div class="toolbar-actions">
+            <div class="coverage-chip">@_coverageText</div>
+            <button type="button" class="primary-button" @onclick="OpenCreateItemModal">+ Tambah Item BOM</button>
+        </div>
+    </div>
+
+    <div class="bom-layout">
+        <section class="product-list-card">
+            <div class="list-toolbar">
+                <input value="@_searchText" @oninput="OnSearchChanged" placeholder="Cari produk atau kode" />
+
+                <select value="@_coverageFilter" @onchange="OnCoverageChangedAsync">
+                    <option value="All">Semua</option>
+                    <option value="Configured">Sudah ada BOM</option>
+                    <option value="Missing">Belum ada BOM</option>
+                </select>
+            </div>
+
+            <div class="coverage-stats">
+                <article>
+                    <small>Terkonfigurasi</small>
+                    <strong>@(_result?.ConfiguredCount ?? 0)</strong>
+                </article>
+                <article>
+                    <small>Belum lengkap</small>
+                    <strong>@(_result?.MissingCount ?? 0)</strong>
+                </article>
+                <article>
+                    <small>Coverage</small>
+                    <strong>@(_result?.CoveragePercentage ?? 0)%</strong>
+                </article>
+            </div>
+
+            @if (_isLoading && _result is null)
+            {
+                <div class="list-skeleton"></div>
+            }
+            else
+            {
+                <div class="product-list">
+                    @foreach (var item in _result?.Items ?? Array.Empty<BomProductListItem>())
+                    {
+                        <button type="button" class="product-item @GetProductItemClass(item)" @onclick="() => SelectProductAsync(item.ProductId)">
+                            <div>
+                                <span>@item.ProductCode</span>
+                                <strong>@item.ProductName</strong>
+                                <small>@item.Category</small>
+                            </div>
+
+                            <div class="product-meta">
+                                <em>@item.MaterialCount bahan</em>
+                                <small>@FormatCurrency(item.DirectCostPerUnit)/unit</small>
+                            </div>
+                        </button>
+                    }
+                </div>
+            }
+        </section>
+
+        <section class="bom-detail-card">
+            @if (_detail is null)
+            {
+                <div class="empty-state">
+                    <span>Detail resep</span>
+                    <h2>Pilih produk dari daftar untuk mulai mengelola BOM.</h2>
+                </div>
+            }
+            else
+            {
+                <div class="detail-head">
+                    <div>
+                        <span>@_detail.Product.Code</span>
+                        <h2>@_detail.Product.Name</h2>
+                        <small>@_detail.Product.Category</small>
+                    </div>
+
+                    <div class="head-actions">
+                        <span class="badge @(_detail.Items.Count > 0 ? "active" : "inactive")">@(_detail.Items.Count > 0 ? "BOM Aktif" : "Perlu BOM")</span>
+                        <button type="button" class="ghost-button" @onclick="OpenCreateItemModal">Tambah Bahan</button>
+                    </div>
+                </div>
+
+                <EditForm Model="_recipeForm" OnValidSubmit="SaveRecipeMetaAsync">
+                    <DataAnnotationsValidator />
+
+                    <div class="recipe-grid">
+                        <label>
+                            <span>Output per batch</span>
+                            <InputNumber @bind-Value="_recipeForm.BatchOutputQuantity" />
+                        </label>
+                        <label>
+                            <span>Yield %</span>
+                            <InputNumber @bind-Value="_recipeForm.YieldPercentage" />
+                        </label>
+                        <label class="full">
+                            <span>Catatan resep</span>
+                            <InputTextArea @bind-Value="_recipeForm.Notes" />
+                        </label>
+                    </div>
+
+                    <div class="recipe-actions">
+                        <button type="submit" class="primary-button">Simpan Metadata Resep</button>
+                        <small>@_statusMessage</small>
+                    </div>
+                </EditForm>
+
+                <div class="summary-grid">
+                    <article>
+                        <small>Biaya langsung / unit</small>
+                        <strong>@FormatCurrency(_detail.DirectMaterialCostPerUnit)</strong>
+                    </article>
+                    <article>
+                        <small>Biaya langsung / batch</small>
+                        <strong>@FormatCurrency(_detail.DirectMaterialCostPerBatch)</strong>
+                    </article>
+                    <article>
+                        <small>Riwayat produksi</small>
+                        <strong>@(_detail.HasProduction ? "Sudah ada" : "Belum ada")</strong>
+                    </article>
+                </div>
+
+                <div class="alert-list">
+                    @foreach (var alert in _detail.Alerts)
+                    {
+                        <article>@alert</article>
+                    }
+                </div>
+
+                <div class="items-head">
+                    <div>
+                        <span>Komposisi bahan</span>
+                        <h3>Item resep per produk</h3>
+                    </div>
+                </div>
+
+                <div class="items-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bahan</th>
+                                <th>Qty / Unit</th>
+                                <th>Harga</th>
+                                <th>Biaya</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (_detail.Items.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="5" class="empty-row">Produk ini belum memiliki item BOM.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var item in _detail.Items)
+                                {
+                                    <tr class="@GetItemRowClass(item)">
+                                        <td>
+                                            <strong>@item.MaterialName</strong>
+                                            <small>@item.MaterialCode • @(item.Brand ?? "-")</small>
+                                        </td>
+                                        <td>@item.QuantityPerUnit.ToString("N2") @item.Unit</td>
+                                        <td>@FormatCurrency(item.UnitPrice)</td>
+                                        <td>@FormatCurrency(item.LineCostPerUnit)</td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button type="button" class="icon-button" @onclick="() => OpenEditItemModal(item)">Edit</button>
+                                                <button type="button" class="icon-button danger" @onclick="() => AskDeleteItem(item.MaterialId, item.MaterialName)">Hapus</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+</section>
+
+@if (_showItemModal && _detail is not null)
+{
+    <div class="overlay" @onclick="CloseItemModal">
+        <div class="modal-card" @onclick:stopPropagation="true">
+            <div class="modal-head">
+                <div>
+                    <span>@(_editingMaterialId is null ? "Tambah item" : "Edit item")</span>
+                    <h2>@(_editingMaterialId is null ? $"Tambah bahan ke {_detail.Product.Name}" : "Perbarui komposisi bahan")</h2>
+                </div>
+                <button type="button" class="close-button" @onclick="CloseItemModal">x</button>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_itemMessage))
+            {
+                <div class="form-message">@_itemMessage</div>
+            }
+
+            <EditForm Model="_itemForm" OnValidSubmit="SaveItemAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="item-form-grid">
+                    <label>
+                        <span>Bahan Baku</span>
+                        <select @bind="_selectedMaterialIdText" disabled="@(_editingMaterialId is not null)">
+                            <option value="">Pilih bahan</option>
+                            @foreach (var material in _availableMaterials)
+                            {
+                                <option value="@material.Id.ToString()">@material.Code - @material.Name</option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        <span>Jumlah per unit</span>
+                        <InputNumber @bind-Value="_itemForm.QuantityPerUnit" />
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="ghost-button" @onclick="CloseItemModal">Batal</button>
+                    <button type="submit" class="primary-button">@(_editingMaterialId is null ? "Simpan Item" : "Update Item")</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@if (_pendingDeleteMaterialId is not null && _detail is not null)
+{
+    <div class="overlay" @onclick="CancelDeleteItem">
+        <div class="confirm-card" @onclick:stopPropagation="true">
+            <span>Konfirmasi</span>
+            <h2>Hapus item BOM?</h2>
+            <p>@_pendingDeleteMaterialName akan dihapus dari resep @_detail.Product.Name.</p>
+
+            <div class="modal-actions">
+                <button type="button" class="ghost-button" @onclick="CancelDeleteItem">Batal</button>
+                <button type="button" class="danger-button" @onclick="DeleteItemAsync">Ya, hapus</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private BomQueryResult? _result;
+    private BomDetail? _detail;
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat data...";
+    private string _coverageText = "Coverage 0%";
+    private string _searchText = string.Empty;
+    private BomCoverageFilter _coverageFilter = BomCoverageFilter.All;
+    private CancellationTokenSource? _searchDebounce;
+
+    private RecipeMetaRequest _recipeForm = new();
+    private bool _showItemModal;
+    private Guid? _editingMaterialId;
+    private BomItemRequest _itemForm = new();
+    private string _selectedMaterialIdText = string.Empty;
+    private string _itemMessage = string.Empty;
+    private IReadOnlyList<RawMaterialListItem> _availableMaterials = Array.Empty<RawMaterialListItem>();
+
+    private Guid? _pendingDeleteMaterialId;
+    private string _pendingDeleteMaterialName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync(bool keepSelection = true)
+    {
+        _isLoading = true;
+        _result = await BomCatalogService.QueryAsync(new BomQuery(_searchText, _coverageFilter));
+        _coverageText = $"Coverage {_result.CoveragePercentage}%";
+        _isLoading = false;
+
+        if (_result.Items.Count == 0)
+        {
+            _detail = null;
+            return;
+        }
+
+        if (!keepSelection || _detail is null || !_result.Items.Any(item => item.ProductId == _detail.Product.Id))
+        {
+            await SelectProductAsync(_result.Items[0].ProductId);
+        }
+    }
+
+    private async Task SelectProductAsync(Guid productId)
+    {
+        _detail = await BomCatalogService.GetDetailAsync(productId);
+        if (_detail is not null)
+        {
+            _recipeForm = new RecipeMetaRequest
+            {
+                BatchOutputQuantity = _detail.Recipe.BatchOutputQuantity,
+                YieldPercentage = _detail.Recipe.YieldPercentage,
+                Notes = _detail.Recipe.Notes
+            };
+        }
+        StateHasChanged();
+    }
+
+    private async Task OnSearchChanged(ChangeEventArgs args)
+    {
+        _searchText = args.Value?.ToString() ?? string.Empty;
+        _searchDebounce?.Cancel();
+        _searchDebounce?.Dispose();
+        _searchDebounce = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(300, _searchDebounce.Token);
+            await LoadAsync(false);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    private async Task OnCoverageChangedAsync(ChangeEventArgs args)
+    {
+        if (Enum.TryParse<BomCoverageFilter>(args.Value?.ToString(), true, out var parsed))
+        {
+            _coverageFilter = parsed;
+        }
+
+        await LoadAsync(false);
+    }
+
+    private async Task SaveRecipeMetaAsync()
+    {
+        if (_detail is null)
+        {
+            return;
+        }
+
+        var result = await BomCatalogService.SaveRecipeMetaAsync(_detail.Product.Id, _recipeForm);
+        _statusMessage = result.Message;
+        if (result.Success)
+        {
+            await SelectProductAsync(_detail.Product.Id);
+            await LoadAsync();
+        }
+    }
+
+    private async Task OpenCreateItemModal()
+    {
+        if (_detail is null)
+        {
+            return;
+        }
+
+        _editingMaterialId = null;
+        _itemMessage = string.Empty;
+        _itemForm = new BomItemRequest();
+        _selectedMaterialIdText = string.Empty;
+        await LoadAvailableMaterialsAsync();
+        _showItemModal = true;
+    }
+
+    private async Task OpenEditItemModal(BomItemView item)
+    {
+        _editingMaterialId = item.MaterialId;
+        _itemMessage = string.Empty;
+        _itemForm = new BomItemRequest
+        {
+            MaterialId = item.MaterialId,
+            QuantityPerUnit = item.QuantityPerUnit
+        };
+        _selectedMaterialIdText = item.MaterialId.ToString();
+        await LoadAvailableMaterialsAsync();
+        _showItemModal = true;
+    }
+
+    private async Task LoadAvailableMaterialsAsync()
+    {
+        var result = await RawMaterialCatalogService.QueryAsync(new RawMaterialQuery(PageSize: 200));
+        _availableMaterials = result.Items.Where(item => item.Status == MaterialStatus.Active).OrderBy(item => item.Name).ToArray();
+    }
+
+    private void CloseItemModal()
+    {
+        _showItemModal = false;
+    }
+
+    private async Task SaveItemAsync()
+    {
+        if (_detail is null)
+        {
+            return;
+        }
+
+        if (Guid.TryParse(_selectedMaterialIdText, out var materialId))
+        {
+            _itemForm.MaterialId = materialId;
+        }
+
+        var result = await BomCatalogService.UpsertItemAsync(_detail.Product.Id, _itemForm);
+        _itemMessage = result.Message;
+        if (!result.Success)
+        {
+            return;
+        }
+
+        _showItemModal = false;
+        await SelectProductAsync(_detail.Product.Id);
+        await LoadAsync();
+    }
+
+    private void AskDeleteItem(Guid materialId, string materialName)
+    {
+        _pendingDeleteMaterialId = materialId;
+        _pendingDeleteMaterialName = materialName;
+    }
+
+    private void CancelDeleteItem()
+    {
+        _pendingDeleteMaterialId = null;
+        _pendingDeleteMaterialName = string.Empty;
+    }
+
+    private async Task DeleteItemAsync()
+    {
+        if (_detail is null || _pendingDeleteMaterialId is null)
+        {
+            return;
+        }
+
+        var result = await BomCatalogService.RemoveItemAsync(_detail.Product.Id, _pendingDeleteMaterialId.Value);
+        _statusMessage = result.Message;
+        CancelDeleteItem();
+        await SelectProductAsync(_detail.Product.Id);
+        await LoadAsync();
+    }
+
+    private string GetProductItemClass(BomProductListItem item)
+    {
+        var classes = new List<string>();
+        if (_detail?.Product.Id == item.ProductId)
+        {
+            classes.Add("selected");
+        }
+        if (!item.HasRecipe || item.WarningCount > 0)
+        {
+            classes.Add("warn");
+        }
+        return string.Join(" ", classes);
+    }
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    private static string GetItemRowClass(BomItemView item) => string.Empty;
+
+    public void Dispose()
+    {
+        _searchDebounce?.Cancel();
+        _searchDebounce?.Dispose();
+    }
+}

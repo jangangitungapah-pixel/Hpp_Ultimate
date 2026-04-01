@@ -1,30 +1,77 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Hpp_Ultimate</a>
+<div class="nav-shell">
+    <div class="nav-head">
+        <a class="brand" href="">
+            <span class="brand-mark">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+            <span class="brand-copy">
+                <strong>HPP Ultimate</strong>
+                <small>Costing workspace</small>
+            </span>
+        </a>
+
+        <label for="nav-toggle" class="nav-toggle-button">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+    </div>
+
+    <input id="nav-toggle" type="checkbox" title="Navigation menu" class="nav-toggle" />
+
+    <div class="nav-scrollable" onclick="document.getElementById('nav-toggle').checked = false">
+        <section class="nav-group">
+            <span class="nav-group-label">Workspace</span>
+
+            @foreach (var item in CoreItems)
+            {
+                <NavLink class="nav-link" href="@item.Href" Match="@item.Match">
+                    <span class="nav-icon">@item.Icon</span>
+                    <strong>@item.Title</strong>
+                </NavLink>
+            }
+        </section>
+
+        <section class="nav-group">
+            <span class="nav-group-label">System</span>
+
+            @foreach (var item in SupportItems)
+            {
+                <NavLink class="nav-link" href="@item.Href" Match="@item.Match">
+                    <span class="nav-icon">@item.Icon</span>
+                    <strong>@item.Title</strong>
+                </NavLink>
+            }
+        </section>
+
+        <div class="nav-footer">
+            <span class="nav-group-label">Today</span>
+            <strong>8 batch aktif</strong>
+            <small>Margin target 24.5%</small>
+        </div>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+@code {
+    private static readonly NavItem[] CoreItems =
+    [
+        new("/", "DS", "Dashboard", NavLinkMatch.All),
+        new("/produk", "KM", "Katalog Material"),
+        new("/bom", "BM", "Resep / BOM"),
+        new("/biaya-produksi", "BP", "Biaya Produksi"),
+        new("/kalkulator-hpp", "HP", "Kalkulator HPP"),
+        new("/harga-jual", "HJ", "Harga Jual")
+    ];
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+    private static readonly NavItem[] SupportItems =
+    [
+        new("/laporan", "LP", "Laporan"),
+        new("/riwayat-produksi", "RT", "Riwayat Produksi"),
+        new("/pengaturan", "PG", "Pengaturan"),
+        new("/login", "US", "Login / User")
+    ];
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
+    private sealed record NavItem(string Href, string Icon, string Title, NavLinkMatch Match = NavLinkMatch.Prefix);
+}

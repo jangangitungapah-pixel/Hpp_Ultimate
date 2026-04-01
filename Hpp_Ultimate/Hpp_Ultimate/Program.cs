@@ -1,5 +1,6 @@
 using Hpp_Ultimate.Client.Pages;
 using Hpp_Ultimate.Components;
+using Hpp_Ultimate.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton(sp =>
+{
+    var environment = sp.GetRequiredService<IHostEnvironment>();
+    var databasePath = Path.Combine(environment.ContentRootPath, "App_Data", "hpp-ultimate.db");
+    return new SeededBusinessDataStore(databasePath);
+});
+builder.Services.AddSingleton<IBusinessDataStore>(sp => sp.GetRequiredService<SeededBusinessDataStore>());
+builder.Services.AddScoped<DashboardState>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<ProductCatalogService>();
+builder.Services.AddScoped<RawMaterialCatalogService>();
+builder.Services.AddScoped<BomCatalogService>();
+builder.Services.AddScoped<ProductionCostService>();
+builder.Services.AddScoped<HppCalculatorService>();
+builder.Services.AddScoped<SellingPriceService>();
+builder.Services.AddScoped<ReportService>();
+builder.Services.AddScoped<ProductionHistoryService>();
+builder.Services.AddScoped<SettingsService>();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
@@ -27,6 +48,17 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+app.MapDashboardApi();
+app.MapProductApi();
+app.MapRawMaterialApi();
+app.MapBomApi();
+app.MapProductionCostApi();
+app.MapHppCalculatorApi();
+app.MapSellingPriceApi();
+app.MapReportApi();
+app.MapProductionHistoryApi();
+app.MapSettingsApi();
+app.MapAuthApi();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()

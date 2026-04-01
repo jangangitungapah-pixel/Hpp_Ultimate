@@ -1,23 +1,107 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="shell-background">
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+    <div class="ambient ambient-c"></div>
+</div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+@if (IsLoginPage)
+{
+    <div class="auth-shell">
+        <div class="auth-shell-brand">
+            <a href="/" class="auth-shell-link">
+                <span class="auth-shell-mark">+</span>
+                <span>
+                    <strong>HPP Ultimate</strong>
+                    <small>Workspace costing dan profit.</small>
+                </span>
+            </a>
         </div>
 
-        <article class="content px-4">
+        <main class="auth-main">
             @Body
-        </article>
-    </main>
-</div>
+        </main>
+    </div>
+}
+else
+{
+    <div class="app-shell">
+        <aside class="app-sidebar">
+            <NavMenu />
+        </aside>
+
+        <main class="app-main">
+            <header class="app-topbar">
+                <div class="topbar-copy">
+                    <span class="topbar-label">@CurrentSection</span>
+                    <strong>@CurrentHeadline</strong>
+                </div>
+
+                <div class="topbar-tools">
+                    <label class="topbar-search" aria-label="Cari">
+                        <span class="search-shortcut">Ctrl K</span>
+                        <input type="text" placeholder="Cari modul atau batch" />
+                    </label>
+
+                    <button type="button" class="topbar-button solid">Produksi Baru</button>
+                </div>
+            </header>
+
+            <article class="app-content">
+                @Body
+            </article>
+        </main>
+    </div>
+}
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
+    <span class="dismiss">x</span>
 </div>
+
+@code {
+    private bool IsLoginPage => CurrentPath.Equals("login", StringComparison.OrdinalIgnoreCase);
+
+    private string CurrentPath
+    {
+        get
+        {
+            var path = Navigation.ToBaseRelativePath(Navigation.Uri);
+            return string.IsNullOrWhiteSpace(path) ? "/" : path.Trim('/');
+        }
+    }
+
+    private string CurrentSection => CurrentPath switch
+    {
+        "/" => "Dashboard",
+        "dashboard" => "Dashboard",
+        "produk" => "Produk",
+        "bahan-baku" => "Bahan Baku",
+        "bom" => "Resep / BOM",
+        "biaya-produksi" => "Biaya Produksi",
+        "kalkulator-hpp" => "Kalkulator HPP",
+        "harga-jual" => "Harga Jual",
+        "laporan" => "Laporan",
+        "riwayat-produksi" => "Riwayat Produksi",
+        "pengaturan" => "Pengaturan",
+        _ => "Workspace"
+    };
+
+    private string CurrentHeadline => CurrentPath switch
+    {
+        "/" or "dashboard" => "Ringkasan biaya, margin, dan performa usaha",
+        "produk" => "Kelola katalog produk dan struktur SKU",
+        "bahan-baku" => "Pantau harga, supplier, dan stok bahan",
+        "bom" => "Bangun resep produksi yang akurat",
+        "biaya-produksi" => "Catat semua biaya per periode produksi",
+        "kalkulator-hpp" => "Hitung biaya per batch dan per unit",
+        "harga-jual" => "Tentukan pricing dari target margin",
+        "laporan" => "Siapkan laporan yang siap dibagikan",
+        "riwayat-produksi" => "Bandingkan batch dan deviasi biaya",
+        "pengaturan" => "Atur preferensi dasar bisnis",
+        _ => "Kelola operasi HPP dalam satu dashboard"
+    };
+}

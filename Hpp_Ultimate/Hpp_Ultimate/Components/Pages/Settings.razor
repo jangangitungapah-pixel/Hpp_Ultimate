@@ -1,0 +1,280 @@
+@page "/pengaturan"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject SettingsService SettingsService
+@inject IBusinessDataStore DataStore
+
+<PageTitle>Pengaturan | HPP Ultimate</PageTitle>
+
+<section class="settings-page">
+    <div class="settings-toolbar">
+        <div>
+            <span>System preferences</span>
+            <h1>Atur identitas usaha, default kalkulasi, dan aturan pajak aplikasi.</h1>
+        </div>
+
+        <div class="toolbar-actions">
+            <div class="status-chip">@_statusMessage</div>
+            <button type="button" class="ghost-button" @onclick="ReloadAsync">Reload</button>
+        </div>
+    </div>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="skeleton-card"></div>
+    }
+    else if (_snapshot is not null)
+    {
+        <div class="summary-grid">
+            <article>
+                <small>Mata uang</small>
+                <strong>@_snapshot.Settings.CurrencyCode</strong>
+            </article>
+            <article>
+                <small>Satuan produk</small>
+                <strong>@_snapshot.Settings.DefaultProductUnit</strong>
+            </article>
+            <article>
+                <small>Satuan bahan</small>
+                <strong>@_snapshot.Settings.DefaultMaterialUnit</strong>
+            </article>
+            <article>
+                <small>Pajak</small>
+                <strong>@_snapshot.Settings.TaxPercent.ToString("0.#")%</strong>
+            </article>
+        </div>
+
+        <div class="settings-layout">
+            <section class="form-card">
+                <div class="section-head">
+                    <div>
+                        <span>Form pengaturan</span>
+                        <h2>Perbarui konfigurasi dasar bisnis</h2>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(_formMessage))
+                {
+                    <div class="form-message">@_formMessage</div>
+                }
+
+                <EditForm Model="_formModel" OnValidSubmit="SaveAsync">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-grid">
+                        <label>
+                            <span>Nama Usaha</span>
+                            <InputText @bind-Value="_formModel.BusinessName" />
+                            <ValidationMessage For="@(() => _formModel.BusinessName)" />
+                        </label>
+
+                        <label>
+                            <span>Legal Entity</span>
+                            <InputText @bind-Value="_formModel.LegalName" />
+                        </label>
+
+                        <label>
+                            <span>Telepon</span>
+                            <InputText @bind-Value="_formModel.Phone" />
+                        </label>
+
+                        <label>
+                            <span>Email</span>
+                            <InputText @bind-Value="_formModel.Email" />
+                            <ValidationMessage For="@(() => _formModel.Email)" />
+                        </label>
+
+                        <label class="full">
+                            <span>Alamat</span>
+                            <InputTextArea @bind-Value="_formModel.Address" />
+                        </label>
+
+                        <label>
+                            <span>Mata Uang</span>
+                            <select @bind="_formModel.CurrencyCode">
+                                @foreach (var currency in _snapshot.Currencies)
+                                {
+                                    <option value="@currency">@currency</option>
+                                }
+                            </select>
+                        </label>
+
+                        <label>
+                            <span>Timezone</span>
+                            <InputText @bind-Value="_formModel.Timezone" />
+                        </label>
+
+                        <label>
+                            <span>Default Satuan Produk</span>
+                            <select @bind="_formModel.DefaultProductUnit">
+                                @foreach (var unit in _snapshot.ProductUnits)
+                                {
+                                    <option value="@unit">@unit</option>
+                                }
+                            </select>
+                        </label>
+
+                        <label>
+                            <span>Default Satuan Bahan</span>
+                            <select @bind="_formModel.DefaultMaterialUnit">
+                                @foreach (var unit in _snapshot.MaterialUnits)
+                                {
+                                    <option value="@unit">@unit</option>
+                                }
+                            </select>
+                        </label>
+
+                        <label>
+                            <span>Pembulatan Harga</span>
+                            <InputNumber @bind-Value="_formModel.DefaultPriceRounding" />
+                            <ValidationMessage For="@(() => _formModel.DefaultPriceRounding)" />
+                        </label>
+
+                        <label>
+                            <span>Pajak %</span>
+                            <InputNumber @bind-Value="_formModel.TaxPercent" />
+                            <ValidationMessage For="@(() => _formModel.TaxPercent)" />
+                        </label>
+
+                        <label class="toggle-row">
+                            <span>Harga Sudah Include Pajak</span>
+                            <InputCheckbox @bind-Value="_formModel.TaxIncluded" />
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="ghost-button" @onclick="ResetForm">Reset</button>
+                        <button type="submit" class="primary-button">Simpan Pengaturan</button>
+                    </div>
+                </EditForm>
+            </section>
+
+            <aside class="side-stack">
+                <section class="preview-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Preview</span>
+                            <h2>Ringkasan profil dan default aktif</h2>
+                        </div>
+                    </div>
+
+                    <div class="preview-grid">
+                        <article>
+                            <small>Brand</small>
+                            <strong>@_snapshot.Settings.BusinessName</strong>
+                        </article>
+                        <article>
+                            <small>Kontak</small>
+                            <strong>@(string.IsNullOrWhiteSpace(_snapshot.Settings.Phone) ? "-" : _snapshot.Settings.Phone)</strong>
+                        </article>
+                        <article>
+                            <small>Email</small>
+                            <strong>@(string.IsNullOrWhiteSpace(_snapshot.Settings.Email) ? "-" : _snapshot.Settings.Email)</strong>
+                        </article>
+                        <article>
+                            <small>Pembulatan</small>
+                            <strong>@_snapshot.Settings.DefaultPriceRounding.ToString("N0")</strong>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="notes-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Catatan sistem</span>
+                            <h2>Dampak pengaturan pada aplikasi</h2>
+                        </div>
+                    </div>
+
+                    <div class="note-list">
+                        @foreach (var note in _snapshot.Notes)
+                        {
+                            <article>@note</article>
+                        }
+                    </div>
+                </section>
+            </aside>
+        </div>
+    }
+</section>
+
+@code {
+    private BusinessSettingsSnapshot? _snapshot;
+    private BusinessSettingsRequest _formModel = new();
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat...";
+    private string _formMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataStore.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        _snapshot = await SettingsService.GetSnapshotAsync();
+        _statusMessage = $"Update {_snapshot.Settings.UpdatedAt:dd MMM yyyy HH:mm}";
+        SyncForm();
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ReloadAsync()
+        => await LoadAsync();
+
+    private async Task SaveAsync()
+    {
+        var result = await SettingsService.SaveAsync(_formModel);
+        _formMessage = result.Message;
+        if (!result.Success)
+        {
+            return;
+        }
+
+        await LoadAsync();
+    }
+
+    private void ResetForm()
+    {
+        SyncForm();
+        _formMessage = "Form dikembalikan ke nilai yang tersimpan.";
+    }
+
+    private void SyncForm()
+    {
+        if (_snapshot is null)
+        {
+            return;
+        }
+
+        _formModel = new BusinessSettingsRequest
+        {
+            BusinessName = _snapshot.Settings.BusinessName,
+            LegalName = _snapshot.Settings.LegalName,
+            Phone = _snapshot.Settings.Phone,
+            Email = _snapshot.Settings.Email,
+            Address = _snapshot.Settings.Address,
+            CurrencyCode = _snapshot.Settings.CurrencyCode,
+            DefaultProductUnit = _snapshot.Settings.DefaultProductUnit,
+            DefaultMaterialUnit = _snapshot.Settings.DefaultMaterialUnit,
+            DefaultPriceRounding = _snapshot.Settings.DefaultPriceRounding,
+            TaxPercent = _snapshot.Settings.TaxPercent,
+            TaxIncluded = _snapshot.Settings.TaxIncluded,
+            Timezone = _snapshot.Settings.Timezone
+        };
+    }
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(async () => await LoadAsync());
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        DataStore.Changed -= HandleStoreChanged;
+        return ValueTask.CompletedTask;
+    }
+}
