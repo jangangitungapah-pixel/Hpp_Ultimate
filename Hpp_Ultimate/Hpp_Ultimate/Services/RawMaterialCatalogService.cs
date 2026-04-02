@@ -338,11 +338,16 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
             return null;
         }
 
+        var linkedRecipes = store.Recipes
+            .Where(recipe => recipe.Groups.Any(group => group.Materials.Any(item => item.MaterialId == id)))
+            .Select(recipe => recipe.Name);
+
         var bomProducts = store.BomItems
             .Where(item => item.MaterialId == id)
             .Select(item => store.Products.FirstOrDefault(product => product.Id == item.ProductId)?.Name)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Cast<string>()
+            .Concat(linkedRecipes)
             .Distinct()
             .Take(8)
             .ToArray();

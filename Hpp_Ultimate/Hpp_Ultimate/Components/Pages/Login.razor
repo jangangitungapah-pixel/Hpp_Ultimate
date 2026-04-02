@@ -1,228 +1,65 @@
 @page "/login"
 @rendermode InteractiveServer
-@implements IDisposable
 @inject AuthService AuthService
-@inject IBusinessDataStore DataStore
+@inject NavigationManager Navigation
 
-<PageTitle>Login / User | HPP Ultimate</PageTitle>
+<PageTitle>Login | HPP Ultimate</PageTitle>
 
 <section class="login-page">
-    <div class="login-showcase">
-        <span class="login-eyebrow">Secure Access</span>
-        <h1>Masuk ke workspace HPP dan kelola akses tim dalam satu layar.</h1>
-        <p>Halaman ini sekarang hidup: form login membaca user nyata dari store aplikasi, sesi aktif ditampilkan langsung, dan admin bisa tambah atau edit akun tim.</p>
-
-        <div class="showcase-grid">
-            <article class="showcase-card accent">
-                <span>Active Session</span>
-                <strong>@(_snapshot?.Session?.FullName ?? "Belum login")</strong>
-                <small>@(_snapshot?.Session is null ? "Masuk dengan akun admin atau staff." : $"{_snapshot.Session.Role} sejak {_snapshot.Session.SignedInAt:HH:mm}")</small>
-            </article>
-
-            <article class="showcase-card">
-                <span>Team Access</span>
-                <strong>@(_snapshot?.ActiveUsers ?? 0) user aktif</strong>
-                <small>@(_snapshot?.AdminCount ?? 0) admin dan @(_snapshot?.StaffCount ?? 0) staff terdaftar.</small>
-            </article>
-        </div>
-
-        <div class="showcase-list">
-            @foreach (var insight in _snapshot?.Insights ?? Array.Empty<string>())
-            {
-                <div><span></span><small>@insight</small></div>
-            }
-        </div>
+    <div class="login-brand">
+        <span class="brand-eyebrow">HPP Ultimate</span>
+        <h1>Masuk ke workspace material.</h1>
+        <p>Gunakan email atau username yang tersimpan untuk melanjutkan ke katalog material.</p>
     </div>
 
-    <div class="login-panel">
-        <section class="auth-card">
-            <div class="auth-card-head">
-                <span>Sign In</span>
-                <h2>Masuk ke akun kamu</h2>
-                <p>@((_snapshot?.TotalUsers ?? 0) == 0 ? "Belum ada akun. Buat admin pertama dulu dari panel user." : "Gunakan email atau username dari daftar user aktif.")</p>
-            </div>
+    <section class="login-card">
+        <div class="login-card-head">
+            <span>Sign In</span>
+            <h2>Masuk ke akun kamu</h2>
+        </div>
 
-            @if (!string.IsNullOrWhiteSpace(_loginMessage))
-            {
-                <div class="form-message">@_loginMessage</div>
-            }
+        @if (!string.IsNullOrWhiteSpace(_loginMessage))
+        {
+            <div class="form-message">@_loginMessage</div>
+        }
 
-            <EditForm Model="_loginForm" OnValidSubmit="SignInAsync" class="auth-form">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
+        <EditForm Model="_loginForm" OnValidSubmit="SignInAsync" class="login-form">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-                <label>
-                    <span>Email / Username</span>
-                    <InputText @bind-Value="_loginForm.Identity" />
-                    <ValidationMessage For="@(() => _loginForm.Identity)" />
-                </label>
+            <label>
+                <span>Email / Username</span>
+                <InputText @bind-Value="_loginForm.Identity" placeholder="Masukkan email atau username" />
+                <ValidationMessage For="@(() => _loginForm.Identity)" />
+            </label>
 
-                <label>
-                    <span>Password</span>
-                    <InputText @bind-Value="_loginForm.Password" type="password" />
-                    <ValidationMessage For="@(() => _loginForm.Password)" />
-                </label>
+            <label>
+                <span>Password</span>
+                <InputText @bind-Value="_loginForm.Password" type="password" placeholder="Masukkan password" />
+                <ValidationMessage For="@(() => _loginForm.Password)" />
+            </label>
 
-                <div class="auth-row">
-                    <label class="check-row">
-                        <InputCheckbox @bind-Value="_loginForm.RememberMe" />
-                        <small>Ingat sesi ini</small>
-                    </label>
+            <label class="remember-row">
+                <InputCheckbox @bind-Value="_loginForm.RememberMe" />
+                <small>Ingat sesi ini</small>
+            </label>
 
-                    @if (_snapshot?.Session is not null)
-                    {
-                        <button type="button" class="link-button" @onclick="LogoutAsync">Logout</button>
-                    }
-                </div>
-
-                <button type="submit" class="auth-button">Masuk</button>
-            </EditForm>
-        </section>
-
-        <section class="team-card">
-            <div class="team-head">
-                <div>
-                    <span>Team Access</span>
-                    <h3>Ringkasan user</h3>
-                </div>
-
-                <div class="team-actions">
-                    <strong>@(_snapshot?.TotalUsers ?? 0) akun</strong>
-                    <button type="button" class="ghost-inline" @onclick="OpenCreateModal">+ User</button>
-                </div>
-            </div>
-
-            <div class="team-grid">
-                @if ((_snapshot?.Users.Count ?? 0) == 0)
-                {
-                    <article>
-                        <div class="user-head">
-                            <div>
-                                <strong>Belum ada user</strong>
-                                <small>Buat admin pertama untuk mulai memakai aplikasi.</small>
-                            </div>
-                        </div>
-
-                        <small>Mulai dari tombol + User di kanan atas panel ini.</small>
-                    </article>
-                }
-                else
-                {
-                    @foreach (var user in _snapshot?.Users ?? Array.Empty<UserListItem>())
-                    {
-                        <article class="@(user.Status == UserStatus.Inactive ? "inactive-user" : null)">
-                            <div class="user-head">
-                                <div>
-                                    <strong>@user.FullName</strong>
-                                    <small>@user.Email</small>
-                                </div>
-
-                                <span class="role-badge @(user.Role == UserRole.Admin ? "admin" : "staff")">@user.Role</span>
-                            </div>
-
-                            <small>@user.Username</small>
-                            <small>@(user.LastLoginAt is null ? "Belum pernah login" : $"Login terakhir {user.LastLoginAt:dd MMM HH:mm}")</small>
-
-                            <div class="user-actions">
-                                <button type="button" class="ghost-inline" @onclick="() => OpenEditModal(user.Id)">Edit</button>
-                                <button type="button" class="ghost-inline danger" @onclick="() => DeactivateAsync(user.Id)">Nonaktifkan</button>
-                            </div>
-                        </article>
-                    }
-                }
-            </div>
-        </section>
-    </div>
+            <button type="submit" class="login-button">Masuk</button>
+        </EditForm>
+    </section>
 </section>
 
-@if (_showFormModal)
-{
-    <div class="overlay" @onclick="CloseFormModal">
-        <div class="modal-card" @onclick:stopPropagation="true">
-            <div class="modal-head">
-                <div>
-                    <span>@(_editingUserId is null ? "Tambah user" : "Edit user")</span>
-                    <h2>@(_editingUserId is null ? "Buat akun tim baru" : "Perbarui akses user")</h2>
-                </div>
-
-                <button type="button" class="close-button" @onclick="CloseFormModal">x</button>
-            </div>
-
-            @if (!string.IsNullOrWhiteSpace(_formMessage))
-            {
-                <div class="form-message">@_formMessage</div>
-            }
-
-            <EditForm Model="_userForm" OnValidSubmit="SaveUserAsync">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-
-                <div class="user-form-grid">
-                    <label>
-                        <span>Nama Lengkap</span>
-                        <InputText @bind-Value="_userForm.FullName" />
-                    </label>
-
-                    <label>
-                        <span>Email</span>
-                        <InputText @bind-Value="_userForm.Email" />
-                    </label>
-
-                    <label>
-                        <span>Username</span>
-                        <InputText @bind-Value="_userForm.Username" />
-                    </label>
-
-                    <label>
-                        <span>Password</span>
-                        <InputText @bind-Value="_userForm.Password" type="password" />
-                    </label>
-
-                    <label>
-                        <span>Role</span>
-                        <select @bind="_userForm.Role">
-                            <option value="@UserRole.Admin">Admin</option>
-                            <option value="@UserRole.Staff">Staff</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        <span>Status</span>
-                        <select @bind="_userForm.Status">
-                            <option value="@UserStatus.Active">Aktif</option>
-                            <option value="@UserStatus.Inactive">Nonaktif</option>
-                        </select>
-                    </label>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="ghost-button" @onclick="CloseFormModal">Batal</button>
-                    <button type="submit" class="auth-button">@(_editingUserId is null ? "Simpan User" : "Update User")</button>
-                </div>
-            </EditForm>
-        </div>
-    </div>
-}
-
 @code {
-    private AuthSnapshot? _snapshot;
     private LoginRequest _loginForm = new();
-    private UserUpsertRequest _userForm = new();
-    private bool _showFormModal;
-    private Guid? _editingUserId;
     private string _loginMessage = string.Empty;
-    private string _formMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        DataStore.Changed += HandleStoreChanged;
-        await LoadAsync();
-    }
-
-    private async Task LoadAsync()
-    {
-        _snapshot = await AuthService.GetSnapshotAsync();
-        StateHasChanged();
+        var snapshot = await AuthService.GetSnapshotAsync();
+        if (snapshot.Session is not null)
+        {
+            Navigation.NavigateTo("/produk", replace: true);
+        }
     }
 
     private async Task SignInAsync()
@@ -235,86 +72,6 @@
         }
 
         _loginForm = new LoginRequest();
-        await LoadAsync();
-    }
-
-    private async Task LogoutAsync()
-    {
-        var result = await AuthService.LogoutAsync();
-        _loginMessage = result.Message;
-        await LoadAsync();
-    }
-
-    private void OpenCreateModal()
-    {
-        _editingUserId = null;
-        _formMessage = string.Empty;
-        _userForm = new UserUpsertRequest
-        {
-            Role = UserRole.Staff,
-            Status = UserStatus.Active
-        };
-        _showFormModal = true;
-    }
-
-    private void OpenEditModal(Guid id)
-    {
-        var user = _snapshot?.Users.FirstOrDefault(item => item.Id == id);
-        if (user is null)
-        {
-            return;
-        }
-
-        _editingUserId = id;
-        _formMessage = string.Empty;
-        _userForm = new UserUpsertRequest
-        {
-            Id = user.Id,
-            FullName = user.FullName,
-            Email = user.Email,
-            Username = user.Username,
-            Password = "staff123",
-            Role = user.Role,
-            Status = user.Status
-        };
-        _showFormModal = true;
-    }
-
-    private void CloseFormModal()
-    {
-        _showFormModal = false;
-        _editingUserId = null;
-        _formMessage = string.Empty;
-    }
-
-    private async Task SaveUserAsync()
-    {
-        _userForm.Id = _editingUserId;
-        var result = await AuthService.SaveUserAsync(_userForm);
-        _formMessage = result.Message;
-        if (!result.Success)
-        {
-            return;
-        }
-
-        CloseFormModal();
-        await LoadAsync();
-    }
-
-    private async Task DeactivateAsync(Guid id)
-    {
-        var result = await AuthService.DeactivateUserAsync(id);
-        _loginMessage = result.Message;
-        await LoadAsync();
-    }
-
-    private async void HandleStoreChanged()
-    {
-        await InvokeAsync(async () => await LoadAsync());
-    }
-
-    public void Dispose()
-    {
-        DataStore.Changed -= HandleStoreChanged;
+        Navigation.NavigateTo("/produk", replace: true);
     }
 }

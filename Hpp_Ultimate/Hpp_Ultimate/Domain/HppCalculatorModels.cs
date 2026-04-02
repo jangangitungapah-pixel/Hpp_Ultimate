@@ -1,66 +1,82 @@
 namespace Hpp_Ultimate.Domain;
 
-public enum HppCalculationBasis
-{
-    AggregatedPeriod,
-    BatchActual,
-    SimulatedRecipe
-}
+public sealed record HppRecipeOption(
+    Guid Id,
+    string Code,
+    string Name,
+    string? Description,
+    RecipeStatus Status,
+    decimal OutputQuantity,
+    string OutputUnit,
+    decimal PortionYield,
+    int MaterialCount,
+    decimal TotalBatchCost,
+    decimal HppPerOutput,
+    decimal HppPerPortion,
+    DateTime UpdatedAt);
 
-public sealed record HppCalculatorQuery(
-    Guid? ProductId = null,
-    Guid? BatchId = null,
-    DashboardPeriodPreset Preset = DashboardPeriodPreset.ThisMonth,
-    DateOnly? From = null,
-    DateOnly? To = null);
-
-public sealed record HppBatchOption(Guid Id, string BatchCode, DateTime ProducedAt, int QuantityProduced);
-
-public sealed record HppMaterialBreakdownItem(
-    Guid MaterialId,
+public sealed record HppMaterialBreakdown(
+    Guid LineId,
     string MaterialCode,
     string MaterialName,
+    string? Brand,
+    string NetLabel,
+    decimal Quantity,
     string Unit,
-    decimal QuantityPerUnit,
-    decimal TotalQuantity,
-    decimal UnitPrice,
-    decimal LineCost);
+    decimal BaseQuantity,
+    string BaseUnit,
+    decimal WastePercent,
+    decimal CostPerBaseUnit,
+    decimal LineCost,
+    string? Notes);
 
-public sealed record HppCostShareItem(string Label, decimal Amount, decimal Percentage, string Tone);
+public sealed record HppGroupBreakdown(
+    Guid Id,
+    string Name,
+    string? Notes,
+    int MaterialCount,
+    decimal Subtotal,
+    IReadOnlyList<HppMaterialBreakdown> Materials);
 
-public sealed record HppBatchComparisonItem(
-    Guid BatchId,
-    string BatchCode,
-    DateTime ProducedAt,
-    int QuantityProduced,
+public sealed record HppCostBreakdown(
+    Guid Id,
+    RecipeCostType Type,
+    string Name,
+    decimal Amount,
+    string? Notes);
+
+public sealed record HppCalculatorSummary(
+    decimal PlannedOutputQuantity,
+    decimal RealizedOutputQuantity,
+    string OutputUnit,
+    decimal PortionYield,
     decimal MaterialCost,
-    decimal LaborCost,
     decimal OverheadCost,
-    decimal TotalCost,
-    decimal HppPerUnit);
+    decimal ProductionCost,
+    decimal OperationalCost,
+    decimal TotalBatchCost,
+    decimal HppPerPlannedOutput,
+    decimal HppPerRealizedOutput,
+    decimal HppPerPortion,
+    decimal RoundedHpp,
+    decimal HppAfterTax,
+    int RoundingIncrement,
+    decimal TaxPercent,
+    bool TaxIncluded);
 
-public sealed record HppSummary(
-    HppCalculationBasis Basis,
-    string BasisLabel,
-    decimal OutputQuantity,
-    decimal MaterialCost,
-    decimal LaborCost,
-    decimal OverheadCost,
-    decimal TotalCost,
-    decimal HppPerUnit,
-    decimal SellingPrice,
-    decimal ProfitPerUnit,
-    decimal MarginPercentage);
+public sealed record HppRecipeBreakdown(
+    Guid RecipeId,
+    string Code,
+    string Name,
+    string? Description,
+    RecipeStatus Status,
+    DateTime UpdatedAt,
+    IReadOnlyList<HppGroupBreakdown> Groups,
+    IReadOnlyList<HppCostBreakdown> Costs,
+    HppCalculatorSummary Summary);
 
 public sealed record HppCalculatorSnapshot(
-    DashboardRange Range,
-    Product? Product,
-    ProductRecipe? Recipe,
-    HppSummary Summary,
-    IReadOnlyList<ProductFilterOption> Products,
-    IReadOnlyList<HppBatchOption> Batches,
-    IReadOnlyList<HppMaterialBreakdownItem> Materials,
-    IReadOnlyList<HppCostShareItem> CostShares,
-    IReadOnlyList<HppBatchComparisonItem> RecentBatches,
-    IReadOnlyList<string> Alerts,
-    DateTime LastUpdated);
+    IReadOnlyList<HppRecipeOption> Recipes,
+    string SearchText,
+    Guid? SelectedRecipeId,
+    HppRecipeBreakdown? Breakdown);

@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @implements IAsyncDisposable
 @inject SettingsService SettingsService
-@inject IBusinessDataStore DataStore
+@inject SeededBusinessDataStore Store
 
 <PageTitle>Pengaturan | HPP Ultimate</PageTitle>
 
@@ -179,6 +179,32 @@
                     </div>
                 </section>
 
+                <section class="account-entry-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Account hub</span>
+                            <h2>Buka pengaturan akun dan pusat akses tim</h2>
+                        </div>
+                    </div>
+
+                    <div class="account-entry-grid">
+                        <article>
+                            <small>Sesi aktif</small>
+                            <strong>@(Store.AuthSession?.FullName ?? "Belum login")</strong>
+                            <p>@(Store.AuthSession is null ? "Masuk terlebih dulu untuk mengelola profil akun." : $"{Store.AuthSession.Role} aktif sejak {Store.AuthSession.SignedInAt:dd MMM HH:mm}")</p>
+                        </article>
+                        <article>
+                            <small>Total akun</small>
+                            <strong>@Store.Users.Count</strong>
+                            <p>Semua data akun, akses admin/staff, dan password dipusatkan di satu halaman terpisah.</p>
+                        </article>
+                    </div>
+
+                    <div class="account-entry-actions">
+                        <a class="primary-button account-link" href="/pengaturan/akun">Buka Pengaturan Akun</a>
+                    </div>
+                </section>
+
                 <section class="notes-card">
                     <div class="section-head">
                         <div>
@@ -206,23 +232,23 @@
                     <div class="danger-summary">
                         <article>
                             <small>Produk</small>
-                            <strong>@DataStore.Products.Count</strong>
+                            <strong>@Store.Products.Count</strong>
                         </article>
                         <article>
                             <small>Material</small>
-                            <strong>@DataStore.RawMaterials.Count</strong>
+                            <strong>@Store.RawMaterials.Count</strong>
                         </article>
                         <article>
                             <small>Stok</small>
-                            <strong>@DataStore.StockMovements.Count</strong>
+                            <strong>@Store.StockMovements.Count</strong>
                         </article>
                         <article>
                             <small>Resep</small>
-                            <strong>@(DataStore.ProductRecipes.Count + DataStore.BomItems.Count)</strong>
+                            <strong>@Store.Recipes.Count</strong>
                         </article>
                         <article>
                             <small>Produksi</small>
-                            <strong>@DataStore.ProductionBatches.Count</strong>
+                            <strong>@Store.ProductionBatches.Count</strong>
                         </article>
                     </div>
 
@@ -266,7 +292,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        DataStore.Changed += HandleStoreChanged;
+        Store.Changed += HandleStoreChanged;
         await LoadAsync();
     }
 
@@ -359,7 +385,7 @@
 
     public ValueTask DisposeAsync()
     {
-        DataStore.Changed -= HandleStoreChanged;
+        Store.Changed -= HandleStoreChanged;
         return ValueTask.CompletedTask;
     }
 }

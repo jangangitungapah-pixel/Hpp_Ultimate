@@ -1,0 +1,746 @@
+﻿@page "/pos"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@using System.Globalization
+@inject HppCalculatorService HppCalculatorService
+@inject SeededBusinessDataStore Store
+
+<PageTitle>Point of Sales | HPP Ultimate</PageTitle>
+
+<section class="pos-page">
+    <header class="pos-header">
+        <div class="header-copy">
+            <span class="section-tag">Point of Sales</span>
+            <h1>Kasir cepat untuk resep aktif dengan HPP yang tetap transparan.</h1>
+            <p>Pilih resep aktif, atur harga jual per porsi, masukkan ke keranjang, lalu tutup transaksi dengan ringkasan profit yang jelas.</p>
+        </div>
+
+        <div class="header-actions">
+            <div class="status-chip">@_statusMessage</div>
+            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+        </div>
+    </header>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="skeleton-card"></div>
+    }
+    else if ((_snapshot?.Recipes.Count ?? 0) == 0 && string.IsNullOrWhiteSpace(_searchText))
+    {
+        <section class="empty-state">
+            <span class="section-tag">Belum ada resep</span>
+            <h2>POS belum punya item jual</h2>
+            <p>Buat resep aktif dulu di halaman resep supaya POS punya daftar produk yang bisa dijual.</p>
+            <a class="primary-button action-link" href="/resep">Buka Halaman Resep</a>
+        </section>
+    }
+    else if ((_snapshot?.Recipes.Count ?? 0) == 0)
+    {
+        <section class="empty-state">
+            <span class="section-tag">Pencarian kosong</span>
+            <h2>Tidak ada item yang cocok</h2>
+            <p>Coba ubah kata kunci pencarian atau kosongkan filter untuk melihat item jual lain.</p>
+            <button type="button" class="primary-button action-link" @onclick="ClearSearchAsync">Reset Pencarian</button>
+        </section>
+    }
+    else if (SellableRecipes.Count == 0)
+    {
+        <section class="empty-state">
+            <span class="section-tag">Resep aktif kosong</span>
+            <h2>Aktifkan minimal satu resep</h2>
+            <p>POS hanya menampilkan resep dengan status aktif agar item yang dijual tetap terkontrol.</p>
+            <a class="primary-button action-link" href="/resep">Kelola Resep</a>
+        </section>
+    }
+    else if (_snapshot is not null)
+    {
+        var selectedBreakdown = _snapshot.Breakdown;
+
+        <div class="pos-layout">
+            <section class="catalog-panel">
+                <div class="panel-head">
+                    <div>
+                        <span class="section-tag">Katalog jual</span>
+                        <h2>Pilih item</h2>
+                        <p>Daftar item jual ditarik dari resep aktif yang sudah punya HPP.</p>
+                    </div>
+
+                    <input class="catalog-search-input" value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari kode atau nama resep" />
+                </div>
+
+                <div class="catalog-grid">
+                    @foreach (var item in SellableRecipes)
+                    {
+                        var isActive = item.Id == _selectedRecipeId;
+                        <button type="button" class="product-card @(isActive ? "active" : null)" @onclick="() => SelectRecipeAsync(item.Id)">
+                            <div class="product-card-top">
+                                <div>
+                                    <small>@item.Code</small>
+                                    <strong>@item.Name</strong>
+                                </div>
+                                <span class="badge active">Aktif</span>
+                            </div>
+
+                            <div class="product-card-metrics">
+                                <article>
+                                    <small>HPP / porsi</small>
+                                    <strong>@FormatCurrency(GetFinalCostPerPortion(item))</strong>
+                                </article>
+                                <article>
+                                    <small>Jual saran</small>
+                                    <strong>@FormatCurrency(GetSuggestedSellingPrice(item))</strong>
+                                </article>
+                            </div>
+
+                            <div class="product-card-meta">
+                                <span>@FormatDecimal(item.PortionYield) porsi</span>
+                                <span>@item.MaterialCount material</span>
+                                <span>@item.UpdatedAt.ToString("dd MMM HH:mm")</span>
+                            </div>
+                        </button>
+                    }
+                </div>
+            </section>
+
+            <section class="workspace-panel">
+                @if (selectedBreakdown is not null)
+                {
+                    <section class="selected-product-card">
+                        <div class="selected-head">
+                            <div>
+                                <span class="section-tag">@selectedBreakdown.Code</span>
+                                <h2>@selectedBreakdown.Name</h2>
+                                @if (!string.IsNullOrWhiteSpace(selectedBreakdown.Description))
+                                {
+                                    <p>@selectedBreakdown.Description</p>
+                                }
+                                else
+                                {
+                                    <p>Item dijual per porsi, dengan dasar HPP dari resep aktif.</p>
+                                }
+                            </div>
+
+                            <div class="selected-meta">
+                                <span>@FormatDecimal(selectedBreakdown.Summary.PortionYield) porsi</span>
+                                <span>@FormatDecimal(selectedBreakdown.Summary.PlannedOutputQuantity) @selectedBreakdown.Summary.OutputUnit</span>
+                            </div>
+                        </div>
+
+                        <div class="selected-metrics">
+                            <article>
+                                <small>HPP final / porsi</small>
+                                <strong>@FormatCurrency(selectedBreakdown.Summary.HppAfterTax)</strong>
+                            </article>
+                            <article>
+                                <small>Harga jual aktif</small>
+                                <strong>@FormatCurrency(_draftUnitPrice)</strong>
+                            </article>
+                            <article>
+                                <small>Profit / porsi</small>
+                                <strong>@FormatCurrency(GetDraftProfitPerUnit(selectedBreakdown))</strong>
+                            </article>
+                            <article class="highlight">
+                                <small>Margin</small>
+                                <strong>@FormatPercent(GetDraftMarginPercent(selectedBreakdown))</strong>
+                            </article>
+                        </div>
+
+                        <div class="sell-config-grid">
+                            <label>
+                                <span>Qty porsi</span>
+                                <input type="number" min="1" step="1" value="@_draftQuantity" @oninput="OnDraftQuantityChanged" />
+                            </label>
+
+                            <label>
+                                <span>Margin default</span>
+                                <input type="number" min="0" step="1" value="@_defaultMarginPercent.ToString("0.##", CultureInfo.InvariantCulture)" @oninput="OnDefaultMarginChanged" />
+                            </label>
+
+                            <label>
+                                <span>Harga jual / porsi</span>
+                                <input type="number" min="0" step="100" value="@_draftUnitPrice.ToString("0.##", CultureInfo.InvariantCulture)" @oninput="OnDraftUnitPriceChanged" />
+                            </label>
+
+                            <div class="sell-actions">
+                                <button type="button" class="ghost-button" @onclick="() => ApplySuggestedPrice(selectedBreakdown)">Pakai Harga Saran</button>
+                                <button type="button" class="primary-button" @onclick="AddSelectedToCartAsync">Tambah ke Transaksi</button>
+                            </div>
+                        </div>
+
+                        <div class="detail-pill-row">
+                            <span>Material @FormatCurrency(selectedBreakdown.Summary.MaterialCost)</span>
+                            <span>Overhead @FormatCurrency(selectedBreakdown.Summary.OverheadCost)</span>
+                            <span>Produksi @FormatCurrency(selectedBreakdown.Summary.ProductionCost)</span>
+                            <span>Total batch @FormatCurrency(selectedBreakdown.Summary.TotalBatchCost)</span>
+                        </div>
+
+                        <details class="breakdown-disclosure">
+                            <summary>Lihat breakdown resep</summary>
+                            <div class="breakdown-stack">
+                                @foreach (var group in selectedBreakdown.Groups)
+                                {
+                                    <article class="group-breakdown-card">
+                                        <div class="group-breakdown-head">
+                                            <div>
+                                                <strong>@group.Name</strong>
+                                                <small>@group.MaterialCount material</small>
+                                            </div>
+                                            <span>@FormatCurrency(group.Subtotal)</span>
+                                        </div>
+
+                                        <div class="group-line-list">
+                                            @foreach (var material in group.Materials)
+                                            {
+                                                <div class="group-line-item">
+                                                    <div>
+                                                        <strong>@material.MaterialName</strong>
+                                                        <small>@material.MaterialCode &middot; @(string.IsNullOrWhiteSpace(material.Brand) ? "Tanpa merk" : material.Brand)</small>
+                                                    </div>
+                                                    <div class="line-meta">
+                                                        <span>@FormatDecimal(material.Quantity) @material.Unit</span>
+                                                        <span>@FormatCurrency(material.LineCost)</span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        </details>
+                    </section>
+                }
+
+                <section class="cart-panel">
+                    <div class="panel-head">
+                        <div>
+                            <span class="section-tag">Transaksi aktif</span>
+                            <h2>Keranjang POS</h2>
+                            <p>Edit qty atau harga jual langsung dari tabel tanpa keluar dari workspace kasir.</p>
+                        </div>
+                    </div>
+
+                    @if (_cart.Count == 0)
+                    {
+                        <div class="empty-mini-state">
+                            <strong>Keranjang masih kosong.</strong>
+                            <span>Pilih resep aktif di kiri, lalu tambahkan ke transaksi.</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="cart-grid-shell">
+                            <table class="cart-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Qty</th>
+                                        <th>Harga Jual</th>
+                                        <th>HPP</th>
+                                        <th>Profit</th>
+                                        <th>Subtotal</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var line in _cart)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="cart-item-cell">
+                                                    <strong>@line.Name</strong>
+                                                    <small>@line.Code &middot; per porsi</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input class="grid-input compact" type="number" min="1" step="1" value="@line.Quantity" @oninput="args => UpdateCartQuantity(line.Id, args)" />
+                                            </td>
+                                            <td>
+                                                <input class="grid-input" type="number" min="0" step="100" value="@line.UnitPrice.ToString("0.##", CultureInfo.InvariantCulture)" @oninput="args => UpdateCartUnitPrice(line.Id, args)" />
+                                            </td>
+                                            <td>@FormatCurrency(line.HppPerUnit * line.Quantity)</td>
+                                            <td>@FormatCurrency(GetLineProfit(line))</td>
+                                            <td>@FormatCurrency(GetLineSubtotal(line))</td>
+                                            <td class="actions-column">
+                                                <button type="button" class="icon-button danger" title="Hapus item" aria-label="Hapus item" @onclick="() => RemoveCartLine(line.Id)">
+                                                    <span class="icon-glyph" aria-hidden="true">&#128465;</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3">Ringkasan transaksi</td>
+                                        <td>@FormatCurrency(TotalHpp)</td>
+                                        <td>@FormatCurrency(TotalProfit)</td>
+                                        <td>@FormatCurrency(TotalRevenue)</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    }
+                </section>
+            </section>
+
+            <aside class="checkout-panel">
+                <div class="panel-head">
+                    <div>
+                        <span class="section-tag">Checkout</span>
+                        <h2>Ringkasan transaksi</h2>
+                        <p>Fokus ke angka final, tapi HPP dan profit tetap terlihat jelas.</p>
+                    </div>
+                </div>
+
+                <div class="method-row">
+                    @foreach (var method in PaymentMethods)
+                    {
+                        <button type="button" class="method-chip @(_paymentMethod == method ? "active" : null)" @onclick="() => SelectPaymentMethod(method)">@method</button>
+                    }
+                </div>
+
+                <div class="checkout-metrics">
+                    <article>
+                        <small>Item</small>
+                        <strong>@_cart.Count</strong>
+                    </article>
+                    <article>
+                        <small>Total porsi</small>
+                        <strong>@TotalQuantity</strong>
+                    </article>
+                    <article>
+                        <small>Revenue</small>
+                        <strong>@FormatCurrency(TotalRevenue)</strong>
+                    </article>
+                    <article>
+                        <small>Profit kotor</small>
+                        <strong>@FormatCurrency(TotalProfit)</strong>
+                    </article>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-row">
+                        <span>Subtotal jual</span>
+                        <strong>@FormatCurrency(TotalRevenue)</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Total HPP</span>
+                        <strong>@FormatCurrency(TotalHpp)</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Margin kotor</span>
+                        <strong>@FormatPercent(GrossMarginPercent)</strong>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total bayar</span>
+                        <strong>@FormatCurrency(TotalRevenue)</strong>
+                    </div>
+                </div>
+
+                <label class="payment-input">
+                    <span>Diterima</span>
+                    <input type="number" min="0" step="100" value="@_paymentReceived.ToString("0.##", CultureInfo.InvariantCulture)" @oninput="OnPaymentReceivedChanged" />
+                </label>
+
+                @if (_paymentMethod == "Cash")
+                {
+                    <div class="cash-shortcuts">
+                        <button type="button" class="ghost-button" @onclick="FillExactCash">Uang Pas</button>
+                        <button type="button" class="ghost-button" @onclick="() => AddCash(10000m)">+10k</button>
+                        <button type="button" class="ghost-button" @onclick="() => AddCash(20000m)">+20k</button>
+                    </div>
+                }
+
+                <div class="summary-card soft">
+                    <div class="summary-row">
+                        <span>Kembalian</span>
+                        <strong>@FormatCurrency(ChangeAmount)</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Status bayar</span>
+                        <strong>@GetPaymentStatusLabel()</strong>
+                    </div>
+                </div>
+
+                <p class="checkout-note">POS ini dipakai sebagai workspace transaksi cepat. Detail HPP tetap dihitung live dari resep aktif.</p>
+
+                <div class="checkout-actions">
+                    <button type="button" class="ghost-button" @onclick="ClearCart">Kosongkan</button>
+                    <button type="button" class="primary-button" disabled="@(!CanCheckout)" @onclick="CompleteTransaction">Bayar Sekarang</button>
+                </div>
+            </aside>
+        </div>
+    }
+</section>
+
+@code {
+    private static readonly string[] PaymentMethods = ["Cash", "QRIS", "Transfer"];
+
+    private HppCalculatorSnapshot? _snapshot;
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat POS...";
+    private string _searchText = string.Empty;
+    private Guid? _selectedRecipeId;
+    private decimal _defaultMarginPercent = 35m;
+    private int _draftQuantity = 1;
+    private decimal _draftUnitPrice;
+    private decimal _paymentReceived;
+    private string _paymentMethod = PaymentMethods[0];
+    private readonly List<PosCartLine> _cart = [];
+
+    private IReadOnlyList<HppRecipeOption> SellableRecipes
+        => _snapshot?.Recipes
+            .Where(item => item.Status == RecipeStatus.Active)
+            .OrderByDescending(item => item.UpdatedAt)
+            .ToArray()
+            ?? [];
+
+    private int TotalQuantity => _cart.Sum(item => item.Quantity);
+    private decimal TotalRevenue => _cart.Sum(GetLineSubtotal);
+    private decimal TotalHpp => _cart.Sum(item => item.HppPerUnit * item.Quantity);
+    private decimal TotalProfit => TotalRevenue - TotalHpp;
+    private decimal GrossMarginPercent => TotalRevenue <= 0 ? 0m : (TotalProfit / TotalRevenue) * 100m;
+    private decimal ChangeAmount => Math.Max(0m, _paymentReceived - TotalRevenue);
+    private bool CanCheckout => _cart.Count > 0 && (_paymentMethod != "Cash" || _paymentReceived >= TotalRevenue);
+
+    protected override async Task OnInitializedAsync()
+    {
+        Store.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync(bool preserveDraftPrice = false)
+    {
+        _isLoading = true;
+        var snapshot = await HppCalculatorService.GetSnapshotAsync(_searchText, _selectedRecipeId, null);
+        var activeFirstId = snapshot.Recipes.FirstOrDefault(item => item.Status == RecipeStatus.Active)?.Id;
+
+        if (activeFirstId is Guid fallbackId &&
+            (snapshot.SelectedRecipeId is null || snapshot.Breakdown?.Status != RecipeStatus.Active))
+        {
+            _selectedRecipeId = fallbackId;
+            snapshot = await HppCalculatorService.GetSnapshotAsync(_searchText, _selectedRecipeId, null);
+        }
+
+        _snapshot = snapshot;
+        _selectedRecipeId = snapshot.SelectedRecipeId;
+
+        if (snapshot.Breakdown is not null)
+        {
+            _draftQuantity = Math.Max(1, _draftQuantity);
+            if (!preserveDraftPrice || _draftUnitPrice <= 0)
+            {
+                _draftUnitPrice = GetSuggestedSellingPrice(snapshot.Breakdown.Summary);
+            }
+
+            _statusMessage = $"{SellableRecipes.Count} item siap dijual";
+        }
+        else
+        {
+            _draftUnitPrice = 0m;
+            _statusMessage = SellableRecipes.Count == 0 ? "Belum ada resep aktif." : "Pilih item untuk mulai transaksi.";
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task ReloadAsync() => LoadAsync(preserveDraftPrice: true);
+
+    private async Task OnSearchChangedAsync(ChangeEventArgs args)
+    {
+        _searchText = args.Value?.ToString() ?? string.Empty;
+        await LoadAsync();
+    }
+
+    private async Task ClearSearchAsync()
+    {
+        _searchText = string.Empty;
+        await LoadAsync();
+    }
+
+    private async Task SelectRecipeAsync(Guid recipeId)
+    {
+        _selectedRecipeId = recipeId;
+        _draftQuantity = 1;
+        _draftUnitPrice = 0m;
+        await LoadAsync();
+    }
+
+    private void OnDraftQuantityChanged(ChangeEventArgs args)
+    {
+        _draftQuantity = TryParseInt(args.Value, 1);
+    }
+
+    private void OnDefaultMarginChanged(ChangeEventArgs args)
+    {
+        _defaultMarginPercent = Math.Clamp(TryParseDecimal(args.Value, _defaultMarginPercent), 0m, 500m);
+        if (_snapshot?.Breakdown is not null)
+        {
+            _draftUnitPrice = GetSuggestedSellingPrice(_snapshot.Breakdown.Summary);
+        }
+    }
+
+    private void OnDraftUnitPriceChanged(ChangeEventArgs args)
+    {
+        _draftUnitPrice = Math.Max(0m, TryParseDecimal(args.Value, _draftUnitPrice));
+    }
+
+    private async Task AddSelectedToCartAsync()
+    {
+        if (_snapshot?.Breakdown is null)
+        {
+            _statusMessage = "Pilih item aktif dulu.";
+            return;
+        }
+
+        var breakdown = _snapshot.Breakdown;
+        var unitPrice = _draftUnitPrice > 0 ? _draftUnitPrice : GetSuggestedSellingPrice(breakdown.Summary);
+        var existing = _cart.FirstOrDefault(item =>
+            item.RecipeId == breakdown.RecipeId &&
+            item.UnitPrice == unitPrice &&
+            item.HppPerUnit == breakdown.Summary.HppAfterTax);
+
+        if (existing is null)
+        {
+            _cart.Add(new PosCartLine(
+                Guid.NewGuid(),
+                breakdown.RecipeId,
+                breakdown.Code,
+                breakdown.Name,
+                Math.Max(1, _draftQuantity),
+                unitPrice,
+                breakdown.Summary.HppAfterTax));
+        }
+        else
+        {
+            existing.Quantity += Math.Max(1, _draftQuantity);
+        }
+
+        _statusMessage = $"{_cart.Count} baris transaksi aktif";
+        _draftQuantity = 1;
+        if (_paymentMethod == "Cash")
+        {
+            _paymentReceived = TotalRevenue;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void ApplySuggestedPrice(HppRecipeBreakdown breakdown)
+    {
+        _draftUnitPrice = GetSuggestedSellingPrice(breakdown.Summary);
+    }
+
+    private void UpdateCartQuantity(Guid id, ChangeEventArgs args)
+    {
+        var line = _cart.FirstOrDefault(item => item.Id == id);
+        if (line is null)
+        {
+            return;
+        }
+
+        line.Quantity = TryParseInt(args.Value, line.Quantity);
+        SyncReceivedAmount();
+    }
+
+    private void UpdateCartUnitPrice(Guid id, ChangeEventArgs args)
+    {
+        var line = _cart.FirstOrDefault(item => item.Id == id);
+        if (line is null)
+        {
+            return;
+        }
+
+        line.UnitPrice = Math.Max(0m, TryParseDecimal(args.Value, line.UnitPrice));
+        SyncReceivedAmount();
+    }
+
+    private void RemoveCartLine(Guid id)
+    {
+        _cart.RemoveAll(item => item.Id == id);
+        SyncReceivedAmount();
+        _statusMessage = _cart.Count == 0 ? "Keranjang kosong." : $"{_cart.Count} baris transaksi aktif";
+    }
+
+    private void OnPaymentReceivedChanged(ChangeEventArgs args)
+    {
+        _paymentReceived = Math.Max(0m, TryParseDecimal(args.Value, _paymentReceived));
+    }
+
+    private void SelectPaymentMethod(string method)
+    {
+        _paymentMethod = method;
+        SyncReceivedAmount();
+    }
+
+    private void ClearCart()
+    {
+        _cart.Clear();
+        _paymentReceived = 0m;
+        _statusMessage = "Keranjang dikosongkan.";
+    }
+
+    private void FillExactCash()
+    {
+        _paymentReceived = TotalRevenue;
+    }
+
+    private void AddCash(decimal amount)
+    {
+        _paymentReceived = Math.Max(_paymentReceived, TotalRevenue) + amount;
+    }
+
+    private void CompleteTransaction()
+    {
+        if (!CanCheckout)
+        {
+            _statusMessage = "Nominal bayar belum cukup untuk menyelesaikan transaksi.";
+            return;
+        }
+
+        var total = TotalRevenue;
+        var itemCount = TotalQuantity;
+        _cart.Clear();
+        _paymentReceived = 0m;
+        _statusMessage = $"Transaksi selesai: {itemCount} porsi · {FormatCurrency(total)} via {_paymentMethod}.";
+    }
+
+    private decimal GetSuggestedSellingPrice(HppRecipeOption item)
+        => RoundToIncrement(GetFinalCostPerPortion(item) * (1m + (_defaultMarginPercent / 100m)));
+
+    private decimal GetSuggestedSellingPrice(HppCalculatorSummary summary)
+        => RoundToIncrement(summary.HppAfterTax * (1m + (_defaultMarginPercent / 100m)));
+
+    private decimal GetFinalCostPerPortion(HppRecipeOption item)
+    {
+        var settings = Store.GetBusinessSettings();
+        var rounded = item.HppPerPortion <= 0 || settings.DefaultPriceRounding <= 1
+            ? decimal.Round(item.HppPerPortion, 2, MidpointRounding.AwayFromZero)
+            : Math.Round(item.HppPerPortion / settings.DefaultPriceRounding, MidpointRounding.AwayFromZero) * settings.DefaultPriceRounding;
+        return settings.TaxIncluded
+            ? rounded
+            : rounded * (1m + Math.Max(0m, settings.TaxPercent) / 100m);
+    }
+
+    private decimal GetDraftProfitPerUnit(HppRecipeBreakdown breakdown)
+        => Math.Max(0m, _draftUnitPrice - breakdown.Summary.HppAfterTax);
+
+    private decimal GetDraftMarginPercent(HppRecipeBreakdown breakdown)
+        => _draftUnitPrice <= 0 ? 0m : Math.Max(0m, (_draftUnitPrice - breakdown.Summary.HppAfterTax) / _draftUnitPrice) * 100m;
+
+    private decimal GetLineSubtotal(PosCartLine line) => line.UnitPrice * line.Quantity;
+
+    private decimal GetLineProfit(PosCartLine line) => (line.UnitPrice - line.HppPerUnit) * line.Quantity;
+
+    private string GetPaymentStatusLabel()
+    {
+        if (_cart.Count == 0)
+        {
+            return "Belum ada transaksi";
+        }
+
+        if (_paymentMethod != "Cash")
+        {
+            return "Non-tunai siap diproses";
+        }
+
+        return _paymentReceived >= TotalRevenue ? "Terkonfirmasi" : "Kurang bayar";
+    }
+
+    private void SyncReceivedAmount()
+    {
+        if (_paymentMethod != "Cash")
+        {
+            _paymentReceived = TotalRevenue;
+        }
+        else if (_cart.Count == 0)
+        {
+            _paymentReceived = 0m;
+        }
+        else if (_paymentReceived <= 0m)
+        {
+            _paymentReceived = TotalRevenue;
+        }
+    }
+
+    private decimal RoundToIncrement(decimal value)
+    {
+        var settings = Store.GetBusinessSettings();
+        if (value <= 0 || settings.DefaultPriceRounding <= 1)
+        {
+            return decimal.Round(value, 2, MidpointRounding.AwayFromZero);
+        }
+
+        return Math.Round(value / settings.DefaultPriceRounding, MidpointRounding.AwayFromZero) * settings.DefaultPriceRounding;
+    }
+
+    private static int TryParseInt(object? value, int fallback)
+    {
+        if (int.TryParse(value?.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed) && parsed > 0)
+        {
+            return parsed;
+        }
+
+        if (int.TryParse(value?.ToString(), NumberStyles.Integer, CultureInfo.CurrentCulture, out parsed) && parsed > 0)
+        {
+            return parsed;
+        }
+
+        return Math.Max(1, fallback);
+    }
+
+    private static decimal TryParseDecimal(object? value, decimal fallback)
+    {
+        if (decimal.TryParse(value?.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out var parsed))
+        {
+            return parsed;
+        }
+
+        if (decimal.TryParse(value?.ToString(), NumberStyles.Number, CultureInfo.CurrentCulture, out parsed))
+        {
+            return parsed;
+        }
+
+        return fallback;
+    }
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    private static string FormatDecimal(decimal value)
+        => value.ToString("0.####", CultureInfo.InvariantCulture);
+
+    private static string FormatPercent(decimal value)
+        => $"{decimal.Round(value, 1, MidpointRounding.AwayFromZero).ToString("0.#", CultureInfo.InvariantCulture)}%";
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(async () => await LoadAsync(preserveDraftPrice: true));
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Store.Changed -= HandleStoreChanged;
+        return ValueTask.CompletedTask;
+    }
+
+    private sealed class PosCartLine(
+        Guid id,
+        Guid recipeId,
+        string code,
+        string name,
+        int quantity,
+        decimal unitPrice,
+        decimal hppPerUnit)
+    {
+        public Guid Id { get; } = id;
+        public Guid RecipeId { get; } = recipeId;
+        public string Code { get; } = code;
+        public string Name { get; } = name;
+        public int Quantity { get; set; } = quantity;
+        public decimal UnitPrice { get; set; } = unitPrice;
+        public decimal HppPerUnit { get; set; } = hppPerUnit;
+    }
+}
+

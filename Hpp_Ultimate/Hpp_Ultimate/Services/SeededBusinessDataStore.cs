@@ -4,7 +4,7 @@ using Hpp_Ultimate.Domain;
 
 namespace Hpp_Ultimate.Services;
 
-public sealed class SeededBusinessDataStore : IBusinessDataStore
+public sealed class SeededBusinessDataStore
 {
     private const string TableName = "AppState";
     private readonly Lock _gate = new();
@@ -13,6 +13,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
     private readonly List<Product> _products = [];
     private readonly List<RawMaterial> _rawMaterials = [];
     private readonly List<MaterialPriceEntry> _materialPrices = [];
+    private readonly List<RecipeBook> _recipes = [];
     private readonly List<StockMovementEntry> _stockMovements = [];
     private readonly List<ProductRecipe> _productRecipes = [];
     private readonly List<BomItem> _bomItems = [];
@@ -49,6 +50,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
     public IReadOnlyList<Product> Products => _products;
     public IReadOnlyList<RawMaterial> RawMaterials => _rawMaterials;
     public IReadOnlyList<MaterialPriceEntry> MaterialPrices => _materialPrices;
+    public IReadOnlyList<RecipeBook> Recipes => _recipes;
     public IReadOnlyList<StockMovementEntry> StockMovements => _stockMovements;
     public IReadOnlyList<ProductRecipe> ProductRecipes => _productRecipes;
     public IReadOnlyList<BomItem> BomItems => _bomItems;
@@ -110,6 +112,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         _products.Clear();
         _rawMaterials.Clear();
         _materialPrices.Clear();
+        _recipes.Clear();
         _stockMovements.Clear();
         _productRecipes.Clear();
         _bomItems.Clear();
@@ -121,6 +124,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         _products.AddRange(Deserialize<List<Product>>(state, "products") ?? []);
         _rawMaterials.AddRange(LoadRawMaterials(state));
         _materialPrices.AddRange(LoadMaterialPrices(state, _rawMaterials));
+        _recipes.AddRange(LoadRecipes(state));
         _stockMovements.AddRange(Deserialize<List<StockMovementEntry>>(state, "stockMovements") ?? []);
         _productRecipes.AddRange(Deserialize<List<ProductRecipe>>(state, "productRecipes") ?? []);
         _bomItems.AddRange(Deserialize<List<BomItem>>(state, "bomItems") ?? []);
@@ -144,6 +148,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         UpsertState(connection, transaction, "products", _products);
         UpsertState(connection, transaction, "rawMaterials", _rawMaterials);
         UpsertState(connection, transaction, "materialPrices", _materialPrices);
+        UpsertState(connection, transaction, "recipes", _recipes);
         UpsertState(connection, transaction, "stockMovements", _stockMovements);
         UpsertState(connection, transaction, "productRecipes", _productRecipes);
         UpsertState(connection, transaction, "bomItems", _bomItems);
@@ -301,6 +306,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         _products.Clear();
         _rawMaterials.Clear();
         _materialPrices.Clear();
+        _recipes.Clear();
         _stockMovements.Clear();
         _productRecipes.Clear();
         _bomItems.Clear();
@@ -356,6 +362,49 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
             .Max() + 1;
 
         return $"BHN-{nextNumber:000}";
+    }
+
+    private IReadOnlyList<RecipeBook> LoadRecipes(IReadOnlyDictionary<string, string> state)
+    {
+        var current = Deserialize<List<RecipeBook>>(state, "recipes");
+        if (current is { Count: > 0 })
+        {
+            return current.Select(SanitizeRecipe).ToArray();
+        }
+
+        var legacy = Deserialize<List<LegacyRecipeBook>>(state, "recipes") ?? [];
+        return legacy.Select(item => SanitizeRecipe(new RecipeBook(
+            item.Id,
+            item.Code,
+            item.Name,
+            item.Description,
+            item.OutputQuantity,
+            item.OutputUnit,
+            item.Status,
+            item.Groups,
+            item.Costs,
+            item.CreatedAt,
+            item.UpdatedAt,
+            1m))).ToArray();
+    }
+
+    private static RecipeBook SanitizeRecipe(RecipeBook recipe)
+        => recipe with
+        {
+            PortionYield = recipe.PortionYield <= 0 ? 1m : recipe.PortionYield
+        };
+
+    public string GenerateNextRecipeCode()
+    {
+        using var scope = _gate.EnterScope();
+        var nextNumber = _recipes.Select(recipe => recipe.Code)
+            .Where(code => code.StartsWith("RCP-", StringComparison.OrdinalIgnoreCase))
+            .Select(code => code[4..])
+            .Select(part => int.TryParse(part, out var number) ? number : 0)
+            .DefaultIfEmpty()
+            .Max() + 1;
+
+        return $"RCP-{nextNumber:000}";
     }
 
     public Product AddProduct(Product product)
@@ -474,6 +523,51 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         return _rawMaterials.Any(material => material.Code.Equals(code, StringComparison.OrdinalIgnoreCase) && (!exceptId.HasValue || material.Id != exceptId.Value));
     }
 
+    public RecipeBook AddRecipeBook(RecipeBook recipe)
+    {
+        using var scope = _gate.EnterScope();
+        _recipes.Add(recipe);
+        TouchUnsafe();
+        return recipe;
+    }
+
+    public RecipeBook UpdateRecipeBook(RecipeBook recipe)
+    {
+        using var scope = _gate.EnterScope();
+        var index = _recipes.FindIndex(item => item.Id == recipe.Id);
+        if (index >= 0)
+        {
+            _recipes[index] = recipe;
+            TouchUnsafe();
+        }
+
+        return recipe;
+    }
+
+    public RecipeBook? FindRecipeBook(Guid id)
+    {
+        using var scope = _gate.EnterScope();
+        return _recipes.FirstOrDefault(item => item.Id == id);
+    }
+
+    public bool RemoveRecipeBook(Guid id)
+    {
+        using var scope = _gate.EnterScope();
+        var removed = _recipes.RemoveAll(item => item.Id == id) > 0;
+        if (removed)
+        {
+            TouchUnsafe();
+        }
+
+        return removed;
+    }
+
+    public bool RecipeCodeExists(string code, Guid? exceptId = null)
+    {
+        using var scope = _gate.EnterScope();
+        return _recipes.Any(recipe => recipe.Code.Equals(code, StringComparison.OrdinalIgnoreCase) && (!exceptId.HasValue || recipe.Id != exceptId.Value));
+    }
+
     public bool HasBom(Guid productId)
     {
         using var scope = _gate.EnterScope();
@@ -489,7 +583,8 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
     public bool MaterialUsedInBom(Guid materialId)
     {
         using var scope = _gate.EnterScope();
-        return _bomItems.Any(item => item.MaterialId == materialId);
+        return _bomItems.Any(item => item.MaterialId == materialId)
+            || _recipes.Any(recipe => recipe.Groups.Any(group => group.Materials.Any(item => item.MaterialId == materialId)));
     }
 
     public bool MaterialUsedInProduction(Guid materialId)
@@ -657,12 +752,13 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
             Products: _products.Count,
             Materials: _rawMaterials.Count,
             StockMovements: _stockMovements.Count,
-            Recipes: _productRecipes.Count + _bomItems.Count,
+            Recipes: _recipes.Count + _productRecipes.Count + _bomItems.Count,
             ProductionBatches: _productionBatches.Count);
 
         _products.Clear();
         _rawMaterials.Clear();
         _materialPrices.Clear();
+        _recipes.Clear();
         _stockMovements.Clear();
         _productRecipes.Clear();
         _bomItems.Clear();
@@ -742,4 +838,17 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         DateTime UpdatedAt,
         decimal? PreviousPrice,
         string Note);
+
+    private sealed record LegacyRecipeBook(
+        Guid Id,
+        string Code,
+        string Name,
+        string? Description,
+        decimal OutputQuantity,
+        string OutputUnit,
+        RecipeStatus Status,
+        IReadOnlyList<RecipeMaterialGroup> Groups,
+        IReadOnlyList<RecipeCostComponent> Costs,
+        DateTime CreatedAt,
+        DateTime UpdatedAt);
 }

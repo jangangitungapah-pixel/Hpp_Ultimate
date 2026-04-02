@@ -88,3 +88,20 @@ public sealed class UserUpsertRequest
     public UserRole Role { get; set; } = UserRole.Staff;
     public UserStatus Status { get; set; } = UserStatus.Active;
 }
+
+public sealed class AccountProfileRequest
+{
+    [Required(ErrorMessage = "Nama lengkap wajib diisi.")]
+    public string FullName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Email wajib diisi.")]
+    [EmailAddress(ErrorMessage = "Format email tidak valid.")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Username wajib diisi.")]
+    public string Username { get; set; } = string.Empty;
+
+    public string NewPassword { get; set; } = string.Empty;
+
+    public bool RememberMe { get; set; }
+}

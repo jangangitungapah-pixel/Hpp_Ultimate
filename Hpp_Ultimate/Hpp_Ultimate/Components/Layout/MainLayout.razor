@@ -11,11 +11,11 @@
 {
     <div class="auth-shell">
         <div class="auth-shell-brand">
-            <a href="/" class="auth-shell-link">
+            <a href="/login" class="auth-shell-link">
                 <span class="auth-shell-mark">+</span>
                 <span>
                     <strong>HPP Ultimate</strong>
-                    <small>Workspace costing dan profit.</small>
+                    <small>Material catalog workspace.</small>
                 </span>
             </a>
         </div>
@@ -37,15 +37,6 @@ else
                 <div class="topbar-copy">
                     <span class="topbar-label">@CurrentSection</span>
                     <strong>@CurrentHeadline</strong>
-                </div>
-
-                <div class="topbar-tools">
-                    <label class="topbar-search" aria-label="Cari">
-                        <span class="search-shortcut">Ctrl K</span>
-                        <input type="text" placeholder="Cari modul atau batch" />
-                    </label>
-
-                    <button type="button" class="topbar-button solid">Produksi Baru</button>
                 </div>
             </header>
 
@@ -76,32 +67,24 @@ else
 
     private string CurrentSection => CurrentPath switch
     {
-        "/" => "Dashboard",
-        "dashboard" => "Dashboard",
-        "produk" => "Produk",
-        "bahan-baku" => "Bahan Baku",
-        "bom" => "Resep / BOM",
-        "biaya-produksi" => "Biaya Produksi",
-        "kalkulator-hpp" => "Kalkulator HPP",
-        "harga-jual" => "Harga Jual",
-        "laporan" => "Laporan",
-        "riwayat-produksi" => "Riwayat Produksi",
+        "/" => "Login",
+        "produk" => "Katalog Material",
+        "resep" => "Resep",
+        "hpp-calculator" => "HPP Calculator",
         "pengaturan" => "Pengaturan",
-        _ => "Workspace"
+        "pengaturan/akun" => "Pengaturan Akun",
+        "login" => "Login",
+        _ => "HPP Ultimate"
     };
 
     private string CurrentHeadline => CurrentPath switch
     {
-        "/" or "dashboard" => "Ringkasan biaya, margin, dan performa usaha",
-        "produk" => "Kelola katalog produk dan struktur SKU",
-        "bahan-baku" => "Pantau harga, supplier, dan stok bahan",
-        "bom" => "Bangun resep produksi yang akurat",
-        "biaya-produksi" => "Catat semua biaya per periode produksi",
-        "kalkulator-hpp" => "Hitung biaya per batch dan per unit",
-        "harga-jual" => "Tentukan pricing dari target margin",
-        "laporan" => "Siapkan laporan yang siap dibagikan",
-        "riwayat-produksi" => "Bandingkan batch dan deviasi biaya",
-        "pengaturan" => "Atur preferensi dasar bisnis",
-        _ => "Kelola operasi HPP dalam satu dashboard"
+        "/" or "login" => "Masuk ke workspace material",
+        "produk" => "Kelola bahan baku, harga, dan konversi unit",
+        "resep" => "Rancang formula bahan, kelompok material, dan biaya produksi",
+        "hpp-calculator" => "Tarik resep aktif, breakdown biaya, dan tentukan HPP final",
+        "pengaturan" => "Atur preferensi dasar bisnis dan jalur akun",
+        "pengaturan/akun" => "Kelola identitas, keamanan, akses, dan data tim",
+        _ => "Halaman ini tidak tersedia di workspace aktif"
     };
 }

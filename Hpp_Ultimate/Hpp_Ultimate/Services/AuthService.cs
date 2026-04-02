@@ -58,6 +58,66 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
         return Task.FromResult(new LoginResult(true, "Sesi login ditutup."));
     }
 
+    public Task<AuthMutationResult> SaveCurrentAccountAsync(AccountProfileRequest request, CancellationToken cancellationToken = default)
+    {
+        if (store.AuthSession is null)
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Sesi login tidak ditemukan. Silakan masuk ulang."));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.FullName))
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Nama lengkap wajib diisi."));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Email))
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Email wajib diisi."));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Username))
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Username wajib diisi."));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.NewPassword) && request.NewPassword.Trim().Length < 6)
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Password baru minimal 6 karakter."));
+        }
+
+        var existing = store.FindUser(store.AuthSession.UserId);
+        if (existing is null)
+        {
+            store.SetSession(null);
+            return Task.FromResult(new AuthMutationResult(false, "Akun aktif tidak ditemukan. Sesi login ditutup."));
+        }
+
+        if (store.UserIdentityExists(request.Email.Trim(), request.Username.Trim(), existing.Id))
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Email atau username sudah dipakai user lain."));
+        }
+
+        var updated = existing with
+        {
+            FullName = request.FullName.Trim(),
+            Email = request.Email.Trim().ToLowerInvariant(),
+            Username = request.Username.Trim().ToLowerInvariant(),
+            Password = string.IsNullOrWhiteSpace(request.NewPassword) ? existing.Password : request.NewPassword,
+            UpdatedAt = DateTime.Now
+        };
+
+        store.UpdateUser(updated);
+        store.SetSession(new AuthSession(
+            updated.Id,
+            updated.FullName,
+            updated.Email,
+            updated.Role,
+            DateTime.Now,
+            request.RememberMe));
+
+        return Task.FromResult(new AuthMutationResult(true, "Profil akun berhasil diperbarui.", updated));
+    }
+
     public Task<AuthMutationResult> SaveUserAsync(UserUpsertRequest request, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(request.FullName))
@@ -122,6 +182,17 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
         };
 
         store.UpdateUser(updated);
+
+        if (store.AuthSession?.UserId == updated.Id)
+        {
+            store.SetSession(store.AuthSession with
+            {
+                FullName = updated.FullName,
+                Email = updated.Email,
+                Role = updated.Role
+            });
+        }
+
         return Task.FromResult(new AuthMutationResult(true, "User berhasil diperbarui.", updated));
     }
 

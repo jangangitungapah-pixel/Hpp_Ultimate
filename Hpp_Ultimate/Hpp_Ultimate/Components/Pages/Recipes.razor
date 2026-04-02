@@ -1,0 +1,1074 @@
+@page "/resep"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject RecipeCatalogService RecipeCatalogService
+@inject SeededBusinessDataStore Store
+
+<PageTitle>Resep | HPP Ultimate</PageTitle>
+
+<section class="recipes-page">
+    <header class="recipes-header">
+        <div class="header-copy">
+            <span class="section-tag">Resep</span>
+            <h1>Resep produksi</h1>
+            <p>Pilih resep dari daftar, cek ringkasannya, lalu buka editor saat perlu menyusun atau memperbarui formula.</p>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            <button type="button" class="primary-button" @onclick="OpenCreateModalAsync">+ Resep Baru</button>
+        </div>
+    </header>
+
+    <section class="recipes-panel list-panel">
+        <div class="panel-head">
+            <div>
+                <span class="section-tag">Daftar resep</span>
+                <h2>Resep yang sudah dibuat</h2>
+                <p>Pilih satu resep untuk melihat komposisi bahan dan biaya batch tanpa pindah halaman.</p>
+            </div>
+
+            <div class="panel-toolbar">
+                <input class="recipe-search-input" value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari nama resep atau kode" />
+            </div>
+        </div>
+
+        <div class="panel-summary">
+            <div class="status-chip">@_statusMessage</div>
+            <div class="header-pills">
+                <span>@(_result?.TotalCount ?? 0) resep</span>
+                <span>@ActiveMaterials.Count material aktif</span>
+            </div>
+        </div>
+
+        @if (ActiveMaterials.Count == 0)
+        {
+            <div class="inline-note">
+                Katalog material masih kosong. Tambah material dulu di <a href="/produk">Katalog Material</a>.
+            </div>
+        }
+
+        @if (_isLoading && _result is null)
+        {
+            <div class="recipe-skeleton"></div>
+        }
+        else if ((_result?.Items.Count ?? 0) == 0)
+        {
+            <div class="empty-state">
+                <h2>Belum ada resep</h2>
+                <p>Buat resep baru untuk mulai menyusun bahan dan biaya batch.</p>
+                <button type="button" class="primary-button" @onclick="OpenCreateModalAsync">Buat Resep</button>
+            </div>
+        }
+        else
+        {
+            <div class="table-shell">
+                <table class="recipe-table">
+                    <thead>
+                        <tr>
+                            <th>Resep</th>
+                            <th>Output</th>
+                            <th>Porsi</th>
+                            <th>Total Batch</th>
+                            <th>HPP / Porsi</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var recipe in _result!.Items)
+                        {
+                            <tr class="@(recipe.Id == _selectedRecipeId ? "active" : null)" @onclick="() => SelectRecipeAsync(recipe.Id)">
+                                <td>
+                                    <div class="table-primary">
+                                        <strong>@recipe.Name</strong>
+                                        <small>@recipe.Code</small>
+                                    </div>
+                                </td>
+                                <td>@recipe.OutputQuantity.ToString("0.##") @recipe.OutputUnit</td>
+                                <td>@recipe.PortionYield.ToString("0.##") porsi</td>
+                                <td>@FormatCurrency(recipe.TotalCost)</td>
+                                <td>@FormatCurrency(recipe.CostPerPortion)</td>
+                                <td>
+                                    <span class="badge @(recipe.Status == RecipeStatus.Active ? "active" : "inactive")">
+                                        @(recipe.Status == RecipeStatus.Active ? "Aktif" : "Draft")
+                                    </span>
+                                </td>
+                                <td>@recipe.UpdatedAt.ToString("dd MMM yyyy HH:mm")</td>
+                                <td>
+                                    <div class="table-actions" @onclick:stopPropagation="true">
+                                        <button type="button" class="ghost-button compact" @onclick="() => OpenEditModalAsync(recipe.Id)">Edit</button>
+                                        <button type="button" class="danger-button subtle compact" @onclick="() => AskDelete(recipe)">Hapus</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    <section class="recipes-panel detail-panel">
+        @if (_selectedRecipe is null || _selectedDraft is null)
+        {
+            <div class="empty-state">
+                <h2>Pilih satu resep</h2>
+                <p>Pilih resep dari tabel di atas untuk melihat struktur bahan, total batch, dan biaya tambahannya.</p>
+            </div>
+        }
+        else
+        {
+            var selectedRecipe = _selectedRecipe;
+            var selectedDraft = _selectedDraft;
+            var selectedTotals = RecipeCatalogService.CalculateTotals(selectedDraft);
+            var visibleCosts = selectedDraft.Costs
+                .Where(item => !string.IsNullOrWhiteSpace(item.Name) && item.Amount > 0)
+                .ToList();
+
+            <div class="detail-header">
+                <div class="recipe-title">
+                    <span>@selectedRecipe.Code</span>
+                    <h2>@selectedRecipe.Name</h2>
+                    @if (!string.IsNullOrWhiteSpace(selectedRecipe.Description))
+                    {
+                        <p>@selectedRecipe.Description</p>
+                    }
+                </div>
+
+                <div class="detail-actions">
+                    <span class="badge @(selectedRecipe.Status == RecipeStatus.Active ? "active" : "inactive")">
+                        @(selectedRecipe.Status == RecipeStatus.Active ? "Aktif" : "Draft")
+                    </span>
+                    <button type="button" class="ghost-button" @onclick="() => OpenEditModalAsync(selectedRecipe.Id)">Edit Resep</button>
+                    <button type="button" class="danger-button subtle" @onclick="() => AskDelete(selectedRecipe)">Hapus</button>
+                </div>
+            </div>
+
+            <div class="detail-summary-strip">
+                <article><small>Output</small><strong>@selectedRecipe.OutputQuantity.ToString("0.##") @selectedRecipe.OutputUnit</strong></article>
+                <article><small>Porsi</small><strong>@selectedRecipe.PortionYield.ToString("0.##") porsi</strong></article>
+                <article><small>Total Batch</small><strong>@FormatCurrency(selectedTotals.TotalCost)</strong></article>
+                <article><small>HPP / Porsi</small><strong>@FormatCurrency(selectedTotals.CostPerPortion)</strong></article>
+                <article><small>Kelompok</small><strong>@selectedTotals.GroupCount</strong></article>
+                <article><small>Material</small><strong>@selectedTotals.MaterialCount</strong></article>
+            </div>
+
+            <div class="detail-stack">
+                <section class="detail-section">
+                    <div class="section-head">
+                        <div>
+                            <span class="section-tag">Kelompok bahan</span>
+                            <h3>Struktur formula resep</h3>
+                            <p>Buka kelompok yang diperlukan untuk audit komposisi dan subtotal materialnya.</p>
+                        </div>
+                    </div>
+
+                    <div class="group-detail-stack">
+                        @for (var groupIndex = 0; groupIndex < selectedDraft.Groups.Count; groupIndex++)
+                        {
+                            var group = selectedDraft.Groups[groupIndex];
+                            <details class="group-detail-card" open="@(selectedDraft.Groups.Count == 1 || groupIndex == 0)">
+                                <summary class="group-detail-summary">
+                                    <div class="group-summary-copy">
+                                        <small>@group.Materials.Count material</small>
+                                        <strong>@group.Name</strong>
+                                        @if (!string.IsNullOrWhiteSpace(group.Notes))
+                                        {
+                                            <span>@group.Notes</span>
+                                        }
+                                    </div>
+
+                                    <strong class="group-total">@FormatCurrency(GetGroupTotal(group))</strong>
+                                </summary>
+
+                                @if (group.Materials.Count == 0)
+                                {
+                                    <div class="empty-mini">Kelompok ini belum memiliki material.</div>
+                                }
+                                else
+                                {
+                                    <div class="group-lines-head">
+                                        <span>Material</span>
+                                        <span>Pemakaian</span>
+                                        <span>Konversi</span>
+                                        <span>Modal</span>
+                                    </div>
+
+                                    <div class="group-lines">
+                                        @foreach (var item in group.Materials)
+                                        {
+                                            <div class="line-row">
+                                                <div class="line-main">
+                                                    <strong>@GetMaterialShortLabel(item)</strong>
+                                                    <small>@GetMaterialBrandLabel(item)</small>
+                                                </div>
+                                                <div class="line-meta">
+                                                    <strong>@GetMaterialQuantityLabel(item)</strong>
+                                                    <span>Waste @item.WastePercent.ToString("0.##")%</span>
+                                                </div>
+                                                <div class="line-meta">
+                                                    <strong>@GetConversionLabel(item)</strong>
+                                                    <span>@GetMaterialNettoLabel(item)</span>
+                                                </div>
+                                                <div class="line-meta emphasis">
+                                                    <strong>@FormatCurrency(GetLineCost(item))</strong>
+                                                    <span>@GetMaterialPricePerPackLabel(item) / pack</span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </details>
+                        }
+                    </div>
+                </section>
+
+                <section class="detail-section">
+                    <div class="section-head">
+                        <div>
+                            <span class="section-tag">Overhead</span>
+                            <h3>Biaya non-material</h3>
+                            <p>Biaya tambahan di luar material utama resep.</p>
+                        </div>
+                    </div>
+
+                    @if (visibleCosts.Count == 0)
+                    {
+                        <div class="empty-mini">Belum ada overhead atau biaya produksi tambahan.</div>
+                    }
+                    else
+                    {
+                        <div class="cost-detail-list">
+                            @foreach (var cost in visibleCosts)
+                            {
+                                <article class="cost-detail-card">
+                                    <div>
+                                        <small>@(cost.Type == RecipeCostType.Overhead ? "Overhead" : "Biaya Produksi")</small>
+                                        <strong>@cost.Name</strong>
+                                        @if (!string.IsNullOrWhiteSpace(cost.Notes))
+                                        {
+                                            <p>@cost.Notes</p>
+                                        }
+                                    </div>
+
+                                    <strong>@FormatCurrency(cost.Amount)</strong>
+                                </article>
+                            }
+                        </div>
+                    }
+                </section>
+
+                <section class="detail-section financial-section">
+                    <div class="section-head">
+                        <div>
+                            <span class="section-tag">Ringkasan biaya</span>
+                            <h3>Angka inti resep</h3>
+                        </div>
+                    </div>
+
+                    <div class="detail-financial-strip">
+                        <article><small>Total Material</small><strong>@FormatCurrency(selectedTotals.MaterialCost)</strong></article>
+                        <article><small>Operasional</small><strong>@FormatCurrency(selectedTotals.OperationalCost)</strong></article>
+                        <article><small>Biaya / Output</small><strong>@FormatCurrency(selectedTotals.CostPerOutputUnit)</strong></article>
+                        <article><small>Update</small><strong>@selectedRecipe.UpdatedAt.ToString("dd MMM yyyy HH:mm")</strong></article>
+                    </div>
+                </section>
+            </div>
+        }
+    </section>
+</section>
+
+@if (_showEditor)
+{
+    <div class="overlay" @onclick="CloseEditor">
+        <div class="studio-shell" @onclick:stopPropagation="true">
+            <EditForm Model="_formModel" OnValidSubmit="SaveAsync" class="studio-form">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="studio-head">
+                    <div class="studio-head-copy">
+                        <span class="section-tag">@(_editingId is null ? "Resep Baru" : "Edit Resep")</span>
+                        <h2>@(_editingId is null ? "Rakit resep" : "Perbarui resep")</h2>
+                        <p>Isi detail resep, atur kelompok bahan, masukkan material, lalu tentukan overhead dalam satu workflow.</p>
+                    </div>
+
+                    <div class="studio-head-actions">
+                        <button type="button" class="ghost-button" @onclick="CloseEditor">Tutup</button>
+                        <button type="submit" class="primary-button">Simpan Resep</button>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(_formMessage))
+                {
+                    <div class="form-message">@_formMessage</div>
+                }
+
+                <div class="editor-summary-strip">
+                    <article><small>Total Batch</small><strong>@FormatCurrency(CurrentTotals.TotalCost)</strong></article>
+                    <article><small>HPP / Porsi</small><strong>@FormatCurrency(CurrentTotals.CostPerPortion)</strong></article>
+                    <article><small>Kelompok</small><strong>@CurrentTotals.GroupCount</strong></article>
+                    <article><small>Material</small><strong>@CurrentTotals.MaterialCount</strong></article>
+                </div>
+
+                <div class="studio-layout">
+                    <div class="studio-main">
+                        <section class="studio-card">
+                            <div class="section-head">
+                                <div>
+                                    <span class="section-tag">Detail resep</span>
+                                    <h3>Identitas utama resep</h3>
+                                    <p>Lengkapi nama, output, porsi, status, dan deskripsi sebelum menyusun bahan.</p>
+                                </div>
+                            </div>
+
+                            <div class="recipe-detail-grid">
+                                <label class="wide-field"><span>Nama resep</span><InputText @bind-Value="_formModel.Name" class="recipe-name-input" /></label>
+                                <label><span>Kode / nomor resep</span><InputText @bind-Value="_formModel.Code" /></label>
+                                <label><span>Output batch</span><InputNumber @bind-Value="_formModel.OutputQuantity" /></label>
+                                <label><span>Satuan batch</span><InputText @bind-Value="_formModel.OutputUnit" /></label>
+                                <label><span>Porsi dihasilkan</span><InputNumber @bind-Value="_formModel.PortionYield" /></label>
+                                <label>
+                                    <span>Status</span>
+                                    <InputSelect @bind-Value="_formModel.Status">
+                                        <option value="@RecipeStatus.Active">Aktif</option>
+                                        <option value="@RecipeStatus.Draft">Draft</option>
+                                    </InputSelect>
+                                </label>
+                                <label class="full"><span>Deskripsi</span><InputTextArea @bind-Value="_formModel.Description" /></label>
+                            </div>
+                        </section>
+
+                        <section class="studio-card">
+                            <div class="section-head">
+                                <div>
+                                    <span class="section-tag">Kelompok bahan</span>
+                                    <h3>Struktur formula</h3>
+                                    <p>Pilih satu kelompok aktif untuk menjadi target input material.</p>
+                                </div>
+
+                                <button type="button" class="ghost-button" @onclick="AddGroup">Tambah Kelompok</button>
+                            </div>
+
+                            @for (var groupIndex = 0; groupIndex < _formModel.Groups.Count; groupIndex++)
+                            {
+                                var group = _formModel.Groups[groupIndex];
+                                <section class="group-card @(_activeGroupId == group.Id ? "active" : null)">
+                                    <div class="group-row-main">
+                                        <div class="group-index">@((groupIndex + 1).ToString("00"))</div>
+
+                                        <div class="group-meta-grid">
+                                            <label><span>Nama kelompok bahan</span><InputText @bind-Value="group.Name" /></label>
+                                            <label><span>Catatan kelompok</span><InputText @bind-Value="group.Notes" /></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="group-row-side">
+                                        <div class="group-footer-copy">
+                                            <strong>@group.Materials.Count material</strong>
+                                            <span>@GetGroupSummary(group)</span>
+                                        </div>
+
+                                        <div class="group-actions">
+                                            <button type="button" class="ghost-button" @onclick="() => OpenMaterialWorkspaceAsync(group)">
+                                                @(_activeGroupId == group.Id ? "Aktif" : "Pilih")
+                                            </button>
+                                            <button type="button" class="danger-button subtle" disabled="@(_formModel.Groups.Count == 1)" @onclick="() => RemoveGroup(group)">Hapus</button>
+                                        </div>
+                                    </div>
+                                </section>
+                            }
+                        </section>
+
+                        <section class="studio-card material-studio-card">
+                            <div class="section-head">
+                                <div>
+                                    <span class="section-tag">Material</span>
+                                    <h3>Input dan list material</h3>
+                                    <p>Pilih kelompok aktif, masukkan material, lalu cek hasilnya di datagrid bawah.</p>
+                                </div>
+                            </div>
+
+                            @if (ActiveEditingGroup is null)
+                            {
+                                <div class="empty-state compact-empty">
+                                    <h2>Pilih kelompok bahan</h2>
+                                    <p>Pilih satu kelompok bahan terlebih dahulu sebelum menambah material.</p>
+                                </div>
+                            }
+                            else
+                            {
+                                var activeGroup = ActiveEditingGroup;
+                                <div class="material-workspace-head">
+                                    <div>
+                                        <span class="section-tag">Kelompok aktif</span>
+                                        <h4>@(string.IsNullOrWhiteSpace(activeGroup.Name) ? "Kelompok baru" : activeGroup.Name)</h4>
+                                        <p>@GetGroupSummary(activeGroup)</p>
+                                    </div>
+
+                                    <div class="header-pills">
+                                        <span>@activeGroup.Materials.Count material</span>
+                                        <span>@FormatCurrency(GetGroupTotal(activeGroup))</span>
+                                    </div>
+                                </div>
+
+                                @if (_formModel.Groups.Count > 1)
+                                {
+                                    <div class="group-quick-switch">
+                                        @for (var groupIndex = 0; groupIndex < _formModel.Groups.Count; groupIndex++)
+                                        {
+                                            var group = _formModel.Groups[groupIndex];
+                                            <button type="button"
+                                                    class="group-pill @(_activeGroupId == group.Id ? "active" : null)"
+                                                    @onclick="() => OpenMaterialWorkspaceAsync(group)">
+                                                <small>@((groupIndex + 1).ToString("00"))</small>
+                                                <strong>@(string.IsNullOrWhiteSpace(group.Name) ? "Kelompok baru" : group.Name)</strong>
+                                                <span>@group.Materials.Count material</span>
+                                            </button>
+                                        }
+                                    </div>
+                                }
+
+                                <div class="material-entry-card">
+                                    <div class="material-entry-grid">
+                                        <label class="material-entry-material">
+                                            <span>Pilih material</span>
+                                            <select class="material-picker-input" value="@GetMaterialValue(_materialDraft)" @onchange="OnDraftMaterialChangedAsync">
+                                                <option value="">Pilih material</option>
+                                                @foreach (var material in ActiveMaterials)
+                                                {
+                                                    <option value="@material.Id">@GetMaterialOptionLabel(material)</option>
+                                                }
+                                            </select>
+                                        </label>
+                                        <label>
+                                            <span>Kuantitas</span>
+                                            <InputNumber @bind-Value="_materialDraft.Quantity" class="material-quantity-input" />
+                                        </label>
+                                        <label>
+                                            <span>Pilih satuan</span>
+                                            <select value="@_materialDraft.Unit" @onchange="args => _materialDraft.Unit = args.Value?.ToString() ?? string.Empty">
+                                                <option value="">Pilih unit</option>
+                                                @foreach (var unit in GetUnits(_materialDraft))
+                                                {
+                                                    <option value="@unit">@unit</option>
+                                                }
+                                            </select>
+                                        </label>
+                                        <label>
+                                            <span>Waste %</span>
+                                            <InputNumber @bind-Value="_materialDraft.WastePercent" />
+                                        </label>
+                                        <label class="wide-field">
+                                            <span>Catatan</span>
+                                            <InputText @bind-Value="_materialDraft.Notes" />
+                                        </label>
+                                        <div class="material-form-actions">
+                                            @if (_editingMaterialId is not null)
+                                            {
+                                                <button type="button" class="ghost-button" @onclick="ResetMaterialDraftAndFocusAsync">Reset</button>
+                                            }
+
+                                            <button type="button" class="primary-button material-submit-button" @onclick="AddDraftMaterialToActiveGroupAsync">
+                                                @(_editingMaterialId is null ? "\u2713 Masukkan" : "\u2713 Update")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (activeGroup.Materials.Count == 0)
+                                {
+                                    <div class="empty-state compact-empty">
+                                        <h2>Belum ada material</h2>
+                                        <p>Material yang dimasukkan dari form di atas akan muncul di datagrid ini.</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="material-grid-shell">
+                                        <QuickGrid Items="activeGroup.Materials.AsQueryable()" Class="material-quickgrid">
+                                            <TemplateColumn Title="Nama Material" Context="item">
+                                                <div class="material-name-cell">
+                                                    <strong>@GetMaterialShortLabel(item)</strong>
+                                                </div>
+                                            </TemplateColumn>
+                                            <TemplateColumn Title="Merk" Context="item">
+                                                <div class="material-meta-cell">
+                                                    <strong>@GetMaterialBrandLabel(item)</strong>
+                                                </div>
+                                            </TemplateColumn>
+                                            <TemplateColumn Title="Netto" Context="item">
+                                                <div class="material-meta-cell">
+                                                    <strong>@GetMaterialNettoLabel(item)</strong>
+                                                </div>
+                                            </TemplateColumn>
+                                            <TemplateColumn Title="Harga / Pack" Context="item">
+                                                <div class="material-meta-cell">
+                                                    <strong>@GetMaterialPricePerPackLabel(item)</strong>
+                                                </div>
+                                            </TemplateColumn>
+                                            <TemplateColumn Title="Berat / Pack" Context="item">
+                                                <div class="material-meta-cell">
+                                                    <strong>@GetMaterialWeightPerPackLabel(item)</strong>
+                                                </div>
+                                            </TemplateColumn>
+                                            <TemplateColumn Title="Qty" Context="item">
+                                                <div class="material-meta-cell">
+                                                    <strong>@GetMaterialQuantityLabel(item)</strong>
+                                                </div>
+                                            </TemplateColumn>
+                                            <TemplateColumn Title="Modal" Context="item">
+                                                <div class="material-cost-cell">
+                                                    <strong>@FormatCurrency(GetLineCost(item))</strong>
+                                                </div>
+                                            </TemplateColumn>
+                                            <TemplateColumn Title="Aksi" Context="item">
+                                                <div class="material-row-actions">
+                                                    <button type="button" class="icon-action-button" title="Edit" aria-label="Edit" @onclick="() => EditMaterialRowAsync(activeGroup, item)">
+                                                        &#9998;
+                                                    </button>
+                                                    <button type="button" class="icon-action-button danger" title="Hapus" aria-label="Hapus" @onclick="() => RemoveMaterialRow(activeGroup, item)">
+                                                        &#128465;
+                                                    </button>
+                                                </div>
+                                            </TemplateColumn>
+                                        </QuickGrid>
+                                    </div>
+                                }
+                            }
+                        </section>
+
+                        <section class="studio-card">
+                            <div class="section-head">
+                                <div>
+                                    <span class="section-tag">Overhead</span>
+                                    <h3>Biaya non-material</h3>
+                                    <p>Tambahkan overhead atau biaya produksi yang ikut membentuk total batch.</p>
+                                </div>
+
+                                <div class="group-actions">
+                                    <button type="button" class="ghost-button" @onclick="() => AddCost(RecipeCostType.Overhead)">+ Overhead</button>
+                                    <button type="button" class="ghost-button" @onclick="() => AddCost(RecipeCostType.Production)">+ Produksi</button>
+                                </div>
+                            </div>
+
+                            @if (_formModel.Costs.Count == 0)
+                            {
+                                <div class="empty-mini">Belum ada biaya tambahan.</div>
+                            }
+                            else
+                            {
+                                <div class="cost-stack">
+                                    @foreach (var cost in _formModel.Costs)
+                                    {
+                                        <article class="cost-card">
+                                            <div class="cost-grid">
+                                                <label>
+                                                    <span>Tipe</span>
+                                                    <InputSelect @bind-Value="cost.Type">
+                                                        <option value="@RecipeCostType.Overhead">Overhead</option>
+                                                        <option value="@RecipeCostType.Production">Biaya Produksi</option>
+                                                    </InputSelect>
+                                                </label>
+                                                <label><span>Nama</span><InputText @bind-Value="cost.Name" /></label>
+                                                <label><span>Nominal</span><InputNumber @bind-Value="cost.Amount" /></label>
+                                                <label><span>Catatan</span><InputText @bind-Value="cost.Notes" /></label>
+                                            </div>
+
+                                            <div class="cost-card-footer">
+                                                <strong>@FormatCurrency(cost.Amount)</strong>
+                                                <button type="button" class="ghost-button" @onclick="() => RemoveCost(cost)">Hapus</button>
+                                            </div>
+                                        </article>
+                                    }
+                                </div>
+                            }
+                        </section>
+                    </div>
+
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@if (_pendingDelete is not null)
+{
+    <div class="overlay" @onclick="CancelDelete">
+        <div class="confirm-card" @onclick:stopPropagation="true">
+            <span class="section-tag">Konfirmasi</span>
+            <h2>Hapus resep ini?</h2>
+            <p>@_pendingDelete.Name akan dihapus dari daftar resep.</p>
+
+            <div class="confirm-actions">
+                <button type="button" class="ghost-button" @onclick="CancelDelete">Batal</button>
+                <button type="button" class="danger-button" @onclick="DeleteAsync">Ya, hapus</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private RecipeQueryResult? _result;
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat resep...";
+    private string _searchText = string.Empty;
+    private bool _showEditor;
+    private Guid? _editingId;
+    private RecipeUpsertRequest _formModel = new();
+    private string _formMessage = string.Empty;
+    private RecipeListItem? _pendingDelete;
+    private bool _focusEditorRequested;
+    private Guid? _selectedRecipeId;
+    private RecipeUpsertRequest? _selectedDraft;
+    private Guid? _activeGroupId;
+    private Guid? _editingMaterialId;
+    private RecipeMaterialInput _materialDraft = CreateMaterialInput();
+
+    private IReadOnlyList<RawMaterial> ActiveMaterials => Store.RawMaterials.Where(item => item.Status == MaterialStatus.Active).OrderBy(item => item.Name).ToArray();
+    private RecipeSummaryTotals CurrentTotals => RecipeCatalogService.CalculateTotals(_formModel);
+    private RecipeListItem? _selectedRecipe => _selectedRecipeId is null ? null : _result?.Items.FirstOrDefault(item => item.Id == _selectedRecipeId);
+    private RecipeGroupInput? ActiveEditingGroup => _activeGroupId is null ? null : _formModel.Groups.FirstOrDefault(item => item.Id == _activeGroupId);
+
+    protected override async Task OnInitializedAsync()
+    {
+        Store.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!_focusEditorRequested)
+        {
+            return;
+        }
+
+        _focusEditorRequested = false;
+        await JS.InvokeVoidAsync("recipeEditor.focusFirst", ".recipe-name-input");
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        _result = await RecipeCatalogService.QueryAsync(_searchText);
+        _statusMessage = $"{_result.TotalCount} resep";
+        await SyncSelectionAsync();
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task ReloadAsync() => LoadAsync();
+
+    private async Task OnSearchChangedAsync(ChangeEventArgs args)
+    {
+        _searchText = args.Value?.ToString() ?? string.Empty;
+        await LoadAsync();
+    }
+
+    private async Task SyncSelectionAsync()
+    {
+        if (_result is null || _result.Items.Count == 0)
+        {
+            _selectedRecipeId = null;
+            _selectedDraft = null;
+            return;
+        }
+
+        if (_selectedRecipeId is null || !_result.Items.Any(item => item.Id == _selectedRecipeId))
+        {
+            _selectedRecipeId = _result.Items[0].Id;
+        }
+
+        await LoadSelectedRecipeAsync();
+    }
+
+    private async Task SelectRecipeAsync(Guid id)
+    {
+        _selectedRecipeId = id;
+        await LoadSelectedRecipeAsync();
+    }
+
+    private async Task LoadSelectedRecipeAsync()
+    {
+        if (_selectedRecipeId is not Guid id)
+        {
+            _selectedDraft = null;
+            return;
+        }
+
+        _selectedDraft = await RecipeCatalogService.GetDraftAsync(id);
+    }
+
+    private async Task OpenCreateModalAsync()
+    {
+        var draft = new RecipeUpsertRequest
+        {
+            Code = await RecipeCatalogService.GenerateNextCodeAsync(),
+            OutputQuantity = 1m,
+            OutputUnit = "pcs",
+            PortionYield = 1m,
+            Status = RecipeStatus.Active,
+            Groups = [CreateGroup("Bahan utama")]
+        };
+
+        BeginEditing(draft, null);
+    }
+
+    private async Task OpenEditModalAsync(Guid id)
+    {
+        var draft = await RecipeCatalogService.GetDraftAsync(id);
+        if (draft is null)
+        {
+            _statusMessage = "Resep tidak ditemukan.";
+            return;
+        }
+
+        BeginEditing(draft, id);
+    }
+
+    private void CloseEditor()
+    {
+        _showEditor = false;
+        _editingId = null;
+        _activeGroupId = null;
+        ResetMaterialDraft();
+    }
+
+    private void AddGroup()
+    {
+        var group = CreateGroup($"Kelompok {_formModel.Groups.Count + 1}");
+        _formModel.Groups.Add(group);
+        _activeGroupId = group.Id;
+        ResetMaterialDraft();
+    }
+
+    private void RemoveGroup(RecipeGroupInput group)
+    {
+        if (_formModel.Groups.Count > 1)
+        {
+            var removedActive = _activeGroupId == group.Id;
+            _formModel.Groups.Remove(group);
+            if (removedActive)
+            {
+                _activeGroupId = _formModel.Groups.FirstOrDefault()?.Id;
+            }
+        }
+    }
+
+    private void RemoveMaterialRow(RecipeGroupInput group, RecipeMaterialInput item)
+    {
+        if (group.Materials.Contains(item))
+        {
+            group.Materials.Remove(item);
+            if (_editingMaterialId == item.Id)
+            {
+                ResetMaterialDraft();
+            }
+        }
+    }
+
+    private async Task OpenMaterialWorkspaceAsync(RecipeGroupInput group)
+    {
+        _activeGroupId = group.Id;
+        ResetMaterialDraft();
+        await FocusMaterialPickerAsync();
+    }
+
+    private async Task OnDraftMaterialChangedAsync(ChangeEventArgs args)
+    {
+        if (!Guid.TryParse(args.Value?.ToString(), out var materialId))
+        {
+            _materialDraft.MaterialId = null;
+            _materialDraft.Unit = string.Empty;
+            await FocusMaterialPickerAsync();
+            return;
+        }
+
+        _materialDraft.MaterialId = materialId;
+        var material = FindMaterial(materialId);
+        _materialDraft.Unit = material is null ? string.Empty : GetSuggestedDraftUnit(material);
+        await FocusMaterialQuantityAsync();
+    }
+
+    private async Task AddDraftMaterialToActiveGroupAsync()
+    {
+        var activeGroup = ActiveEditingGroup;
+        if (activeGroup is null)
+        {
+            _formMessage = "Pilih kelompok bahan terlebih dahulu.";
+            return;
+        }
+
+        if (_materialDraft.MaterialId is null)
+        {
+            _formMessage = "Pilih material terlebih dahulu.";
+            return;
+        }
+
+        if (_materialDraft.Quantity <= 0)
+        {
+            _formMessage = "Kuantitas material harus lebih besar dari 0.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(_materialDraft.Unit))
+        {
+            _formMessage = "Pilih satuan material.";
+            return;
+        }
+
+        if (_editingMaterialId is Guid editingId)
+        {
+            var existing = activeGroup.Materials.FirstOrDefault(item => item.Id == editingId);
+            if (existing is not null)
+            {
+                existing.MaterialId = _materialDraft.MaterialId;
+                existing.Quantity = _materialDraft.Quantity;
+                existing.Unit = _materialDraft.Unit;
+                existing.WastePercent = _materialDraft.WastePercent;
+                existing.Notes = _materialDraft.Notes;
+            }
+        }
+        else
+        {
+            activeGroup.Materials.Add(new RecipeMaterialInput
+            {
+                MaterialId = _materialDraft.MaterialId,
+                Quantity = _materialDraft.Quantity,
+                Unit = _materialDraft.Unit,
+                WastePercent = _materialDraft.WastePercent,
+                Notes = _materialDraft.Notes
+            });
+        }
+
+        _formMessage = string.Empty;
+        ResetMaterialDraft();
+        await FocusMaterialPickerAsync();
+    }
+
+    private async Task EditMaterialRowAsync(RecipeGroupInput group, RecipeMaterialInput item)
+    {
+        _activeGroupId = group.Id;
+        _editingMaterialId = item.Id;
+        _materialDraft = new RecipeMaterialInput
+        {
+            Id = item.Id,
+            MaterialId = item.MaterialId,
+            Quantity = item.Quantity,
+            Unit = item.Unit,
+            WastePercent = item.WastePercent,
+            Notes = item.Notes
+        };
+
+        await FocusMaterialQuantityAsync();
+    }
+
+    private void ResetMaterialDraft()
+    {
+        _editingMaterialId = null;
+        _materialDraft = CreateMaterialInput();
+    }
+
+    private async Task ResetMaterialDraftAndFocusAsync()
+    {
+        ResetMaterialDraft();
+        await FocusMaterialPickerAsync();
+    }
+
+    private void AddCost(RecipeCostType type) => _formModel.Costs.Add(new RecipeCostInput { Type = type });
+    private void RemoveCost(RecipeCostInput cost) => _formModel.Costs.Remove(cost);
+
+    private async Task SaveAsync()
+    {
+        var result = await RecipeCatalogService.SaveAsync(_formModel);
+        _formMessage = result.Message;
+        if (!result.Success)
+        {
+            return;
+        }
+
+        _showEditor = false;
+        _editingId = null;
+        _selectedRecipeId = result.Recipe?.Id;
+        await LoadAsync();
+        _statusMessage = result.Message;
+    }
+
+    private void AskDelete(RecipeListItem recipe) => _pendingDelete = recipe;
+    private void CancelDelete() => _pendingDelete = null;
+
+    private async Task DeleteAsync()
+    {
+        if (_pendingDelete is null)
+        {
+            return;
+        }
+
+        var result = await RecipeCatalogService.DeleteAsync(_pendingDelete.Id);
+        _pendingDelete = null;
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private IReadOnlyList<string> GetUnits(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        return material is null ? [] : RecipeCatalogMath.GetAvailableUnits(material);
+    }
+
+    private string GetMaterialValue(RecipeMaterialInput item) => item.MaterialId?.ToString() ?? string.Empty;
+
+    private string GetMaterialShortLabel(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        return material is null ? "Material tidak ditemukan" : $"{material.Name} ({material.Code})";
+    }
+
+    private string GetMaterialBrandLabel(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        if (material is null)
+        {
+            return "-";
+        }
+
+        return string.IsNullOrWhiteSpace(material.Brand) ? "Tanpa merk" : material.Brand.Trim();
+    }
+
+    private string GetMaterialNettoLabel(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        return material is null ? "-" : $"{material.NetQuantity.ToString("0.####")} {material.NetUnit}";
+    }
+
+    private string GetMaterialPricePerPackLabel(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        return material is null ? "-" : FormatCurrency(material.PricePerPack);
+    }
+
+    private string GetMaterialWeightPerPackLabel(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        return material is null ? "-" : $"{material.NetQuantityInBaseUnit.ToString("0.####")} {material.BaseUnit}";
+    }
+
+    private string GetMaterialQuantityLabel(RecipeMaterialInput item)
+    {
+        if (item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.Unit))
+        {
+            return "-";
+        }
+
+        return $"{item.Quantity.ToString("0.##")} {item.Unit}";
+    }
+
+    private decimal GetLineCost(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        return material is null ? 0m : RecipeCatalogMath.CalculateLineCost(item, material);
+    }
+
+    private string GetConversionLabel(RecipeMaterialInput item)
+    {
+        var material = FindMaterial(item);
+        if (material is null)
+        {
+            return "-";
+        }
+
+        var baseQuantity = RecipeCatalogMath.ConvertToBaseQuantity(item.Quantity, item.Unit, material);
+        return baseQuantity <= 0 ? "-" : $"{baseQuantity.ToString("0.####")} {material.BaseUnit}";
+    }
+
+    private string GetGroupSummary(RecipeGroupInput group)
+    {
+        var itemCount = group.Materials.Count(item => item.MaterialId is not null);
+        var subtotal = group.Materials.Sum(GetLineCost);
+        return itemCount == 0
+            ? "Belum ada material. Buka list material untuk mulai mengisi bahan."
+            : $"{itemCount} material aktif - subtotal {FormatCurrency(subtotal)}";
+    }
+
+    private decimal GetGroupTotal(RecipeGroupInput group)
+        => group.Materials.Sum(GetLineCost);
+
+    private static string GetSuggestedDraftUnit(RawMaterial material)
+    {
+        var units = RecipeCatalogMath.GetAvailableUnits(material);
+
+        var preferred = units.FirstOrDefault(item =>
+            item.Equals(material.NetUnit, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(preferred))
+        {
+            return preferred;
+        }
+
+        preferred = units.FirstOrDefault(item =>
+            item.Equals(material.BaseUnit, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(preferred))
+        {
+            return preferred;
+        }
+
+        return units.FirstOrDefault() ?? material.BaseUnit;
+    }
+
+    private static string GetMaterialOptionLabel(RawMaterial material)
+    {
+        var brand = string.IsNullOrWhiteSpace(material.Brand) ? "Tanpa merk" : material.Brand.Trim();
+        var netto = $"{material.NetQuantity.ToString("0.####")} {material.NetUnit}";
+        return $"{material.Name} ({material.Code}) - {brand} - netto {netto}";
+    }
+
+    private Task FocusMaterialPickerAsync()
+        => JS.InvokeVoidAsync("recipeEditor.focusFirst", ".material-picker-input").AsTask();
+
+    private Task FocusMaterialQuantityAsync()
+        => JS.InvokeVoidAsync("recipeEditor.focusFirst", ".material-quantity-input").AsTask();
+
+    private void BeginEditing(RecipeUpsertRequest draft, Guid? editingId)
+    {
+        _editingId = editingId;
+        _formMessage = string.Empty;
+        _formModel = draft;
+
+        EnsureEditorHasGroup();
+        _activeGroupId = _formModel.Groups[0].Id;
+        ResetMaterialDraft();
+        _focusEditorRequested = true;
+        _showEditor = true;
+    }
+
+    private void EnsureEditorHasGroup()
+    {
+        if (_formModel.Groups.Count == 0)
+        {
+            _formModel.Groups.Add(CreateGroup("Bahan utama"));
+        }
+    }
+
+    private RawMaterial? FindMaterial(RecipeMaterialInput item)
+        => FindMaterial(item.MaterialId);
+
+    private RawMaterial? FindMaterial(Guid? materialId)
+        => materialId is Guid id ? Store.FindRawMaterial(id) : null;
+
+    private static RecipeGroupInput CreateGroup(string name) => new() { Name = name };
+    private static RecipeMaterialInput CreateMaterialInput() => new() { Quantity = 1m };
+    private static string FormatCurrency(decimal value) => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(async () => await LoadAsync());
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Store.Changed -= HandleStoreChanged;
+        return ValueTask.CompletedTask;
+    }
+}
