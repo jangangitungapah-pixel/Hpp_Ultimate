@@ -196,7 +196,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         var current = Deserialize<List<RawMaterial>>(state, "rawMaterials");
         if (current is { Count: > 0 })
         {
-            return current;
+            return current.Select(SanitizeMaterial).ToArray();
         }
 
         var legacy = Deserialize<List<LegacyRawMaterial>>(state, "rawMaterials") ?? [];
@@ -207,7 +207,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
                 ? normalizedUnit
                 : "pcs";
 
-            return new RawMaterial(
+            return SanitizeMaterial(new RawMaterial(
                 item.Id,
                 item.Code,
                 item.Name,
@@ -220,7 +220,7 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
                 item.Description,
                 item.Status,
                 item.CreatedAt,
-                item.UpdatedAt);
+                item.UpdatedAt));
         }).ToArray();
     }
 
@@ -275,6 +275,23 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
                 "Harga awal material"));
         }
     }
+
+    private static RawMaterial SanitizeMaterial(RawMaterial material)
+        => material with
+        {
+            Code = material.Code ?? string.Empty,
+            Name = material.Name ?? string.Empty,
+            Brand = string.IsNullOrWhiteSpace(material.Brand) ? null : material.Brand.Trim(),
+            BaseUnit = string.IsNullOrWhiteSpace(material.BaseUnit) ? "pcs" : MaterialUnitCatalog.NormalizeUnit(material.BaseUnit),
+            NetUnit = string.IsNullOrWhiteSpace(material.NetUnit)
+                ? (string.IsNullOrWhiteSpace(material.BaseUnit) ? "pcs" : MaterialUnitCatalog.NormalizeUnit(material.BaseUnit))
+                : MaterialUnitCatalog.NormalizeUnit(material.NetUnit),
+            UnitConversions = material.UnitConversions?
+                .Where(item => item is not null && !string.IsNullOrWhiteSpace(item.UnitName) && item.ConversionQuantity > 0)
+                .Select(item => new MaterialUnitConversion(item.UnitName.Trim(), item.ConversionQuantity))
+                .ToArray() ?? [],
+            Description = string.IsNullOrWhiteSpace(material.Description) ? null : material.Description.Trim()
+        };
 
     private SqliteConnection CreateConnection()
         => new($"Data Source={_dbPath}");
@@ -630,6 +647,31 @@ public sealed class SeededBusinessDataStore : IBusinessDataStore
         _businessSettings = settings;
         TouchUnsafe();
         return settings;
+    }
+
+    public (int Products, int Materials, int StockMovements, int Recipes, int ProductionBatches) ClearOperationalData()
+    {
+        using var scope = _gate.EnterScope();
+
+        var summary = (
+            Products: _products.Count,
+            Materials: _rawMaterials.Count,
+            StockMovements: _stockMovements.Count,
+            Recipes: _productRecipes.Count + _bomItems.Count,
+            ProductionBatches: _productionBatches.Count);
+
+        _products.Clear();
+        _rawMaterials.Clear();
+        _materialPrices.Clear();
+        _stockMovements.Clear();
+        _productRecipes.Clear();
+        _bomItems.Clear();
+        _productionBatches.Clear();
+        _laborCosts.Clear();
+        _overheadCosts.Clear();
+
+        TouchUnsafe();
+        return summary;
     }
 
     public BusinessUser? FindUser(Guid id)

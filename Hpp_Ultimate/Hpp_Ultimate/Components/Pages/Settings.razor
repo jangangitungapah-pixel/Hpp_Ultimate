@@ -194,10 +194,66 @@
                         }
                     </div>
                 </section>
+
+                <section class="danger-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Clear data</span>
+                            <h2>Hapus seluruh data operasional aplikasi</h2>
+                        </div>
+                    </div>
+
+                    <div class="danger-summary">
+                        <article>
+                            <small>Produk</small>
+                            <strong>@DataStore.Products.Count</strong>
+                        </article>
+                        <article>
+                            <small>Material</small>
+                            <strong>@DataStore.RawMaterials.Count</strong>
+                        </article>
+                        <article>
+                            <small>Stok</small>
+                            <strong>@DataStore.StockMovements.Count</strong>
+                        </article>
+                        <article>
+                            <small>Resep</small>
+                            <strong>@(DataStore.ProductRecipes.Count + DataStore.BomItems.Count)</strong>
+                        </article>
+                        <article>
+                            <small>Produksi</small>
+                            <strong>@DataStore.ProductionBatches.Count</strong>
+                        </article>
+                    </div>
+
+                    <p class="danger-copy">Aksi ini membersihkan data produk, katalog material, stok, resep/BOM, dan histori produksi. Pengaturan usaha serta akun login tetap dipertahankan.</p>
+
+                    <div class="form-actions">
+                        <button type="button" class="danger-button" @onclick="OpenClearDataModal">Clear Data</button>
+                    </div>
+                </section>
             </aside>
         </div>
     }
 </section>
+
+@if (_showClearDataModal)
+{
+    <div class="overlay" @onclick="CloseClearDataModal">
+        <div class="confirm-card" @onclick:stopPropagation="true">
+            <span>Konfirmasi</span>
+            <h2>Clear semua data operasional?</h2>
+            <p>Semua data produk, material, stok, resep, dan produksi akan dihapus permanen. Pengaturan usaha dan akun tetap tersimpan.</p>
+
+            <div class="form-actions">
+                <button type="button" class="ghost-button" @onclick="CloseClearDataModal">Batal</button>
+                <button type="button" class="danger-button" disabled="@_isClearingData" @onclick="ConfirmClearDataAsync">
+                    @(_isClearingData ? "Membersihkan..." : "Ya, Clear Data")
+                </button>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     private BusinessSettingsSnapshot? _snapshot;
@@ -205,6 +261,8 @@
     private bool _isLoading = true;
     private string _statusMessage = "Memuat...";
     private string _formMessage = string.Empty;
+    private bool _showClearDataModal;
+    private bool _isClearingData;
 
     protected override async Task OnInitializedAsync()
     {
@@ -241,6 +299,33 @@
     {
         SyncForm();
         _formMessage = "Form dikembalikan ke nilai yang tersimpan.";
+    }
+
+    private void OpenClearDataModal()
+    {
+        _showClearDataModal = true;
+    }
+
+    private void CloseClearDataModal()
+    {
+        if (_isClearingData)
+        {
+            return;
+        }
+
+        _showClearDataModal = false;
+    }
+
+    private async Task ConfirmClearDataAsync()
+    {
+        _isClearingData = true;
+        var result = await SettingsService.ClearOperationalDataAsync();
+        _isClearingData = false;
+        _showClearDataModal = false;
+
+        _formMessage = result.Message;
+        await LoadAsync();
+        _statusMessage = result.Message;
     }
 
     private void SyncForm()

@@ -55,7 +55,8 @@ public static class RawMaterialApiEndpoints
             await using var stream = file.OpenReadStream();
             var result = await service.PreviewImportAsync(file.FileName, stream, cancellationToken);
             return Results.Ok(result);
-        });
+        })
+        .DisableAntiforgery();
 
         endpoints.MapPost("/api/bahan-baku/import-commit", async (RawMaterialImportCommitRequest request, RawMaterialCatalogService service, CancellationToken cancellationToken) =>
         {

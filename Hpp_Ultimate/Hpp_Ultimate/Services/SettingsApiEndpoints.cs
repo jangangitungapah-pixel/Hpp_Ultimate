@@ -15,6 +15,12 @@ public static class SettingsApiEndpoints
             return result.Success ? Results.Ok(result) : Results.BadRequest(result);
         });
 
+        endpoints.MapPost("/api/settings/clear-data", async (SettingsService service, CancellationToken cancellationToken) =>
+        {
+            var result = await service.ClearOperationalDataAsync(cancellationToken);
+            return result.Success ? Results.Ok(result) : Results.BadRequest(result);
+        });
+
         return endpoints;
     }
 }

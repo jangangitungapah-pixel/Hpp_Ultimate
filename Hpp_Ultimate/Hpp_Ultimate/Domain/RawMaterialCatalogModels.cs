@@ -133,6 +133,8 @@ public sealed record RawMaterialImportResult(
     bool Success,
     string Message,
     int ImportedCount,
+    int UpdatedCount,
+    int UnchangedCount,
     int SkippedCount,
     IReadOnlyList<string> Errors);
 

@@ -26,6 +26,15 @@ public sealed record BusinessSettingsSnapshot(
 
 public sealed record BusinessSettingsMutationResult(bool Success, string Message, BusinessSettings? Settings = null);
 
+public sealed record BusinessDataResetResult(
+    bool Success,
+    string Message,
+    int ClearedProducts,
+    int ClearedMaterials,
+    int ClearedStocks,
+    int ClearedRecipes,
+    int ClearedProductionBatches);
+
 public sealed class BusinessSettingsRequest
 {
     [Required(ErrorMessage = "Nama usaha wajib diisi.")]

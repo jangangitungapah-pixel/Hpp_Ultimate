@@ -7,7 +7,6 @@
 
 .materials-toolbar,
 .materials-table-card,
-.detail-card,
 .modal-card,
 .confirm-card {
     border: 1px solid rgba(255, 255, 255, 0.72);
@@ -61,8 +60,7 @@
 .toolbar-actions,
 .row-actions,
 .pager,
-.modal-actions,
-.detail-badges {
+.modal-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.7rem;
@@ -115,24 +113,54 @@ th button {
     color: #b91c1c;
 }
 
-.materials-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(21rem, 0.95fr);
-    gap: 1rem;
-    align-items: start;
-}
-
-.materials-table-card,
-.detail-card {
+.materials-table-card {
     padding: 1.1rem;
     border-radius: 1.45rem;
 }
 
+.datagrid-shell {
+    width: 100%;
+    overflow: hidden;
+}
+
 .table-toolbar {
     display: grid;
-    grid-template-columns: minmax(16rem, 1.3fr) minmax(12rem, 0.45fr) auto;
+    grid-template-columns: minmax(16rem, 1.3fr) minmax(10rem, 0.4fr) minmax(10rem, 0.45fr) auto auto;
     gap: 0.75rem;
     align-items: center;
+}
+
+.sort-direction-button {
+    min-height: 2.95rem;
+}
+
+.datagrid-meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.datagrid-meta article {
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.datagrid-meta small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #b45309;
+}
+
+.datagrid-meta strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: #0f172a;
 }
 
 .table-toolbar input,
@@ -191,54 +219,116 @@ th button {
     margin-top: 1rem;
 }
 
-table {
+.datagrid-wrap {
+    margin-inline: -1.1rem;
+    padding-inline: 1.1rem;
+}
+
+.table-wrap table {
     width: 100%;
     border-collapse: collapse;
 }
 
-th,
-td {
-    padding: 0.95rem 0.75rem;
+.datagrid-table {
+    min-width: 100%;
+}
+
+.datagrid-wrap ::deep table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.datagrid-wrap ::deep thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: rgba(248, 250, 252, 0.98);
+    backdrop-filter: blur(12px);
+}
+
+.table-wrap th,
+.table-wrap td,
+.datagrid-wrap ::deep th,
+.datagrid-wrap ::deep td {
+    padding: 1rem 0.9rem;
     border-bottom: 1px solid rgba(226, 232, 240, 0.92);
     text-align: left;
     vertical-align: top;
 }
 
-th button {
+.table-wrap th button {
     padding: 0;
     background: transparent;
     color: #64748b;
     font-weight: 800;
 }
 
-tbody tr {
+.table-wrap tbody tr,
+.datagrid-wrap ::deep tbody tr {
     transition: background 140ms ease;
-    cursor: pointer;
 }
 
-tbody tr:hover,
+.table-wrap tbody tr:hover,
+.datagrid-wrap ::deep tbody tr:hover,
 .selected-row {
-    background: rgba(255, 247, 237, 0.55);
+    background: rgba(255, 247, 237, 0.6);
 }
 
-td strong,
-td small,
+.table-wrap td strong,
+.table-wrap td small,
+.datagrid-wrap ::deep td strong,
+.datagrid-wrap ::deep td small,
 .history-list strong,
 .history-list small,
 .history-list span {
     display: block;
 }
 
-td strong,
+.table-wrap td strong,
+.datagrid-wrap ::deep td strong,
 .detail-grid strong,
 .history-list strong {
     color: #0f172a;
 }
 
-td small,
+.table-wrap td small,
+.datagrid-wrap ::deep td small,
 .history-list small,
 .history-list span,
 .muted {
+    color: #64748b;
+}
+
+.material-cell,
+.net-cell,
+.cost-cell {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.material-cell strong,
+.net-cell strong,
+.cost-cell strong {
+    font-size: 0.98rem;
+}
+
+.data-text {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    color: #0f172a;
+}
+
+.actions-column {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.datagrid-wrap ::deep .col-title {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: #64748b;
 }
 
@@ -254,11 +344,6 @@ td small,
 .ghost-button:disabled,
 .primary-button:disabled {
     opacity: 0.45;
-}
-
-.detail-card {
-    display: grid;
-    gap: 1rem;
 }
 
 .detail-head {
@@ -280,7 +365,6 @@ td small,
 
 .detail-grid article,
 .detail-section,
-.detail-empty,
 .readonly-card,
 .empty-conversion,
 .empty-import {
@@ -345,6 +429,7 @@ td small,
 .empty-row {
     text-align: center;
     color: #94a3b8;
+    padding-block: 3rem;
 }
 
 .overlay {
@@ -370,6 +455,26 @@ td small,
 
 .import-card {
     width: min(100%, 72rem);
+}
+
+.detail-modal-card {
+    width: min(100%, 74rem);
+    max-height: min(90vh, 60rem);
+    overflow: auto;
+}
+
+.detail-modal-head {
+    margin-bottom: 1rem;
+}
+
+.detail-modal-head small {
+    color: #64748b;
+}
+
+.detail-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
 }
 
 .modal-head {
@@ -529,14 +634,9 @@ td small,
     }
 }
 
-@media (max-width: 1260px) {
-    .materials-layout {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (max-width: 900px) {
     .table-toolbar,
+    .datagrid-meta,
     .form-grid,
     .detail-grid,
     .import-summary,
@@ -551,5 +651,10 @@ td small,
     .modal-actions {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .datagrid-wrap {
+        margin-inline: -0.4rem;
+        padding-inline: 0.4rem;
     }
 }

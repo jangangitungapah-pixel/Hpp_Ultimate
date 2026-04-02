@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Text;
 using ClosedXML.Excel;
 using Microsoft.Extensions.Caching.Memory;
@@ -169,12 +170,18 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
                 .Select(item => $"Baris {item.RowNumber}: {string.Join(" ", item.Errors)}")
                 .ToArray();
 
-            return new RawMaterialImportResult(false, "Import dibatalkan karena masih ada row yang invalid.", 0, request.Rows.Count(item => !item.IsValid), blockingErrors);
+            return new RawMaterialImportResult(false, "Import dibatalkan karena masih ada row yang invalid.", 0, 0, 0, request.Rows.Count(item => !item.IsValid), blockingErrors);
         }
 
         var errors = new List<string>();
         var imported = 0;
+        var updated = 0;
+        var unchanged = 0;
         var skipped = 0;
+        var lastRowByIdentity = request.Rows
+            .Where(item => item.IsValid)
+            .GroupBy(item => GetImportIdentityKey(item, includeBrand: true))
+            .ToDictionary(group => group.Key, group => group.Max(item => item.RowNumber), StringComparer.Ordinal);
 
         foreach (var row in request.Rows.OrderBy(item => item.RowNumber))
         {
@@ -191,34 +198,80 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
                 continue;
             }
 
-            var createResult = await CreateAsync(new RawMaterialUpsertRequest
+            var identityKey = GetImportIdentityKey(row, includeBrand: true);
+            if (lastRowByIdentity.TryGetValue(identityKey, out var lastRowNumber) && lastRowNumber != row.RowNumber)
             {
-                Code = await GenerateNextCodeAsync(cancellationToken),
+                unchanged++;
+                continue;
+            }
+
+            var existing = FindExistingMaterialForImport(row);
+            if (existing is null)
+            {
+                var createResult = await CreateAsync(new RawMaterialUpsertRequest
+                {
+                    Code = await GenerateNextCodeAsync(cancellationToken),
+                    Name = row.Name,
+                    Brand = row.Brand,
+                    BaseUnit = row.BaseUnit,
+                    NetQuantity = row.NetQuantity ?? 0m,
+                    NetUnit = row.NetUnit,
+                    PricePerPack = row.PricePerPack ?? 0m,
+                    Status = MaterialStatus.Active
+                }, cancellationToken);
+
+                if (createResult.Success)
+                {
+                    imported++;
+                    continue;
+                }
+
+                skipped++;
+                errors.Add($"Baris {row.RowNumber}: {createResult.Message}");
+                continue;
+            }
+
+            if (IsEquivalentImport(existing, row))
+            {
+                unchanged++;
+                continue;
+            }
+
+            var updateResult = await UpdateAsync(existing.Id, new RawMaterialUpsertRequest
+            {
+                Id = existing.Id,
+                Code = existing.Code,
                 Name = row.Name,
                 Brand = row.Brand,
                 BaseUnit = row.BaseUnit,
                 NetQuantity = row.NetQuantity ?? 0m,
                 NetUnit = row.NetUnit,
                 PricePerPack = row.PricePerPack ?? 0m,
-                Status = MaterialStatus.Active
+                UnitConversions = existing.UnitConversions
+                    .Select(item => new RawMaterialUnitConversionInput
+                    {
+                        UnitName = item.UnitName,
+                        ConversionQuantity = item.ConversionQuantity
+                    })
+                    .ToList(),
+                Description = existing.Description,
+                Status = existing.Status
             }, cancellationToken);
 
-            if (createResult.Success)
+            if (updateResult.Success)
             {
-                imported++;
+                updated++;
                 continue;
             }
 
             skipped++;
-            errors.Add($"Baris {row.RowNumber}: {createResult.Message}");
+            errors.Add($"Baris {row.RowNumber}: {updateResult.Message}");
         }
 
         var success = request.SkipInvalidRows || errors.Count == 0;
-        var message = imported == 0
-            ? "Tidak ada material yang berhasil diimport."
-            : $"{imported} material berhasil diimport.";
+        var message = $"Import selesai. {imported} material baru, {updated} material diperbarui, {unchanged} data sama dilewati, {skipped} baris dilewati karena error.";
 
-        return new RawMaterialImportResult(success, message, imported, skipped, errors);
+        return new RawMaterialImportResult(success, message, imported, updated, unchanged, skipped, errors);
     }
 
     public async Task<string> ExportCsvAsync(CancellationToken cancellationToken = default)
@@ -318,15 +371,15 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
     private RawMaterialListItem MapToListItem(RawMaterial material)
         => new(
             material.Id,
-            material.Code,
-            material.Name,
+            material.Code ?? string.Empty,
+            material.Name ?? string.Empty,
             material.Brand,
-            material.BaseUnit,
+            material.BaseUnit ?? string.Empty,
             material.NetQuantity,
-            material.NetUnit,
+            material.NetUnit ?? string.Empty,
             material.PricePerPack,
             material.CostPerBaseUnit,
-            material.UnitConversions.Count,
+            material.UnitConversions?.Count ?? 0,
             material.Status,
             material.UpdatedAt,
             store.MaterialUsedInBom(material.Id),
@@ -401,10 +454,98 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
             .Select(item => new MaterialUnitConversion(item.UnitName.Trim(), item.ConversionQuantity))
             .ToArray();
 
+    private RawMaterial? FindExistingMaterialForImport(RawMaterialImportPreviewRow row)
+    {
+        var exactMatches = store.RawMaterials
+            .Where(material => GetImportIdentityKey(material, includeBrand: true) == GetImportIdentityKey(row, includeBrand: true))
+            .ToArray();
+
+        if (exactMatches.Length == 1)
+        {
+            return exactMatches[0];
+        }
+
+        if (exactMatches.Length > 1)
+        {
+            return exactMatches
+                .OrderByDescending(item => item.UpdatedAt)
+                .First();
+        }
+
+        var fallbackMatches = store.RawMaterials
+            .Where(material =>
+                (string.IsNullOrWhiteSpace(row.Brand) || string.IsNullOrWhiteSpace(material.Brand)) &&
+                GetImportIdentityKey(material, includeBrand: false) == GetImportIdentityKey(row, includeBrand: false))
+            .ToArray();
+
+        return fallbackMatches.Length switch
+        {
+            1 => fallbackMatches[0],
+            > 1 => fallbackMatches.OrderByDescending(item => item.UpdatedAt).First(),
+            _ => null
+        };
+    }
+
+    private static bool IsEquivalentImport(RawMaterial existing, RawMaterialImportPreviewRow row)
+    {
+        var existingName = NormalizeLookupText(existing.Name);
+        var rowName = NormalizeLookupText(row.Name);
+        var existingBrand = NormalizeLookupText(existing.Brand);
+        var rowBrand = NormalizeLookupText(row.Brand);
+        var existingBaseUnit = NormalizeUnitOrEmpty(existing.BaseUnit);
+        var rowBaseUnit = NormalizeUnitOrEmpty(row.BaseUnit);
+        var existingNetUnit = NormalizeUnitOrEmpty(existing.NetUnit);
+        var rowNetUnit = NormalizeUnitOrEmpty(row.NetUnit);
+        var existingNetQty = existing.NetQuantity;
+        var rowNetQty = row.NetQuantity ?? 0m;
+        var existingBaseQty = existing.NetQuantityInBaseUnit;
+        var rowBaseQty = GetNetQuantityInBaseUnit(row);
+
+        return existingName == rowName
+            && existingBrand == rowBrand
+            && existingBaseUnit == rowBaseUnit
+            && existingNetUnit == rowNetUnit
+            && existingNetQty == rowNetQty
+            && existingBaseQty == rowBaseQty
+            && existing.PricePerPack == (row.PricePerPack ?? 0m);
+    }
+
     private static string NormalizeUnit(string unit) => MaterialUnitCatalog.NormalizeUnit(unit);
 
     private static string? NormalizeOptional(string? value)
         => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+
+    private static string GetImportIdentityKey(RawMaterial material, bool includeBrand)
+        => string.Join("|",
+            NormalizeLookupText(material.Name),
+            includeBrand ? NormalizeLookupText(material.Brand) : string.Empty,
+            NormalizeUnitOrEmpty(material.BaseUnit),
+            material.NetQuantityInBaseUnit.ToString("0.####", CultureInfo.InvariantCulture));
+
+    private static string GetImportIdentityKey(RawMaterialImportPreviewRow row, bool includeBrand)
+        => string.Join("|",
+            NormalizeLookupText(row.Name),
+            includeBrand ? NormalizeLookupText(row.Brand) : string.Empty,
+            NormalizeUnitOrEmpty(row.BaseUnit),
+            GetNetQuantityInBaseUnit(row).ToString("0.####", CultureInfo.InvariantCulture));
+
+    private static decimal GetNetQuantityInBaseUnit(RawMaterialImportPreviewRow row)
+    {
+        if (row.NetQuantity is null || row.NetQuantity <= 0)
+        {
+            return 0m;
+        }
+
+        if (!MaterialUnitCatalog.AreCompatible(row.BaseUnit, row.NetUnit))
+        {
+            return 0m;
+        }
+
+        return MaterialUnitCatalog.Convert(row.NetQuantity.Value, row.NetUnit, row.BaseUnit);
+    }
+
+    private static string NormalizeLookupText(string? value)
+        => string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim().ToUpperInvariant();
 
     private static async Task<List<string[]>> ReadCsvAsync(Stream stream, CancellationToken cancellationToken)
     {
@@ -465,18 +606,54 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
             return values[index]?.Trim() ?? string.Empty;
         }
 
-        var name = Read("nama_material");
-        var brand = NormalizeOptional(Read("merk"));
-        var baseUnit = Read("base_unit");
-        var netUnit = Read("net_unit");
+        string ReadAny(params string[] keys)
+        {
+            foreach (var key in keys)
+            {
+                var value = Read(key);
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    return value;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        var name = ReadAny("nama_material", "nama_bahan", "material", "bahan");
+        var brand = NormalizeOptional(ReadAny("merk", "merek", "merek_contoh", "brand"));
+        var baseUnit = ReadAny("base_unit");
+        var netUnit = ReadAny("net_unit");
+        var packDescriptor = ReadAny("berat_per_pack", "netto", "isi_pack", "ukuran_pack");
+
+        if (string.IsNullOrWhiteSpace(packDescriptor))
+        {
+            packDescriptor = ReadAny("berat_pack");
+        }
+
+        var parsedPackSize = ParsePackSize(packDescriptor);
+        if (string.IsNullOrWhiteSpace(baseUnit))
+        {
+            baseUnit = parsedPackSize.BaseUnit;
+        }
+
+        if (string.IsNullOrWhiteSpace(netUnit))
+        {
+            netUnit = parsedPackSize.NetUnit;
+        }
+
+        var netQty = TryParseDecimal(ReadAny("net_qty"));
+        if (netQty is null || netQty <= 0)
+        {
+            netQty = parsedPackSize.NetQuantity;
+        }
 
         if (string.IsNullOrWhiteSpace(baseUnit))
         {
             baseUnit = netUnit;
         }
 
-        var netQty = TryParseDecimal(Read("net_qty"));
-        var pricePerPack = TryParseDecimal(Read("harga_per_pack"));
+        var pricePerPack = TryParseDecimal(ReadAny("harga_per_pack", "estimasi_harga_(idr)", "estimasi_harga_idr", "harga", "price"));
         var errors = new List<string>();
 
         if (string.IsNullOrWhiteSpace(name))
@@ -526,6 +703,11 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
             return null;
         }
 
+        raw = raw.Replace("Rp", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("IDR", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("Â", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Trim();
+
         if (decimal.TryParse(raw, NumberStyles.Number, CultureInfo.InvariantCulture, out var invariant))
         {
             return invariant;
@@ -540,6 +722,115 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
     private static string NormalizeUnitOrEmpty(string value)
         => string.IsNullOrWhiteSpace(value) ? string.Empty : MaterialUnitCatalog.NormalizeUnit(value);
 
+    private static ParsedPackSize ParsePackSize(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return ParsedPackSize.Empty;
+        }
+
+        var normalized = raw.Trim()
+            .Replace("Â", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace(",", ".", StringComparison.OrdinalIgnoreCase);
+
+        var parentheticalMatches = Regex.Matches(normalized, @"\(([^)]*)\)");
+        foreach (Match match in parentheticalMatches)
+        {
+            var nested = ParsePackSize(match.Groups[1].Value);
+            if (nested.IsValid)
+            {
+                return nested;
+            }
+        }
+
+        var multiplied = Regex.Match(
+            normalized,
+            @"(?<qty>\d+(?:\.\d+)?)\s*(?<unit>kg|gr|gram|g|liter|litre|l|ml|pcs|pc|piece|pieces|lembar|btr|butir|botol|sachet|tray|pack|pouch|cup|jar|kaleng|box|kotak|blok|sheet|roll)\s*[xX]\s*(?<mult>\d+(?:\.\d+)?)",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (multiplied.Success)
+        {
+            var multipliedQty = TryParseDecimal(multiplied.Groups["qty"].Value);
+            var mult = TryParseDecimal(multiplied.Groups["mult"].Value);
+            var multipliedUnit = NormalizeImportUnit(multiplied.Groups["unit"].Value);
+
+            if (multipliedQty is > 0 && mult is > 0 && !string.IsNullOrWhiteSpace(multipliedUnit))
+            {
+                var multipliedBaseUnit = MaterialUnitCatalog.GetFamily(multipliedUnit) switch
+                {
+                    "mass" => "gr",
+                    "volume" => "ml",
+                    "count" => "pcs",
+                    _ => multipliedUnit
+                };
+
+                return new ParsedPackSize(multipliedQty.Value * mult.Value, multipliedUnit, multipliedBaseUnit);
+            }
+        }
+
+        var direct = Regex.Match(
+            normalized,
+            @"(?<qty>\d+(?:\.\d+)?)\s*(?<unit>kg|gr|gram|g|liter|litre|l|ml|pcs|pc|piece|pieces|lembar|btr|butir|botol|sachet|tray|pack|pouch|cup|jar|kaleng|box|kotak|blok|sheet|roll)",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (!direct.Success)
+        {
+            return ParsedPackSize.Empty;
+        }
+
+        var qty = TryParseDecimal(direct.Groups["qty"].Value);
+        if (qty is null || qty <= 0)
+        {
+            return ParsedPackSize.Empty;
+        }
+
+        var unit = NormalizeImportUnit(direct.Groups["unit"].Value);
+        if (string.IsNullOrWhiteSpace(unit))
+        {
+            return ParsedPackSize.Empty;
+        }
+
+        var baseUnit = MaterialUnitCatalog.GetFamily(unit) switch
+        {
+            "mass" => "gr",
+            "volume" => "ml",
+            "count" => "pcs",
+            _ => unit
+        };
+
+        return new ParsedPackSize(qty.Value, unit, baseUnit);
+    }
+
+    private static string NormalizeImportUnit(string rawUnit)
+    {
+        var unit = rawUnit.Trim().ToLowerInvariant();
+        return unit switch
+        {
+            "g" => "gr",
+            "gram" => "gr",
+            "liter" => "l",
+            "litre" => "l",
+            "pc" => "pcs",
+            "piece" => "pcs",
+            "pieces" => "pcs",
+            "lembar" => "pcs",
+            "btr" => "pcs",
+            "butir" => "pcs",
+            "botol" => "pcs",
+            "sachet" => "pcs",
+            "tray" => "pcs",
+            "pack" => "pcs",
+            "pouch" => "pcs",
+            "cup" => "pcs",
+            "jar" => "pcs",
+            "kaleng" => "pcs",
+            "box" => "pcs",
+            "kotak" => "pcs",
+            "blok" => "pcs",
+            "sheet" => "pcs",
+            "roll" => "pcs",
+            _ => MaterialUnitCatalog.NormalizeUnit(unit)
+        };
+    }
+
     private static string Csv(params object?[] values)
         => string.Join(",", values.Select(value =>
         {
@@ -551,4 +842,11 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
 
             return $"\"{text.Replace("\"", "\"\"")}\"";
         }));
+
+    private readonly record struct ParsedPackSize(decimal? NetQuantity, string NetUnit, string BaseUnit)
+    {
+        public bool IsValid => NetQuantity is > 0 && !string.IsNullOrWhiteSpace(NetUnit) && !string.IsNullOrWhiteSpace(BaseUnit);
+
+        public static ParsedPackSize Empty => new(null, string.Empty, string.Empty);
+    }
 }

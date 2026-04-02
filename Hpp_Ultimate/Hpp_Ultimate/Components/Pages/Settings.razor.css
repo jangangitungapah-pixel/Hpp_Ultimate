@@ -9,6 +9,8 @@
 .form-card,
 .preview-card,
 .notes-card,
+.danger-card,
+.confirm-card,
 .summary-grid article {
     border: 1px solid rgba(255, 255, 255, 0.72);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.66));
@@ -25,7 +27,8 @@
 }
 
 .settings-toolbar span,
-.section-head span {
+.section-head span,
+.confirm-card span {
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.16em;
@@ -34,7 +37,8 @@
 }
 
 .settings-toolbar h1,
-.section-head h2 {
+.section-head h2,
+.confirm-card h2 {
     margin: 0.42rem 0 0;
     color: #0f172a;
 }
@@ -51,7 +55,8 @@
 }
 
 .ghost-button,
-.primary-button {
+.primary-button,
+.danger-button {
     border: 0;
     font: inherit;
     padding: 0.78rem 0.92rem;
@@ -69,6 +74,12 @@
     background: linear-gradient(135deg, #f97316, #fb7185);
     color: white;
     box-shadow: 0 14px 28px rgba(249, 115, 22, 0.22);
+}
+
+.danger-button {
+    background: rgba(220, 38, 38, 0.95);
+    color: white;
+    box-shadow: 0 14px 28px rgba(220, 38, 38, 0.18);
 }
 
 .status-chip {
@@ -126,7 +137,8 @@
 
 .form-card,
 .preview-card,
-.notes-card {
+.notes-card,
+.danger-card {
     padding: 1.1rem;
     border-radius: 1.45rem;
 }
@@ -227,6 +239,69 @@
     color: #475569;
 }
 
+.danger-card {
+    border-color: rgba(248, 113, 113, 0.35);
+    background: linear-gradient(135deg, rgba(254, 242, 242, 0.92), rgba(255, 255, 255, 0.78));
+}
+
+.danger-summary {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+}
+
+.danger-summary article {
+    padding: 0.95rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(254, 202, 202, 0.9);
+}
+
+.danger-summary small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #b91c1c;
+}
+
+.danger-summary strong {
+    display: block;
+    margin-top: 0.35rem;
+    color: #7f1d1d;
+    font-size: 1.12rem;
+}
+
+.danger-copy {
+    margin: 0.9rem 0 0;
+    color: #7f1d1d;
+    line-height: 1.6;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.22);
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    z-index: 50;
+}
+
+.confirm-card {
+    width: min(100%, 32rem);
+    padding: 1.2rem;
+    border-radius: 1.45rem;
+}
+
+.confirm-card p {
+    margin: 0.8rem 0 0;
+    color: #64748b;
+    line-height: 1.6;
+}
+
 .validation-message,
 .form-grid ::deep .validation-message {
     color: #dc2626;
@@ -266,7 +341,8 @@
 
     .summary-grid,
     .form-grid,
-    .preview-grid {
+    .preview-grid,
+    .danger-summary {
         grid-template-columns: 1fr;
     }
 }

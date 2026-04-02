@@ -64,6 +64,23 @@ public sealed class SettingsService(IMemoryCache cache, SeededBusinessDataStore 
         return Task.FromResult(new BusinessSettingsMutationResult(true, "Pengaturan berhasil disimpan.", updated));
     }
 
+    public Task<BusinessDataResetResult> ClearOperationalDataAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var cleared = store.ClearOperationalData();
+        var message = $"Semua data operasional berhasil dibersihkan. Produk: {cleared.Products}, material: {cleared.Materials}, stok: {cleared.StockMovements}, resep: {cleared.Recipes}, produksi: {cleared.ProductionBatches}.";
+
+        return Task.FromResult(new BusinessDataResetResult(
+            true,
+            message,
+            cleared.Products,
+            cleared.Materials,
+            cleared.StockMovements,
+            cleared.Recipes,
+            cleared.ProductionBatches));
+    }
+
     private BusinessSettingsSnapshot BuildSnapshot()
     {
         var settings = store.GetBusinessSettings();

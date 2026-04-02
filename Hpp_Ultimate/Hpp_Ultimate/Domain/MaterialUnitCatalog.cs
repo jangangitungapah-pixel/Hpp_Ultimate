@@ -44,24 +44,59 @@ public static class MaterialUnitCatalog
     public static bool AreCompatible(string leftUnit, string rightUnit)
         => string.Equals(GetFamily(leftUnit), GetFamily(rightUnit), StringComparison.OrdinalIgnoreCase);
 
-    public static string NormalizeUnit(string unit)
+    public static string NormalizeUnit(string? unit)
     {
+        if (string.IsNullOrWhiteSpace(unit))
+        {
+            return string.Empty;
+        }
+
         var normalized = unit.Trim().ToLowerInvariant();
         return Aliases.TryGetValue(normalized, out var alias) ? alias : normalized;
     }
 
     public static string? GetFamily(string unit)
-        => Units.FirstOrDefault(item => item.Value.Equals(NormalizeUnit(unit), StringComparison.OrdinalIgnoreCase))?.Family;
+        => TryGetOption(unit)?.Family;
 
     public static decimal Convert(decimal value, string fromUnit, string toUnit)
     {
+        if (value == 0)
+        {
+            return 0m;
+        }
+
+        var normalizedFrom = NormalizeUnit(fromUnit);
+        var normalizedTo = NormalizeUnit(toUnit);
+        if (string.IsNullOrWhiteSpace(normalizedFrom) || string.IsNullOrWhiteSpace(normalizedTo))
+        {
+            return 0m;
+        }
+
+        if (normalizedFrom.Equals(normalizedTo, StringComparison.OrdinalIgnoreCase))
+        {
+            return value;
+        }
+
         if (!AreCompatible(fromUnit, toUnit))
         {
             return 0m;
         }
 
-        var from = Units.First(item => item.Value.Equals(NormalizeUnit(fromUnit), StringComparison.OrdinalIgnoreCase));
-        var to = Units.First(item => item.Value.Equals(NormalizeUnit(toUnit), StringComparison.OrdinalIgnoreCase));
+        var from = TryGetOption(normalizedFrom);
+        var to = TryGetOption(normalizedTo);
+        if (from is null || to is null)
+        {
+            return 0m;
+        }
+
         return value * from.RatioToCanonical / to.RatioToCanonical;
+    }
+
+    private static MaterialUnitOption? TryGetOption(string? unit)
+    {
+        var normalized = NormalizeUnit(unit);
+        return string.IsNullOrWhiteSpace(normalized)
+            ? null
+            : Units.FirstOrDefault(item => item.Value.Equals(normalized, StringComparison.OrdinalIgnoreCase));
     }
 }
