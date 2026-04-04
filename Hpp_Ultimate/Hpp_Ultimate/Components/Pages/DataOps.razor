@@ -1,0 +1,242 @@
+@page "/backup-data"
+@rendermode InteractiveServer
+@using System.Globalization
+@inject DataOpsService DataOpsService
+@inject SeededBusinessDataStore Store
+
+<PageTitle>Backup & Data Ops | HPP Ultimate</PageTitle>
+
+<section class="dataops-page">
+    <header class="page-header">
+        <div>
+            <span class="section-tag">Admin data ops</span>
+            <h1>Backup penuh, restore, export, dan import data operasional.</h1>
+            <p>Gunakan halaman ini untuk membuat snapshot aplikasi, memulihkan backup, serta memindahkan resep dan transaksi antar lingkungan.</p>
+        </div>
+
+        <div class="header-actions">
+            <div class="status-chip">@_statusMessage</div>
+            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <div class="error-card">@_errorMessage</div>
+    }
+    else if (_isLoading && _snapshot is null)
+    {
+        <div class="skeleton-card"></div>
+    }
+    else if (_snapshot is not null)
+    {
+        <div class="summary-grid">
+            <article>
+                <small>Backup files</small>
+                <strong>@_snapshot.BackupCount</strong>
+            </article>
+            <article>
+                <small>Export files</small>
+                <strong>@_snapshot.ExportCount</strong>
+            </article>
+            <article>
+                <small>User aktif</small>
+                <strong>@(Store.AuthSession?.FullName ?? "-")</strong>
+            </article>
+        </div>
+
+        <div class="page-layout">
+            <section class="action-panel">
+                <div class="section-head">
+                    <div>
+                        <span>Aksi cepat</span>
+                        <h2>Operasi utama</h2>
+                    </div>
+                </div>
+
+                <div class="action-grid">
+                    <button type="button" class="primary-button" @onclick="CreateBackupAsync">Buat Backup Penuh</button>
+                    <button type="button" class="ghost-button" @onclick="ExportRecipesAsync">Export Resep JSON</button>
+                    <button type="button" class="ghost-button" @onclick="ExportSalesJsonAsync">Export Penjualan JSON</button>
+                    <button type="button" class="ghost-button" @onclick="ExportSalesCsvAsync">Export Penjualan CSV</button>
+                </div>
+
+                <div class="import-grid">
+                    <label class="upload-card">
+                        <span>Import resep</span>
+                        <InputFile OnChange="ImportRecipesAsync" accept=".json" />
+                    </label>
+                    <label class="upload-card">
+                        <span>Import penjualan</span>
+                        <InputFile OnChange="ImportSalesAsync" accept=".json" />
+                    </label>
+                </div>
+            </section>
+
+            <section class="file-panel">
+                <div class="section-head">
+                    <div>
+                        <span>Backup</span>
+                        <h2>Snapshot tersimpan</h2>
+                    </div>
+                </div>
+
+                @if (_snapshot.Backups.Count == 0)
+                {
+                    <div class="empty-state">Belum ada backup penuh yang tersimpan.</div>
+                }
+                else
+                {
+                    <div class="file-list">
+                        @foreach (var file in _snapshot.Backups)
+                        {
+                            <article>
+                                <div>
+                                    <strong>@file.FileName</strong>
+                                    <small>@file.UpdatedAt.ToString("dd MMM yyyy HH:mm") · @FormatSize(file.SizeBytes)</small>
+                                    <p>@file.AbsolutePath</p>
+                                </div>
+                                <button type="button" class="danger-button" @onclick="() => RestoreBackupAsync(file.FileName)">Restore</button>
+                            </article>
+                        }
+                    </div>
+                }
+            </section>
+
+            <section class="file-panel">
+                <div class="section-head">
+                    <div>
+                        <span>Export</span>
+                        <h2>File keluar terbaru</h2>
+                    </div>
+                </div>
+
+                @if (_snapshot.Exports.Count == 0)
+                {
+                    <div class="empty-state">Belum ada file export.</div>
+                }
+                else
+                {
+                    <div class="file-list">
+                        @foreach (var file in _snapshot.Exports)
+                        {
+                            <article>
+                                <div>
+                                    <strong>@file.FileName</strong>
+                                    <small>@file.UpdatedAt.ToString("dd MMM yyyy HH:mm") · @FormatSize(file.SizeBytes)</small>
+                                    <p>@file.AbsolutePath</p>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+            </section>
+        </div>
+    }
+</section>
+
+@code {
+    private const long MaxUploadSize = 10 * 1024 * 1024;
+
+    private DataOpsSnapshot? _snapshot;
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat data ops...";
+    private string? _errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        _errorMessage = null;
+
+        try
+        {
+            _snapshot = await DataOpsService.GetSnapshotAsync();
+            _statusMessage = $"{_snapshot.BackupCount} backup, {_snapshot.ExportCount} export tersedia.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            _snapshot = null;
+            _errorMessage = ex.Message;
+            _statusMessage = "Akses admin diperlukan.";
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task ReloadAsync() => LoadAsync();
+
+    private async Task CreateBackupAsync()
+    {
+        var result = await DataOpsService.CreateBackupAsync();
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private async Task RestoreBackupAsync(string fileName)
+    {
+        var result = await DataOpsService.RestoreBackupAsync(fileName);
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private async Task ExportRecipesAsync()
+    {
+        var result = await DataOpsService.ExportRecipesAsync();
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private async Task ExportSalesJsonAsync()
+    {
+        var result = await DataOpsService.ExportSalesJsonAsync();
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private async Task ExportSalesCsvAsync()
+    {
+        var result = await DataOpsService.ExportSalesCsvAsync();
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private async Task ImportRecipesAsync(InputFileChangeEventArgs args)
+    {
+        var file = args.File;
+        await using var stream = file.OpenReadStream(MaxUploadSize);
+        var result = await DataOpsService.ImportRecipesAsync(file.Name, stream);
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private async Task ImportSalesAsync(InputFileChangeEventArgs args)
+    {
+        var file = args.File;
+        await using var stream = file.OpenReadStream(MaxUploadSize);
+        var result = await DataOpsService.ImportSalesAsync(file.Name, stream);
+        _statusMessage = result.Message;
+        await LoadAsync();
+    }
+
+    private static string FormatSize(long bytes)
+    {
+        if (bytes < 1024)
+        {
+            return $"{bytes} B";
+        }
+
+        var size = bytes / 1024d;
+        if (size < 1024)
+        {
+            return $"{size.ToString("0.0", CultureInfo.InvariantCulture)} KB";
+        }
+
+        return $"{(size / 1024d).ToString("0.0", CultureInfo.InvariantCulture)} MB";
+    }
+}

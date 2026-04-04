@@ -1,0 +1,3342 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - link "HPP Ultimate Operational workspace" [ref=e7] [cursor=pointer]:
+          - /url: /pengaturan
+          - generic [ref=e8]:
+            - strong [ref=e9]: HPP Ultimate
+            - text: Operational workspace
+        - checkbox [ref=e10]
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - text: Persiapan
+            - link "PG Pengaturan" [ref=e13] [cursor=pointer]:
+              - /url: /pengaturan
+              - text: PG
+              - strong [ref=e14]: Pengaturan
+            - link "AK Pengaturan Akun" [ref=e15] [cursor=pointer]:
+              - /url: /pengaturan/akun
+              - text: AK
+              - strong [ref=e16]: Pengaturan Akun
+          - generic [ref=e17]:
+            - text: Master & Formula
+            - link "KM Katalog Material" [ref=e18] [cursor=pointer]:
+              - /url: /produk
+              - text: KM
+              - strong [ref=e19]: Katalog Material
+            - link "GD Gudang" [ref=e20] [cursor=pointer]:
+              - /url: /gudang
+              - text: GD
+              - strong [ref=e21]: Gudang
+            - link "RS Resep" [ref=e22] [cursor=pointer]:
+              - /url: /resep
+              - text: RS
+              - strong [ref=e23]: Resep
+          - generic [ref=e24]:
+            - text: Operasional
+            - link "PR Produksi" [ref=e25] [cursor=pointer]:
+              - /url: /produksi
+              - text: PR
+              - strong [ref=e26]: Produksi
+            - link "BL Belanja" [ref=e27] [cursor=pointer]:
+              - /url: /belanja
+              - text: BL
+              - strong [ref=e28]: Belanja
+            - link "PO Point of Sales" [ref=e29] [cursor=pointer]:
+              - /url: /pos
+              - text: PO
+              - strong [ref=e30]: Point of Sales
+          - generic [ref=e31]:
+            - text: Monitoring
+            - link "PB Pembukuan" [ref=e32] [cursor=pointer]:
+              - /url: /pembukuan
+              - text: PB
+              - strong [ref=e33]: Pembukuan
+          - generic [ref=e34]:
+            - text: Kontrol Data
+            - link "BD Backup & Data Ops" [ref=e35] [cursor=pointer]:
+              - /url: /backup-data
+              - text: BD
+              - strong [ref=e36]: Backup & Data Ops
+          - generic [ref=e37]:
+            - generic [ref=e38]:
+              - generic [ref=e39]: A
+              - generic [ref=e40]:
+                - strong [ref=e41]: Arief
+                - text: Admin
+            - link "Logout" [ref=e42] [cursor=pointer]:
+              - /url: /logout
+    - main [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - text: Produksi
+          - strong [ref=e46]: Eksekusi batch produksi dan konsumsi bahan baku
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - text: ⚲
+            - textbox "Current user" [ref=e49]: Arief
+          - generic [ref=e50]: A
+      - article [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]:
+              - text: Produksi praktis
+              - heading "Siapkan antrian produksi, atur timer target, lalu mulai dari satu workspace." [active] [level=1] [ref=e55]
+              - paragraph [ref=e56]: Resep aktif diambil langsung dari halaman resep. Saat produksi dimulai, stok gudang otomatis berkurang. Jika stok kurang, produksi tetap bisa diantrikan tetapi belum bisa dijalankan.
+            - generic [ref=e57]:
+              - generic [ref=e58]: 6 antrian · 0 berjalan
+              - button "Refresh" [ref=e59] [cursor=pointer]
+          - generic [ref=e60]:
+            - article [ref=e61]:
+              - text: Resep tersedia
+              - strong [ref=e62]: "50"
+            - article [ref=e63]:
+              - text: Dalam antrian
+              - strong [ref=e64]: "6"
+            - article [ref=e65]:
+              - text: Sedang berjalan
+              - strong [ref=e66]: "0"
+            - article [ref=e67]:
+              - text: Selesai
+              - strong [ref=e68]: "50"
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e72]:
+                - text: Daftar resep
+                - heading "Pilih resep yang ingin diproduksi" [level=2] [ref=e73]
+                - paragraph [ref=e74]: List ini diambil dari halaman resep. Pilih satu resep untuk melihat kebutuhan bahan dan target porsi per batch.
+              - textbox "Cari nama atau kode resep" [ref=e76]
+              - generic [ref=e77]:
+                - article [ref=e78]:
+                  - generic [ref=e79]:
+                    - generic [ref=e80]:
+                      - text: RCP-012
+                      - strong [ref=e81]: Donat Keju
+                    - generic [ref=e82]: Siap
+                  - generic [ref=e83]:
+                    - article [ref=e84]:
+                      - text: Porsi / batch
+                      - strong [ref=e85]: 16 box
+                    - article [ref=e86]:
+                      - text: Material
+                      - strong [ref=e87]: 4 bahan
+                  - paragraph [ref=e88]: Siap dijadwalkan.
+                - article [ref=e89]:
+                  - generic [ref=e90]:
+                    - generic [ref=e91]:
+                      - text: RCP-024
+                      - strong [ref=e92]: Pudding Kopi
+                    - generic [ref=e93]: Siap
+                  - generic [ref=e94]:
+                    - article [ref=e95]:
+                      - text: Porsi / batch
+                      - strong [ref=e96]: 24 cup
+                    - article [ref=e97]:
+                      - text: Material
+                      - strong [ref=e98]: 4 bahan
+                  - paragraph [ref=e99]: Siap dijadwalkan.
+                - article [ref=e100]:
+                  - generic [ref=e101]:
+                    - generic [ref=e102]:
+                      - text: RCP-036
+                      - strong [ref=e103]: Sandwich Cokelat
+                    - generic [ref=e104]: Tertahan
+                  - generic [ref=e105]:
+                    - article [ref=e106]:
+                      - text: Porsi / batch
+                      - strong [ref=e107]: 12 pcs
+                    - article [ref=e108]:
+                      - text: Material
+                      - strong [ref=e109]: 4 bahan
+                  - paragraph [ref=e110]: Stok Telur Ayam kosong.
+                - article [ref=e111]:
+                  - generic [ref=e112]:
+                    - generic [ref=e113]:
+                      - text: RCP-048
+                      - strong [ref=e114]: Mie Box Matcha
+                    - generic [ref=e115]: Siap
+                  - generic [ref=e116]:
+                    - article [ref=e117]:
+                      - text: Porsi / batch
+                      - strong [ref=e118]: 20 pouch
+                    - article [ref=e119]:
+                      - text: Material
+                      - strong [ref=e120]: 4 bahan
+                  - paragraph [ref=e121]: Siap dijadwalkan.
+                - article [ref=e122]:
+                  - generic [ref=e123]:
+                    - generic [ref=e124]:
+                      - text: RCP-006
+                      - strong [ref=e125]: Brownies Cokelat
+                    - generic [ref=e126]: Tertahan
+                  - generic [ref=e127]:
+                    - article [ref=e128]:
+                      - text: Porsi / batch
+                      - strong [ref=e129]: 12 pcs
+                    - article [ref=e130]:
+                      - text: Material
+                      - strong [ref=e131]: 4 bahan
+                  - paragraph [ref=e132]: Stok Susu Bubuk Full Cream kurang 39,6 gr.
+                - article [ref=e133]:
+                  - generic [ref=e134]:
+                    - generic [ref=e135]:
+                      - text: RCP-018
+                      - strong [ref=e136]: Cookies Matcha
+                    - generic [ref=e137]: Siap
+                  - generic [ref=e138]:
+                    - article [ref=e139]:
+                      - text: Porsi / batch
+                      - strong [ref=e140]: 20 pouch
+                    - article [ref=e141]:
+                      - text: Material
+                      - strong [ref=e142]: 4 bahan
+                  - paragraph [ref=e143]: Siap dijadwalkan.
+                - article [ref=e144]:
+                  - generic [ref=e145]:
+                    - generic [ref=e146]:
+                      - text: RCP-030
+                      - strong [ref=e147]: Muffin Red Velvet
+                    - generic [ref=e148]: Tertahan
+                  - generic [ref=e149]:
+                    - article [ref=e150]:
+                      - text: Porsi / batch
+                      - strong [ref=e151]: 28 tray
+                    - article [ref=e152]:
+                      - text: Material
+                      - strong [ref=e153]: 4 bahan
+                  - paragraph [ref=e154]: Stok Butter Margarine kurang 19,2 gr.
+                - article [ref=e155]:
+                  - generic [ref=e156]:
+                    - generic [ref=e157]:
+                      - text: RCP-042
+                      - strong [ref=e158]: Rice Bowl Keju
+                    - generic [ref=e159]: Tertahan
+                  - generic [ref=e160]:
+                    - article [ref=e161]:
+                      - text: Porsi / batch
+                      - strong [ref=e162]: 16 box
+                    - article [ref=e163]:
+                      - text: Material
+                      - strong [ref=e164]: 4 bahan
+                  - paragraph [ref=e165]: Stok Ragi Instan kurang 98,35 gr.
+                - article [ref=e166]:
+                  - generic [ref=e167]:
+                    - generic [ref=e168]:
+                      - text: RCP-011
+                      - strong [ref=e169]: Donat Cokelat
+                    - generic [ref=e170]: Siap
+                  - generic [ref=e171]:
+                    - article [ref=e172]:
+                      - text: Porsi / batch
+                      - strong [ref=e173]: 12 pcs
+                    - article [ref=e174]:
+                      - text: Material
+                      - strong [ref=e175]: 4 bahan
+                  - paragraph [ref=e176]: Siap dijadwalkan.
+                - article [ref=e177]:
+                  - generic [ref=e178]:
+                    - generic [ref=e179]:
+                      - text: RCP-023
+                      - strong [ref=e180]: Pudding Matcha
+                    - generic [ref=e181]: Siap
+                  - generic [ref=e182]:
+                    - article [ref=e183]:
+                      - text: Porsi / batch
+                      - strong [ref=e184]: 20 pouch
+                    - article [ref=e185]:
+                      - text: Material
+                      - strong [ref=e186]: 4 bahan
+                  - paragraph [ref=e187]: Siap dijadwalkan.
+                - article [ref=e188]:
+                  - generic [ref=e189]:
+                    - generic [ref=e190]:
+                      - text: RCP-035
+                      - strong [ref=e191]: Croissant Red Velvet
+                    - generic [ref=e192]: Tertahan
+                  - generic [ref=e193]:
+                    - article [ref=e194]:
+                      - text: Porsi / batch
+                      - strong [ref=e195]: 28 tray
+                    - article [ref=e196]:
+                      - text: Material
+                      - strong [ref=e197]: 4 bahan
+                  - paragraph [ref=e198]: Stok Ragi Instan kurang 37,15 gr.
+                - article [ref=e199]:
+                  - generic [ref=e200]:
+                    - generic [ref=e201]:
+                      - text: RCP-047
+                      - strong [ref=e202]: Mie Box Keju
+                    - generic [ref=e203]: Siap
+                  - generic [ref=e204]:
+                    - article [ref=e205]:
+                      - text: Porsi / batch
+                      - strong [ref=e206]: 16 box
+                    - article [ref=e207]:
+                      - text: Material
+                      - strong [ref=e208]: 4 bahan
+                  - paragraph [ref=e209]: Siap dijadwalkan.
+                - article [ref=e210]:
+                  - generic [ref=e211]:
+                    - generic [ref=e212]:
+                      - text: RCP-005
+                      - strong [ref=e213]: Roti Sobek Red Velvet
+                    - generic [ref=e214]: Tertahan
+                  - generic [ref=e215]:
+                    - article [ref=e216]:
+                      - text: Porsi / batch
+                      - strong [ref=e217]: 28 tray
+                    - article [ref=e218]:
+                      - text: Material
+                      - strong [ref=e219]: 4 bahan
+                  - paragraph [ref=e220]: Stok Susu Cair UHT kurang 61,1 ml.
+                - article [ref=e221]:
+                  - generic [ref=e222]:
+                    - generic [ref=e223]:
+                      - text: RCP-017
+                      - strong [ref=e224]: Cookies Keju
+                    - generic [ref=e225]: Siap
+                  - generic [ref=e226]:
+                    - article [ref=e227]:
+                      - text: Porsi / batch
+                      - strong [ref=e228]: 16 box
+                    - article [ref=e229]:
+                      - text: Material
+                      - strong [ref=e230]: 4 bahan
+                  - paragraph [ref=e231]: Siap dijadwalkan.
+                - article [ref=e232]:
+                  - generic [ref=e233]:
+                    - generic [ref=e234]:
+                      - text: RCP-029
+                      - strong [ref=e235]: Muffin Kopi
+                    - generic [ref=e236]: Siap
+                  - generic [ref=e237]:
+                    - article [ref=e238]:
+                      - text: Porsi / batch
+                      - strong [ref=e239]: 24 cup
+                    - article [ref=e240]:
+                      - text: Material
+                      - strong [ref=e241]: 4 bahan
+                  - paragraph [ref=e242]: Siap dijadwalkan.
+                - article [ref=e243]:
+                  - generic [ref=e244]:
+                    - generic [ref=e245]:
+                      - text: RCP-041
+                      - strong [ref=e246]: Rice Bowl Cokelat
+                    - generic [ref=e247]: Tertahan
+                  - generic [ref=e248]:
+                    - article [ref=e249]:
+                      - text: Porsi / batch
+                      - strong [ref=e250]: 12 pcs
+                    - article [ref=e251]:
+                      - text: Material
+                      - strong [ref=e252]: 4 bahan
+                  - paragraph [ref=e253]: Stok Susu Bubuk Full Cream kurang 39,6 gr.
+                - article [ref=e254]:
+                  - generic [ref=e255]:
+                    - generic [ref=e256]:
+                      - text: RCP-010
+                      - strong [ref=e257]: Brownies Red Velvet
+                    - generic [ref=e258]: Siap
+                  - generic [ref=e259]:
+                    - article [ref=e260]:
+                      - text: Porsi / batch
+                      - strong [ref=e261]: 28 tray
+                    - article [ref=e262]:
+                      - text: Material
+                      - strong [ref=e263]: 4 bahan
+                  - paragraph [ref=e264]: Siap dijadwalkan.
+                - article [ref=e265]:
+                  - generic [ref=e266]:
+                    - generic [ref=e267]:
+                      - text: RCP-022
+                      - strong [ref=e268]: Pudding Keju
+                    - generic [ref=e269]: Siap
+                  - generic [ref=e270]:
+                    - article [ref=e271]:
+                      - text: Porsi / batch
+                      - strong [ref=e272]: 16 box
+                    - article [ref=e273]:
+                      - text: Material
+                      - strong [ref=e274]: 4 bahan
+                  - paragraph [ref=e275]: Siap dijadwalkan.
+                - article [ref=e276]:
+                  - generic [ref=e277]:
+                    - generic [ref=e278]:
+                      - text: RCP-034
+                      - strong [ref=e279]: Croissant Kopi
+                    - generic [ref=e280]: Tertahan
+                  - generic [ref=e281]:
+                    - article [ref=e282]:
+                      - text: Porsi / batch
+                      - strong [ref=e283]: 24 cup
+                    - article [ref=e284]:
+                      - text: Material
+                      - strong [ref=e285]: 4 bahan
+                  - paragraph [ref=e286]: Stok Butter Margarine kurang 24,3 gr.
+                - article [ref=e287]:
+                  - generic [ref=e288]:
+                    - generic [ref=e289]:
+                      - text: RCP-046
+                      - strong [ref=e290]: Mie Box Cokelat
+                    - generic [ref=e291]: Siap
+                  - generic [ref=e292]:
+                    - article [ref=e293]:
+                      - text: Porsi / batch
+                      - strong [ref=e294]: 12 pcs
+                    - article [ref=e295]:
+                      - text: Material
+                      - strong [ref=e296]: 4 bahan
+                  - paragraph [ref=e297]: Siap dijadwalkan.
+                - article [ref=e298]:
+                  - generic [ref=e299]:
+                    - generic [ref=e300]:
+                      - text: RCP-004
+                      - strong [ref=e301]: Roti Sobek Kopi
+                    - generic [ref=e302]: Tertahan
+                  - generic [ref=e303]:
+                    - article [ref=e304]:
+                      - text: Porsi / batch
+                      - strong [ref=e305]: 24 cup
+                    - article [ref=e306]:
+                      - text: Material
+                      - strong [ref=e307]: 4 bahan
+                  - paragraph [ref=e308]: Stok Telur Ayam kosong.
+                - article [ref=e309]:
+                  - generic [ref=e310]:
+                    - generic [ref=e311]:
+                      - text: RCP-016
+                      - strong [ref=e312]: Cookies Cokelat
+                    - generic [ref=e313]: Siap
+                  - generic [ref=e314]:
+                    - article [ref=e315]:
+                      - text: Porsi / batch
+                      - strong [ref=e316]: 12 pcs
+                    - article [ref=e317]:
+                      - text: Material
+                      - strong [ref=e318]: 4 bahan
+                  - paragraph [ref=e319]: Siap dijadwalkan.
+                - article [ref=e320]:
+                  - generic [ref=e321]:
+                    - generic [ref=e322]:
+                      - text: RCP-028
+                      - strong [ref=e323]: Muffin Matcha
+                    - generic [ref=e324]: Tertahan
+                  - generic [ref=e325]:
+                    - article [ref=e326]:
+                      - text: Porsi / batch
+                      - strong [ref=e327]: 20 pouch
+                    - article [ref=e328]:
+                      - text: Material
+                      - strong [ref=e329]: 4 bahan
+                  - paragraph [ref=e330]: Stok Telur Ayam kosong.
+                - article [ref=e331]:
+                  - generic [ref=e332]:
+                    - generic [ref=e333]:
+                      - text: RCP-040
+                      - strong [ref=e334]: Sandwich Red Velvet
+                    - generic [ref=e335]: Tertahan
+                  - generic [ref=e336]:
+                    - article [ref=e337]:
+                      - text: Porsi / batch
+                      - strong [ref=e338]: 28 tray
+                    - article [ref=e339]:
+                      - text: Material
+                      - strong [ref=e340]: 4 bahan
+                  - paragraph [ref=e341]: Stok Susu Cair UHT kurang 61,1 ml.
+                - article [ref=e342]:
+                  - generic [ref=e343]:
+                    - generic [ref=e344]:
+                      - text: RCP-009
+                      - strong [ref=e345]: Brownies Kopi
+                    - generic [ref=e346]: Siap
+                  - generic [ref=e347]:
+                    - article [ref=e348]:
+                      - text: Porsi / batch
+                      - strong [ref=e349]: 24 cup
+                    - article [ref=e350]:
+                      - text: Material
+                      - strong [ref=e351]: 4 bahan
+                  - paragraph [ref=e352]: Siap dijadwalkan.
+                - article [ref=e353]:
+                  - generic [ref=e354]:
+                    - generic [ref=e355]:
+                      - text: RCP-021
+                      - strong [ref=e356]: Pudding Cokelat
+                    - generic [ref=e357]: Siap
+                  - generic [ref=e358]:
+                    - article [ref=e359]:
+                      - text: Porsi / batch
+                      - strong [ref=e360]: 12 pcs
+                    - article [ref=e361]:
+                      - text: Material
+                      - strong [ref=e362]: 4 bahan
+                  - paragraph [ref=e363]: Siap dijadwalkan.
+                - article [ref=e364]:
+                  - generic [ref=e365]:
+                    - generic [ref=e366]:
+                      - text: RCP-033
+                      - strong [ref=e367]: Croissant Matcha
+                    - generic [ref=e368]: Siap
+                  - generic [ref=e369]:
+                    - article [ref=e370]:
+                      - text: Porsi / batch
+                      - strong [ref=e371]: 20 pouch
+                    - article [ref=e372]:
+                      - text: Material
+                      - strong [ref=e373]: 4 bahan
+                  - paragraph [ref=e374]: Siap dijadwalkan.
+                - article [ref=e375]:
+                  - generic [ref=e376]:
+                    - generic [ref=e377]:
+                      - text: RCP-045
+                      - strong [ref=e378]: Rice Bowl Red Velvet
+                    - generic [ref=e379]: Siap
+                  - generic [ref=e380]:
+                    - article [ref=e381]:
+                      - text: Porsi / batch
+                      - strong [ref=e382]: 28 tray
+                    - article [ref=e383]:
+                      - text: Material
+                      - strong [ref=e384]: 4 bahan
+                  - paragraph [ref=e385]: Siap dijadwalkan.
+                - article [ref=e386]:
+                  - generic [ref=e387]:
+                    - generic [ref=e388]:
+                      - text: RCP-003
+                      - strong [ref=e389]: Roti Sobek Matcha
+                    - generic [ref=e390]: Tertahan
+                  - generic [ref=e391]:
+                    - article [ref=e392]:
+                      - text: Porsi / batch
+                      - strong [ref=e393]: 20 pouch
+                    - article [ref=e394]:
+                      - text: Material
+                      - strong [ref=e395]: 4 bahan
+                  - paragraph [ref=e396]: Stok Gula Pasir kurang 27,6 gr.
+                - article [ref=e397]:
+                  - generic [ref=e398]:
+                    - generic [ref=e399]:
+                      - text: RCP-015
+                      - strong [ref=e400]: Donat Red Velvet
+                    - generic [ref=e401]: Siap
+                  - generic [ref=e402]:
+                    - article [ref=e403]:
+                      - text: Porsi / batch
+                      - strong [ref=e404]: 28 tray
+                    - article [ref=e405]:
+                      - text: Material
+                      - strong [ref=e406]: 4 bahan
+                  - paragraph [ref=e407]: Siap dijadwalkan.
+                - article [ref=e408]:
+                  - generic [ref=e409]:
+                    - generic [ref=e410]:
+                      - text: RCP-027
+                      - strong [ref=e411]: Muffin Keju
+                    - generic [ref=e412]: Siap
+                  - generic [ref=e413]:
+                    - article [ref=e414]:
+                      - text: Porsi / batch
+                      - strong [ref=e415]: 16 box
+                    - article [ref=e416]:
+                      - text: Material
+                      - strong [ref=e417]: 4 bahan
+                  - paragraph [ref=e418]: Siap dijadwalkan.
+                - article [ref=e419]:
+                  - generic [ref=e420]:
+                    - generic [ref=e421]:
+                      - text: RCP-039
+                      - strong [ref=e422]: Sandwich Kopi
+                    - generic [ref=e423]: Tertahan
+                  - generic [ref=e424]:
+                    - article [ref=e425]:
+                      - text: Porsi / batch
+                      - strong [ref=e426]: 24 cup
+                    - article [ref=e427]:
+                      - text: Material
+                      - strong [ref=e428]: 4 bahan
+                  - paragraph [ref=e429]: Stok Telur Ayam kosong.
+                - article [ref=e430]:
+                  - generic [ref=e431]:
+                    - generic [ref=e432]:
+                      - text: RCP-008
+                      - strong [ref=e433]: Brownies Matcha
+                    - generic [ref=e434]: Tertahan
+                  - generic [ref=e435]:
+                    - article [ref=e436]:
+                      - text: Porsi / batch
+                      - strong [ref=e437]: 20 pouch
+                    - article [ref=e438]:
+                      - text: Material
+                      - strong [ref=e439]: 4 bahan
+                  - paragraph [ref=e440]: Stok Cokelat Bubuk kurang 115,1 gr.
+                - article [ref=e441]:
+                  - generic [ref=e442]:
+                    - generic [ref=e443]:
+                      - text: RCP-020
+                      - strong [ref=e444]: Cookies Red Velvet
+                    - generic [ref=e445]: Siap
+                  - generic [ref=e446]:
+                    - article [ref=e447]:
+                      - text: Porsi / batch
+                      - strong [ref=e448]: 28 tray
+                    - article [ref=e449]:
+                      - text: Material
+                      - strong [ref=e450]: 4 bahan
+                  - paragraph [ref=e451]: Siap dijadwalkan.
+                - article [ref=e452]:
+                  - generic [ref=e453]:
+                    - generic [ref=e454]:
+                      - text: RCP-032
+                      - strong [ref=e455]: Croissant Keju
+                    - generic [ref=e456]: Tertahan
+                  - generic [ref=e457]:
+                    - article [ref=e458]:
+                      - text: Porsi / batch
+                      - strong [ref=e459]: 16 box
+                    - article [ref=e460]:
+                      - text: Material
+                      - strong [ref=e461]: 4 bahan
+                  - paragraph [ref=e462]: Stok Telur Ayam kosong.
+                - article [ref=e463]:
+                  - generic [ref=e464]:
+                    - generic [ref=e465]:
+                      - text: RCP-044
+                      - strong [ref=e466]: Rice Bowl Kopi
+                    - generic [ref=e467]: Siap
+                  - generic [ref=e468]:
+                    - article [ref=e469]:
+                      - text: Porsi / batch
+                      - strong [ref=e470]: 24 cup
+                    - article [ref=e471]:
+                      - text: Material
+                      - strong [ref=e472]: 4 bahan
+                  - paragraph [ref=e473]: Siap dijadwalkan.
+                - article [ref=e474]:
+                  - generic [ref=e475]:
+                    - generic [ref=e476]:
+                      - text: RCP-002
+                      - strong [ref=e477]: Roti Sobek Keju
+                    - generic [ref=e478]: Tertahan
+                  - generic [ref=e479]:
+                    - article [ref=e480]:
+                      - text: Porsi / batch
+                      - strong [ref=e481]: 16 box
+                    - article [ref=e482]:
+                      - text: Material
+                      - strong [ref=e483]: 4 bahan
+                  - paragraph [ref=e484]: Stok Butter Margarine kurang 65,1 gr.
+                - article [ref=e485]:
+                  - generic [ref=e486]:
+                    - generic [ref=e487]:
+                      - text: RCP-014
+                      - strong [ref=e488]: Donat Kopi
+                    - generic [ref=e489]: Siap
+                  - generic [ref=e490]:
+                    - article [ref=e491]:
+                      - text: Porsi / batch
+                      - strong [ref=e492]: 24 cup
+                    - article [ref=e493]:
+                      - text: Material
+                      - strong [ref=e494]: 4 bahan
+                  - paragraph [ref=e495]: Siap dijadwalkan.
+                - article [ref=e496]:
+                  - generic [ref=e497]:
+                    - generic [ref=e498]:
+                      - text: RCP-026
+                      - strong [ref=e499]: Muffin Cokelat
+                    - generic [ref=e500]: Siap
+                  - generic [ref=e501]:
+                    - article [ref=e502]:
+                      - text: Porsi / batch
+                      - strong [ref=e503]: 12 pcs
+                    - article [ref=e504]:
+                      - text: Material
+                      - strong [ref=e505]: 4 bahan
+                  - paragraph [ref=e506]: Siap dijadwalkan.
+                - article [ref=e507]:
+                  - generic [ref=e508]:
+                    - generic [ref=e509]:
+                      - text: RCP-038
+                      - strong [ref=e510]: Sandwich Matcha
+                    - generic [ref=e511]: Tertahan
+                  - generic [ref=e512]:
+                    - article [ref=e513]:
+                      - text: Porsi / batch
+                      - strong [ref=e514]: 20 pouch
+                    - article [ref=e515]:
+                      - text: Material
+                      - strong [ref=e516]: 4 bahan
+                  - paragraph [ref=e517]: Stok Gula Pasir kurang 27,6 gr.
+                - article [ref=e518]:
+                  - generic [ref=e519]:
+                    - generic [ref=e520]:
+                      - text: RCP-050
+                      - strong [ref=e521]: Mie Box Red Velvet
+                    - generic [ref=e522]: Siap
+                  - generic [ref=e523]:
+                    - article [ref=e524]:
+                      - text: Porsi / batch
+                      - strong [ref=e525]: 28 tray
+                    - article [ref=e526]:
+                      - text: Material
+                      - strong [ref=e527]: 4 bahan
+                  - paragraph [ref=e528]: Siap dijadwalkan.
+                - article [ref=e529]:
+                  - generic [ref=e530]:
+                    - generic [ref=e531]:
+                      - text: RCP-007
+                      - strong [ref=e532]: Brownies Keju
+                    - generic [ref=e533]: Tertahan
+                  - generic [ref=e534]:
+                    - article [ref=e535]:
+                      - text: Porsi / batch
+                      - strong [ref=e536]: 16 box
+                    - article [ref=e537]:
+                      - text: Material
+                      - strong [ref=e538]: 4 bahan
+                  - paragraph [ref=e539]: Stok Ragi Instan kurang 98,35 gr.
+                - article [ref=e540]:
+                  - generic [ref=e541]:
+                    - generic [ref=e542]:
+                      - text: RCP-019
+                      - strong [ref=e543]: Cookies Kopi
+                    - generic [ref=e544]: Siap
+                  - generic [ref=e545]:
+                    - article [ref=e546]:
+                      - text: Porsi / batch
+                      - strong [ref=e547]: 24 cup
+                    - article [ref=e548]:
+                      - text: Material
+                      - strong [ref=e549]: 4 bahan
+                  - paragraph [ref=e550]: Siap dijadwalkan.
+                - article [ref=e551]:
+                  - generic [ref=e552]:
+                    - generic [ref=e553]:
+                      - text: RCP-031
+                      - strong [ref=e554]: Croissant Cokelat
+                    - generic [ref=e555]: Tertahan
+                  - generic [ref=e556]:
+                    - article [ref=e557]:
+                      - text: Porsi / batch
+                      - strong [ref=e558]: 12 pcs
+                    - article [ref=e559]:
+                      - text: Material
+                      - strong [ref=e560]: 4 bahan
+                  - paragraph [ref=e561]: Stok Ragi Instan kurang 11,65 gr.
+                - article [ref=e562]:
+                  - generic [ref=e563]:
+                    - generic [ref=e564]:
+                      - text: RCP-043
+                      - strong [ref=e565]: Rice Bowl Matcha
+                    - generic [ref=e566]: Tertahan
+                  - generic [ref=e567]:
+                    - article [ref=e568]:
+                      - text: Porsi / batch
+                      - strong [ref=e569]: 20 pouch
+                    - article [ref=e570]:
+                      - text: Material
+                      - strong [ref=e571]: 4 bahan
+                  - paragraph [ref=e572]: Stok Cokelat Bubuk kurang 115,1 gr.
+                - article [ref=e573]:
+                  - generic [ref=e574]:
+                    - generic [ref=e575]:
+                      - text: RCP-001
+                      - strong [ref=e576]: Roti Sobek Cokelat
+                    - generic [ref=e577]: Tertahan
+                  - generic [ref=e578]:
+                    - article [ref=e579]:
+                      - text: Porsi / batch
+                      - strong [ref=e580]: 12 pcs
+                    - article [ref=e581]:
+                      - text: Material
+                      - strong [ref=e582]: 4 bahan
+                  - paragraph [ref=e583]: Stok Telur Ayam kosong.
+                - article [ref=e584]:
+                  - generic [ref=e585]:
+                    - generic [ref=e586]:
+                      - text: RCP-013
+                      - strong [ref=e587]: Donat Matcha
+                    - generic [ref=e588]: Siap
+                  - generic [ref=e589]:
+                    - article [ref=e590]:
+                      - text: Porsi / batch
+                      - strong [ref=e591]: 20 pouch
+                    - article [ref=e592]:
+                      - text: Material
+                      - strong [ref=e593]: 4 bahan
+                  - paragraph [ref=e594]: Siap dijadwalkan.
+                - article [ref=e595]:
+                  - generic [ref=e596]:
+                    - generic [ref=e597]:
+                      - text: RCP-025
+                      - strong [ref=e598]: Pudding Red Velvet
+                    - generic [ref=e599]: Siap
+                  - generic [ref=e600]:
+                    - article [ref=e601]:
+                      - text: Porsi / batch
+                      - strong [ref=e602]: 28 tray
+                    - article [ref=e603]:
+                      - text: Material
+                      - strong [ref=e604]: 4 bahan
+                  - paragraph [ref=e605]: Siap dijadwalkan.
+                - article [ref=e606]:
+                  - generic [ref=e607]:
+                    - generic [ref=e608]:
+                      - text: RCP-037
+                      - strong [ref=e609]: Sandwich Keju
+                    - generic [ref=e610]: Tertahan
+                  - generic [ref=e611]:
+                    - article [ref=e612]:
+                      - text: Porsi / batch
+                      - strong [ref=e613]: 16 box
+                    - article [ref=e614]:
+                      - text: Material
+                      - strong [ref=e615]: 4 bahan
+                  - paragraph [ref=e616]: Stok Butter Margarine kurang 65,1 gr.
+                - article [ref=e617]:
+                  - generic [ref=e618]:
+                    - generic [ref=e619]:
+                      - text: RCP-049
+                      - strong [ref=e620]: Mie Box Kopi
+                    - generic [ref=e621]: Siap
+                  - generic [ref=e622]:
+                    - article [ref=e623]:
+                      - text: Porsi / batch
+                      - strong [ref=e624]: 24 cup
+                    - article [ref=e625]:
+                      - text: Material
+                      - strong [ref=e626]: 4 bahan
+                  - paragraph [ref=e627]: Siap dijadwalkan.
+            - generic [ref=e628]:
+              - generic [ref=e630]:
+                - text: Draft produksi
+                - heading "Donat Keju" [level=2] [ref=e631]
+                - paragraph [ref=e632]: RCP-012 - 16 box per batch
+              - generic [ref=e633]:
+                - article [ref=e634]:
+                  - text: Batch
+                  - strong [ref=e635]: "1"
+                - article [ref=e636]:
+                  - text: Porsi / batch
+                  - strong [ref=e637]: 16 box
+                - article [ref=e638]:
+                  - text: Total porsi
+                  - strong [ref=e639]: 16 box
+                - article [ref=e640]:
+                  - text: Modal bahan
+                  - strong [ref=e641]: Rp24.475
+              - generic [ref=e642]:
+                - generic [ref=e644]:
+                  - text: Tambah antrian
+                  - heading "Atur batch, timer target, dan detail produksi" [level=3] [ref=e645]
+                  - paragraph [ref=e646]: Item yang sudah masuk antrian masih bisa diedit sebelum mulai produksi.
+                - generic [ref=e647]:
+                  - generic [ref=e648]:
+                    - generic [ref=e649]:
+                      - text: Jumlah batch
+                      - spinbutton "Jumlah batch" [ref=e650]: "1"
+                    - generic [ref=e651]:
+                      - text: Timer target (menit)
+                      - spinbutton "Timer target (menit)" [ref=e652]: "30"
+                    - generic [ref=e653]:
+                      - text: Catatan produksi
+                      - textbox "Catatan produksi" [ref=e654]
+                  - generic [ref=e655]:
+                    - text: Target produksi
+                    - strong [ref=e656]: 30 menit
+                    - generic [ref=e657]:
+                      - text: Timer mulai otomatis saat tombol
+                      - emphasis [ref=e658]: Mulai Produksi
+                      - text: ditekan dari tabel antrian.
+                  - generic [ref=e659]:
+                    - button "Preview ulang" [ref=e660] [cursor=pointer]
+                    - button "Tambah Antrian" [ref=e661] [cursor=pointer]
+              - generic [ref=e662]:
+                - generic [ref=e664]:
+                  - text: Kebutuhan bahan
+                  - heading "Simulasi stok untuk draft ini" [level=3] [ref=e665]
+                  - paragraph [ref=e666]: Stok dicek dari batch yang dipilih. Produksi hanya bisa dimulai kalau kebutuhan bahan sudah cukup.
+                - table [ref=e668]:
+                  - rowgroup [ref=e669]:
+                    - row "Material Butuh / batch Total butuh Stok Status" [ref=e670]:
+                      - columnheader "Material" [ref=e671]
+                      - columnheader "Butuh / batch" [ref=e672]
+                      - columnheader "Total butuh" [ref=e673]
+                      - columnheader "Stok" [ref=e674]
+                      - columnheader "Status" [ref=e675]
+                  - rowgroup [ref=e676]:
+                    - row "Cream Cheese BHN-023 - Anchor 40,8 gr 40,8 gr 18364,7 gr Cukup" [ref=e677]:
+                      - cell "Cream Cheese BHN-023 - Anchor" [ref=e678]:
+                        - generic [ref=e679]:
+                          - strong [ref=e680]: Cream Cheese
+                          - text: BHN-023 - Anchor
+                      - cell "40,8 gr" [ref=e681]
+                      - cell "40,8 gr" [ref=e682]
+                      - cell "18364,7 gr" [ref=e683]
+                      - cell "Cukup" [ref=e684]:
+                        - generic [ref=e685]: Cukup
+                    - row "Kopi Arabika Grind BHN-019 - Kopi Tuku 61,2 gr 61,2 gr 13054,5 gr Cukup" [ref=e686]:
+                      - cell "Kopi Arabika Grind BHN-019 - Kopi Tuku" [ref=e687]:
+                        - generic [ref=e688]:
+                          - strong [ref=e689]: Kopi Arabika Grind
+                          - text: BHN-019 - Kopi Tuku
+                      - cell "61,2 gr" [ref=e690]
+                      - cell "61,2 gr" [ref=e691]
+                      - cell "13054,5 gr" [ref=e692]
+                      - cell "Cukup" [ref=e693]:
+                        - generic [ref=e694]: Cukup
+                    - row "Mesis Cokelat BHN-012 - Ceres 107,1 gr 107,1 gr 8542,5 gr Cukup" [ref=e695]:
+                      - cell "Mesis Cokelat BHN-012 - Ceres" [ref=e696]:
+                        - generic [ref=e697]:
+                          - strong [ref=e698]: Mesis Cokelat
+                          - text: BHN-012 - Ceres
+                      - cell "107,1 gr" [ref=e699]
+                      - cell "107,1 gr" [ref=e700]
+                      - cell "8542,5 gr" [ref=e701]
+                      - cell "Cukup" [ref=e702]:
+                        - generic [ref=e703]: Cukup
+                    - row "Pisang Cavendish BHN-015 - Sunpride 107,1 gr 107,1 gr 17239,8 gr Cukup" [ref=e704]:
+                      - cell "Pisang Cavendish BHN-015 - Sunpride" [ref=e705]:
+                        - generic [ref=e706]:
+                          - strong [ref=e707]: Pisang Cavendish
+                          - text: BHN-015 - Sunpride
+                      - cell "107,1 gr" [ref=e708]
+                      - cell "107,1 gr" [ref=e709]
+                      - cell "17239,8 gr" [ref=e710]
+                      - cell "Cukup" [ref=e711]:
+                        - generic [ref=e712]: Cukup
+                - generic [ref=e713]:
+                  - article [ref=e714]:
+                    - generic [ref=e715]:
+                      - generic [ref=e716]:
+                        - strong [ref=e717]: Cream Cheese
+                        - text: BHN-023 - Anchor
+                      - generic [ref=e718]: Cukup
+                    - generic [ref=e719]:
+                      - article [ref=e720]:
+                        - text: Butuh / batch
+                        - strong [ref=e721]: 40,8 gr
+                      - article [ref=e722]:
+                        - text: Total butuh
+                        - strong [ref=e723]: 40,8 gr
+                      - article [ref=e724]:
+                        - text: Stok
+                        - strong [ref=e725]: 18364,7 gr
+                  - article [ref=e726]:
+                    - generic [ref=e727]:
+                      - generic [ref=e728]:
+                        - strong [ref=e729]: Kopi Arabika Grind
+                        - text: BHN-019 - Kopi Tuku
+                      - generic [ref=e730]: Cukup
+                    - generic [ref=e731]:
+                      - article [ref=e732]:
+                        - text: Butuh / batch
+                        - strong [ref=e733]: 61,2 gr
+                      - article [ref=e734]:
+                        - text: Total butuh
+                        - strong [ref=e735]: 61,2 gr
+                      - article [ref=e736]:
+                        - text: Stok
+                        - strong [ref=e737]: 13054,5 gr
+                  - article [ref=e738]:
+                    - generic [ref=e739]:
+                      - generic [ref=e740]:
+                        - strong [ref=e741]: Mesis Cokelat
+                        - text: BHN-012 - Ceres
+                      - generic [ref=e742]: Cukup
+                    - generic [ref=e743]:
+                      - article [ref=e744]:
+                        - text: Butuh / batch
+                        - strong [ref=e745]: 107,1 gr
+                      - article [ref=e746]:
+                        - text: Total butuh
+                        - strong [ref=e747]: 107,1 gr
+                      - article [ref=e748]:
+                        - text: Stok
+                        - strong [ref=e749]: 8542,5 gr
+                  - article [ref=e750]:
+                    - generic [ref=e751]:
+                      - generic [ref=e752]:
+                        - strong [ref=e753]: Pisang Cavendish
+                        - text: BHN-015 - Sunpride
+                      - generic [ref=e754]: Cukup
+                    - generic [ref=e755]:
+                      - article [ref=e756]:
+                        - text: Butuh / batch
+                        - strong [ref=e757]: 107,1 gr
+                      - article [ref=e758]:
+                        - text: Total butuh
+                        - strong [ref=e759]: 107,1 gr
+                      - article [ref=e760]:
+                        - text: Stok
+                        - strong [ref=e761]: 17239,8 gr
+          - generic [ref=e762]:
+            - generic [ref=e764]:
+              - text: Antrian produksi
+              - heading "Draft yang siap dijalankan" [level=2] [ref=e765]
+              - paragraph [ref=e766]: Mulai produksi dipindahkan ke setiap row antrian agar detail produksi masih bisa diedit sebelumnya.
+            - table [ref=e768]:
+              - rowgroup [ref=e769]:
+                - row "Produksi Batch Timer Target Catatan Status Aksi" [ref=e770]:
+                  - columnheader "Produksi" [ref=e771]:
+                    - generic [ref=e774]: Produksi
+                  - columnheader "Batch" [ref=e775]:
+                    - generic [ref=e778]: Batch
+                  - columnheader "Timer Target" [ref=e779]:
+                    - generic [ref=e782]: Timer Target
+                  - columnheader "Catatan" [ref=e783]:
+                    - generic [ref=e786]: Catatan
+                  - columnheader "Status" [ref=e787]:
+                    - generic [ref=e790]: Status
+                  - columnheader "Aksi" [ref=e791]:
+                    - generic [ref=e794]: Aksi
+              - rowgroup [ref=e795]:
+                - row "Roti Sobek Keju PRD-051 - RCP-002 1 batch 16 box 25 menit Masuk antrian 03 Apr 21:03 Menunggu slot oven / finishing. Stok Butter Margarine kurang 65,1 gr. Tertahan stok Edit Mulai Produksi" [ref=e796]:
+                  - cell "Roti Sobek Keju PRD-051 - RCP-002" [ref=e797]:
+                    - generic [ref=e798]:
+                      - strong [ref=e799]: Roti Sobek Keju
+                      - text: PRD-051 - RCP-002
+                  - cell "1 batch 16 box" [ref=e800]:
+                    - generic [ref=e801]:
+                      - strong [ref=e802]: 1 batch
+                      - text: 16 box
+                  - cell "25 menit Masuk antrian 03 Apr 21:03" [ref=e803]:
+                    - generic [ref=e804]:
+                      - strong [ref=e805]: 25 menit
+                      - text: Masuk antrian 03 Apr 21:03
+                  - cell "Menunggu slot oven / finishing. Stok Butter Margarine kurang 65,1 gr." [ref=e806]:
+                    - generic [ref=e807]:
+                      - strong [ref=e808]: Menunggu slot oven / finishing.
+                      - text: Stok Butter Margarine kurang 65,1 gr.
+                  - cell "Tertahan stok" [ref=e809]:
+                    - generic [ref=e810]: Tertahan stok
+                  - cell "Edit Mulai Produksi" [ref=e811]:
+                    - generic [ref=e812]:
+                      - button "Edit" [ref=e813] [cursor=pointer]
+                      - button "Mulai Produksi" [disabled] [ref=e814]
+                - row "Roti Sobek Red Velvet PRD-052 - RCP-005 2 batch 56 tray 35 menit Masuk antrian 03 Apr 21:56 Menunggu slot oven / finishing. Stok Susu Cair UHT kurang 244,7 ml. Tertahan stok Edit Mulai Produksi" [ref=e815]:
+                  - cell "Roti Sobek Red Velvet PRD-052 - RCP-005" [ref=e816]:
+                    - generic [ref=e817]:
+                      - strong [ref=e818]: Roti Sobek Red Velvet
+                      - text: PRD-052 - RCP-005
+                  - cell "2 batch 56 tray" [ref=e819]:
+                    - generic [ref=e820]:
+                      - strong [ref=e821]: 2 batch
+                      - text: 56 tray
+                  - cell "35 menit Masuk antrian 03 Apr 21:56" [ref=e822]:
+                    - generic [ref=e823]:
+                      - strong [ref=e824]: 35 menit
+                      - text: Masuk antrian 03 Apr 21:56
+                  - cell "Menunggu slot oven / finishing. Stok Susu Cair UHT kurang 244,7 ml." [ref=e825]:
+                    - generic [ref=e826]:
+                      - strong [ref=e827]: Menunggu slot oven / finishing.
+                      - text: Stok Susu Cair UHT kurang 244,7 ml.
+                  - cell "Tertahan stok" [ref=e828]:
+                    - generic [ref=e829]: Tertahan stok
+                  - cell "Edit Mulai Produksi" [ref=e830]:
+                    - generic [ref=e831]:
+                      - button "Edit" [ref=e832] [cursor=pointer]
+                      - button "Mulai Produksi" [disabled] [ref=e833]
+                - row "Brownies Matcha PRD-053 - RCP-008 1 batch 20 pouch 45 menit Masuk antrian 03 Apr 22:49 Menunggu slot oven / finishing. Stok Cokelat Bubuk kurang 115,1 gr. Tertahan stok Edit Mulai Produksi" [ref=e834]:
+                  - cell "Brownies Matcha PRD-053 - RCP-008" [ref=e835]:
+                    - generic [ref=e836]:
+                      - strong [ref=e837]: Brownies Matcha
+                      - text: PRD-053 - RCP-008
+                  - cell "1 batch 20 pouch" [ref=e838]:
+                    - generic [ref=e839]:
+                      - strong [ref=e840]: 1 batch
+                      - text: 20 pouch
+                  - cell "45 menit Masuk antrian 03 Apr 22:49" [ref=e841]:
+                    - generic [ref=e842]:
+                      - strong [ref=e843]: 45 menit
+                      - text: Masuk antrian 03 Apr 22:49
+                  - cell "Menunggu slot oven / finishing. Stok Cokelat Bubuk kurang 115,1 gr." [ref=e844]:
+                    - generic [ref=e845]:
+                      - strong [ref=e846]: Menunggu slot oven / finishing.
+                      - text: Stok Cokelat Bubuk kurang 115,1 gr.
+                  - cell "Tertahan stok" [ref=e847]:
+                    - generic [ref=e848]: Tertahan stok
+                  - cell "Edit Mulai Produksi" [ref=e849]:
+                    - generic [ref=e850]:
+                      - button "Edit" [ref=e851] [cursor=pointer]
+                      - button "Mulai Produksi" [disabled] [ref=e852]
+                - row "Donat Cokelat PRD-054 - RCP-011 2 batch 24 pcs 55 menit Masuk antrian 03 Apr 23:42 Menunggu slot oven / finishing. Siap mulai Siap mulai Edit Mulai Produksi" [ref=e853]:
+                  - cell "Donat Cokelat PRD-054 - RCP-011" [ref=e854]:
+                    - generic [ref=e855]:
+                      - strong [ref=e856]: Donat Cokelat
+                      - text: PRD-054 - RCP-011
+                  - cell "2 batch 24 pcs" [ref=e857]:
+                    - generic [ref=e858]:
+                      - strong [ref=e859]: 2 batch
+                      - text: 24 pcs
+                  - cell "55 menit Masuk antrian 03 Apr 23:42" [ref=e860]:
+                    - generic [ref=e861]:
+                      - strong [ref=e862]: 55 menit
+                      - text: Masuk antrian 03 Apr 23:42
+                  - cell "Menunggu slot oven / finishing. Siap mulai" [ref=e863]:
+                    - generic [ref=e864]:
+                      - strong [ref=e865]: Menunggu slot oven / finishing.
+                      - text: Siap mulai
+                  - cell "Siap mulai" [ref=e866]:
+                    - generic [ref=e867]: Siap mulai
+                  - cell "Edit Mulai Produksi" [ref=e868]:
+                    - generic [ref=e869]:
+                      - button "Edit" [ref=e870] [cursor=pointer]
+                      - button "Mulai Produksi" [ref=e871] [cursor=pointer]
+                - row "Donat Kopi PRD-055 - RCP-014 1 batch 24 cup 25 menit Masuk antrian 04 Apr 00:35 Menunggu slot oven / finishing. Siap mulai Siap mulai Edit Mulai Produksi" [ref=e872]:
+                  - cell "Donat Kopi PRD-055 - RCP-014" [ref=e873]:
+                    - generic [ref=e874]:
+                      - strong [ref=e875]: Donat Kopi
+                      - text: PRD-055 - RCP-014
+                  - cell "1 batch 24 cup" [ref=e876]:
+                    - generic [ref=e877]:
+                      - strong [ref=e878]: 1 batch
+                      - text: 24 cup
+                  - cell "25 menit Masuk antrian 04 Apr 00:35" [ref=e879]:
+                    - generic [ref=e880]:
+                      - strong [ref=e881]: 25 menit
+                      - text: Masuk antrian 04 Apr 00:35
+                  - cell "Menunggu slot oven / finishing. Siap mulai" [ref=e882]:
+                    - generic [ref=e883]:
+                      - strong [ref=e884]: Menunggu slot oven / finishing.
+                      - text: Siap mulai
+                  - cell "Siap mulai" [ref=e885]:
+                    - generic [ref=e886]: Siap mulai
+                  - cell "Edit Mulai Produksi" [ref=e887]:
+                    - generic [ref=e888]:
+                      - button "Edit" [ref=e889] [cursor=pointer]
+                      - button "Mulai Produksi" [ref=e890] [cursor=pointer]
+                - row "Cookies Keju PRD-056 - RCP-017 2 batch 32 box 35 menit Masuk antrian 04 Apr 01:28 Menunggu slot oven / finishing. Siap mulai Siap mulai Edit Mulai Produksi" [ref=e891]:
+                  - cell "Cookies Keju PRD-056 - RCP-017" [ref=e892]:
+                    - generic [ref=e893]:
+                      - strong [ref=e894]: Cookies Keju
+                      - text: PRD-056 - RCP-017
+                  - cell "2 batch 32 box" [ref=e895]:
+                    - generic [ref=e896]:
+                      - strong [ref=e897]: 2 batch
+                      - text: 32 box
+                  - cell "35 menit Masuk antrian 04 Apr 01:28" [ref=e898]:
+                    - generic [ref=e899]:
+                      - strong [ref=e900]: 35 menit
+                      - text: Masuk antrian 04 Apr 01:28
+                  - cell "Menunggu slot oven / finishing. Siap mulai" [ref=e901]:
+                    - generic [ref=e902]:
+                      - strong [ref=e903]: Menunggu slot oven / finishing.
+                      - text: Siap mulai
+                  - cell "Siap mulai" [ref=e904]:
+                    - generic [ref=e905]: Siap mulai
+                  - cell "Edit Mulai Produksi" [ref=e906]:
+                    - generic [ref=e907]:
+                      - button "Edit" [ref=e908] [cursor=pointer]
+                      - button "Mulai Produksi" [ref=e909] [cursor=pointer]
+            - generic [ref=e910]:
+              - article [ref=e911]:
+                - generic [ref=e912]:
+                  - generic [ref=e913]:
+                    - strong [ref=e914]: Roti Sobek Keju
+                    - text: PRD-051 - RCP-002
+                  - generic [ref=e915]: Tertahan stok
+                - generic [ref=e916]:
+                  - article [ref=e917]:
+                    - text: Batch
+                    - strong [ref=e918]: 1 batch
+                    - text: 16 box
+                  - article [ref=e919]:
+                    - text: Timer target
+                    - strong [ref=e920]: 25 menit
+                    - text: Masuk 03 Apr 21:03
+                  - article [ref=e921]:
+                    - text: Catatan
+                    - strong [ref=e922]: Menunggu slot oven / finishing.
+                    - text: Stok Butter Margarine kurang 65,1 gr.
+                - generic [ref=e923]:
+                  - button "Edit" [ref=e924] [cursor=pointer]
+                  - button "Mulai Produksi" [disabled] [ref=e925]
+              - article [ref=e926]:
+                - generic [ref=e927]:
+                  - generic [ref=e928]:
+                    - strong [ref=e929]: Roti Sobek Red Velvet
+                    - text: PRD-052 - RCP-005
+                  - generic [ref=e930]: Tertahan stok
+                - generic [ref=e931]:
+                  - article [ref=e932]:
+                    - text: Batch
+                    - strong [ref=e933]: 2 batch
+                    - text: 56 tray
+                  - article [ref=e934]:
+                    - text: Timer target
+                    - strong [ref=e935]: 35 menit
+                    - text: Masuk 03 Apr 21:56
+                  - article [ref=e936]:
+                    - text: Catatan
+                    - strong [ref=e937]: Menunggu slot oven / finishing.
+                    - text: Stok Susu Cair UHT kurang 244,7 ml.
+                - generic [ref=e938]:
+                  - button "Edit" [ref=e939] [cursor=pointer]
+                  - button "Mulai Produksi" [disabled] [ref=e940]
+              - article [ref=e941]:
+                - generic [ref=e942]:
+                  - generic [ref=e943]:
+                    - strong [ref=e944]: Brownies Matcha
+                    - text: PRD-053 - RCP-008
+                  - generic [ref=e945]: Tertahan stok
+                - generic [ref=e946]:
+                  - article [ref=e947]:
+                    - text: Batch
+                    - strong [ref=e948]: 1 batch
+                    - text: 20 pouch
+                  - article [ref=e949]:
+                    - text: Timer target
+                    - strong [ref=e950]: 45 menit
+                    - text: Masuk 03 Apr 22:49
+                  - article [ref=e951]:
+                    - text: Catatan
+                    - strong [ref=e952]: Menunggu slot oven / finishing.
+                    - text: Stok Cokelat Bubuk kurang 115,1 gr.
+                - generic [ref=e953]:
+                  - button "Edit" [ref=e954] [cursor=pointer]
+                  - button "Mulai Produksi" [disabled] [ref=e955]
+              - article [ref=e956]:
+                - generic [ref=e957]:
+                  - generic [ref=e958]:
+                    - strong [ref=e959]: Donat Cokelat
+                    - text: PRD-054 - RCP-011
+                  - generic [ref=e960]: Siap mulai
+                - generic [ref=e961]:
+                  - article [ref=e962]:
+                    - text: Batch
+                    - strong [ref=e963]: 2 batch
+                    - text: 24 pcs
+                  - article [ref=e964]:
+                    - text: Timer target
+                    - strong [ref=e965]: 55 menit
+                    - text: Masuk 03 Apr 23:42
+                  - article [ref=e966]:
+                    - text: Catatan
+                    - strong [ref=e967]: Menunggu slot oven / finishing.
+                    - text: Siap mulai
+                - generic [ref=e968]:
+                  - button "Edit" [ref=e969] [cursor=pointer]
+                  - button "Mulai Produksi" [ref=e970] [cursor=pointer]
+              - article [ref=e971]:
+                - generic [ref=e972]:
+                  - generic [ref=e973]:
+                    - strong [ref=e974]: Donat Kopi
+                    - text: PRD-055 - RCP-014
+                  - generic [ref=e975]: Siap mulai
+                - generic [ref=e976]:
+                  - article [ref=e977]:
+                    - text: Batch
+                    - strong [ref=e978]: 1 batch
+                    - text: 24 cup
+                  - article [ref=e979]:
+                    - text: Timer target
+                    - strong [ref=e980]: 25 menit
+                    - text: Masuk 04 Apr 00:35
+                  - article [ref=e981]:
+                    - text: Catatan
+                    - strong [ref=e982]: Menunggu slot oven / finishing.
+                    - text: Siap mulai
+                - generic [ref=e983]:
+                  - button "Edit" [ref=e984] [cursor=pointer]
+                  - button "Mulai Produksi" [ref=e985] [cursor=pointer]
+              - article [ref=e986]:
+                - generic [ref=e987]:
+                  - generic [ref=e988]:
+                    - strong [ref=e989]: Cookies Keju
+                    - text: PRD-056 - RCP-017
+                  - generic [ref=e990]: Siap mulai
+                - generic [ref=e991]:
+                  - article [ref=e992]:
+                    - text: Batch
+                    - strong [ref=e993]: 2 batch
+                    - text: 32 box
+                  - article [ref=e994]:
+                    - text: Timer target
+                    - strong [ref=e995]: 35 menit
+                    - text: Masuk 04 Apr 01:28
+                  - article [ref=e996]:
+                    - text: Catatan
+                    - strong [ref=e997]: Menunggu slot oven / finishing.
+                    - text: Siap mulai
+                - generic [ref=e998]:
+                  - button "Edit" [ref=e999] [cursor=pointer]
+                  - button "Mulai Produksi" [ref=e1000] [cursor=pointer]
+          - generic [ref=e1001]:
+            - generic [ref=e1003]:
+              - text: History produksi
+              - heading "Produksi berjalan dan selesai" [level=2] [ref=e1004]
+              - paragraph [ref=e1005]: Timer target akan berjalan otomatis saat produksi dimulai, lalu alarm berbunyi saat target waktunya habis.
+            - table [ref=e1007]:
+              - rowgroup [ref=e1008]:
+                - row "Produksi Batch Timer Mulai Status Aksi" [ref=e1009]:
+                  - columnheader "Produksi" [ref=e1010]:
+                    - generic [ref=e1013]: Produksi
+                  - columnheader "Batch" [ref=e1014]:
+                    - generic [ref=e1017]: Batch
+                  - columnheader "Timer" [ref=e1018]:
+                    - generic [ref=e1021]: Timer
+                  - columnheader "Mulai" [ref=e1022]:
+                    - generic [ref=e1025]: Mulai
+                  - columnheader "Status" [ref=e1026]:
+                    - generic [ref=e1029]: Status
+                  - columnheader "Aksi" [ref=e1030]:
+                    - generic [ref=e1033]: Aksi
+              - rowgroup [ref=e1034]:
+                - row "Muffin Red Velvet PRD-030 - RCP-030 4 batch 112 tray 1 jam 15 menit Target 1 jam 15 menit 04 Apr 2026 14:56 Selesai 04 Apr 2026 16:11 Selesai Selesai" [ref=e1035]:
+                  - cell "Muffin Red Velvet PRD-030 - RCP-030" [ref=e1036]:
+                    - generic [ref=e1037]:
+                      - strong [ref=e1038]: Muffin Red Velvet
+                      - text: PRD-030 - RCP-030
+                  - cell "4 batch 112 tray" [ref=e1039]:
+                    - generic [ref=e1040]:
+                      - strong [ref=e1041]: 4 batch
+                      - text: 112 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1042]:
+                    - generic [ref=e1043]:
+                      - strong [ref=e1044]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "04 Apr 2026 14:56 Selesai 04 Apr 2026 16:11" [ref=e1045]:
+                    - generic [ref=e1046]:
+                      - strong [ref=e1047]: 04 Apr 2026 14:56
+                      - text: Selesai 04 Apr 2026 16:11
+                  - cell "Selesai" [ref=e1048]:
+                    - generic [ref=e1049]: Selesai
+                  - cell "Selesai" [ref=e1050]:
+                    - generic [ref=e1051]: Selesai
+                - row "Pudding Kopi PRD-024 - RCP-024 4 batch 96 cup 1 jam 05 menit Target 1 jam 05 menit 04 Apr 2026 14:57 Selesai 04 Apr 2026 16:02 Selesai Selesai" [ref=e1052]:
+                  - cell "Pudding Kopi PRD-024 - RCP-024" [ref=e1053]:
+                    - generic [ref=e1054]:
+                      - strong [ref=e1055]: Pudding Kopi
+                      - text: PRD-024 - RCP-024
+                  - cell "4 batch 96 cup" [ref=e1056]:
+                    - generic [ref=e1057]:
+                      - strong [ref=e1058]: 4 batch
+                      - text: 96 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1059]:
+                    - generic [ref=e1060]:
+                      - strong [ref=e1061]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "04 Apr 2026 14:57 Selesai 04 Apr 2026 16:02" [ref=e1062]:
+                    - generic [ref=e1063]:
+                      - strong [ref=e1064]: 04 Apr 2026 14:57
+                      - text: Selesai 04 Apr 2026 16:02
+                  - cell "Selesai" [ref=e1065]:
+                    - generic [ref=e1066]: Selesai
+                  - cell "Selesai" [ref=e1067]:
+                    - generic [ref=e1068]: Selesai
+                - row "Cookies Matcha PRD-018 - RCP-018 4 batch 80 pouch 55 menit Target 55 menit 04 Apr 2026 14:58 Selesai 04 Apr 2026 15:53 Selesai Selesai" [ref=e1069]:
+                  - cell "Cookies Matcha PRD-018 - RCP-018" [ref=e1070]:
+                    - generic [ref=e1071]:
+                      - strong [ref=e1072]: Cookies Matcha
+                      - text: PRD-018 - RCP-018
+                  - cell "4 batch 80 pouch" [ref=e1073]:
+                    - generic [ref=e1074]:
+                      - strong [ref=e1075]: 4 batch
+                      - text: 80 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1076]:
+                    - generic [ref=e1077]:
+                      - strong [ref=e1078]: 55 menit
+                      - text: Target 55 menit
+                  - cell "04 Apr 2026 14:58 Selesai 04 Apr 2026 15:53" [ref=e1079]:
+                    - generic [ref=e1080]:
+                      - strong [ref=e1081]: 04 Apr 2026 14:58
+                      - text: Selesai 04 Apr 2026 15:53
+                  - cell "Selesai" [ref=e1082]:
+                    - generic [ref=e1083]: Selesai
+                  - cell "Selesai" [ref=e1084]:
+                    - generic [ref=e1085]: Selesai
+                - row "Donat Keju PRD-012 - RCP-012 4 batch 64 box 45 menit Target 45 menit 04 Apr 2026 14:59 Selesai 04 Apr 2026 15:44 Selesai Selesai" [ref=e1086]:
+                  - cell "Donat Keju PRD-012 - RCP-012" [ref=e1087]:
+                    - generic [ref=e1088]:
+                      - strong [ref=e1089]: Donat Keju
+                      - text: PRD-012 - RCP-012
+                  - cell "4 batch 64 box" [ref=e1090]:
+                    - generic [ref=e1091]:
+                      - strong [ref=e1092]: 4 batch
+                      - text: 64 box
+                  - cell "45 menit Target 45 menit" [ref=e1093]:
+                    - generic [ref=e1094]:
+                      - strong [ref=e1095]: 45 menit
+                      - text: Target 45 menit
+                  - cell "04 Apr 2026 14:59 Selesai 04 Apr 2026 15:44" [ref=e1096]:
+                    - generic [ref=e1097]:
+                      - strong [ref=e1098]: 04 Apr 2026 14:59
+                      - text: Selesai 04 Apr 2026 15:44
+                  - cell "Selesai" [ref=e1099]:
+                    - generic [ref=e1100]: Selesai
+                  - cell "Selesai" [ref=e1101]:
+                    - generic [ref=e1102]: Selesai
+                - row "Brownies Cokelat PRD-006 - RCP-006 4 batch 48 pcs 35 menit Target 35 menit 04 Apr 2026 15:00 Selesai 04 Apr 2026 15:35 Selesai Selesai" [ref=e1103]:
+                  - cell "Brownies Cokelat PRD-006 - RCP-006" [ref=e1104]:
+                    - generic [ref=e1105]:
+                      - strong [ref=e1106]: Brownies Cokelat
+                      - text: PRD-006 - RCP-006
+                  - cell "4 batch 48 pcs" [ref=e1107]:
+                    - generic [ref=e1108]:
+                      - strong [ref=e1109]: 4 batch
+                      - text: 48 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1110]:
+                    - generic [ref=e1111]:
+                      - strong [ref=e1112]: 35 menit
+                      - text: Target 35 menit
+                  - cell "04 Apr 2026 15:00 Selesai 04 Apr 2026 15:35" [ref=e1113]:
+                    - generic [ref=e1114]:
+                      - strong [ref=e1115]: 04 Apr 2026 15:00
+                      - text: Selesai 04 Apr 2026 15:35
+                  - cell "Selesai" [ref=e1116]:
+                    - generic [ref=e1117]: Selesai
+                  - cell "Selesai" [ref=e1118]:
+                    - generic [ref=e1119]: Selesai
+                - row "Mie Box Matcha PRD-048 - RCP-048 4 batch 80 pouch 55 menit Target 55 menit 04 Apr 2026 14:28 Selesai 04 Apr 2026 15:23 Selesai Selesai" [ref=e1120]:
+                  - cell "Mie Box Matcha PRD-048 - RCP-048" [ref=e1121]:
+                    - generic [ref=e1122]:
+                      - strong [ref=e1123]: Mie Box Matcha
+                      - text: PRD-048 - RCP-048
+                  - cell "4 batch 80 pouch" [ref=e1124]:
+                    - generic [ref=e1125]:
+                      - strong [ref=e1126]: 4 batch
+                      - text: 80 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1127]:
+                    - generic [ref=e1128]:
+                      - strong [ref=e1129]: 55 menit
+                      - text: Target 55 menit
+                  - cell "04 Apr 2026 14:28 Selesai 04 Apr 2026 15:23" [ref=e1130]:
+                    - generic [ref=e1131]:
+                      - strong [ref=e1132]: 04 Apr 2026 14:28
+                      - text: Selesai 04 Apr 2026 15:23
+                  - cell "Selesai" [ref=e1133]:
+                    - generic [ref=e1134]: Selesai
+                  - cell "Selesai" [ref=e1135]:
+                    - generic [ref=e1136]: Selesai
+                - row "Rice Bowl Keju PRD-042 - RCP-042 4 batch 64 box 45 menit Target 45 menit 04 Apr 2026 14:29 Selesai 04 Apr 2026 15:14 Selesai Selesai" [ref=e1137]:
+                  - cell "Rice Bowl Keju PRD-042 - RCP-042" [ref=e1138]:
+                    - generic [ref=e1139]:
+                      - strong [ref=e1140]: Rice Bowl Keju
+                      - text: PRD-042 - RCP-042
+                  - cell "4 batch 64 box" [ref=e1141]:
+                    - generic [ref=e1142]:
+                      - strong [ref=e1143]: 4 batch
+                      - text: 64 box
+                  - cell "45 menit Target 45 menit" [ref=e1144]:
+                    - generic [ref=e1145]:
+                      - strong [ref=e1146]: 45 menit
+                      - text: Target 45 menit
+                  - cell "04 Apr 2026 14:29 Selesai 04 Apr 2026 15:14" [ref=e1147]:
+                    - generic [ref=e1148]:
+                      - strong [ref=e1149]: 04 Apr 2026 14:29
+                      - text: Selesai 04 Apr 2026 15:14
+                  - cell "Selesai" [ref=e1150]:
+                    - generic [ref=e1151]: Selesai
+                  - cell "Selesai" [ref=e1152]:
+                    - generic [ref=e1153]: Selesai
+                - row "Sandwich Cokelat PRD-036 - RCP-036 4 batch 48 pcs 35 menit Target 35 menit 04 Apr 2026 14:30 Selesai 04 Apr 2026 15:05 Selesai Selesai" [ref=e1154]:
+                  - cell "Sandwich Cokelat PRD-036 - RCP-036" [ref=e1155]:
+                    - generic [ref=e1156]:
+                      - strong [ref=e1157]: Sandwich Cokelat
+                      - text: PRD-036 - RCP-036
+                  - cell "4 batch 48 pcs" [ref=e1158]:
+                    - generic [ref=e1159]:
+                      - strong [ref=e1160]: 4 batch
+                      - text: 48 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1161]:
+                    - generic [ref=e1162]:
+                      - strong [ref=e1163]: 35 menit
+                      - text: Target 35 menit
+                  - cell "04 Apr 2026 14:30 Selesai 04 Apr 2026 15:05" [ref=e1164]:
+                    - generic [ref=e1165]:
+                      - strong [ref=e1166]: 04 Apr 2026 14:30
+                      - text: Selesai 04 Apr 2026 15:05
+                  - cell "Selesai" [ref=e1167]:
+                    - generic [ref=e1168]: Selesai
+                  - cell "Selesai" [ref=e1169]:
+                    - generic [ref=e1170]: Selesai
+                - row "Donat Red Velvet PRD-060 - RCP-015 1 batch 28 tray 1 jam 10 menit Target 1 jam 10 menit 03 Apr 2026 21:05 Selesai 04 Apr 2026 07:16 Selesai Selesai" [ref=e1171]:
+                  - cell "Donat Red Velvet PRD-060 - RCP-015" [ref=e1172]:
+                    - generic [ref=e1173]:
+                      - strong [ref=e1174]: Donat Red Velvet
+                      - text: PRD-060 - RCP-015
+                  - cell "1 batch 28 tray" [ref=e1175]:
+                    - generic [ref=e1176]:
+                      - strong [ref=e1177]: 1 batch
+                      - text: 28 tray
+                  - cell "1 jam 10 menit Target 1 jam 10 menit" [ref=e1178]:
+                    - generic [ref=e1179]:
+                      - strong [ref=e1180]: 1 jam 10 menit
+                      - text: Target 1 jam 10 menit
+                  - cell "03 Apr 2026 21:05 Selesai 04 Apr 2026 07:16" [ref=e1181]:
+                    - generic [ref=e1182]:
+                      - strong [ref=e1183]: 03 Apr 2026 21:05
+                      - text: Selesai 04 Apr 2026 07:16
+                  - cell "Selesai" [ref=e1184]:
+                    - generic [ref=e1185]: Selesai
+                  - cell "Selesai" [ref=e1186]:
+                    - generic [ref=e1187]: Selesai
+                - row "Donat Cokelat PRD-059 - RCP-011 3 batch 36 pcs 1 jam 00 menit Target 1 jam 00 menit 03 Apr 2026 22:11 Selesai 04 Apr 2026 07:16 Selesai Selesai" [ref=e1188]:
+                  - cell "Donat Cokelat PRD-059 - RCP-011" [ref=e1189]:
+                    - generic [ref=e1190]:
+                      - strong [ref=e1191]: Donat Cokelat
+                      - text: PRD-059 - RCP-011
+                  - cell "3 batch 36 pcs" [ref=e1192]:
+                    - generic [ref=e1193]:
+                      - strong [ref=e1194]: 3 batch
+                      - text: 36 pcs
+                  - cell "1 jam 00 menit Target 1 jam 00 menit" [ref=e1195]:
+                    - generic [ref=e1196]:
+                      - strong [ref=e1197]: 1 jam 00 menit
+                      - text: Target 1 jam 00 menit
+                  - cell "03 Apr 2026 22:11 Selesai 04 Apr 2026 07:16" [ref=e1198]:
+                    - generic [ref=e1199]:
+                      - strong [ref=e1200]: 03 Apr 2026 22:11
+                      - text: Selesai 04 Apr 2026 07:16
+                  - cell "Selesai" [ref=e1201]:
+                    - generic [ref=e1202]: Selesai
+                  - cell "Selesai" [ref=e1203]:
+                    - generic [ref=e1204]: Selesai
+                - row "Brownies Keju PRD-058 - RCP-007 2 batch 32 box 50 menit Target 50 menit 03 Apr 2026 23:17 Selesai 04 Apr 2026 07:16 Selesai Selesai" [ref=e1205]:
+                  - cell "Brownies Keju PRD-058 - RCP-007" [ref=e1206]:
+                    - generic [ref=e1207]:
+                      - strong [ref=e1208]: Brownies Keju
+                      - text: PRD-058 - RCP-007
+                  - cell "2 batch 32 box" [ref=e1209]:
+                    - generic [ref=e1210]:
+                      - strong [ref=e1211]: 2 batch
+                      - text: 32 box
+                  - cell "50 menit Target 50 menit" [ref=e1212]:
+                    - generic [ref=e1213]:
+                      - strong [ref=e1214]: 50 menit
+                      - text: Target 50 menit
+                  - cell "03 Apr 2026 23:17 Selesai 04 Apr 2026 07:16" [ref=e1215]:
+                    - generic [ref=e1216]:
+                      - strong [ref=e1217]: 03 Apr 2026 23:17
+                      - text: Selesai 04 Apr 2026 07:16
+                  - cell "Selesai" [ref=e1218]:
+                    - generic [ref=e1219]: Selesai
+                  - cell "Selesai" [ref=e1220]:
+                    - generic [ref=e1221]: Selesai
+                - row "Roti Sobek Matcha PRD-057 - RCP-003 1 batch 20 pouch 40 menit Target 40 menit 04 Apr 2026 00:23 Selesai 04 Apr 2026 07:16 Selesai Selesai" [ref=e1222]:
+                  - cell "Roti Sobek Matcha PRD-057 - RCP-003" [ref=e1223]:
+                    - generic [ref=e1224]:
+                      - strong [ref=e1225]: Roti Sobek Matcha
+                      - text: PRD-057 - RCP-003
+                  - cell "1 batch 20 pouch" [ref=e1226]:
+                    - generic [ref=e1227]:
+                      - strong [ref=e1228]: 1 batch
+                      - text: 20 pouch
+                  - cell "40 menit Target 40 menit" [ref=e1229]:
+                    - generic [ref=e1230]:
+                      - strong [ref=e1231]: 40 menit
+                      - text: Target 40 menit
+                  - cell "04 Apr 2026 00:23 Selesai 04 Apr 2026 07:16" [ref=e1232]:
+                    - generic [ref=e1233]:
+                      - strong [ref=e1234]: 04 Apr 2026 00:23
+                      - text: Selesai 04 Apr 2026 07:16
+                  - cell "Selesai" [ref=e1235]:
+                    - generic [ref=e1236]: Selesai
+                  - cell "Selesai" [ref=e1237]:
+                    - generic [ref=e1238]: Selesai
+                - row "Roti Sobek Red Velvet PRD-005 - RCP-005 3 batch 84 tray 1 jam 15 menit Target 1 jam 15 menit 03 Apr 2026 14:11 Selesai 03 Apr 2026 15:26 Selesai Selesai" [ref=e1239]:
+                  - cell "Roti Sobek Red Velvet PRD-005 - RCP-005" [ref=e1240]:
+                    - generic [ref=e1241]:
+                      - strong [ref=e1242]: Roti Sobek Red Velvet
+                      - text: PRD-005 - RCP-005
+                  - cell "3 batch 84 tray" [ref=e1243]:
+                    - generic [ref=e1244]:
+                      - strong [ref=e1245]: 3 batch
+                      - text: 84 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1246]:
+                    - generic [ref=e1247]:
+                      - strong [ref=e1248]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "03 Apr 2026 14:11 Selesai 03 Apr 2026 15:26" [ref=e1249]:
+                    - generic [ref=e1250]:
+                      - strong [ref=e1251]: 03 Apr 2026 14:11
+                      - text: Selesai 03 Apr 2026 15:26
+                  - cell "Selesai" [ref=e1252]:
+                    - generic [ref=e1253]: Selesai
+                  - cell "Selesai" [ref=e1254]:
+                    - generic [ref=e1255]: Selesai
+                - row "Mie Box Keju PRD-047 - RCP-047 3 batch 48 box 45 menit Target 45 menit 03 Apr 2026 14:14 Selesai 03 Apr 2026 14:59 Selesai Selesai" [ref=e1256]:
+                  - cell "Mie Box Keju PRD-047 - RCP-047" [ref=e1257]:
+                    - generic [ref=e1258]:
+                      - strong [ref=e1259]: Mie Box Keju
+                      - text: PRD-047 - RCP-047
+                  - cell "3 batch 48 box" [ref=e1260]:
+                    - generic [ref=e1261]:
+                      - strong [ref=e1262]: 3 batch
+                      - text: 48 box
+                  - cell "45 menit Target 45 menit" [ref=e1263]:
+                    - generic [ref=e1264]:
+                      - strong [ref=e1265]: 45 menit
+                      - text: Target 45 menit
+                  - cell "03 Apr 2026 14:14 Selesai 03 Apr 2026 14:59" [ref=e1266]:
+                    - generic [ref=e1267]:
+                      - strong [ref=e1268]: 03 Apr 2026 14:14
+                      - text: Selesai 03 Apr 2026 14:59
+                  - cell "Selesai" [ref=e1269]:
+                    - generic [ref=e1270]: Selesai
+                  - cell "Selesai" [ref=e1271]:
+                    - generic [ref=e1272]: Selesai
+                - row "Croissant Red Velvet PRD-035 - RCP-035 3 batch 84 tray 1 jam 15 menit Target 1 jam 15 menit 03 Apr 2026 13:41 Selesai 03 Apr 2026 14:56 Selesai Selesai" [ref=e1273]:
+                  - cell "Croissant Red Velvet PRD-035 - RCP-035" [ref=e1274]:
+                    - generic [ref=e1275]:
+                      - strong [ref=e1276]: Croissant Red Velvet
+                      - text: PRD-035 - RCP-035
+                  - cell "3 batch 84 tray" [ref=e1277]:
+                    - generic [ref=e1278]:
+                      - strong [ref=e1279]: 3 batch
+                      - text: 84 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1280]:
+                    - generic [ref=e1281]:
+                      - strong [ref=e1282]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "03 Apr 2026 13:41 Selesai 03 Apr 2026 14:56" [ref=e1283]:
+                    - generic [ref=e1284]:
+                      - strong [ref=e1285]: 03 Apr 2026 13:41
+                      - text: Selesai 03 Apr 2026 14:56
+                  - cell "Selesai" [ref=e1286]:
+                    - generic [ref=e1287]: Selesai
+                  - cell "Selesai" [ref=e1288]:
+                    - generic [ref=e1289]: Selesai
+                - row "Muffin Kopi PRD-029 - RCP-029 3 batch 72 cup 1 jam 05 menit Target 1 jam 05 menit 03 Apr 2026 13:42 Selesai 03 Apr 2026 14:47 Selesai Selesai" [ref=e1290]:
+                  - cell "Muffin Kopi PRD-029 - RCP-029" [ref=e1291]:
+                    - generic [ref=e1292]:
+                      - strong [ref=e1293]: Muffin Kopi
+                      - text: PRD-029 - RCP-029
+                  - cell "3 batch 72 cup" [ref=e1294]:
+                    - generic [ref=e1295]:
+                      - strong [ref=e1296]: 3 batch
+                      - text: 72 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1297]:
+                    - generic [ref=e1298]:
+                      - strong [ref=e1299]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "03 Apr 2026 13:42 Selesai 03 Apr 2026 14:47" [ref=e1300]:
+                    - generic [ref=e1301]:
+                      - strong [ref=e1302]: 03 Apr 2026 13:42
+                      - text: Selesai 03 Apr 2026 14:47
+                  - cell "Selesai" [ref=e1303]:
+                    - generic [ref=e1304]: Selesai
+                  - cell "Selesai" [ref=e1305]:
+                    - generic [ref=e1306]: Selesai
+                - row "Pudding Matcha PRD-023 - RCP-023 3 batch 60 pouch 55 menit Target 55 menit 03 Apr 2026 13:43 Selesai 03 Apr 2026 14:38 Selesai Selesai" [ref=e1307]:
+                  - cell "Pudding Matcha PRD-023 - RCP-023" [ref=e1308]:
+                    - generic [ref=e1309]:
+                      - strong [ref=e1310]: Pudding Matcha
+                      - text: PRD-023 - RCP-023
+                  - cell "3 batch 60 pouch" [ref=e1311]:
+                    - generic [ref=e1312]:
+                      - strong [ref=e1313]: 3 batch
+                      - text: 60 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1314]:
+                    - generic [ref=e1315]:
+                      - strong [ref=e1316]: 55 menit
+                      - text: Target 55 menit
+                  - cell "03 Apr 2026 13:43 Selesai 03 Apr 2026 14:38" [ref=e1317]:
+                    - generic [ref=e1318]:
+                      - strong [ref=e1319]: 03 Apr 2026 13:43
+                      - text: Selesai 03 Apr 2026 14:38
+                  - cell "Selesai" [ref=e1320]:
+                    - generic [ref=e1321]: Selesai
+                  - cell "Selesai" [ref=e1322]:
+                    - generic [ref=e1323]: Selesai
+                - row "Cookies Keju PRD-017 - RCP-017 3 batch 48 box 45 menit Target 45 menit 03 Apr 2026 13:44 Selesai 03 Apr 2026 14:29 Selesai Selesai" [ref=e1324]:
+                  - cell "Cookies Keju PRD-017 - RCP-017" [ref=e1325]:
+                    - generic [ref=e1326]:
+                      - strong [ref=e1327]: Cookies Keju
+                      - text: PRD-017 - RCP-017
+                  - cell "3 batch 48 box" [ref=e1328]:
+                    - generic [ref=e1329]:
+                      - strong [ref=e1330]: 3 batch
+                      - text: 48 box
+                  - cell "45 menit Target 45 menit" [ref=e1331]:
+                    - generic [ref=e1332]:
+                      - strong [ref=e1333]: 45 menit
+                      - text: Target 45 menit
+                  - cell "03 Apr 2026 13:44 Selesai 03 Apr 2026 14:29" [ref=e1334]:
+                    - generic [ref=e1335]:
+                      - strong [ref=e1336]: 03 Apr 2026 13:44
+                      - text: Selesai 03 Apr 2026 14:29
+                  - cell "Selesai" [ref=e1337]:
+                    - generic [ref=e1338]: Selesai
+                  - cell "Selesai" [ref=e1339]:
+                    - generic [ref=e1340]: Selesai
+                - row "Donat Cokelat PRD-011 - RCP-011 3 batch 36 pcs 35 menit Target 35 menit 03 Apr 2026 13:45 Selesai 03 Apr 2026 14:20 Selesai Selesai" [ref=e1341]:
+                  - cell "Donat Cokelat PRD-011 - RCP-011" [ref=e1342]:
+                    - generic [ref=e1343]:
+                      - strong [ref=e1344]: Donat Cokelat
+                      - text: PRD-011 - RCP-011
+                  - cell "3 batch 36 pcs" [ref=e1345]:
+                    - generic [ref=e1346]:
+                      - strong [ref=e1347]: 3 batch
+                      - text: 36 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1348]:
+                    - generic [ref=e1349]:
+                      - strong [ref=e1350]: 35 menit
+                      - text: Target 35 menit
+                  - cell "03 Apr 2026 13:45 Selesai 03 Apr 2026 14:20" [ref=e1351]:
+                    - generic [ref=e1352]:
+                      - strong [ref=e1353]: 03 Apr 2026 13:45
+                      - text: Selesai 03 Apr 2026 14:20
+                  - cell "Selesai" [ref=e1354]:
+                    - generic [ref=e1355]: Selesai
+                  - cell "Selesai" [ref=e1356]:
+                    - generic [ref=e1357]: Selesai
+                - row "Rice Bowl Cokelat PRD-041 - RCP-041 3 batch 36 pcs 35 menit Target 35 menit 03 Apr 2026 13:15 Selesai 03 Apr 2026 13:50 Selesai Selesai" [ref=e1358]:
+                  - cell "Rice Bowl Cokelat PRD-041 - RCP-041" [ref=e1359]:
+                    - generic [ref=e1360]:
+                      - strong [ref=e1361]: Rice Bowl Cokelat
+                      - text: PRD-041 - RCP-041
+                  - cell "3 batch 36 pcs" [ref=e1362]:
+                    - generic [ref=e1363]:
+                      - strong [ref=e1364]: 3 batch
+                      - text: 36 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1365]:
+                    - generic [ref=e1366]:
+                      - strong [ref=e1367]: 35 menit
+                      - text: Target 35 menit
+                  - cell "03 Apr 2026 13:15 Selesai 03 Apr 2026 13:50" [ref=e1368]:
+                    - generic [ref=e1369]:
+                      - strong [ref=e1370]: 03 Apr 2026 13:15
+                      - text: Selesai 03 Apr 2026 13:50
+                  - cell "Selesai" [ref=e1371]:
+                    - generic [ref=e1372]: Selesai
+                  - cell "Selesai" [ref=e1373]:
+                    - generic [ref=e1374]: Selesai
+                - row "Sandwich Red Velvet PRD-040 - RCP-040 2 batch 56 tray 1 jam 15 menit Target 1 jam 15 menit 02 Apr 2026 13:26 Selesai 02 Apr 2026 14:41 Selesai Selesai" [ref=e1375]:
+                  - cell "Sandwich Red Velvet PRD-040 - RCP-040" [ref=e1376]:
+                    - generic [ref=e1377]:
+                      - strong [ref=e1378]: Sandwich Red Velvet
+                      - text: PRD-040 - RCP-040
+                  - cell "2 batch 56 tray" [ref=e1379]:
+                    - generic [ref=e1380]:
+                      - strong [ref=e1381]: 2 batch
+                      - text: 56 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1382]:
+                    - generic [ref=e1383]:
+                      - strong [ref=e1384]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "02 Apr 2026 13:26 Selesai 02 Apr 2026 14:41" [ref=e1385]:
+                    - generic [ref=e1386]:
+                      - strong [ref=e1387]: 02 Apr 2026 13:26
+                      - text: Selesai 02 Apr 2026 14:41
+                  - cell "Selesai" [ref=e1388]:
+                    - generic [ref=e1389]: Selesai
+                  - cell "Selesai" [ref=e1390]:
+                    - generic [ref=e1391]: Selesai
+                - row "Croissant Kopi PRD-034 - RCP-034 2 batch 48 cup 1 jam 05 menit Target 1 jam 05 menit 02 Apr 2026 13:27 Selesai 02 Apr 2026 14:32 Selesai Selesai" [ref=e1392]:
+                  - cell "Croissant Kopi PRD-034 - RCP-034" [ref=e1393]:
+                    - generic [ref=e1394]:
+                      - strong [ref=e1395]: Croissant Kopi
+                      - text: PRD-034 - RCP-034
+                  - cell "2 batch 48 cup" [ref=e1396]:
+                    - generic [ref=e1397]:
+                      - strong [ref=e1398]: 2 batch
+                      - text: 48 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1399]:
+                    - generic [ref=e1400]:
+                      - strong [ref=e1401]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "02 Apr 2026 13:27 Selesai 02 Apr 2026 14:32" [ref=e1402]:
+                    - generic [ref=e1403]:
+                      - strong [ref=e1404]: 02 Apr 2026 13:27
+                      - text: Selesai 02 Apr 2026 14:32
+                  - cell "Selesai" [ref=e1405]:
+                    - generic [ref=e1406]: Selesai
+                  - cell "Selesai" [ref=e1407]:
+                    - generic [ref=e1408]: Selesai
+                - row "Brownies Red Velvet PRD-010 - RCP-010 2 batch 56 tray 1 jam 15 menit Target 1 jam 15 menit 02 Apr 2026 12:56 Selesai 02 Apr 2026 14:11 Selesai Selesai" [ref=e1409]:
+                  - cell "Brownies Red Velvet PRD-010 - RCP-010" [ref=e1410]:
+                    - generic [ref=e1411]:
+                      - strong [ref=e1412]: Brownies Red Velvet
+                      - text: PRD-010 - RCP-010
+                  - cell "2 batch 56 tray" [ref=e1413]:
+                    - generic [ref=e1414]:
+                      - strong [ref=e1415]: 2 batch
+                      - text: 56 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1416]:
+                    - generic [ref=e1417]:
+                      - strong [ref=e1418]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "02 Apr 2026 12:56 Selesai 02 Apr 2026 14:11" [ref=e1419]:
+                    - generic [ref=e1420]:
+                      - strong [ref=e1421]: 02 Apr 2026 12:56
+                      - text: Selesai 02 Apr 2026 14:11
+                  - cell "Selesai" [ref=e1422]:
+                    - generic [ref=e1423]: Selesai
+                  - cell "Selesai" [ref=e1424]:
+                    - generic [ref=e1425]: Selesai
+                - row "Roti Sobek Kopi PRD-004 - RCP-004 2 batch 48 cup 1 jam 05 menit Target 1 jam 05 menit 02 Apr 2026 12:57 Selesai 02 Apr 2026 14:02 Selesai Selesai" [ref=e1426]:
+                  - cell "Roti Sobek Kopi PRD-004 - RCP-004" [ref=e1427]:
+                    - generic [ref=e1428]:
+                      - strong [ref=e1429]: Roti Sobek Kopi
+                      - text: PRD-004 - RCP-004
+                  - cell "2 batch 48 cup" [ref=e1430]:
+                    - generic [ref=e1431]:
+                      - strong [ref=e1432]: 2 batch
+                      - text: 48 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1433]:
+                    - generic [ref=e1434]:
+                      - strong [ref=e1435]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "02 Apr 2026 12:57 Selesai 02 Apr 2026 14:02" [ref=e1436]:
+                    - generic [ref=e1437]:
+                      - strong [ref=e1438]: 02 Apr 2026 12:57
+                      - text: Selesai 02 Apr 2026 14:02
+                  - cell "Selesai" [ref=e1439]:
+                    - generic [ref=e1440]: Selesai
+                  - cell "Selesai" [ref=e1441]:
+                    - generic [ref=e1442]: Selesai
+                - row "Mie Box Cokelat PRD-046 - RCP-046 2 batch 24 pcs 35 menit Target 35 menit 02 Apr 2026 13:00 Selesai 02 Apr 2026 13:35 Selesai Selesai" [ref=e1443]:
+                  - cell "Mie Box Cokelat PRD-046 - RCP-046" [ref=e1444]:
+                    - generic [ref=e1445]:
+                      - strong [ref=e1446]: Mie Box Cokelat
+                      - text: PRD-046 - RCP-046
+                  - cell "2 batch 24 pcs" [ref=e1447]:
+                    - generic [ref=e1448]:
+                      - strong [ref=e1449]: 2 batch
+                      - text: 24 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1450]:
+                    - generic [ref=e1451]:
+                      - strong [ref=e1452]: 35 menit
+                      - text: Target 35 menit
+                  - cell "02 Apr 2026 13:00 Selesai 02 Apr 2026 13:35" [ref=e1453]:
+                    - generic [ref=e1454]:
+                      - strong [ref=e1455]: 02 Apr 2026 13:00
+                      - text: Selesai 02 Apr 2026 13:35
+                  - cell "Selesai" [ref=e1456]:
+                    - generic [ref=e1457]: Selesai
+                  - cell "Selesai" [ref=e1458]:
+                    - generic [ref=e1459]: Selesai
+                - row "Muffin Matcha PRD-028 - RCP-028 2 batch 40 pouch 55 menit Target 55 menit 02 Apr 2026 12:28 Selesai 02 Apr 2026 13:23 Selesai Selesai" [ref=e1460]:
+                  - cell "Muffin Matcha PRD-028 - RCP-028" [ref=e1461]:
+                    - generic [ref=e1462]:
+                      - strong [ref=e1463]: Muffin Matcha
+                      - text: PRD-028 - RCP-028
+                  - cell "2 batch 40 pouch" [ref=e1464]:
+                    - generic [ref=e1465]:
+                      - strong [ref=e1466]: 2 batch
+                      - text: 40 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1467]:
+                    - generic [ref=e1468]:
+                      - strong [ref=e1469]: 55 menit
+                      - text: Target 55 menit
+                  - cell "02 Apr 2026 12:28 Selesai 02 Apr 2026 13:23" [ref=e1470]:
+                    - generic [ref=e1471]:
+                      - strong [ref=e1472]: 02 Apr 2026 12:28
+                      - text: Selesai 02 Apr 2026 13:23
+                  - cell "Selesai" [ref=e1473]:
+                    - generic [ref=e1474]: Selesai
+                  - cell "Selesai" [ref=e1475]:
+                    - generic [ref=e1476]: Selesai
+                - row "Pudding Keju PRD-022 - RCP-022 2 batch 32 box 45 menit Target 45 menit 02 Apr 2026 12:29 Selesai 02 Apr 2026 13:14 Selesai Selesai" [ref=e1477]:
+                  - cell "Pudding Keju PRD-022 - RCP-022" [ref=e1478]:
+                    - generic [ref=e1479]:
+                      - strong [ref=e1480]: Pudding Keju
+                      - text: PRD-022 - RCP-022
+                  - cell "2 batch 32 box" [ref=e1481]:
+                    - generic [ref=e1482]:
+                      - strong [ref=e1483]: 2 batch
+                      - text: 32 box
+                  - cell "45 menit Target 45 menit" [ref=e1484]:
+                    - generic [ref=e1485]:
+                      - strong [ref=e1486]: 45 menit
+                      - text: Target 45 menit
+                  - cell "02 Apr 2026 12:29 Selesai 02 Apr 2026 13:14" [ref=e1487]:
+                    - generic [ref=e1488]:
+                      - strong [ref=e1489]: 02 Apr 2026 12:29
+                      - text: Selesai 02 Apr 2026 13:14
+                  - cell "Selesai" [ref=e1490]:
+                    - generic [ref=e1491]: Selesai
+                  - cell "Selesai" [ref=e1492]:
+                    - generic [ref=e1493]: Selesai
+                - row "Cookies Cokelat PRD-016 - RCP-016 2 batch 24 pcs 35 menit Target 35 menit 02 Apr 2026 12:30 Selesai 02 Apr 2026 13:05 Selesai Selesai" [ref=e1494]:
+                  - cell "Cookies Cokelat PRD-016 - RCP-016" [ref=e1495]:
+                    - generic [ref=e1496]:
+                      - strong [ref=e1497]: Cookies Cokelat
+                      - text: PRD-016 - RCP-016
+                  - cell "2 batch 24 pcs" [ref=e1498]:
+                    - generic [ref=e1499]:
+                      - strong [ref=e1500]: 2 batch
+                      - text: 24 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1501]:
+                    - generic [ref=e1502]:
+                      - strong [ref=e1503]: 35 menit
+                      - text: Target 35 menit
+                  - cell "02 Apr 2026 12:30 Selesai 02 Apr 2026 13:05" [ref=e1504]:
+                    - generic [ref=e1505]:
+                      - strong [ref=e1506]: 02 Apr 2026 12:30
+                      - text: Selesai 02 Apr 2026 13:05
+                  - cell "Selesai" [ref=e1507]:
+                    - generic [ref=e1508]: Selesai
+                  - cell "Selesai" [ref=e1509]:
+                    - generic [ref=e1510]: Selesai
+                - row "Rice Bowl Red Velvet PRD-045 - RCP-045 4 batch 112 tray 1 jam 15 menit Target 1 jam 15 menit 01 Apr 2026 15:11 Selesai 01 Apr 2026 16:26 Selesai Selesai" [ref=e1511]:
+                  - cell "Rice Bowl Red Velvet PRD-045 - RCP-045" [ref=e1512]:
+                    - generic [ref=e1513]:
+                      - strong [ref=e1514]: Rice Bowl Red Velvet
+                      - text: PRD-045 - RCP-045
+                  - cell "4 batch 112 tray" [ref=e1515]:
+                    - generic [ref=e1516]:
+                      - strong [ref=e1517]: 4 batch
+                      - text: 112 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1518]:
+                    - generic [ref=e1519]:
+                      - strong [ref=e1520]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "01 Apr 2026 15:11 Selesai 01 Apr 2026 16:26" [ref=e1521]:
+                    - generic [ref=e1522]:
+                      - strong [ref=e1523]: 01 Apr 2026 15:11
+                      - text: Selesai 01 Apr 2026 16:26
+                  - cell "Selesai" [ref=e1524]:
+                    - generic [ref=e1525]: Selesai
+                  - cell "Selesai" [ref=e1526]:
+                    - generic [ref=e1527]: Selesai
+                - row "Sandwich Kopi PRD-039 - RCP-039 4 batch 96 cup 1 jam 05 menit Target 1 jam 05 menit 01 Apr 2026 15:12 Selesai 01 Apr 2026 16:17 Selesai Selesai" [ref=e1528]:
+                  - cell "Sandwich Kopi PRD-039 - RCP-039" [ref=e1529]:
+                    - generic [ref=e1530]:
+                      - strong [ref=e1531]: Sandwich Kopi
+                      - text: PRD-039 - RCP-039
+                  - cell "4 batch 96 cup" [ref=e1532]:
+                    - generic [ref=e1533]:
+                      - strong [ref=e1534]: 4 batch
+                      - text: 96 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1535]:
+                    - generic [ref=e1536]:
+                      - strong [ref=e1537]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "01 Apr 2026 15:12 Selesai 01 Apr 2026 16:17" [ref=e1538]:
+                    - generic [ref=e1539]:
+                      - strong [ref=e1540]: 01 Apr 2026 15:12
+                      - text: Selesai 01 Apr 2026 16:17
+                  - cell "Selesai" [ref=e1541]:
+                    - generic [ref=e1542]: Selesai
+                  - cell "Selesai" [ref=e1543]:
+                    - generic [ref=e1544]: Selesai
+                - row "Croissant Matcha PRD-033 - RCP-033 4 batch 80 pouch 55 menit Target 55 menit 01 Apr 2026 15:13 Selesai 01 Apr 2026 16:08 Selesai Selesai" [ref=e1545]:
+                  - cell "Croissant Matcha PRD-033 - RCP-033" [ref=e1546]:
+                    - generic [ref=e1547]:
+                      - strong [ref=e1548]: Croissant Matcha
+                      - text: PRD-033 - RCP-033
+                  - cell "4 batch 80 pouch" [ref=e1549]:
+                    - generic [ref=e1550]:
+                      - strong [ref=e1551]: 4 batch
+                      - text: 80 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1552]:
+                    - generic [ref=e1553]:
+                      - strong [ref=e1554]: 55 menit
+                      - text: Target 55 menit
+                  - cell "01 Apr 2026 15:13 Selesai 01 Apr 2026 16:08" [ref=e1555]:
+                    - generic [ref=e1556]:
+                      - strong [ref=e1557]: 01 Apr 2026 15:13
+                      - text: Selesai 01 Apr 2026 16:08
+                  - cell "Selesai" [ref=e1558]:
+                    - generic [ref=e1559]: Selesai
+                  - cell "Selesai" [ref=e1560]:
+                    - generic [ref=e1561]: Selesai
+                - row "Muffin Keju PRD-027 - RCP-027 4 batch 64 box 45 menit Target 45 menit 01 Apr 2026 15:14 Selesai 01 Apr 2026 15:59 Selesai Selesai" [ref=e1562]:
+                  - cell "Muffin Keju PRD-027 - RCP-027" [ref=e1563]:
+                    - generic [ref=e1564]:
+                      - strong [ref=e1565]: Muffin Keju
+                      - text: PRD-027 - RCP-027
+                  - cell "4 batch 64 box" [ref=e1566]:
+                    - generic [ref=e1567]:
+                      - strong [ref=e1568]: 4 batch
+                      - text: 64 box
+                  - cell "45 menit Target 45 menit" [ref=e1569]:
+                    - generic [ref=e1570]:
+                      - strong [ref=e1571]: 45 menit
+                      - text: Target 45 menit
+                  - cell "01 Apr 2026 15:14 Selesai 01 Apr 2026 15:59" [ref=e1572]:
+                    - generic [ref=e1573]:
+                      - strong [ref=e1574]: 01 Apr 2026 15:14
+                      - text: Selesai 01 Apr 2026 15:59
+                  - cell "Selesai" [ref=e1575]:
+                    - generic [ref=e1576]: Selesai
+                  - cell "Selesai" [ref=e1577]:
+                    - generic [ref=e1578]: Selesai
+                - row "Donat Red Velvet PRD-015 - RCP-015 4 batch 112 tray 1 jam 15 menit Target 1 jam 15 menit 01 Apr 2026 14:41 Selesai 01 Apr 2026 15:56 Selesai Selesai" [ref=e1579]:
+                  - cell "Donat Red Velvet PRD-015 - RCP-015" [ref=e1580]:
+                    - generic [ref=e1581]:
+                      - strong [ref=e1582]: Donat Red Velvet
+                      - text: PRD-015 - RCP-015
+                  - cell "4 batch 112 tray" [ref=e1583]:
+                    - generic [ref=e1584]:
+                      - strong [ref=e1585]: 4 batch
+                      - text: 112 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1586]:
+                    - generic [ref=e1587]:
+                      - strong [ref=e1588]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "01 Apr 2026 14:41 Selesai 01 Apr 2026 15:56" [ref=e1589]:
+                    - generic [ref=e1590]:
+                      - strong [ref=e1591]: 01 Apr 2026 14:41
+                      - text: Selesai 01 Apr 2026 15:56
+                  - cell "Selesai" [ref=e1592]:
+                    - generic [ref=e1593]: Selesai
+                  - cell "Selesai" [ref=e1594]:
+                    - generic [ref=e1595]: Selesai
+                - row "Brownies Kopi PRD-009 - RCP-009 4 batch 96 cup 1 jam 05 menit Target 1 jam 05 menit 01 Apr 2026 14:42 Selesai 01 Apr 2026 15:47 Selesai Selesai" [ref=e1596]:
+                  - cell "Brownies Kopi PRD-009 - RCP-009" [ref=e1597]:
+                    - generic [ref=e1598]:
+                      - strong [ref=e1599]: Brownies Kopi
+                      - text: PRD-009 - RCP-009
+                  - cell "4 batch 96 cup" [ref=e1600]:
+                    - generic [ref=e1601]:
+                      - strong [ref=e1602]: 4 batch
+                      - text: 96 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1603]:
+                    - generic [ref=e1604]:
+                      - strong [ref=e1605]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "01 Apr 2026 14:42 Selesai 01 Apr 2026 15:47" [ref=e1606]:
+                    - generic [ref=e1607]:
+                      - strong [ref=e1608]: 01 Apr 2026 14:42
+                      - text: Selesai 01 Apr 2026 15:47
+                  - cell "Selesai" [ref=e1609]:
+                    - generic [ref=e1610]: Selesai
+                  - cell "Selesai" [ref=e1611]:
+                    - generic [ref=e1612]: Selesai
+                - row "Roti Sobek Matcha PRD-003 - RCP-003 4 batch 80 pouch 55 menit Target 55 menit 01 Apr 2026 14:43 Selesai 01 Apr 2026 15:38 Selesai Selesai" [ref=e1613]:
+                  - cell "Roti Sobek Matcha PRD-003 - RCP-003" [ref=e1614]:
+                    - generic [ref=e1615]:
+                      - strong [ref=e1616]: Roti Sobek Matcha
+                      - text: PRD-003 - RCP-003
+                  - cell "4 batch 80 pouch" [ref=e1617]:
+                    - generic [ref=e1618]:
+                      - strong [ref=e1619]: 4 batch
+                      - text: 80 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1620]:
+                    - generic [ref=e1621]:
+                      - strong [ref=e1622]: 55 menit
+                      - text: Target 55 menit
+                  - cell "01 Apr 2026 14:43 Selesai 01 Apr 2026 15:38" [ref=e1623]:
+                    - generic [ref=e1624]:
+                      - strong [ref=e1625]: 01 Apr 2026 14:43
+                      - text: Selesai 01 Apr 2026 15:38
+                  - cell "Selesai" [ref=e1626]:
+                    - generic [ref=e1627]: Selesai
+                  - cell "Selesai" [ref=e1628]:
+                    - generic [ref=e1629]: Selesai
+                - row "Pudding Cokelat PRD-021 - RCP-021 4 batch 48 pcs 35 menit Target 35 menit 01 Apr 2026 14:15 Selesai 01 Apr 2026 14:50 Selesai Selesai" [ref=e1630]:
+                  - cell "Pudding Cokelat PRD-021 - RCP-021" [ref=e1631]:
+                    - generic [ref=e1632]:
+                      - strong [ref=e1633]: Pudding Cokelat
+                      - text: PRD-021 - RCP-021
+                  - cell "4 batch 48 pcs" [ref=e1634]:
+                    - generic [ref=e1635]:
+                      - strong [ref=e1636]: 4 batch
+                      - text: 48 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1637]:
+                    - generic [ref=e1638]:
+                      - strong [ref=e1639]: 35 menit
+                      - text: Target 35 menit
+                  - cell "01 Apr 2026 14:15 Selesai 01 Apr 2026 14:50" [ref=e1640]:
+                    - generic [ref=e1641]:
+                      - strong [ref=e1642]: 01 Apr 2026 14:15
+                      - text: Selesai 01 Apr 2026 14:50
+                  - cell "Selesai" [ref=e1643]:
+                    - generic [ref=e1644]: Selesai
+                  - cell "Selesai" [ref=e1645]:
+                    - generic [ref=e1646]: Selesai
+                - row "Cookies Red Velvet PRD-020 - RCP-020 3 batch 84 tray 1 jam 15 menit Target 1 jam 15 menit 31 Mar 2026 14:26 Selesai 31 Mar 2026 15:41 Selesai Selesai" [ref=e1647]:
+                  - cell "Cookies Red Velvet PRD-020 - RCP-020" [ref=e1648]:
+                    - generic [ref=e1649]:
+                      - strong [ref=e1650]: Cookies Red Velvet
+                      - text: PRD-020 - RCP-020
+                  - cell "3 batch 84 tray" [ref=e1651]:
+                    - generic [ref=e1652]:
+                      - strong [ref=e1653]: 3 batch
+                      - text: 84 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1654]:
+                    - generic [ref=e1655]:
+                      - strong [ref=e1656]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "31 Mar 2026 14:26 Selesai 31 Mar 2026 15:41" [ref=e1657]:
+                    - generic [ref=e1658]:
+                      - strong [ref=e1659]: 31 Mar 2026 14:26
+                      - text: Selesai 31 Mar 2026 15:41
+                  - cell "Selesai" [ref=e1660]:
+                    - generic [ref=e1661]: Selesai
+                  - cell "Selesai" [ref=e1662]:
+                    - generic [ref=e1663]: Selesai
+                - row "Donat Kopi PRD-014 - RCP-014 3 batch 72 cup 1 jam 05 menit Target 1 jam 05 menit 31 Mar 2026 14:27 Selesai 31 Mar 2026 15:32 Selesai Selesai" [ref=e1664]:
+                  - cell "Donat Kopi PRD-014 - RCP-014" [ref=e1665]:
+                    - generic [ref=e1666]:
+                      - strong [ref=e1667]: Donat Kopi
+                      - text: PRD-014 - RCP-014
+                  - cell "3 batch 72 cup" [ref=e1668]:
+                    - generic [ref=e1669]:
+                      - strong [ref=e1670]: 3 batch
+                      - text: 72 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1671]:
+                    - generic [ref=e1672]:
+                      - strong [ref=e1673]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "31 Mar 2026 14:27 Selesai 31 Mar 2026 15:32" [ref=e1674]:
+                    - generic [ref=e1675]:
+                      - strong [ref=e1676]: 31 Mar 2026 14:27
+                      - text: Selesai 31 Mar 2026 15:32
+                  - cell "Selesai" [ref=e1677]:
+                    - generic [ref=e1678]: Selesai
+                  - cell "Selesai" [ref=e1679]:
+                    - generic [ref=e1680]: Selesai
+                - row "Mie Box Red Velvet PRD-050 - RCP-050 3 batch 84 tray 1 jam 15 menit Target 1 jam 15 menit 31 Mar 2026 13:56 Selesai 31 Mar 2026 15:11 Selesai Selesai" [ref=e1681]:
+                  - cell "Mie Box Red Velvet PRD-050 - RCP-050" [ref=e1682]:
+                    - generic [ref=e1683]:
+                      - strong [ref=e1684]: Mie Box Red Velvet
+                      - text: PRD-050 - RCP-050
+                  - cell "3 batch 84 tray" [ref=e1685]:
+                    - generic [ref=e1686]:
+                      - strong [ref=e1687]: 3 batch
+                      - text: 84 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1688]:
+                    - generic [ref=e1689]:
+                      - strong [ref=e1690]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "31 Mar 2026 13:56 Selesai 31 Mar 2026 15:11" [ref=e1691]:
+                    - generic [ref=e1692]:
+                      - strong [ref=e1693]: 31 Mar 2026 13:56
+                      - text: Selesai 31 Mar 2026 15:11
+                  - cell "Selesai" [ref=e1694]:
+                    - generic [ref=e1695]: Selesai
+                  - cell "Selesai" [ref=e1696]:
+                    - generic [ref=e1697]: Selesai
+                - row "Rice Bowl Kopi PRD-044 - RCP-044 3 batch 72 cup 1 jam 05 menit Target 1 jam 05 menit 31 Mar 2026 13:57 Selesai 31 Mar 2026 15:02 Selesai Selesai" [ref=e1698]:
+                  - cell "Rice Bowl Kopi PRD-044 - RCP-044" [ref=e1699]:
+                    - generic [ref=e1700]:
+                      - strong [ref=e1701]: Rice Bowl Kopi
+                      - text: PRD-044 - RCP-044
+                  - cell "3 batch 72 cup" [ref=e1702]:
+                    - generic [ref=e1703]:
+                      - strong [ref=e1704]: 3 batch
+                      - text: 72 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1705]:
+                    - generic [ref=e1706]:
+                      - strong [ref=e1707]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "31 Mar 2026 13:57 Selesai 31 Mar 2026 15:02" [ref=e1708]:
+                    - generic [ref=e1709]:
+                      - strong [ref=e1710]: 31 Mar 2026 13:57
+                      - text: Selesai 31 Mar 2026 15:02
+                  - cell "Selesai" [ref=e1711]:
+                    - generic [ref=e1712]: Selesai
+                  - cell "Selesai" [ref=e1713]:
+                    - generic [ref=e1714]: Selesai
+                - row "Sandwich Matcha PRD-038 - RCP-038 3 batch 60 pouch 55 menit Target 55 menit 31 Mar 2026 13:58 Selesai 31 Mar 2026 14:53 Selesai Selesai" [ref=e1715]:
+                  - cell "Sandwich Matcha PRD-038 - RCP-038" [ref=e1716]:
+                    - generic [ref=e1717]:
+                      - strong [ref=e1718]: Sandwich Matcha
+                      - text: PRD-038 - RCP-038
+                  - cell "3 batch 60 pouch" [ref=e1719]:
+                    - generic [ref=e1720]:
+                      - strong [ref=e1721]: 3 batch
+                      - text: 60 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1722]:
+                    - generic [ref=e1723]:
+                      - strong [ref=e1724]: 55 menit
+                      - text: Target 55 menit
+                  - cell "31 Mar 2026 13:58 Selesai 31 Mar 2026 14:53" [ref=e1725]:
+                    - generic [ref=e1726]:
+                      - strong [ref=e1727]: 31 Mar 2026 13:58
+                      - text: Selesai 31 Mar 2026 14:53
+                  - cell "Selesai" [ref=e1728]:
+                    - generic [ref=e1729]: Selesai
+                  - cell "Selesai" [ref=e1730]:
+                    - generic [ref=e1731]: Selesai
+                - row "Croissant Keju PRD-032 - RCP-032 3 batch 48 box 45 menit Target 45 menit 31 Mar 2026 13:59 Selesai 31 Mar 2026 14:44 Selesai Selesai" [ref=e1732]:
+                  - cell "Croissant Keju PRD-032 - RCP-032" [ref=e1733]:
+                    - generic [ref=e1734]:
+                      - strong [ref=e1735]: Croissant Keju
+                      - text: PRD-032 - RCP-032
+                  - cell "3 batch 48 box" [ref=e1736]:
+                    - generic [ref=e1737]:
+                      - strong [ref=e1738]: 3 batch
+                      - text: 48 box
+                  - cell "45 menit Target 45 menit" [ref=e1739]:
+                    - generic [ref=e1740]:
+                      - strong [ref=e1741]: 45 menit
+                      - text: Target 45 menit
+                  - cell "31 Mar 2026 13:59 Selesai 31 Mar 2026 14:44" [ref=e1742]:
+                    - generic [ref=e1743]:
+                      - strong [ref=e1744]: 31 Mar 2026 13:59
+                      - text: Selesai 31 Mar 2026 14:44
+                  - cell "Selesai" [ref=e1745]:
+                    - generic [ref=e1746]: Selesai
+                  - cell "Selesai" [ref=e1747]:
+                    - generic [ref=e1748]: Selesai
+                - row "Muffin Cokelat PRD-026 - RCP-026 3 batch 36 pcs 35 menit Target 35 menit 31 Mar 2026 14:00 Selesai 31 Mar 2026 14:35 Selesai Selesai" [ref=e1749]:
+                  - cell "Muffin Cokelat PRD-026 - RCP-026" [ref=e1750]:
+                    - generic [ref=e1751]:
+                      - strong [ref=e1752]: Muffin Cokelat
+                      - text: PRD-026 - RCP-026
+                  - cell "3 batch 36 pcs" [ref=e1753]:
+                    - generic [ref=e1754]:
+                      - strong [ref=e1755]: 3 batch
+                      - text: 36 pcs
+                  - cell "35 menit Target 35 menit" [ref=e1756]:
+                    - generic [ref=e1757]:
+                      - strong [ref=e1758]: 35 menit
+                      - text: Target 35 menit
+                  - cell "31 Mar 2026 14:00 Selesai 31 Mar 2026 14:35" [ref=e1759]:
+                    - generic [ref=e1760]:
+                      - strong [ref=e1761]: 31 Mar 2026 14:00
+                      - text: Selesai 31 Mar 2026 14:35
+                  - cell "Selesai" [ref=e1762]:
+                    - generic [ref=e1763]: Selesai
+                  - cell "Selesai" [ref=e1764]:
+                    - generic [ref=e1765]: Selesai
+                - row "Brownies Matcha PRD-008 - RCP-008 3 batch 60 pouch 55 menit Target 55 menit 31 Mar 2026 13:28 Selesai 31 Mar 2026 14:23 Selesai Selesai" [ref=e1766]:
+                  - cell "Brownies Matcha PRD-008 - RCP-008" [ref=e1767]:
+                    - generic [ref=e1768]:
+                      - strong [ref=e1769]: Brownies Matcha
+                      - text: PRD-008 - RCP-008
+                  - cell "3 batch 60 pouch" [ref=e1770]:
+                    - generic [ref=e1771]:
+                      - strong [ref=e1772]: 3 batch
+                      - text: 60 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1773]:
+                    - generic [ref=e1774]:
+                      - strong [ref=e1775]: 55 menit
+                      - text: Target 55 menit
+                  - cell "31 Mar 2026 13:28 Selesai 31 Mar 2026 14:23" [ref=e1776]:
+                    - generic [ref=e1777]:
+                      - strong [ref=e1778]: 31 Mar 2026 13:28
+                      - text: Selesai 31 Mar 2026 14:23
+                  - cell "Selesai" [ref=e1779]:
+                    - generic [ref=e1780]: Selesai
+                  - cell "Selesai" [ref=e1781]:
+                    - generic [ref=e1782]: Selesai
+                - row "Roti Sobek Keju PRD-002 - RCP-002 3 batch 48 box 45 menit Target 45 menit 31 Mar 2026 13:29 Selesai 31 Mar 2026 14:14 Selesai Selesai" [ref=e1783]:
+                  - cell "Roti Sobek Keju PRD-002 - RCP-002" [ref=e1784]:
+                    - generic [ref=e1785]:
+                      - strong [ref=e1786]: Roti Sobek Keju
+                      - text: PRD-002 - RCP-002
+                  - cell "3 batch 48 box" [ref=e1787]:
+                    - generic [ref=e1788]:
+                      - strong [ref=e1789]: 3 batch
+                      - text: 48 box
+                  - cell "45 menit Target 45 menit" [ref=e1790]:
+                    - generic [ref=e1791]:
+                      - strong [ref=e1792]: 45 menit
+                      - text: Target 45 menit
+                  - cell "31 Mar 2026 13:29 Selesai 31 Mar 2026 14:14" [ref=e1793]:
+                    - generic [ref=e1794]:
+                      - strong [ref=e1795]: 31 Mar 2026 13:29
+                      - text: Selesai 31 Mar 2026 14:14
+                  - cell "Selesai" [ref=e1796]:
+                    - generic [ref=e1797]: Selesai
+                  - cell "Selesai" [ref=e1798]:
+                    - generic [ref=e1799]: Selesai
+                - row "Pudding Red Velvet PRD-025 - RCP-025 2 batch 56 tray 1 jam 15 menit Target 1 jam 15 menit 30 Mar 2026 13:11 Selesai 30 Mar 2026 14:26 Selesai Selesai" [ref=e1800]:
+                  - cell "Pudding Red Velvet PRD-025 - RCP-025" [ref=e1801]:
+                    - generic [ref=e1802]:
+                      - strong [ref=e1803]: Pudding Red Velvet
+                      - text: PRD-025 - RCP-025
+                  - cell "2 batch 56 tray" [ref=e1804]:
+                    - generic [ref=e1805]:
+                      - strong [ref=e1806]: 2 batch
+                      - text: 56 tray
+                  - cell "1 jam 15 menit Target 1 jam 15 menit" [ref=e1807]:
+                    - generic [ref=e1808]:
+                      - strong [ref=e1809]: 1 jam 15 menit
+                      - text: Target 1 jam 15 menit
+                  - cell "30 Mar 2026 13:11 Selesai 30 Mar 2026 14:26" [ref=e1810]:
+                    - generic [ref=e1811]:
+                      - strong [ref=e1812]: 30 Mar 2026 13:11
+                      - text: Selesai 30 Mar 2026 14:26
+                  - cell "Selesai" [ref=e1813]:
+                    - generic [ref=e1814]: Selesai
+                  - cell "Selesai" [ref=e1815]:
+                    - generic [ref=e1816]: Selesai
+                - row "Cookies Kopi PRD-019 - RCP-019 2 batch 48 cup 1 jam 05 menit Target 1 jam 05 menit 30 Mar 2026 13:12 Selesai 30 Mar 2026 14:17 Selesai Selesai" [ref=e1817]:
+                  - cell "Cookies Kopi PRD-019 - RCP-019" [ref=e1818]:
+                    - generic [ref=e1819]:
+                      - strong [ref=e1820]: Cookies Kopi
+                      - text: PRD-019 - RCP-019
+                  - cell "2 batch 48 cup" [ref=e1821]:
+                    - generic [ref=e1822]:
+                      - strong [ref=e1823]: 2 batch
+                      - text: 48 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1824]:
+                    - generic [ref=e1825]:
+                      - strong [ref=e1826]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "30 Mar 2026 13:12 Selesai 30 Mar 2026 14:17" [ref=e1827]:
+                    - generic [ref=e1828]:
+                      - strong [ref=e1829]: 30 Mar 2026 13:12
+                      - text: Selesai 30 Mar 2026 14:17
+                  - cell "Selesai" [ref=e1830]:
+                    - generic [ref=e1831]: Selesai
+                  - cell "Selesai" [ref=e1832]:
+                    - generic [ref=e1833]: Selesai
+                - row "Donat Matcha PRD-013 - RCP-013 2 batch 40 pouch 55 menit Target 55 menit 30 Mar 2026 13:13 Selesai 30 Mar 2026 14:08 Selesai Selesai" [ref=e1834]:
+                  - cell "Donat Matcha PRD-013 - RCP-013" [ref=e1835]:
+                    - generic [ref=e1836]:
+                      - strong [ref=e1837]: Donat Matcha
+                      - text: PRD-013 - RCP-013
+                  - cell "2 batch 40 pouch" [ref=e1838]:
+                    - generic [ref=e1839]:
+                      - strong [ref=e1840]: 2 batch
+                      - text: 40 pouch
+                  - cell "55 menit Target 55 menit" [ref=e1841]:
+                    - generic [ref=e1842]:
+                      - strong [ref=e1843]: 55 menit
+                      - text: Target 55 menit
+                  - cell "30 Mar 2026 13:13 Selesai 30 Mar 2026 14:08" [ref=e1844]:
+                    - generic [ref=e1845]:
+                      - strong [ref=e1846]: 30 Mar 2026 13:13
+                      - text: Selesai 30 Mar 2026 14:08
+                  - cell "Selesai" [ref=e1847]:
+                    - generic [ref=e1848]: Selesai
+                  - cell "Selesai" [ref=e1849]:
+                    - generic [ref=e1850]: Selesai
+                - row "Brownies Keju PRD-007 - RCP-007 2 batch 32 box 45 menit Target 45 menit 30 Mar 2026 13:14 Selesai 30 Mar 2026 13:59 Selesai Selesai" [ref=e1851]:
+                  - cell "Brownies Keju PRD-007 - RCP-007" [ref=e1852]:
+                    - generic [ref=e1853]:
+                      - strong [ref=e1854]: Brownies Keju
+                      - text: PRD-007 - RCP-007
+                  - cell "2 batch 32 box" [ref=e1855]:
+                    - generic [ref=e1856]:
+                      - strong [ref=e1857]: 2 batch
+                      - text: 32 box
+                  - cell "45 menit Target 45 menit" [ref=e1858]:
+                    - generic [ref=e1859]:
+                      - strong [ref=e1860]: 45 menit
+                      - text: Target 45 menit
+                  - cell "30 Mar 2026 13:14 Selesai 30 Mar 2026 13:59" [ref=e1861]:
+                    - generic [ref=e1862]:
+                      - strong [ref=e1863]: 30 Mar 2026 13:14
+                      - text: Selesai 30 Mar 2026 13:59
+                  - cell "Selesai" [ref=e1864]:
+                    - generic [ref=e1865]: Selesai
+                  - cell "Selesai" [ref=e1866]:
+                    - generic [ref=e1867]: Selesai
+                - row "Mie Box Kopi PRD-049 - RCP-049 2 batch 48 cup 1 jam 05 menit Target 1 jam 05 menit 30 Mar 2026 12:42 Selesai 30 Mar 2026 13:47 Selesai Selesai" [ref=e1868]:
+                  - cell "Mie Box Kopi PRD-049 - RCP-049" [ref=e1869]:
+                    - generic [ref=e1870]:
+                      - strong [ref=e1871]: Mie Box Kopi
+                      - text: PRD-049 - RCP-049
+                  - cell "2 batch 48 cup" [ref=e1872]:
+                    - generic [ref=e1873]:
+                      - strong [ref=e1874]: 2 batch
+                      - text: 48 cup
+                  - cell "1 jam 05 menit Target 1 jam 05 menit" [ref=e1875]:
+                    - generic [ref=e1876]:
+                      - strong [ref=e1877]: 1 jam 05 menit
+                      - text: Target 1 jam 05 menit
+                  - cell "30 Mar 2026 12:42 Selesai 30 Mar 2026 13:47" [ref=e1878]:
+                    - generic [ref=e1879]:
+                      - strong [ref=e1880]: 30 Mar 2026 12:42
+                      - text: Selesai 30 Mar 2026 13:47
+                  - cell "Selesai" [ref=e1881]:
+                    - generic [ref=e1882]: Selesai
+                  - cell "Selesai" [ref=e1883]:
+                    - generic [ref=e1884]: Selesai
+            - generic [ref=e1885]:
+              - article [ref=e1886]:
+                - generic [ref=e1887]:
+                  - generic [ref=e1888]:
+                    - strong [ref=e1889]: Muffin Red Velvet
+                    - text: PRD-030 - RCP-030
+                  - generic [ref=e1890]: Selesai
+                - generic [ref=e1891]:
+                  - article [ref=e1892]:
+                    - text: Batch
+                    - strong [ref=e1893]: 4 batch
+                    - text: 112 tray
+                  - article [ref=e1894]:
+                    - text: Timer
+                    - strong [ref=e1895]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e1896]:
+                    - text: Mulai
+                    - strong [ref=e1897]: 04 Apr 2026 14:56
+                    - text: Selesai 04 Apr 2026 16:11
+                - generic [ref=e1898]: Selesai
+              - article [ref=e1899]:
+                - generic [ref=e1900]:
+                  - generic [ref=e1901]:
+                    - strong [ref=e1902]: Pudding Kopi
+                    - text: PRD-024 - RCP-024
+                  - generic [ref=e1903]: Selesai
+                - generic [ref=e1904]:
+                  - article [ref=e1905]:
+                    - text: Batch
+                    - strong [ref=e1906]: 4 batch
+                    - text: 96 cup
+                  - article [ref=e1907]:
+                    - text: Timer
+                    - strong [ref=e1908]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e1909]:
+                    - text: Mulai
+                    - strong [ref=e1910]: 04 Apr 2026 14:57
+                    - text: Selesai 04 Apr 2026 16:02
+                - generic [ref=e1911]: Selesai
+              - article [ref=e1912]:
+                - generic [ref=e1913]:
+                  - generic [ref=e1914]:
+                    - strong [ref=e1915]: Cookies Matcha
+                    - text: PRD-018 - RCP-018
+                  - generic [ref=e1916]: Selesai
+                - generic [ref=e1917]:
+                  - article [ref=e1918]:
+                    - text: Batch
+                    - strong [ref=e1919]: 4 batch
+                    - text: 80 pouch
+                  - article [ref=e1920]:
+                    - text: Timer
+                    - strong [ref=e1921]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e1922]:
+                    - text: Mulai
+                    - strong [ref=e1923]: 04 Apr 2026 14:58
+                    - text: Selesai 04 Apr 2026 15:53
+                - generic [ref=e1924]: Selesai
+              - article [ref=e1925]:
+                - generic [ref=e1926]:
+                  - generic [ref=e1927]:
+                    - strong [ref=e1928]: Donat Keju
+                    - text: PRD-012 - RCP-012
+                  - generic [ref=e1929]: Selesai
+                - generic [ref=e1930]:
+                  - article [ref=e1931]:
+                    - text: Batch
+                    - strong [ref=e1932]: 4 batch
+                    - text: 64 box
+                  - article [ref=e1933]:
+                    - text: Timer
+                    - strong [ref=e1934]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e1935]:
+                    - text: Mulai
+                    - strong [ref=e1936]: 04 Apr 2026 14:59
+                    - text: Selesai 04 Apr 2026 15:44
+                - generic [ref=e1937]: Selesai
+              - article [ref=e1938]:
+                - generic [ref=e1939]:
+                  - generic [ref=e1940]:
+                    - strong [ref=e1941]: Brownies Cokelat
+                    - text: PRD-006 - RCP-006
+                  - generic [ref=e1942]: Selesai
+                - generic [ref=e1943]:
+                  - article [ref=e1944]:
+                    - text: Batch
+                    - strong [ref=e1945]: 4 batch
+                    - text: 48 pcs
+                  - article [ref=e1946]:
+                    - text: Timer
+                    - strong [ref=e1947]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e1948]:
+                    - text: Mulai
+                    - strong [ref=e1949]: 04 Apr 2026 15:00
+                    - text: Selesai 04 Apr 2026 15:35
+                - generic [ref=e1950]: Selesai
+              - article [ref=e1951]:
+                - generic [ref=e1952]:
+                  - generic [ref=e1953]:
+                    - strong [ref=e1954]: Mie Box Matcha
+                    - text: PRD-048 - RCP-048
+                  - generic [ref=e1955]: Selesai
+                - generic [ref=e1956]:
+                  - article [ref=e1957]:
+                    - text: Batch
+                    - strong [ref=e1958]: 4 batch
+                    - text: 80 pouch
+                  - article [ref=e1959]:
+                    - text: Timer
+                    - strong [ref=e1960]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e1961]:
+                    - text: Mulai
+                    - strong [ref=e1962]: 04 Apr 2026 14:28
+                    - text: Selesai 04 Apr 2026 15:23
+                - generic [ref=e1963]: Selesai
+              - article [ref=e1964]:
+                - generic [ref=e1965]:
+                  - generic [ref=e1966]:
+                    - strong [ref=e1967]: Rice Bowl Keju
+                    - text: PRD-042 - RCP-042
+                  - generic [ref=e1968]: Selesai
+                - generic [ref=e1969]:
+                  - article [ref=e1970]:
+                    - text: Batch
+                    - strong [ref=e1971]: 4 batch
+                    - text: 64 box
+                  - article [ref=e1972]:
+                    - text: Timer
+                    - strong [ref=e1973]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e1974]:
+                    - text: Mulai
+                    - strong [ref=e1975]: 04 Apr 2026 14:29
+                    - text: Selesai 04 Apr 2026 15:14
+                - generic [ref=e1976]: Selesai
+              - article [ref=e1977]:
+                - generic [ref=e1978]:
+                  - generic [ref=e1979]:
+                    - strong [ref=e1980]: Sandwich Cokelat
+                    - text: PRD-036 - RCP-036
+                  - generic [ref=e1981]: Selesai
+                - generic [ref=e1982]:
+                  - article [ref=e1983]:
+                    - text: Batch
+                    - strong [ref=e1984]: 4 batch
+                    - text: 48 pcs
+                  - article [ref=e1985]:
+                    - text: Timer
+                    - strong [ref=e1986]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e1987]:
+                    - text: Mulai
+                    - strong [ref=e1988]: 04 Apr 2026 14:30
+                    - text: Selesai 04 Apr 2026 15:05
+                - generic [ref=e1989]: Selesai
+              - article [ref=e1990]:
+                - generic [ref=e1991]:
+                  - generic [ref=e1992]:
+                    - strong [ref=e1993]: Donat Red Velvet
+                    - text: PRD-060 - RCP-015
+                  - generic [ref=e1994]: Selesai
+                - generic [ref=e1995]:
+                  - article [ref=e1996]:
+                    - text: Batch
+                    - strong [ref=e1997]: 1 batch
+                    - text: 28 tray
+                  - article [ref=e1998]:
+                    - text: Timer
+                    - strong [ref=e1999]: 1 jam 10 menit
+                    - text: Target 1 jam 10 menit
+                  - article [ref=e2000]:
+                    - text: Mulai
+                    - strong [ref=e2001]: 03 Apr 2026 21:05
+                    - text: Selesai 04 Apr 2026 07:16
+                - generic [ref=e2002]: Selesai
+              - article [ref=e2003]:
+                - generic [ref=e2004]:
+                  - generic [ref=e2005]:
+                    - strong [ref=e2006]: Donat Cokelat
+                    - text: PRD-059 - RCP-011
+                  - generic [ref=e2007]: Selesai
+                - generic [ref=e2008]:
+                  - article [ref=e2009]:
+                    - text: Batch
+                    - strong [ref=e2010]: 3 batch
+                    - text: 36 pcs
+                  - article [ref=e2011]:
+                    - text: Timer
+                    - strong [ref=e2012]: 1 jam 00 menit
+                    - text: Target 1 jam 00 menit
+                  - article [ref=e2013]:
+                    - text: Mulai
+                    - strong [ref=e2014]: 03 Apr 2026 22:11
+                    - text: Selesai 04 Apr 2026 07:16
+                - generic [ref=e2015]: Selesai
+              - article [ref=e2016]:
+                - generic [ref=e2017]:
+                  - generic [ref=e2018]:
+                    - strong [ref=e2019]: Brownies Keju
+                    - text: PRD-058 - RCP-007
+                  - generic [ref=e2020]: Selesai
+                - generic [ref=e2021]:
+                  - article [ref=e2022]:
+                    - text: Batch
+                    - strong [ref=e2023]: 2 batch
+                    - text: 32 box
+                  - article [ref=e2024]:
+                    - text: Timer
+                    - strong [ref=e2025]: 50 menit
+                    - text: Target 50 menit
+                  - article [ref=e2026]:
+                    - text: Mulai
+                    - strong [ref=e2027]: 03 Apr 2026 23:17
+                    - text: Selesai 04 Apr 2026 07:16
+                - generic [ref=e2028]: Selesai
+              - article [ref=e2029]:
+                - generic [ref=e2030]:
+                  - generic [ref=e2031]:
+                    - strong [ref=e2032]: Roti Sobek Matcha
+                    - text: PRD-057 - RCP-003
+                  - generic [ref=e2033]: Selesai
+                - generic [ref=e2034]:
+                  - article [ref=e2035]:
+                    - text: Batch
+                    - strong [ref=e2036]: 1 batch
+                    - text: 20 pouch
+                  - article [ref=e2037]:
+                    - text: Timer
+                    - strong [ref=e2038]: 40 menit
+                    - text: Target 40 menit
+                  - article [ref=e2039]:
+                    - text: Mulai
+                    - strong [ref=e2040]: 04 Apr 2026 00:23
+                    - text: Selesai 04 Apr 2026 07:16
+                - generic [ref=e2041]: Selesai
+              - article [ref=e2042]:
+                - generic [ref=e2043]:
+                  - generic [ref=e2044]:
+                    - strong [ref=e2045]: Roti Sobek Red Velvet
+                    - text: PRD-005 - RCP-005
+                  - generic [ref=e2046]: Selesai
+                - generic [ref=e2047]:
+                  - article [ref=e2048]:
+                    - text: Batch
+                    - strong [ref=e2049]: 3 batch
+                    - text: 84 tray
+                  - article [ref=e2050]:
+                    - text: Timer
+                    - strong [ref=e2051]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2052]:
+                    - text: Mulai
+                    - strong [ref=e2053]: 03 Apr 2026 14:11
+                    - text: Selesai 03 Apr 2026 15:26
+                - generic [ref=e2054]: Selesai
+              - article [ref=e2055]:
+                - generic [ref=e2056]:
+                  - generic [ref=e2057]:
+                    - strong [ref=e2058]: Mie Box Keju
+                    - text: PRD-047 - RCP-047
+                  - generic [ref=e2059]: Selesai
+                - generic [ref=e2060]:
+                  - article [ref=e2061]:
+                    - text: Batch
+                    - strong [ref=e2062]: 3 batch
+                    - text: 48 box
+                  - article [ref=e2063]:
+                    - text: Timer
+                    - strong [ref=e2064]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e2065]:
+                    - text: Mulai
+                    - strong [ref=e2066]: 03 Apr 2026 14:14
+                    - text: Selesai 03 Apr 2026 14:59
+                - generic [ref=e2067]: Selesai
+              - article [ref=e2068]:
+                - generic [ref=e2069]:
+                  - generic [ref=e2070]:
+                    - strong [ref=e2071]: Croissant Red Velvet
+                    - text: PRD-035 - RCP-035
+                  - generic [ref=e2072]: Selesai
+                - generic [ref=e2073]:
+                  - article [ref=e2074]:
+                    - text: Batch
+                    - strong [ref=e2075]: 3 batch
+                    - text: 84 tray
+                  - article [ref=e2076]:
+                    - text: Timer
+                    - strong [ref=e2077]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2078]:
+                    - text: Mulai
+                    - strong [ref=e2079]: 03 Apr 2026 13:41
+                    - text: Selesai 03 Apr 2026 14:56
+                - generic [ref=e2080]: Selesai
+              - article [ref=e2081]:
+                - generic [ref=e2082]:
+                  - generic [ref=e2083]:
+                    - strong [ref=e2084]: Muffin Kopi
+                    - text: PRD-029 - RCP-029
+                  - generic [ref=e2085]: Selesai
+                - generic [ref=e2086]:
+                  - article [ref=e2087]:
+                    - text: Batch
+                    - strong [ref=e2088]: 3 batch
+                    - text: 72 cup
+                  - article [ref=e2089]:
+                    - text: Timer
+                    - strong [ref=e2090]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2091]:
+                    - text: Mulai
+                    - strong [ref=e2092]: 03 Apr 2026 13:42
+                    - text: Selesai 03 Apr 2026 14:47
+                - generic [ref=e2093]: Selesai
+              - article [ref=e2094]:
+                - generic [ref=e2095]:
+                  - generic [ref=e2096]:
+                    - strong [ref=e2097]: Pudding Matcha
+                    - text: PRD-023 - RCP-023
+                  - generic [ref=e2098]: Selesai
+                - generic [ref=e2099]:
+                  - article [ref=e2100]:
+                    - text: Batch
+                    - strong [ref=e2101]: 3 batch
+                    - text: 60 pouch
+                  - article [ref=e2102]:
+                    - text: Timer
+                    - strong [ref=e2103]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e2104]:
+                    - text: Mulai
+                    - strong [ref=e2105]: 03 Apr 2026 13:43
+                    - text: Selesai 03 Apr 2026 14:38
+                - generic [ref=e2106]: Selesai
+              - article [ref=e2107]:
+                - generic [ref=e2108]:
+                  - generic [ref=e2109]:
+                    - strong [ref=e2110]: Cookies Keju
+                    - text: PRD-017 - RCP-017
+                  - generic [ref=e2111]: Selesai
+                - generic [ref=e2112]:
+                  - article [ref=e2113]:
+                    - text: Batch
+                    - strong [ref=e2114]: 3 batch
+                    - text: 48 box
+                  - article [ref=e2115]:
+                    - text: Timer
+                    - strong [ref=e2116]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e2117]:
+                    - text: Mulai
+                    - strong [ref=e2118]: 03 Apr 2026 13:44
+                    - text: Selesai 03 Apr 2026 14:29
+                - generic [ref=e2119]: Selesai
+              - article [ref=e2120]:
+                - generic [ref=e2121]:
+                  - generic [ref=e2122]:
+                    - strong [ref=e2123]: Donat Cokelat
+                    - text: PRD-011 - RCP-011
+                  - generic [ref=e2124]: Selesai
+                - generic [ref=e2125]:
+                  - article [ref=e2126]:
+                    - text: Batch
+                    - strong [ref=e2127]: 3 batch
+                    - text: 36 pcs
+                  - article [ref=e2128]:
+                    - text: Timer
+                    - strong [ref=e2129]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e2130]:
+                    - text: Mulai
+                    - strong [ref=e2131]: 03 Apr 2026 13:45
+                    - text: Selesai 03 Apr 2026 14:20
+                - generic [ref=e2132]: Selesai
+              - article [ref=e2133]:
+                - generic [ref=e2134]:
+                  - generic [ref=e2135]:
+                    - strong [ref=e2136]: Rice Bowl Cokelat
+                    - text: PRD-041 - RCP-041
+                  - generic [ref=e2137]: Selesai
+                - generic [ref=e2138]:
+                  - article [ref=e2139]:
+                    - text: Batch
+                    - strong [ref=e2140]: 3 batch
+                    - text: 36 pcs
+                  - article [ref=e2141]:
+                    - text: Timer
+                    - strong [ref=e2142]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e2143]:
+                    - text: Mulai
+                    - strong [ref=e2144]: 03 Apr 2026 13:15
+                    - text: Selesai 03 Apr 2026 13:50
+                - generic [ref=e2145]: Selesai
+              - article [ref=e2146]:
+                - generic [ref=e2147]:
+                  - generic [ref=e2148]:
+                    - strong [ref=e2149]: Sandwich Red Velvet
+                    - text: PRD-040 - RCP-040
+                  - generic [ref=e2150]: Selesai
+                - generic [ref=e2151]:
+                  - article [ref=e2152]:
+                    - text: Batch
+                    - strong [ref=e2153]: 2 batch
+                    - text: 56 tray
+                  - article [ref=e2154]:
+                    - text: Timer
+                    - strong [ref=e2155]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2156]:
+                    - text: Mulai
+                    - strong [ref=e2157]: 02 Apr 2026 13:26
+                    - text: Selesai 02 Apr 2026 14:41
+                - generic [ref=e2158]: Selesai
+              - article [ref=e2159]:
+                - generic [ref=e2160]:
+                  - generic [ref=e2161]:
+                    - strong [ref=e2162]: Croissant Kopi
+                    - text: PRD-034 - RCP-034
+                  - generic [ref=e2163]: Selesai
+                - generic [ref=e2164]:
+                  - article [ref=e2165]:
+                    - text: Batch
+                    - strong [ref=e2166]: 2 batch
+                    - text: 48 cup
+                  - article [ref=e2167]:
+                    - text: Timer
+                    - strong [ref=e2168]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2169]:
+                    - text: Mulai
+                    - strong [ref=e2170]: 02 Apr 2026 13:27
+                    - text: Selesai 02 Apr 2026 14:32
+                - generic [ref=e2171]: Selesai
+              - article [ref=e2172]:
+                - generic [ref=e2173]:
+                  - generic [ref=e2174]:
+                    - strong [ref=e2175]: Brownies Red Velvet
+                    - text: PRD-010 - RCP-010
+                  - generic [ref=e2176]: Selesai
+                - generic [ref=e2177]:
+                  - article [ref=e2178]:
+                    - text: Batch
+                    - strong [ref=e2179]: 2 batch
+                    - text: 56 tray
+                  - article [ref=e2180]:
+                    - text: Timer
+                    - strong [ref=e2181]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2182]:
+                    - text: Mulai
+                    - strong [ref=e2183]: 02 Apr 2026 12:56
+                    - text: Selesai 02 Apr 2026 14:11
+                - generic [ref=e2184]: Selesai
+              - article [ref=e2185]:
+                - generic [ref=e2186]:
+                  - generic [ref=e2187]:
+                    - strong [ref=e2188]: Roti Sobek Kopi
+                    - text: PRD-004 - RCP-004
+                  - generic [ref=e2189]: Selesai
+                - generic [ref=e2190]:
+                  - article [ref=e2191]:
+                    - text: Batch
+                    - strong [ref=e2192]: 2 batch
+                    - text: 48 cup
+                  - article [ref=e2193]:
+                    - text: Timer
+                    - strong [ref=e2194]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2195]:
+                    - text: Mulai
+                    - strong [ref=e2196]: 02 Apr 2026 12:57
+                    - text: Selesai 02 Apr 2026 14:02
+                - generic [ref=e2197]: Selesai
+              - article [ref=e2198]:
+                - generic [ref=e2199]:
+                  - generic [ref=e2200]:
+                    - strong [ref=e2201]: Mie Box Cokelat
+                    - text: PRD-046 - RCP-046
+                  - generic [ref=e2202]: Selesai
+                - generic [ref=e2203]:
+                  - article [ref=e2204]:
+                    - text: Batch
+                    - strong [ref=e2205]: 2 batch
+                    - text: 24 pcs
+                  - article [ref=e2206]:
+                    - text: Timer
+                    - strong [ref=e2207]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e2208]:
+                    - text: Mulai
+                    - strong [ref=e2209]: 02 Apr 2026 13:00
+                    - text: Selesai 02 Apr 2026 13:35
+                - generic [ref=e2210]: Selesai
+              - article [ref=e2211]:
+                - generic [ref=e2212]:
+                  - generic [ref=e2213]:
+                    - strong [ref=e2214]: Muffin Matcha
+                    - text: PRD-028 - RCP-028
+                  - generic [ref=e2215]: Selesai
+                - generic [ref=e2216]:
+                  - article [ref=e2217]:
+                    - text: Batch
+                    - strong [ref=e2218]: 2 batch
+                    - text: 40 pouch
+                  - article [ref=e2219]:
+                    - text: Timer
+                    - strong [ref=e2220]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e2221]:
+                    - text: Mulai
+                    - strong [ref=e2222]: 02 Apr 2026 12:28
+                    - text: Selesai 02 Apr 2026 13:23
+                - generic [ref=e2223]: Selesai
+              - article [ref=e2224]:
+                - generic [ref=e2225]:
+                  - generic [ref=e2226]:
+                    - strong [ref=e2227]: Pudding Keju
+                    - text: PRD-022 - RCP-022
+                  - generic [ref=e2228]: Selesai
+                - generic [ref=e2229]:
+                  - article [ref=e2230]:
+                    - text: Batch
+                    - strong [ref=e2231]: 2 batch
+                    - text: 32 box
+                  - article [ref=e2232]:
+                    - text: Timer
+                    - strong [ref=e2233]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e2234]:
+                    - text: Mulai
+                    - strong [ref=e2235]: 02 Apr 2026 12:29
+                    - text: Selesai 02 Apr 2026 13:14
+                - generic [ref=e2236]: Selesai
+              - article [ref=e2237]:
+                - generic [ref=e2238]:
+                  - generic [ref=e2239]:
+                    - strong [ref=e2240]: Cookies Cokelat
+                    - text: PRD-016 - RCP-016
+                  - generic [ref=e2241]: Selesai
+                - generic [ref=e2242]:
+                  - article [ref=e2243]:
+                    - text: Batch
+                    - strong [ref=e2244]: 2 batch
+                    - text: 24 pcs
+                  - article [ref=e2245]:
+                    - text: Timer
+                    - strong [ref=e2246]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e2247]:
+                    - text: Mulai
+                    - strong [ref=e2248]: 02 Apr 2026 12:30
+                    - text: Selesai 02 Apr 2026 13:05
+                - generic [ref=e2249]: Selesai
+              - article [ref=e2250]:
+                - generic [ref=e2251]:
+                  - generic [ref=e2252]:
+                    - strong [ref=e2253]: Rice Bowl Red Velvet
+                    - text: PRD-045 - RCP-045
+                  - generic [ref=e2254]: Selesai
+                - generic [ref=e2255]:
+                  - article [ref=e2256]:
+                    - text: Batch
+                    - strong [ref=e2257]: 4 batch
+                    - text: 112 tray
+                  - article [ref=e2258]:
+                    - text: Timer
+                    - strong [ref=e2259]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2260]:
+                    - text: Mulai
+                    - strong [ref=e2261]: 01 Apr 2026 15:11
+                    - text: Selesai 01 Apr 2026 16:26
+                - generic [ref=e2262]: Selesai
+              - article [ref=e2263]:
+                - generic [ref=e2264]:
+                  - generic [ref=e2265]:
+                    - strong [ref=e2266]: Sandwich Kopi
+                    - text: PRD-039 - RCP-039
+                  - generic [ref=e2267]: Selesai
+                - generic [ref=e2268]:
+                  - article [ref=e2269]:
+                    - text: Batch
+                    - strong [ref=e2270]: 4 batch
+                    - text: 96 cup
+                  - article [ref=e2271]:
+                    - text: Timer
+                    - strong [ref=e2272]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2273]:
+                    - text: Mulai
+                    - strong [ref=e2274]: 01 Apr 2026 15:12
+                    - text: Selesai 01 Apr 2026 16:17
+                - generic [ref=e2275]: Selesai
+              - article [ref=e2276]:
+                - generic [ref=e2277]:
+                  - generic [ref=e2278]:
+                    - strong [ref=e2279]: Croissant Matcha
+                    - text: PRD-033 - RCP-033
+                  - generic [ref=e2280]: Selesai
+                - generic [ref=e2281]:
+                  - article [ref=e2282]:
+                    - text: Batch
+                    - strong [ref=e2283]: 4 batch
+                    - text: 80 pouch
+                  - article [ref=e2284]:
+                    - text: Timer
+                    - strong [ref=e2285]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e2286]:
+                    - text: Mulai
+                    - strong [ref=e2287]: 01 Apr 2026 15:13
+                    - text: Selesai 01 Apr 2026 16:08
+                - generic [ref=e2288]: Selesai
+              - article [ref=e2289]:
+                - generic [ref=e2290]:
+                  - generic [ref=e2291]:
+                    - strong [ref=e2292]: Muffin Keju
+                    - text: PRD-027 - RCP-027
+                  - generic [ref=e2293]: Selesai
+                - generic [ref=e2294]:
+                  - article [ref=e2295]:
+                    - text: Batch
+                    - strong [ref=e2296]: 4 batch
+                    - text: 64 box
+                  - article [ref=e2297]:
+                    - text: Timer
+                    - strong [ref=e2298]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e2299]:
+                    - text: Mulai
+                    - strong [ref=e2300]: 01 Apr 2026 15:14
+                    - text: Selesai 01 Apr 2026 15:59
+                - generic [ref=e2301]: Selesai
+              - article [ref=e2302]:
+                - generic [ref=e2303]:
+                  - generic [ref=e2304]:
+                    - strong [ref=e2305]: Donat Red Velvet
+                    - text: PRD-015 - RCP-015
+                  - generic [ref=e2306]: Selesai
+                - generic [ref=e2307]:
+                  - article [ref=e2308]:
+                    - text: Batch
+                    - strong [ref=e2309]: 4 batch
+                    - text: 112 tray
+                  - article [ref=e2310]:
+                    - text: Timer
+                    - strong [ref=e2311]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2312]:
+                    - text: Mulai
+                    - strong [ref=e2313]: 01 Apr 2026 14:41
+                    - text: Selesai 01 Apr 2026 15:56
+                - generic [ref=e2314]: Selesai
+              - article [ref=e2315]:
+                - generic [ref=e2316]:
+                  - generic [ref=e2317]:
+                    - strong [ref=e2318]: Brownies Kopi
+                    - text: PRD-009 - RCP-009
+                  - generic [ref=e2319]: Selesai
+                - generic [ref=e2320]:
+                  - article [ref=e2321]:
+                    - text: Batch
+                    - strong [ref=e2322]: 4 batch
+                    - text: 96 cup
+                  - article [ref=e2323]:
+                    - text: Timer
+                    - strong [ref=e2324]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2325]:
+                    - text: Mulai
+                    - strong [ref=e2326]: 01 Apr 2026 14:42
+                    - text: Selesai 01 Apr 2026 15:47
+                - generic [ref=e2327]: Selesai
+              - article [ref=e2328]:
+                - generic [ref=e2329]:
+                  - generic [ref=e2330]:
+                    - strong [ref=e2331]: Roti Sobek Matcha
+                    - text: PRD-003 - RCP-003
+                  - generic [ref=e2332]: Selesai
+                - generic [ref=e2333]:
+                  - article [ref=e2334]:
+                    - text: Batch
+                    - strong [ref=e2335]: 4 batch
+                    - text: 80 pouch
+                  - article [ref=e2336]:
+                    - text: Timer
+                    - strong [ref=e2337]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e2338]:
+                    - text: Mulai
+                    - strong [ref=e2339]: 01 Apr 2026 14:43
+                    - text: Selesai 01 Apr 2026 15:38
+                - generic [ref=e2340]: Selesai
+              - article [ref=e2341]:
+                - generic [ref=e2342]:
+                  - generic [ref=e2343]:
+                    - strong [ref=e2344]: Pudding Cokelat
+                    - text: PRD-021 - RCP-021
+                  - generic [ref=e2345]: Selesai
+                - generic [ref=e2346]:
+                  - article [ref=e2347]:
+                    - text: Batch
+                    - strong [ref=e2348]: 4 batch
+                    - text: 48 pcs
+                  - article [ref=e2349]:
+                    - text: Timer
+                    - strong [ref=e2350]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e2351]:
+                    - text: Mulai
+                    - strong [ref=e2352]: 01 Apr 2026 14:15
+                    - text: Selesai 01 Apr 2026 14:50
+                - generic [ref=e2353]: Selesai
+              - article [ref=e2354]:
+                - generic [ref=e2355]:
+                  - generic [ref=e2356]:
+                    - strong [ref=e2357]: Cookies Red Velvet
+                    - text: PRD-020 - RCP-020
+                  - generic [ref=e2358]: Selesai
+                - generic [ref=e2359]:
+                  - article [ref=e2360]:
+                    - text: Batch
+                    - strong [ref=e2361]: 3 batch
+                    - text: 84 tray
+                  - article [ref=e2362]:
+                    - text: Timer
+                    - strong [ref=e2363]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2364]:
+                    - text: Mulai
+                    - strong [ref=e2365]: 31 Mar 2026 14:26
+                    - text: Selesai 31 Mar 2026 15:41
+                - generic [ref=e2366]: Selesai
+              - article [ref=e2367]:
+                - generic [ref=e2368]:
+                  - generic [ref=e2369]:
+                    - strong [ref=e2370]: Donat Kopi
+                    - text: PRD-014 - RCP-014
+                  - generic [ref=e2371]: Selesai
+                - generic [ref=e2372]:
+                  - article [ref=e2373]:
+                    - text: Batch
+                    - strong [ref=e2374]: 3 batch
+                    - text: 72 cup
+                  - article [ref=e2375]:
+                    - text: Timer
+                    - strong [ref=e2376]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2377]:
+                    - text: Mulai
+                    - strong [ref=e2378]: 31 Mar 2026 14:27
+                    - text: Selesai 31 Mar 2026 15:32
+                - generic [ref=e2379]: Selesai
+              - article [ref=e2380]:
+                - generic [ref=e2381]:
+                  - generic [ref=e2382]:
+                    - strong [ref=e2383]: Mie Box Red Velvet
+                    - text: PRD-050 - RCP-050
+                  - generic [ref=e2384]: Selesai
+                - generic [ref=e2385]:
+                  - article [ref=e2386]:
+                    - text: Batch
+                    - strong [ref=e2387]: 3 batch
+                    - text: 84 tray
+                  - article [ref=e2388]:
+                    - text: Timer
+                    - strong [ref=e2389]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2390]:
+                    - text: Mulai
+                    - strong [ref=e2391]: 31 Mar 2026 13:56
+                    - text: Selesai 31 Mar 2026 15:11
+                - generic [ref=e2392]: Selesai
+              - article [ref=e2393]:
+                - generic [ref=e2394]:
+                  - generic [ref=e2395]:
+                    - strong [ref=e2396]: Rice Bowl Kopi
+                    - text: PRD-044 - RCP-044
+                  - generic [ref=e2397]: Selesai
+                - generic [ref=e2398]:
+                  - article [ref=e2399]:
+                    - text: Batch
+                    - strong [ref=e2400]: 3 batch
+                    - text: 72 cup
+                  - article [ref=e2401]:
+                    - text: Timer
+                    - strong [ref=e2402]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2403]:
+                    - text: Mulai
+                    - strong [ref=e2404]: 31 Mar 2026 13:57
+                    - text: Selesai 31 Mar 2026 15:02
+                - generic [ref=e2405]: Selesai
+              - article [ref=e2406]:
+                - generic [ref=e2407]:
+                  - generic [ref=e2408]:
+                    - strong [ref=e2409]: Sandwich Matcha
+                    - text: PRD-038 - RCP-038
+                  - generic [ref=e2410]: Selesai
+                - generic [ref=e2411]:
+                  - article [ref=e2412]:
+                    - text: Batch
+                    - strong [ref=e2413]: 3 batch
+                    - text: 60 pouch
+                  - article [ref=e2414]:
+                    - text: Timer
+                    - strong [ref=e2415]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e2416]:
+                    - text: Mulai
+                    - strong [ref=e2417]: 31 Mar 2026 13:58
+                    - text: Selesai 31 Mar 2026 14:53
+                - generic [ref=e2418]: Selesai
+              - article [ref=e2419]:
+                - generic [ref=e2420]:
+                  - generic [ref=e2421]:
+                    - strong [ref=e2422]: Croissant Keju
+                    - text: PRD-032 - RCP-032
+                  - generic [ref=e2423]: Selesai
+                - generic [ref=e2424]:
+                  - article [ref=e2425]:
+                    - text: Batch
+                    - strong [ref=e2426]: 3 batch
+                    - text: 48 box
+                  - article [ref=e2427]:
+                    - text: Timer
+                    - strong [ref=e2428]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e2429]:
+                    - text: Mulai
+                    - strong [ref=e2430]: 31 Mar 2026 13:59
+                    - text: Selesai 31 Mar 2026 14:44
+                - generic [ref=e2431]: Selesai
+              - article [ref=e2432]:
+                - generic [ref=e2433]:
+                  - generic [ref=e2434]:
+                    - strong [ref=e2435]: Muffin Cokelat
+                    - text: PRD-026 - RCP-026
+                  - generic [ref=e2436]: Selesai
+                - generic [ref=e2437]:
+                  - article [ref=e2438]:
+                    - text: Batch
+                    - strong [ref=e2439]: 3 batch
+                    - text: 36 pcs
+                  - article [ref=e2440]:
+                    - text: Timer
+                    - strong [ref=e2441]: 35 menit
+                    - text: Target 35 menit
+                  - article [ref=e2442]:
+                    - text: Mulai
+                    - strong [ref=e2443]: 31 Mar 2026 14:00
+                    - text: Selesai 31 Mar 2026 14:35
+                - generic [ref=e2444]: Selesai
+              - article [ref=e2445]:
+                - generic [ref=e2446]:
+                  - generic [ref=e2447]:
+                    - strong [ref=e2448]: Brownies Matcha
+                    - text: PRD-008 - RCP-008
+                  - generic [ref=e2449]: Selesai
+                - generic [ref=e2450]:
+                  - article [ref=e2451]:
+                    - text: Batch
+                    - strong [ref=e2452]: 3 batch
+                    - text: 60 pouch
+                  - article [ref=e2453]:
+                    - text: Timer
+                    - strong [ref=e2454]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e2455]:
+                    - text: Mulai
+                    - strong [ref=e2456]: 31 Mar 2026 13:28
+                    - text: Selesai 31 Mar 2026 14:23
+                - generic [ref=e2457]: Selesai
+              - article [ref=e2458]:
+                - generic [ref=e2459]:
+                  - generic [ref=e2460]:
+                    - strong [ref=e2461]: Roti Sobek Keju
+                    - text: PRD-002 - RCP-002
+                  - generic [ref=e2462]: Selesai
+                - generic [ref=e2463]:
+                  - article [ref=e2464]:
+                    - text: Batch
+                    - strong [ref=e2465]: 3 batch
+                    - text: 48 box
+                  - article [ref=e2466]:
+                    - text: Timer
+                    - strong [ref=e2467]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e2468]:
+                    - text: Mulai
+                    - strong [ref=e2469]: 31 Mar 2026 13:29
+                    - text: Selesai 31 Mar 2026 14:14
+                - generic [ref=e2470]: Selesai
+              - article [ref=e2471]:
+                - generic [ref=e2472]:
+                  - generic [ref=e2473]:
+                    - strong [ref=e2474]: Pudding Red Velvet
+                    - text: PRD-025 - RCP-025
+                  - generic [ref=e2475]: Selesai
+                - generic [ref=e2476]:
+                  - article [ref=e2477]:
+                    - text: Batch
+                    - strong [ref=e2478]: 2 batch
+                    - text: 56 tray
+                  - article [ref=e2479]:
+                    - text: Timer
+                    - strong [ref=e2480]: 1 jam 15 menit
+                    - text: Target 1 jam 15 menit
+                  - article [ref=e2481]:
+                    - text: Mulai
+                    - strong [ref=e2482]: 30 Mar 2026 13:11
+                    - text: Selesai 30 Mar 2026 14:26
+                - generic [ref=e2483]: Selesai
+              - article [ref=e2484]:
+                - generic [ref=e2485]:
+                  - generic [ref=e2486]:
+                    - strong [ref=e2487]: Cookies Kopi
+                    - text: PRD-019 - RCP-019
+                  - generic [ref=e2488]: Selesai
+                - generic [ref=e2489]:
+                  - article [ref=e2490]:
+                    - text: Batch
+                    - strong [ref=e2491]: 2 batch
+                    - text: 48 cup
+                  - article [ref=e2492]:
+                    - text: Timer
+                    - strong [ref=e2493]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2494]:
+                    - text: Mulai
+                    - strong [ref=e2495]: 30 Mar 2026 13:12
+                    - text: Selesai 30 Mar 2026 14:17
+                - generic [ref=e2496]: Selesai
+              - article [ref=e2497]:
+                - generic [ref=e2498]:
+                  - generic [ref=e2499]:
+                    - strong [ref=e2500]: Donat Matcha
+                    - text: PRD-013 - RCP-013
+                  - generic [ref=e2501]: Selesai
+                - generic [ref=e2502]:
+                  - article [ref=e2503]:
+                    - text: Batch
+                    - strong [ref=e2504]: 2 batch
+                    - text: 40 pouch
+                  - article [ref=e2505]:
+                    - text: Timer
+                    - strong [ref=e2506]: 55 menit
+                    - text: Target 55 menit
+                  - article [ref=e2507]:
+                    - text: Mulai
+                    - strong [ref=e2508]: 30 Mar 2026 13:13
+                    - text: Selesai 30 Mar 2026 14:08
+                - generic [ref=e2509]: Selesai
+              - article [ref=e2510]:
+                - generic [ref=e2511]:
+                  - generic [ref=e2512]:
+                    - strong [ref=e2513]: Brownies Keju
+                    - text: PRD-007 - RCP-007
+                  - generic [ref=e2514]: Selesai
+                - generic [ref=e2515]:
+                  - article [ref=e2516]:
+                    - text: Batch
+                    - strong [ref=e2517]: 2 batch
+                    - text: 32 box
+                  - article [ref=e2518]:
+                    - text: Timer
+                    - strong [ref=e2519]: 45 menit
+                    - text: Target 45 menit
+                  - article [ref=e2520]:
+                    - text: Mulai
+                    - strong [ref=e2521]: 30 Mar 2026 13:14
+                    - text: Selesai 30 Mar 2026 13:59
+                - generic [ref=e2522]: Selesai
+              - article [ref=e2523]:
+                - generic [ref=e2524]:
+                  - generic [ref=e2525]:
+                    - strong [ref=e2526]: Mie Box Kopi
+                    - text: PRD-049 - RCP-049
+                  - generic [ref=e2527]: Selesai
+                - generic [ref=e2528]:
+                  - article [ref=e2529]:
+                    - text: Batch
+                    - strong [ref=e2530]: 2 batch
+                    - text: 48 cup
+                  - article [ref=e2531]:
+                    - text: Timer
+                    - strong [ref=e2532]: 1 jam 05 menit
+                    - text: Target 1 jam 05 menit
+                  - article [ref=e2533]:
+                    - text: Mulai
+                    - strong [ref=e2534]: 30 Mar 2026 12:42
+                    - text: Selesai 30 Mar 2026 13:47
+                - generic [ref=e2535]: Selesai
+  - generic [ref=e2536]:
+    - text: An unhandled error has occurred.
+    - link "Reload" [ref=e2537] [cursor=pointer]:
+      - /url: .
+    - text: x

@@ -3,11 +3,17 @@ using Hpp_Ultimate.Domain;
 
 namespace Hpp_Ultimate.Services;
 
-public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore store)
+public sealed class AuthService(
+    IMemoryCache cache,
+    SeededBusinessDataStore store,
+    WorkspaceAccessService access,
+    AuditTrailService auditTrail)
 {
     public async Task<AuthSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default)
     {
-        var cacheKey = $"auth:{store.Version}";
+        var actor = access.GetActiveUser(clearInvalidSession: true);
+        var actorCacheKey = actor is null ? "anon" : $"{actor.Id}:{actor.Role}";
+        var cacheKey = $"auth:{store.Version}:{actorCacheKey}";
 
         if (cache.TryGetValue(cacheKey, out AuthSnapshot? snapshot))
         {
@@ -16,7 +22,7 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
 
         await Task.Delay(80, cancellationToken);
 
-        snapshot = BuildSnapshot();
+        snapshot = BuildSnapshot(actor);
         cache.Set(cacheKey, snapshot, TimeSpan.FromSeconds(20));
         return snapshot;
     }
@@ -38,32 +44,50 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
             return Task.FromResult(new LoginResult(false, "User tidak ditemukan atau akun nonaktif."));
         }
 
-        if (!user.Password.Equals(request.Password, StringComparison.Ordinal))
+        var passwordStatus = PasswordHasher.Verify(request.Password.Trim(), user.Password);
+        if (passwordStatus == PasswordVerificationStatus.Failed)
         {
             return Task.FromResult(new LoginResult(false, "Password tidak cocok."));
         }
 
         var now = DateTime.Now;
-        var updatedUser = user with { LastLoginAt = now, UpdatedAt = now };
+        var updatedUser = user with
+        {
+            LastLoginAt = now,
+            UpdatedAt = now,
+            Password = passwordStatus == PasswordVerificationStatus.SuccessRehashNeeded
+                ? PasswordHasher.HashPassword(request.Password.Trim())
+                : user.Password
+        };
         store.UpdateUser(updatedUser);
 
         var session = new AuthSession(updatedUser.Id, updatedUser.FullName, updatedUser.Email, updatedUser.Role, now, request.RememberMe);
         store.SetSession(session);
+        auditTrail.Record(updatedUser, "Auth", "Login", "Sesi login", updatedUser.Id, $"Login berhasil dengan identitas {request.Identity.Trim()}.");
         return Task.FromResult(new LoginResult(true, $"Login berhasil sebagai {updatedUser.FullName}.", session));
     }
 
     public Task<LoginResult> LogoutAsync(CancellationToken cancellationToken = default)
     {
+        var actor = access.GetActiveUser(clearInvalidSession: true);
         store.SetSession(null);
+        if (actor is not null)
+        {
+            auditTrail.Record(actor, "Auth", "Logout", "Sesi login", actor.Id, "Sesi login ditutup.");
+        }
+
         return Task.FromResult(new LoginResult(true, "Sesi login ditutup."));
     }
 
     public Task<AuthMutationResult> SaveCurrentAccountAsync(AccountProfileRequest request, CancellationToken cancellationToken = default)
     {
-        if (store.AuthSession is null)
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
         {
-            return Task.FromResult(new AuthMutationResult(false, "Sesi login tidak ditemukan. Silakan masuk ulang."));
+            return Task.FromResult(new AuthMutationResult(false, accessDecision.Message));
         }
+
+        var activeUser = accessDecision.Actor!;
 
         if (string.IsNullOrWhiteSpace(request.FullName))
         {
@@ -85,24 +109,19 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
             return Task.FromResult(new AuthMutationResult(false, "Password baru minimal 6 karakter."));
         }
 
-        var existing = store.FindUser(store.AuthSession.UserId);
-        if (existing is null)
-        {
-            store.SetSession(null);
-            return Task.FromResult(new AuthMutationResult(false, "Akun aktif tidak ditemukan. Sesi login ditutup."));
-        }
-
-        if (store.UserIdentityExists(request.Email.Trim(), request.Username.Trim(), existing.Id))
+        if (store.UserIdentityExists(request.Email.Trim(), request.Username.Trim(), activeUser.Id))
         {
             return Task.FromResult(new AuthMutationResult(false, "Email atau username sudah dipakai user lain."));
         }
 
-        var updated = existing with
+        var updated = activeUser with
         {
             FullName = request.FullName.Trim(),
             Email = request.Email.Trim().ToLowerInvariant(),
             Username = request.Username.Trim().ToLowerInvariant(),
-            Password = string.IsNullOrWhiteSpace(request.NewPassword) ? existing.Password : request.NewPassword,
+            Password = string.IsNullOrWhiteSpace(request.NewPassword)
+                ? activeUser.Password
+                : PasswordHasher.HashPassword(request.NewPassword.Trim()),
             UpdatedAt = DateTime.Now
         };
 
@@ -114,12 +133,25 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
             updated.Role,
             DateTime.Now,
             request.RememberMe));
+        auditTrail.Record(updated, "Auth", "Update profil", updated.FullName, updated.Id, "Profil akun aktif diperbarui.");
 
         return Task.FromResult(new AuthMutationResult(true, "Profil akun berhasil diperbarui.", updated));
     }
 
     public Task<AuthMutationResult> SaveUserAsync(UserUpsertRequest request, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAdmin();
+        if (!accessDecision.Allowed)
+        {
+            if (accessDecision.Actor is not null)
+            {
+                auditTrail.Record(accessDecision.Actor, "Security", "Akses ditolak", "Manajemen user", request.Id, accessDecision.Message);
+            }
+
+            return Task.FromResult(new AuthMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         if (string.IsNullOrWhiteSpace(request.FullName))
         {
             return Task.FromResult(new AuthMutationResult(false, "Nama user wajib diisi."));
@@ -135,9 +167,16 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
             return Task.FromResult(new AuthMutationResult(false, "Username wajib diisi."));
         }
 
-        if (string.IsNullOrWhiteSpace(request.Password))
+        var isCreate = request.Id is null;
+        var normalizedPassword = request.Password.Trim();
+        if (isCreate && string.IsNullOrWhiteSpace(normalizedPassword))
         {
             return Task.FromResult(new AuthMutationResult(false, "Password wajib diisi."));
+        }
+
+        if (!string.IsNullOrWhiteSpace(normalizedPassword) && normalizedPassword.Length < 6)
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Password minimal 6 karakter."));
         }
 
         if (store.UserIdentityExists(request.Email.Trim(), request.Username.Trim(), request.Id))
@@ -145,7 +184,7 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
             return Task.FromResult(new AuthMutationResult(false, "Email atau username sudah dipakai user lain."));
         }
 
-        if (request.Id is null)
+        if (isCreate)
         {
             var now = DateTime.Now;
             var created = new BusinessUser(
@@ -155,19 +194,27 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
                 request.Username.Trim().ToLowerInvariant(),
                 request.Role,
                 request.Status,
-                request.Password,
+                PasswordHasher.HashPassword(normalizedPassword),
                 now,
                 now,
                 null);
 
             store.AddUser(created);
+            auditTrail.Record(actor, "Auth", "Tambah user", created.FullName, created.Id, $"User {created.FullName} dibuat dengan role {created.Role}.");
             return Task.FromResult(new AuthMutationResult(true, "User berhasil ditambahkan.", created));
         }
 
-        var existing = store.FindUser(request.Id.Value);
+        var existing = request.Id is Guid existingId
+            ? store.FindUser(existingId)
+            : null;
         if (existing is null)
         {
             return Task.FromResult(new AuthMutationResult(false, "User tidak ditemukan."));
+        }
+
+        if (!CanModifyAdminState(existing, request.Role, request.Status))
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Admin aktif terakhir tidak bisa diturunkan role-nya atau dinonaktifkan."));
         }
 
         var updated = existing with
@@ -177,7 +224,9 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
             Username = request.Username.Trim().ToLowerInvariant(),
             Role = request.Role,
             Status = request.Status,
-            Password = request.Password,
+            Password = string.IsNullOrWhiteSpace(normalizedPassword)
+                ? existing.Password
+                : PasswordHasher.HashPassword(normalizedPassword),
             UpdatedAt = DateTime.Now
         };
 
@@ -185,23 +234,48 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
 
         if (store.AuthSession?.UserId == updated.Id)
         {
-            store.SetSession(store.AuthSession with
+            if (updated.Status == UserStatus.Active)
             {
-                FullName = updated.FullName,
-                Email = updated.Email,
-                Role = updated.Role
-            });
+                store.SetSession(store.AuthSession with
+                {
+                    FullName = updated.FullName,
+                    Email = updated.Email,
+                    Role = updated.Role
+                });
+            }
+            else
+            {
+                store.SetSession(null);
+            }
         }
 
+        auditTrail.Record(actor, "Auth", "Update user", updated.FullName, updated.Id, $"User {updated.FullName} diperbarui ke role {updated.Role} dengan status {updated.Status}.");
         return Task.FromResult(new AuthMutationResult(true, "User berhasil diperbarui.", updated));
     }
 
     public Task<AuthMutationResult> DeactivateUserAsync(Guid id, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAdmin();
+        if (!accessDecision.Allowed)
+        {
+            if (accessDecision.Actor is not null)
+            {
+                auditTrail.Record(accessDecision.Actor, "Security", "Akses ditolak", "Nonaktifkan user", id, accessDecision.Message);
+            }
+
+            return Task.FromResult(new AuthMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         var user = store.FindUser(id);
         if (user is null)
         {
             return Task.FromResult(new AuthMutationResult(false, "User tidak ditemukan."));
+        }
+
+        if (!CanModifyAdminState(user, user.Role, UserStatus.Inactive))
+        {
+            return Task.FromResult(new AuthMutationResult(false, "Admin aktif terakhir tidak bisa dinonaktifkan."));
         }
 
         var updated = user with
@@ -217,35 +291,41 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
             store.SetSession(null);
         }
 
+        auditTrail.Record(actor, "Auth", "Nonaktifkan user", updated.FullName, updated.Id, $"User {updated.FullName} dinonaktifkan.");
         return Task.FromResult(new AuthMutationResult(true, "User dinonaktifkan.", updated));
     }
 
-    private AuthSnapshot BuildSnapshot()
+    private AuthSnapshot BuildSnapshot(BusinessUser? actor)
     {
-        var users = store.Users
+        var allUsers = store.Users
             .OrderBy(item => item.FullName)
             .Select(item => new UserListItem(item.Id, item.FullName, item.Email, item.Username, item.Role, item.Status, item.UpdatedAt, item.LastLoginAt))
             .ToArray();
+        var visibleUsers = actor?.Role == UserRole.Admin
+            ? allUsers
+            : actor is null
+                ? []
+                : allUsers.Where(item => item.Id == actor.Id).ToArray();
 
         var insights = new List<string>();
-        if (users.Length == 0)
+        if (allUsers.Length == 0)
         {
             insights.Add("Belum ada user. Buat admin pertama dari tombol + User.");
         }
 
-        var inactiveCount = users.Count(item => item.Status == UserStatus.Inactive);
+        var inactiveCount = allUsers.Count(item => item.Status == UserStatus.Inactive);
         if (inactiveCount > 0)
         {
             insights.Add($"{inactiveCount} akun saat ini nonaktif.");
         }
 
-        var lastLogin = users.Where(item => item.LastLoginAt.HasValue).OrderByDescending(item => item.LastLoginAt).FirstOrDefault();
+        var lastLogin = allUsers.Where(item => item.LastLoginAt.HasValue).OrderByDescending(item => item.LastLoginAt).FirstOrDefault();
         if (lastLogin is not null)
         {
             insights.Add($"Login terbaru dilakukan oleh {lastLogin.FullName} pada {lastLogin.LastLoginAt:dd MMM HH:mm}.");
         }
 
-        var adminCount = users.Count(item => item.Role == UserRole.Admin && item.Status == UserStatus.Active);
+        var adminCount = allUsers.Count(item => item.Role == UserRole.Admin && item.Status == UserStatus.Active);
         if (adminCount == 0)
         {
             insights.Add("Belum ada admin aktif. Minimal satu admin disarankan.");
@@ -258,11 +338,29 @@ public sealed class AuthService(IMemoryCache cache, SeededBusinessDataStore stor
 
         return new AuthSnapshot(
             store.AuthSession,
-            users,
-            users.Length,
-            users.Count(item => item.Status == UserStatus.Active),
-            users.Count(item => item.Role == UserRole.Admin),
-            users.Count(item => item.Role == UserRole.Staff),
+            visibleUsers,
+            allUsers.Length,
+            allUsers.Count(item => item.Status == UserStatus.Active),
+            allUsers.Count(item => item.Role == UserRole.Admin),
+            allUsers.Count(item => item.Role == UserRole.Staff),
             insights);
+    }
+
+    private bool CanModifyAdminState(BusinessUser existing, UserRole targetRole, UserStatus targetStatus)
+    {
+        if (existing.Role != UserRole.Admin || existing.Status != UserStatus.Active)
+        {
+            return true;
+        }
+
+        if (targetRole == UserRole.Admin && targetStatus == UserStatus.Active)
+        {
+            return true;
+        }
+
+        return store.Users.Count(item =>
+            item.Id != existing.Id &&
+            item.Role == UserRole.Admin &&
+            item.Status == UserStatus.Active) > 0;
     }
 }

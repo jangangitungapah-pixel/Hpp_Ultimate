@@ -1,0 +1,173 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+          - link "HC HPP Calculator" [ref=e34] [cursor=pointer]:
+            - /url: /hpp-calculator
+            - generic [ref=e35]: HC
+            - strong [ref=e36]: HPP Calculator
+          - link "PJ Produk Jadi" [ref=e37] [cursor=pointer]:
+            - /url: /produk-jadi
+            - generic [ref=e38]: PJ
+            - strong [ref=e39]: Produk Jadi
+        - generic [ref=e40]:
+          - generic [ref=e41]: Operasional
+          - link "PR Produksi" [ref=e42] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e43]: PR
+            - strong [ref=e44]: Produksi
+          - link "PO Point of Sales" [ref=e45] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e46]: PO
+            - strong [ref=e47]: Point of Sales
+          - link "JL Penjualan" [ref=e48] [cursor=pointer]:
+            - /url: /penjualan
+            - generic [ref=e49]: JL
+            - strong [ref=e50]: Penjualan
+        - generic [ref=e51]:
+          - generic [ref=e52]: Monitoring
+          - link "LP Laporan" [ref=e53] [cursor=pointer]:
+            - /url: /laporan
+            - generic [ref=e54]: LP
+            - strong [ref=e55]: Laporan
+        - generic [ref=e56]:
+          - generic [ref=e57]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e58] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e59]: BD
+            - strong [ref=e60]: Backup & Data Ops
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: A
+            - generic [ref=e64]:
+              - strong [ref=e65]: Arief
+              - generic [ref=e66]: Admin
+          - link "Logout" [ref=e67] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]: Gudang
+        - strong [ref=e72]: Catat saldo bahan, minimum stock, dan mutasi gudang
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]: ⚲
+          - textbox "Current user" [ref=e76]: Arief
+        - generic [ref=e77]: A
+    - article [ref=e78]:
+      - generic [ref=e157]:
+        - generic [ref=e158]:
+          - generic [ref=e159]:
+            - generic [ref=e160]: Gudang
+            - heading "Input stok material dari katalog lalu pantau posisinya di satu datagrid." [level=1] [ref=e161]
+            - paragraph [ref=e162]: "Flow gudang sekarang ringkas: pilih material dari katalog, catat stok masuk atau keluar, lalu cek hasilnya langsung di daftar gudang."
+          - generic [ref=e163]:
+            - generic [ref=e164]: 1 material ada di gudang
+            - button "Refresh" [ref=e165] [cursor=pointer]
+        - generic [ref=e166]:
+          - article [ref=e167]:
+            - generic [ref=e168]: Material di gudang
+            - strong [ref=e169]: "1"
+          - article [ref=e170]:
+            - generic [ref=e171]: Perlu restock
+            - strong [ref=e172]: "0"
+          - article [ref=e173]:
+            - generic [ref=e174]: Nilai stok
+            - strong [ref=e175]: Rp16.016
+        - generic [ref=e176]:
+          - generic [ref=e178]:
+            - generic [ref=e179]: Input stok
+            - heading "Pilih material katalog lalu simpan mutasinya" [level=2] [ref=e180]
+            - paragraph [ref=e181]: Material diambil dari katalog. Setelah disimpan, item akan muncul atau terbarui di datagrid gudang.
+          - generic [ref=e235]: Mutasi stok berhasil dicatat.
+          - generic [ref=e236]:
+            - generic [ref=e237]:
+              - generic [ref=e238]:
+                - generic [ref=e239]: Material katalog
+                - combobox "Material katalog" [ref=e240]: BHN-001 - Tepung Terigu - Segitga Biru
+              - generic [ref=e241]:
+                - generic [ref=e242]: Flow stok
+                - combobox "Flow stok" [ref=e243]:
+                  - option "Stok masuk" [selected]
+                  - option "Stok keluar"
+              - generic [ref=e244]:
+                - generic [ref=e245]: Jumlah
+                - spinbutton "Jumlah" [ref=e246]: "1"
+              - generic [ref=e247]:
+                - generic [ref=e248]: Waktu catat
+                - textbox "Waktu catat" [ref=e249]: 2026-04-03T19:46
+              - generic [ref=e250]:
+                - generic [ref=e251]: Catatan
+                - textbox "Catatan" [ref=e252]
+            - generic [ref=e253]:
+              - generic [ref=e254]:
+                - generic [ref=e255]: Material terpilih
+                - strong [ref=e256]: Tepung Terigu
+                - generic [ref=e257]: BHN-001 · Segitga Biru
+              - generic [ref=e258]:
+                - generic [ref=e259]: On hand 1001 gr
+                - generic [ref=e260]: Minimum 250 gr
+                - generic [ref=e261]: Last move 03 Apr 2026 19:46
+            - generic [ref=e262]:
+              - button "Reset" [ref=e263] [cursor=pointer]
+              - button "Simpan Stok" [ref=e264] [cursor=pointer]
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - generic [ref=e205]:
+              - text: Datagrid gudang
+              - heading "Material yang sudah tercatat di gudang" [level=2] [ref=e206]
+              - paragraph [ref=e207]: Tabel ini mengikuti pola katalog material, tetapi informasinya disesuaikan untuk stok gudang.
+            - textbox "Cari material gudang" [ref=e209]
+          - table [ref=e211]:
+            - rowgroup [ref=e212]:
+              - row "Nama Material Merk On Hand Minimum Nilai Stok Last Move Status" [ref=e213]:
+                - columnheader "Nama Material" [ref=e214]
+                - columnheader "Merk" [ref=e215]
+                - columnheader "On Hand" [ref=e216]
+                - columnheader "Minimum" [ref=e217]
+                - columnheader "Nilai Stok" [ref=e218]
+                - columnheader "Last Move" [ref=e219]
+                - columnheader "Status" [ref=e220]
+            - rowgroup [ref=e221]:
+              - row "Tepung Terigu BHN-001 Segitga Biru 1001 gr 250 gr Rp16.016 03 Apr 2026 19:46 Aman" [ref=e265]:
+                - cell "Tepung Terigu BHN-001" [ref=e223]:
+                  - generic [ref=e224]:
+                    - strong [ref=e225]: Tepung Terigu
+                    - generic [ref=e226]: BHN-001
+                - cell "Segitga Biru" [ref=e227]
+                - cell "1001 gr" [ref=e266]:
+                  - strong [ref=e229]: 1001 gr
+                - cell "250 gr" [ref=e230]
+                - cell "Rp16.016" [ref=e267]
+                - cell "03 Apr 2026 19:46" [ref=e268]
+                - cell "Aman" [ref=e233]:
+                  - generic [ref=e234]: Aman

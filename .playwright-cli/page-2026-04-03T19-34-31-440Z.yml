@@ -1,0 +1,223 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+        - generic [ref=e34]:
+          - generic [ref=e35]: Operasional
+          - link "PR Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e37]: PR
+            - strong [ref=e38]: Produksi
+          - link "BL Belanja" [ref=e39] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e40]: BL
+            - strong [ref=e41]: Belanja
+          - link "PO Point of Sales" [ref=e42] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e43]: PO
+            - strong [ref=e44]: Point of Sales
+        - generic [ref=e45]:
+          - generic [ref=e46]: Monitoring
+          - link "PB Pembukuan" [ref=e47] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e48]: PB
+            - strong [ref=e49]: Pembukuan
+        - generic [ref=e50]:
+          - generic [ref=e51]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e52] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e53]: BD
+            - strong [ref=e54]: Backup & Data Ops
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: A
+            - generic [ref=e58]:
+              - strong [ref=e59]: Arief
+              - generic [ref=e60]: Admin
+          - link "Logout" [ref=e61] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Pengaturan Akun
+        - strong [ref=e66]: Kelola identitas, keamanan, akses, dan data tim
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: ⚲
+          - textbox "Current user" [ref=e70]: Arief
+        - generic [ref=e71]: A
+    - article [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - link "< Kembali ke Pengaturan" [ref=e77] [cursor=pointer]:
+              - /url: /pengaturan
+            - generic [ref=e78]: Account control center
+            - heading "Kelola identitas akun, keamanan sesi, dan orkestrasi akses tim dalam satu workspace." [active] [level=1] [ref=e79]
+            - paragraph [ref=e80]: Halaman ini menggantikan menu login sebagai pusat pengelolaan akun. Profil akun aktif, password, sesi, dan daftar user tim sekarang dipusatkan di sini.
+            - generic [ref=e81]:
+              - article [ref=e82]:
+                - generic [ref=e83]: Akun aktif
+                - strong [ref=e84]: Arief
+              - article [ref=e85]:
+                - generic [ref=e86]: Mode sesi
+                - strong [ref=e87]: Session-only
+              - article [ref=e88]:
+                - generic [ref=e89]: Hak akses
+                - strong [ref=e90]: Admin
+          - generic [ref=e91]:
+            - article [ref=e92]:
+              - generic [ref=e93]: Session Runtime
+              - strong [ref=e94]: 38j 22m
+              - text: Sesi dimulai 02 Apr 2026 12:12
+            - article [ref=e95]:
+              - generic [ref=e96]: Team Pulse
+              - strong [ref=e97]: 1 user aktif
+              - text: 1 admin dan 0 staff tersimpan.
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e101]:
+              - generic [ref=e102]: Profile studio
+              - heading "Profil akun aktif dan kontrol sesi" [level=2] [ref=e103]
+            - generic [ref=e104]:
+              - generic [ref=e105]:
+                - generic [ref=e106]:
+                  - generic [ref=e107]: Nama Lengkap
+                  - textbox "Nama Lengkap" [ref=e108]: Arief
+                - generic [ref=e109]:
+                  - generic [ref=e110]: Email
+                  - textbox "Email" [ref=e111]: arief@gmail.com
+                - generic [ref=e112]:
+                  - generic [ref=e113]: Username
+                  - textbox "Username" [ref=e114]: arief
+                - generic [ref=e115]:
+                  - generic [ref=e116]: Password Baru
+                  - textbox "Password Baru" [ref=e117]:
+                    - /placeholder: Kosongkan jika tidak diubah
+                - generic [ref=e118]:
+                  - generic [ref=e119]:
+                    - text: Remember Session
+                    - generic [ref=e120]: Simpan preferensi sesi saat browser ditutup.
+                  - checkbox "Remember Session Simpan preferensi sesi saat browser ditutup." [ref=e121]
+                - article [ref=e122]:
+                  - generic [ref=e123]: Role
+                  - strong [ref=e124]: Admin
+                  - paragraph [ref=e125]: Role aktif hanya bisa berubah dari panel admin di bawah.
+                - article [ref=e126]:
+                  - generic [ref=e127]: Terakhir login
+                  - strong [ref=e128]: 02 Apr 2026 12:12
+                  - paragraph [ref=e129]: Timestamp ini otomatis diperbarui saat autentikasi berhasil.
+                - article [ref=e130]:
+                  - generic [ref=e131]: Updated
+                  - strong [ref=e132]: 02 Apr 2026 12:12
+                  - paragraph [ref=e133]: Perubahan identitas dan password akan tersimpan ke store akun.
+              - generic [ref=e134]:
+                - button "Reset" [ref=e135] [cursor=pointer]
+                - button "Logout" [ref=e136] [cursor=pointer]
+                - button "Simpan Profil Akun" [ref=e137] [cursor=pointer]
+          - complementary [ref=e138]:
+            - generic [ref=e139]:
+              - generic [ref=e141]:
+                - generic [ref=e142]: Security telemetry
+                - heading "Status akses dan sinyal akun" [level=2] [ref=e143]
+              - generic [ref=e144]:
+                - article [ref=e145]:
+                  - generic [ref=e146]: Status akun
+                  - strong [ref=e147]: Active
+                - article [ref=e148]:
+                  - generic [ref=e149]: Remember me
+                  - strong [ref=e150]: Tidak aktif
+                - article [ref=e151]:
+                  - generic [ref=e152]: Admin aktif
+                  - strong [ref=e153]: "1"
+                - article [ref=e154]:
+                  - generic [ref=e155]: User nonaktif
+                  - strong [ref=e156]: "0"
+              - article [ref=e158]: Login terbaru dilakukan oleh Arief pada 02 Apr 12:12.
+            - generic [ref=e159]:
+              - generic [ref=e161]:
+                - generic [ref=e162]: Activity lane
+                - heading "Jejak akun dan tim terbaru" [level=2] [ref=e163]
+              - article [ref=e165]:
+                - generic [ref=e167]:
+                  - strong [ref=e168]: Arief
+                  - generic [ref=e169]: arief@gmail.com
+                  - paragraph [ref=e170]: Login terakhir 02 Apr 2026 12:12
+                - generic [ref=e171]: Admin
+        - generic [ref=e172]:
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - generic [ref=e175]: Admin cockpit
+              - heading "Manajemen user, peran, dan keberlanjutan akses tim" [level=2] [ref=e176]
+            - generic [ref=e177]:
+              - button "Refresh" [ref=e178] [cursor=pointer]
+              - button "+ Tambah User" [ref=e179] [cursor=pointer]
+          - generic [ref=e180]:
+            - article [ref=e181]:
+              - generic [ref=e182]: Total akun
+              - strong [ref=e183]: "1"
+            - article [ref=e184]:
+              - generic [ref=e185]: Admin aktif
+              - strong [ref=e186]: "1"
+            - article [ref=e187]:
+              - generic [ref=e188]: Staff aktif
+              - strong [ref=e189]: "0"
+            - article [ref=e190]:
+              - generic [ref=e191]: Nonaktif
+              - strong [ref=e192]: "0"
+          - generic [ref=e193]:
+            - article [ref=e195]:
+              - generic [ref=e196]:
+                - generic [ref=e197]:
+                  - strong [ref=e198]: Arief
+                  - text: arief@gmail.com
+                - generic [ref=e199]: Admin
+              - generic [ref=e200]:
+                - generic [ref=e201]: arief
+                - generic [ref=e202]: Login 02 Apr 12:12
+                - generic [ref=e203]: "Status: Active"
+              - generic [ref=e204]:
+                - button "Edit" [ref=e205] [cursor=pointer]
+                - button "Nonaktifkan" [disabled] [ref=e206] [cursor=pointer]
+            - generic [ref=e207]:
+              - article [ref=e208]:
+                - generic [ref=e209]: Akun aktif saat ini
+                - strong [ref=e210]: Arief
+                - paragraph [ref=e211]: arief@gmail.com
+              - article [ref=e212]:
+                - generic [ref=e213]: Hak admin
+                - strong [ref=e214]: Penuh
+                - paragraph [ref=e215]: Admin dapat menambah, mengubah, dan menonaktifkan akun tim.
+              - article [ref=e216]:
+                - generic [ref=e217]: Kebijakan password
+                - strong [ref=e218]: Min 6 karakter
+                - paragraph [ref=e219]: Password akun aktif bisa diubah dari panel profil di kiri.

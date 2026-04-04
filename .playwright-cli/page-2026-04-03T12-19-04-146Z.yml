@@ -1,0 +1,266 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+          - link "HC HPP Calculator" [ref=e34] [cursor=pointer]:
+            - /url: /hpp-calculator
+            - generic [ref=e35]: HC
+            - strong [ref=e36]: HPP Calculator
+          - link "PJ Produk Jadi" [ref=e37] [cursor=pointer]:
+            - /url: /produk-jadi
+            - generic [ref=e38]: PJ
+            - strong [ref=e39]: Produk Jadi
+        - generic [ref=e40]:
+          - generic [ref=e41]: Operasional
+          - link "PR Produksi" [ref=e42] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e43]: PR
+            - strong [ref=e44]: Produksi
+          - link "PO Point of Sales" [ref=e45] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e46]: PO
+            - strong [ref=e47]: Point of Sales
+          - link "JL Penjualan" [ref=e48] [cursor=pointer]:
+            - /url: /penjualan
+            - generic [ref=e49]: JL
+            - strong [ref=e50]: Penjualan
+        - generic [ref=e51]:
+          - generic [ref=e52]: Monitoring
+          - link "LP Laporan" [ref=e53] [cursor=pointer]:
+            - /url: /laporan
+            - generic [ref=e54]: LP
+            - strong [ref=e55]: Laporan
+        - generic [ref=e56]:
+          - generic [ref=e57]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e58] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e59]: BD
+            - strong [ref=e60]: Backup & Data Ops
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: A
+            - generic [ref=e64]:
+              - strong [ref=e65]: Arief
+              - generic [ref=e66]: Admin
+          - link "Logout" [ref=e67] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]: Gudang
+        - strong [ref=e72]: Catat saldo bahan, minimum stock, dan mutasi gudang
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]: ⚲
+          - textbox "Current user" [ref=e76]: Arief
+        - generic [ref=e77]: A
+    - article [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - generic [ref=e82]: Gudang material
+            - heading "Kelola stok bahan secepat mungkin dari satu meja kerja." [level=1] [ref=e83]
+            - paragraph [ref=e84]: "Prioritas halaman ini sekarang sederhana: temukan material yang berisiko, catat mutasi, lihat saldo akhir, lalu lanjut ke item berikutnya tanpa bolak-balik."
+          - generic [ref=e85]:
+            - generic [ref=e86]: 1 tampil · 0 perlu restock
+            - button "Refresh" [ref=e87] [cursor=pointer]
+        - generic [ref=e88]:
+          - article [ref=e89]:
+            - generic [ref=e90]: Perlu restock
+            - strong [ref=e91]: "0"
+            - generic [ref=e92]: Tidak ada stok kritis.
+          - article [ref=e93]:
+            - generic [ref=e94]: Total material
+            - strong [ref=e95]: "1"
+            - generic [ref=e96]: 1 material terlihat
+          - article [ref=e97]:
+            - generic [ref=e98]: Nilai stok
+            - strong [ref=e99]: Rp16.000
+            - generic [ref=e100]: Akumulasi on-hand x modal per unit.
+          - article [ref=e101]:
+            - generic [ref=e102]: Baru bergerak
+            - strong [ref=e103]: "1"
+            - generic [ref=e104]: Material dengan mutasi yang sudah tercatat.
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e108]:
+              - generic [ref=e109]: Antrian material
+              - heading "Pilih material kerja" [level=2] [ref=e110]
+              - paragraph [ref=e111]: Urutan menonjolkan stok kritis dan material yang baru bergerak.
+            - textbox "Cari nama, kode, atau merk" [ref=e113]
+            - generic [ref=e114]:
+              - button "Semua" [ref=e115] [cursor=pointer]
+              - button "Perlu Restock" [ref=e116] [cursor=pointer]
+              - button "Stok Aman" [ref=e117] [cursor=pointer]
+              - button "Baru Bergerak" [ref=e118] [cursor=pointer]
+            - table [ref=e120]:
+              - rowgroup [ref=e121]:
+                - row "Material On Hand Minimum Gap Last Move Status" [ref=e122]:
+                  - columnheader "Material" [ref=e123]:
+                    - generic [ref=e126]: Material
+                  - columnheader "On Hand" [ref=e127]:
+                    - generic [ref=e130]: On Hand
+                  - columnheader "Minimum" [ref=e131]:
+                    - generic [ref=e134]: Minimum
+                  - columnheader "Gap" [ref=e135]:
+                    - generic [ref=e138]: Gap
+                  - columnheader "Last Move" [ref=e139]:
+                    - generic [ref=e142]: Last Move
+                  - columnheader "Status" [ref=e143]:
+                    - generic [ref=e146]: Status
+              - rowgroup [ref=e147]:
+                - row "Tepung Terigu BHN-001 · Segitga Biru 1000 gr 250 gr -750 gr 03 Apr 19:04 Aman" [ref=e148]:
+                  - cell "Tepung Terigu BHN-001 · Segitga Biru" [ref=e149]:
+                    - button "Tepung Terigu BHN-001 · Segitga Biru" [ref=e150] [cursor=pointer]:
+                      - strong [ref=e151]: Tepung Terigu
+                      - generic [ref=e152]: BHN-001 · Segitga Biru
+                  - cell "1000 gr" [ref=e153]:
+                    - strong [ref=e155]: 1000 gr
+                  - cell "250 gr" [ref=e156]:
+                    - strong [ref=e158]: 250 gr
+                  - cell "-750 gr" [ref=e159]:
+                    - strong [ref=e161]: "-750 gr"
+                  - cell "03 Apr 19:04" [ref=e162]:
+                    - strong [ref=e164]: 03 Apr 19:04
+                  - cell "Aman" [ref=e165]:
+                    - generic [ref=e166]: Aman
+          - generic [ref=e167]:
+            - generic [ref=e168]:
+              - generic [ref=e169]:
+                - generic [ref=e170]: BHN-001
+                - heading "Tepung Terigu" [level=2] [ref=e171]
+                - paragraph [ref=e172]: Segitga Biru
+              - generic [ref=e173]:
+                - generic [ref=e174]: Aman
+                - generic [ref=e175]: Last move 03 Apr 19:04
+            - generic [ref=e176]:
+              - article [ref=e177]:
+                - generic [ref=e178]: On hand sekarang
+                - strong [ref=e179]: 1000 gr
+              - article [ref=e180]:
+                - generic [ref=e181]: Minimum stock
+                - strong [ref=e182]: 250 gr
+              - article [ref=e183]:
+                - generic [ref=e184]: Projected balance
+                - strong [ref=e185]: 1000 gr
+              - article [ref=e186]:
+                - generic [ref=e187]: Nilai stok
+                - strong [ref=e188]: Rp16.000
+            - generic [ref=e189]:
+              - generic [ref=e190]:
+                - generic [ref=e192]:
+                  - generic [ref=e193]: Aksi utama
+                  - heading "Catat mutasi dengan cepat" [level=3] [ref=e194]
+                - generic [ref=e195]:
+                  - button "Stok Masuk Tambah barang yang datang" [ref=e196] [cursor=pointer]:
+                    - strong [ref=e197]: Stok Masuk
+                    - generic [ref=e198]: Tambah barang yang datang
+                  - button "Stok Keluar Kurangi stok non-produksi" [ref=e199] [cursor=pointer]:
+                    - strong [ref=e200]: Stok Keluar
+                    - generic [ref=e201]: Kurangi stok non-produksi
+                  - button "Adjustment Koreksi plus atau minus" [ref=e202] [cursor=pointer]:
+                    - strong [ref=e203]: Adjustment
+                    - generic [ref=e204]: Koreksi plus atau minus
+                  - button "Saldo Awal Set stok pembuka" [ref=e205] [cursor=pointer]:
+                    - strong [ref=e206]: Saldo Awal
+                    - generic [ref=e207]: Set stok pembuka
+                - generic [ref=e208]:
+                  - generic [ref=e209]:
+                    - generic [ref=e210]:
+                      - generic [ref=e211]: Kuantitas
+                      - spinbutton "Kuantitas" [ref=e212]: "0"
+                    - generic [ref=e213]:
+                      - generic [ref=e214]: Waktu catat
+                      - textbox "Waktu catat" [ref=e215]: 2026-04-03T19:19
+                    - generic [ref=e216]:
+                      - generic [ref=e217]: Catatan
+                      - textbox "Catatan" [ref=e218]
+                  - generic [ref=e219]:
+                    - article [ref=e220]:
+                      - generic: Dampak mutasi
+                      - strong [ref=e221]: 0 gr
+                    - article [ref=e222]:
+                      - generic: Saldo akhir
+                      - strong [ref=e223]: 1000 gr
+                    - article [ref=e224]:
+                      - generic: Interpretasi
+                      - strong [ref=e225]: Aman setelah mutasi
+                  - generic [ref=e226]:
+                    - button "Reset Form" [ref=e227] [cursor=pointer]
+                    - button "Simpan Mutasi" [ref=e228] [cursor=pointer]
+              - generic [ref=e229]:
+                - generic [ref=e231]:
+                  - generic [ref=e232]: Kebijakan stok
+                  - heading "Atur minimum stock" [level=3] [ref=e233]
+                - generic [ref=e235]:
+                  - generic [ref=e236]:
+                    - generic [ref=e237]: Minimum stock target
+                    - spinbutton "Minimum stock target" [ref=e238]: "250"
+                  - generic [ref=e239]:
+                    - article [ref=e240]:
+                      - generic [ref=e241]: Gap ke target
+                      - strong [ref=e242]: "-750 gr"
+                    - article [ref=e243]:
+                      - generic [ref=e244]: Status setelah disimpan
+                      - strong [ref=e245]: Tidak kritis
+                  - button "Simpan Minimum" [ref=e246] [cursor=pointer]
+            - generic [ref=e247]:
+              - generic [ref=e249]:
+                - generic [ref=e250]: Ledger terbaru
+                - heading "12 mutasi terakhir" [level=3] [ref=e251]
+              - table [ref=e253]:
+                - rowgroup [ref=e254]:
+                  - row "Waktu Tipe Qty Catatan Referensi" [ref=e255]:
+                    - columnheader "Waktu" [ref=e256]:
+                      - generic [ref=e259]: Waktu
+                    - columnheader "Tipe" [ref=e260]:
+                      - generic [ref=e263]: Tipe
+                    - columnheader "Qty" [ref=e264]:
+                      - generic [ref=e267]: Qty
+                    - columnheader "Catatan" [ref=e268]:
+                      - generic [ref=e271]: Catatan
+                    - columnheader "Referensi" [ref=e272]:
+                      - generic [ref=e275]: Referensi
+                - rowgroup [ref=e276]:
+                  - row "03 Apr 2026 19:04 Stok masuk +1000 gr Stok masuk gudang Manual" [ref=e277]:
+                    - cell "03 Apr 2026 19:04" [ref=e278]:
+                      - generic [ref=e279]:
+                        - strong [ref=e280]: 03 Apr 2026
+                        - generic [ref=e281]: 19:04
+                    - cell "Stok masuk" [ref=e282]:
+                      - strong [ref=e284]: Stok masuk
+                    - cell "+1000 gr" [ref=e285]:
+                      - strong [ref=e287]: +1000 gr
+                    - cell "Stok masuk gudang" [ref=e288]:
+                      - strong [ref=e290]: Stok masuk gudang
+                    - cell "Manual" [ref=e291]:
+                      - generic [ref=e292]: Manual

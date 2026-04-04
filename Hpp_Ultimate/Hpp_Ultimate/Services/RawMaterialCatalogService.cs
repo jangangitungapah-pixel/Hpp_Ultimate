@@ -8,7 +8,11 @@ using Hpp_Ultimate.Domain;
 
 namespace Hpp_Ultimate.Services;
 
-public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusinessDataStore store)
+public sealed class RawMaterialCatalogService(
+    IMemoryCache cache,
+    SeededBusinessDataStore store,
+    WorkspaceAccessService access,
+    AuditTrailService auditTrail)
 {
     private static readonly CultureInfo IdCulture = new("id-ID");
 
@@ -19,6 +23,12 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
 
     public async Task<RawMaterialQueryResult> QueryAsync(RawMaterialQuery query, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
         var normalized = Normalize(query);
         var cacheKey = $"rawmaterials:{store.Version}:{normalized.Search}:{normalized.Status}:{normalized.SortBy}:{normalized.Descending}:{normalized.Page}:{normalized.PageSize}";
 
@@ -35,13 +45,42 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
     }
 
     public Task<RawMaterialDetail?> GetDetailAsync(Guid id, CancellationToken cancellationToken = default)
-        => Task.FromResult(BuildDetail(id));
+    {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
+        return Task.FromResult(BuildDetail(id));
+    }
 
     public Task<string> GenerateNextCodeAsync(CancellationToken cancellationToken = default)
-        => Task.FromResult(store.GenerateNextMaterialCode());
+    {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
+        return Task.FromResult(store.GenerateNextMaterialCode());
+    }
 
     public Task<RawMaterialMutationResult> CreateAsync(RawMaterialUpsertRequest request, CancellationToken cancellationToken = default)
+        => CreateAsync(request, auditMutation: true, cancellationToken);
+
+    private Task<RawMaterialMutationResult> CreateAsync(
+        RawMaterialUpsertRequest request,
+        bool auditMutation,
+        CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            return Task.FromResult(new RawMaterialMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         var validation = ValidateRequest(request, null);
         if (validation is not null)
         {
@@ -65,11 +104,30 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
             now);
 
         store.AddRawMaterial(material);
+        if (auditMutation)
+        {
+            auditTrail.Record(actor, "Material", "Tambah material", material.Name, material.Id, $"Material {material.Name} ditambahkan.");
+        }
+
         return Task.FromResult(new RawMaterialMutationResult(true, "Material berhasil ditambahkan.", material));
     }
 
     public Task<RawMaterialMutationResult> UpdateAsync(Guid id, RawMaterialUpsertRequest request, CancellationToken cancellationToken = default)
+        => UpdateAsync(id, request, auditMutation: true, cancellationToken);
+
+    private Task<RawMaterialMutationResult> UpdateAsync(
+        Guid id,
+        RawMaterialUpsertRequest request,
+        bool auditMutation,
+        CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            return Task.FromResult(new RawMaterialMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         var existing = store.FindRawMaterial(id);
         if (existing is null)
         {
@@ -97,11 +155,23 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
         };
 
         store.UpdateRawMaterial(updated, existing.PricePerPack);
+        if (auditMutation)
+        {
+            auditTrail.Record(actor, "Material", "Update material", updated.Name, updated.Id, $"Material {updated.Name} diperbarui.");
+        }
+
         return Task.FromResult(new RawMaterialMutationResult(true, "Material berhasil diperbarui.", updated));
     }
 
     public Task<RawMaterialMutationResult> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            return Task.FromResult(new RawMaterialMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         var existing = store.FindRawMaterial(id);
         if (existing is null)
         {
@@ -120,15 +190,23 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
             };
 
             store.UpdateRawMaterial(updated, existing.PricePerPack, "Penonaktifan material");
+            auditTrail.Record(actor, "Material", "Nonaktifkan material", updated.Name, updated.Id, $"Material {updated.Name} dipindahkan ke status nonaktif karena masih dipakai.");
             return Task.FromResult(new RawMaterialMutationResult(true, "Material dipindahkan ke status nonaktif karena sudah dipakai modul lain.", updated, usedInBom, usedInProduction));
         }
 
         store.RemoveRawMaterial(id);
+        auditTrail.Record(actor, "Material", "Hapus material", existing.Name, existing.Id, $"Material {existing.Name} dihapus.");
         return Task.FromResult(new RawMaterialMutationResult(true, "Material berhasil dihapus.", existing, WasDeleted: true));
     }
 
     public async Task<RawMaterialImportPreviewResult> PreviewImportAsync(string fileName, Stream fileStream, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
         var extension = Path.GetExtension(fileName).ToLowerInvariant();
         var rows = extension switch
         {
@@ -162,6 +240,13 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
 
     public async Task<RawMaterialImportResult> CommitImportAsync(RawMaterialImportCommitRequest request, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            return new RawMaterialImportResult(false, accessDecision.Message, 0, 0, 0, 0, []);
+        }
+
+        var actor = accessDecision.Actor!;
         if (!request.SkipInvalidRows && request.Rows.Any(item => !item.IsValid))
         {
             var blockingErrors = request.Rows
@@ -218,7 +303,7 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
                     NetUnit = row.NetUnit,
                     PricePerPack = row.PricePerPack ?? 0m,
                     Status = MaterialStatus.Active
-                }, cancellationToken);
+                }, auditMutation: false, cancellationToken);
 
                 if (createResult.Success)
                 {
@@ -256,7 +341,7 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
                     .ToList(),
                 Description = existing.Description,
                 Status = existing.Status
-            }, cancellationToken);
+            }, auditMutation: false, cancellationToken);
 
             if (updateResult.Success)
             {
@@ -270,12 +355,19 @@ public sealed class RawMaterialCatalogService(IMemoryCache cache, SeededBusiness
 
         var success = request.SkipInvalidRows || errors.Count == 0;
         var message = $"Import selesai. {imported} material baru, {updated} material diperbarui, {unchanged} data sama dilewati, {skipped} baris dilewati karena error.";
+        auditTrail.Record(actor, "Material", "Import material", "Katalog material", null, message);
 
         return new RawMaterialImportResult(success, message, imported, updated, unchanged, skipped, errors);
     }
 
     public async Task<string> ExportCsvAsync(CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
         var result = await QueryAsync(new RawMaterialQuery(PageSize: 500), cancellationToken);
         var lines = new List<string>
         {

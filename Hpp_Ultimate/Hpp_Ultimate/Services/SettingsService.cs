@@ -3,7 +3,11 @@ using Hpp_Ultimate.Domain;
 
 namespace Hpp_Ultimate.Services;
 
-public sealed class SettingsService(IMemoryCache cache, SeededBusinessDataStore store)
+public sealed class SettingsService(
+    IMemoryCache cache,
+    SeededBusinessDataStore store,
+    WorkspaceAccessService access,
+    AuditTrailService auditTrail)
 {
     public static readonly string[] ProductUnits = ["pcs", "pack", "botol", "pouch", "kg", "gram", "liter", "ml"];
     public static readonly string[] MaterialUnits = ["kg", "gram", "liter", "ml", "pcs", "pak", "box", "botol", "pouch"];
@@ -11,7 +15,14 @@ public sealed class SettingsService(IMemoryCache cache, SeededBusinessDataStore 
 
     public async Task<BusinessSettingsSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default)
     {
-        var cacheKey = $"settings:{store.Version}";
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
+        var actor = accessDecision.Actor!;
+        var cacheKey = $"settings:{store.Version}:{actor.Id}:{actor.Role}";
 
         if (cache.TryGetValue(cacheKey, out BusinessSettingsSnapshot? snapshot))
         {
@@ -20,13 +31,25 @@ public sealed class SettingsService(IMemoryCache cache, SeededBusinessDataStore 
 
         await Task.Delay(80, cancellationToken);
 
-        snapshot = BuildSnapshot();
+        snapshot = BuildSnapshot(actor);
         cache.Set(cacheKey, snapshot, TimeSpan.FromSeconds(20));
         return snapshot;
     }
 
     public Task<BusinessSettingsMutationResult> SaveAsync(BusinessSettingsRequest request, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAdmin();
+        if (!accessDecision.Allowed)
+        {
+            if (accessDecision.Actor is not null)
+            {
+                auditTrail.Record(accessDecision.Actor, "Security", "Akses ditolak", "Pengaturan bisnis", null, accessDecision.Message);
+            }
+
+            return Task.FromResult(new BusinessSettingsMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         if (string.IsNullOrWhiteSpace(request.BusinessName))
         {
             return Task.FromResult(new BusinessSettingsMutationResult(false, "Nama usaha wajib diisi."));
@@ -61,15 +84,29 @@ public sealed class SettingsService(IMemoryCache cache, SeededBusinessDataStore 
         };
 
         store.UpdateBusinessSettings(updated);
+        auditTrail.Record(actor, "Settings", "Simpan pengaturan", updated.BusinessName, null, "Pengaturan bisnis dasar diperbarui.");
         return Task.FromResult(new BusinessSettingsMutationResult(true, "Pengaturan berhasil disimpan.", updated));
     }
 
     public Task<BusinessDataResetResult> ClearOperationalDataAsync(CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAdmin();
+        if (!accessDecision.Allowed)
+        {
+            if (accessDecision.Actor is not null)
+            {
+                auditTrail.Record(accessDecision.Actor, "Security", "Akses ditolak", "Clear data", null, accessDecision.Message);
+            }
+
+            return Task.FromResult(new BusinessDataResetResult(false, accessDecision.Message, 0, 0, 0, 0, 0));
+        }
+
+        var actor = accessDecision.Actor!;
         cancellationToken.ThrowIfCancellationRequested();
 
         var cleared = store.ClearOperationalData();
         var message = $"Semua data operasional berhasil dibersihkan. Produk: {cleared.Products}, material: {cleared.Materials}, stok: {cleared.StockMovements}, resep: {cleared.Recipes}, produksi: {cleared.ProductionBatches}.";
+        auditTrail.Record(actor, "Settings", "Clear data", "Data operasional", null, message);
 
         return Task.FromResult(new BusinessDataResetResult(
             true,
@@ -81,7 +118,7 @@ public sealed class SettingsService(IMemoryCache cache, SeededBusinessDataStore 
             cleared.ProductionBatches));
     }
 
-    private BusinessSettingsSnapshot BuildSnapshot()
+    private BusinessSettingsSnapshot BuildSnapshot(BusinessUser actor)
     {
         var settings = store.GetBusinessSettings();
         var notes = new List<string>
@@ -92,7 +129,25 @@ public sealed class SettingsService(IMemoryCache cache, SeededBusinessDataStore 
                 ? $"Pajak {settings.TaxPercent:0.#}% dihitung sebagai include tax."
                 : $"Pajak {settings.TaxPercent:0.#}% masih di mode exclude tax."
         };
+        var canManageSettings = actor.Role == UserRole.Admin;
+        if (!canManageSettings)
+        {
+            notes.Add("Mode staff bersifat read-only untuk pengaturan usaha dan clear data.");
+        }
 
-        return new BusinessSettingsSnapshot(settings, Currencies, ProductUnits, MaterialUnits, notes);
+        var canViewAuditTrail = canManageSettings;
+        var recentAuditEntries = canViewAuditTrail
+            ? auditTrail.GetRecent(10)
+            : Array.Empty<AuditLogEntry>();
+
+        return new BusinessSettingsSnapshot(
+            settings,
+            Currencies,
+            ProductUnits,
+            MaterialUnits,
+            notes,
+            canManageSettings,
+            canViewAuditTrail,
+            recentAuditEntries);
     }
 }

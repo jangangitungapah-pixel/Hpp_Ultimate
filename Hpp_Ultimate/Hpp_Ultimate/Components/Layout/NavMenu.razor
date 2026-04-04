@@ -1,6 +1,8 @@
+@inject SeededBusinessDataStore Store
+
 <div class="nav-shell">
     <div class="nav-head">
-        <a class="brand" href="/produk">
+        <a class="brand" href="/pengaturan">
             <span class="brand-mark">
                 <span></span>
                 <span></span>
@@ -8,7 +10,7 @@
             </span>
             <span class="brand-copy">
                 <strong>HPP Ultimate</strong>
-                <small>Material workspace</small>
+                <small>Operational workspace</small>
             </span>
         </a>
 
@@ -22,36 +24,89 @@
     <input id="nav-toggle" type="checkbox" title="Navigation menu" class="nav-toggle" />
 
     <div class="nav-scrollable" onclick="document.getElementById('nav-toggle').checked = false">
-        <section class="nav-group">
-            <span class="nav-group-label">Workspace</span>
+        @foreach (var group in VisibleGroups)
+        {
+            <section class="nav-group">
+                <span class="nav-group-label">@group.Label</span>
 
-            @foreach (var item in WorkspaceItems)
-            {
-                <NavLink class="nav-link" href="@item.Href" Match="@item.Match">
-                    <span class="nav-icon">@item.Icon</span>
-                    <strong>@item.Title</strong>
-                </NavLink>
-            }
-        </section>
+                @foreach (var item in group.Items)
+                {
+                    <NavLink class="nav-link" href="@item.Href" Match="@item.Match">
+                        <span class="nav-icon">@item.Icon</span>
+                        <strong>@item.Title</strong>
+                    </NavLink>
+                }
+            </section>
+        }
 
         <div class="nav-footer">
-            <span class="nav-group-label">Scope</span>
-            <strong>5 modul utama</strong>
-            <small>Akun dikelola dari halaman Pengaturan.</small>
+            <div class="nav-user-card">
+                <div class="nav-user-avatar">@CurrentUserInitials</div>
+                <div class="nav-user-copy">
+                    <strong>@(Store.AuthSession?.FullName ?? "Workspace User")</strong>
+                    <small>@(Store.AuthSession?.Role.ToString() ?? "Operator")</small>
+                </div>
+            </div>
             <a class="nav-logout" href="/logout">Logout</a>
         </div>
     </div>
 </div>
 
 @code {
-    private static readonly NavItem[] WorkspaceItems =
+    private bool IsAdmin => Store.AuthSession?.Role == UserRole.Admin;
+    private string CurrentUserInitials
+    {
+        get
+        {
+            var name = Store.AuthSession?.FullName;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return "HU";
+            }
+
+            var parts = name
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Take(2)
+                .Select(part => char.ToUpperInvariant(part[0]));
+
+            return string.Concat(parts);
+        }
+    }
+
+    private IReadOnlyList<NavGroup> VisibleGroups
+        => IsAdmin
+            ? AdminGroups
+            : StaffGroups;
+
+    private static readonly IReadOnlyList<NavGroup> StaffGroups =
     [
-        new("/produk", "KM", "Katalog Material"),
-        new("/resep", "RS", "Resep"),
-        new("/pos", "PO", "Point of Sales"),
-        new("/hpp-calculator", "HC", "HPP Calculator"),
-        new("/pengaturan", "PG", "Pengaturan")
+        new("Persiapan", [
+            new("/pengaturan", "PG", "Pengaturan"),
+            new("/pengaturan/akun", "AK", "Pengaturan Akun")
+        ]),
+        new("Master & Formula", [
+            new("/produk", "KM", "Katalog Material"),
+            new("/gudang", "GD", "Gudang"),
+            new("/resep", "RS", "Resep")
+        ]),
+        new("Operasional", [
+            new("/produksi", "PR", "Produksi"),
+            new("/belanja", "BL", "Belanja"),
+            new("/pos", "PO", "Point of Sales")
+        ]),
+        new("Monitoring", [
+            new("/pembukuan", "PB", "Pembukuan")
+        ])
     ];
 
+    private static readonly IReadOnlyList<NavGroup> AdminGroups =
+    [
+        ..StaffGroups,
+        new("Kontrol Data", [
+            new("/backup-data", "BD", "Backup & Data Ops")
+        ])
+    ];
+
+    private sealed record NavGroup(string Label, IReadOnlyList<NavItem> Items);
     private sealed record NavItem(string Href, string Icon, string Title, NavLinkMatch Match = NavLinkMatch.Prefix);
 }

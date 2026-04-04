@@ -14,10 +14,18 @@ builder.Services.AddSingleton(sp =>
     return new SeededBusinessDataStore(databasePath);
 });
 builder.Services.AddScoped<RawMaterialCatalogService>();
+builder.Services.AddScoped<WarehouseService>();
+builder.Services.AddScoped<ProductionService>();
 builder.Services.AddScoped<RecipeCatalogService>();
 builder.Services.AddScoped<HppCalculatorService>();
+builder.Services.AddScoped<ShoppingService>();
+builder.Services.AddScoped<SalesService>();
+builder.Services.AddScoped<BookkeepingService>();
+builder.Services.AddScoped<DataOpsService>();
 builder.Services.AddScoped<SettingsService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<WorkspaceAccessService>();
+builder.Services.AddScoped<AuditTrailService>();
 
 var app = builder.Build();
 

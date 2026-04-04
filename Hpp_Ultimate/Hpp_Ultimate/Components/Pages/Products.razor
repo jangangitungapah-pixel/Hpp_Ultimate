@@ -55,6 +55,13 @@
                 <option value="cost">Urutkan: Modal</option>
             </select>
 
+            <select value="@_pageSize" @onchange="OnPageSizeChangedAsync">
+                @foreach (var option in PageSizeOptions)
+                {
+                    <option value="@option">@option baris</option>
+                }
+            </select>
+
             <button type="button" class="ghost-button sort-direction-button" @onclick="ToggleSortDirectionAsync">
                 @(_sortDescending ? "Desc" : "Asc")
             </button>
@@ -144,6 +151,58 @@
                     </table>
                 }
             </div>
+
+            @if ((_result?.Items.Count ?? 0) > 0)
+            {
+                <div class="material-card-list">
+                    @foreach (var material in _result!.Items)
+                    {
+                        <article class="material-mobile-card @GetSelectedRowClass(material.Id)">
+                            <div class="material-mobile-head">
+                                <button type="button" class="row-link primary material-mobile-link" @onclick="() => OpenDetailAsync(material.Id)">
+                                    <small>@material.Code</small>
+                                    <strong>@material.Name</strong>
+                                    <span>@GetBrandLabel(material.Brand)</span>
+                                </button>
+
+                                <span class="badge @GetStatusClass(material.Status)">@GetStatusLabel(material.Status)</span>
+                            </div>
+
+                            <div class="material-mobile-grid">
+                                <article>
+                                    <small>Netto</small>
+                                    <strong>@material.NetQuantity.ToString("0.####") @material.NetUnit</strong>
+                                </article>
+                                <article>
+                                    <small>Harga / Pack</small>
+                                    <strong>@FormatCurrency(material.PricePerPack)</strong>
+                                </article>
+                                <article>
+                                    <small>Modal / Unit</small>
+                                    <strong>@FormatCurrency(material.CostPerUnit) / @material.BaseUnit</strong>
+                                </article>
+                                <article>
+                                    <small>Konversi</small>
+                                    <strong>@material.ConversionCount unit</strong>
+                                </article>
+                            </div>
+
+                            <div class="material-mobile-footer">
+                                <small>Update @material.UpdatedAt.ToString("dd MMM yyyy HH:mm")</small>
+                                <div class="row-actions">
+                                    <button type="button" class="ghost-button compact-mobile-button" @onclick="() => OpenDetailAsync(material.Id)">Detail</button>
+                                    <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModalAsync(material.Id)">
+                                        <span class="icon-glyph" aria-hidden="true">&#9998;</span>
+                                    </button>
+                                    <button type="button" class="icon-button danger" title="Hapus" aria-label="Hapus" @onclick="() => AskDelete(material)">
+                                        <span class="icon-glyph" aria-hidden="true">&#128465;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
 
             <div class="table-footer">
                 <small>@(_result?.TotalCount ?? 0) material</small>
@@ -567,6 +626,7 @@
     private string _sortBy = "updated";
     private bool _sortDescending = true;
     private int _page = 1;
+    private int _pageSize = 10;
     private CancellationTokenSource? _searchDebounce;
 
     private bool _showFormModal;
@@ -582,6 +642,7 @@
     private bool _skipInvalidRows = true;
 
     private RawMaterialListItem? _pendingDelete;
+    private static readonly int[] PageSizeOptions = [5, 10, 15, 25];
     private int TotalPages => Math.Max(1, (int)Math.Ceiling((_result?.TotalCount ?? 0) / (double)Math.Max(1, _result?.PageSize ?? 10)));
     private string CurrentSortLabel => _sortBy.ToLowerInvariant() switch
     {
@@ -615,7 +676,7 @@
             _sortBy,
             _sortDescending,
             _page,
-            10));
+            _pageSize));
 
         _statusMessage = $"{_result.TotalCount} material ditemukan";
         _isLoading = false;
@@ -668,6 +729,13 @@
     private async Task OnSortByChangedAsync(ChangeEventArgs args)
     {
         _sortBy = args.Value?.ToString() ?? "updated";
+        _page = 1;
+        await LoadAsync();
+    }
+
+    private async Task OnPageSizeChangedAsync(ChangeEventArgs args)
+    {
+        _pageSize = int.TryParse(args.Value?.ToString(), out var parsed) ? parsed : _pageSize;
         _page = 1;
         await LoadAsync();
     }

@@ -1,8 +1,13 @@
 .settings-page {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 1rem;
-    padding-bottom: 1.2rem;
+    padding-bottom: 1.4rem;
+    --surface-border: rgba(255, 255, 255, 0.76);
+    --surface-shadow: 0 24px 46px rgba(15, 23, 42, 0.1);
+    --soft-border: rgba(226, 232, 240, 0.9);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --accent: #c26a17;
 }
 
 .settings-toolbar,
@@ -10,155 +15,239 @@
 .preview-card,
 .account-entry-card,
 .notes-card,
+.audit-card,
 .danger-card,
 .confirm-card,
-.summary-grid article {
-    border: 1px solid rgba(255, 255, 255, 0.72);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.66));
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+.summary-grid article,
+.preview-grid article,
+.account-entry-grid article,
+.note-list article,
+.audit-list article,
+.danger-summary article {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--surface-border);
+    background: var(--app-surface);
+    box-shadow:
+        var(--surface-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(18px);
 }
 
+.settings-toolbar::before,
+.form-card::before,
+.preview-card::before,
+.account-entry-card::before,
+.audit-card::before,
+.danger-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(118deg, rgba(255, 255, 255, 0.2), transparent 34%, transparent 68%, rgba(255, 255, 255, 0.08));
+}
+
+.settings-toolbar,
+.form-card,
+.preview-card,
+.account-entry-card,
+.notes-card,
+.audit-card,
+.danger-card,
+.confirm-card {
+    padding: 1.15rem;
+    border-radius: 1.55rem;
+}
+
+.notes-card,
+.audit-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(248, 250, 252, 0.78));
+    box-shadow: 0 18px 30px rgba(15, 23, 42, 0.06);
+}
+
 .settings-toolbar {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 1rem;
-    padding: 1.2rem;
-    border-radius: 1.6rem;
+    align-items: center;
 }
 
 .settings-toolbar span,
 .section-head span,
 .confirm-card span {
+    display: block;
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #b45309;
+    color: var(--accent);
 }
 
 .settings-toolbar h1,
 .section-head h2,
 .confirm-card h2 {
     margin: 0.42rem 0 0;
-    color: #0f172a;
+    color: var(--text-main);
 }
 
 .settings-toolbar h1 {
-    font-size: clamp(1.8rem, 4vw, 2.7rem);
-    line-height: 1.02;
+    max-width: 18ch;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 0.96;
+}
+
+.toolbar-actions,
+.section-head,
+.form-actions,
+.account-entry-actions,
+.audit-head,
+.audit-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
 }
 
 .toolbar-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .ghost-button,
 .primary-button,
 .danger-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.95rem;
+    padding: 0.8rem 1rem;
+    border-radius: 999px;
     border: 0;
     font: inherit;
-    padding: 0.78rem 0.92rem;
-    border-radius: 1rem;
-    font-weight: 700;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
 .ghost-button {
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.86);
     color: #334155;
-    box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.92);
+    box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.9);
 }
 
 .primary-button {
-    background: linear-gradient(135deg, #f97316, #fb7185);
+    background: var(--app-highlight);
     color: white;
-    box-shadow: 0 14px 28px rgba(249, 115, 22, 0.22);
+    box-shadow: var(--app-button-shadow);
 }
 
 .danger-button {
-    background: rgba(220, 38, 38, 0.95);
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.96), rgba(249, 115, 22, 0.9));
     color: white;
-    box-shadow: 0 14px 28px rgba(220, 38, 38, 0.18);
+    box-shadow: 0 18px 30px rgba(220, 38, 38, 0.18);
+}
+
+.ghost-button:hover,
+.primary-button:hover,
+.danger-button:hover {
+    transform: translateY(-1px);
 }
 
 .status-chip {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 2.9rem;
-    padding: 0.72rem 0.92rem;
+    min-height: 2.95rem;
+    padding: 0.72rem 1rem;
     border-radius: 999px;
-    background: rgba(255, 247, 237, 0.9);
+    background:
+        linear-gradient(145deg, rgba(255, 247, 237, 0.98), rgba(255, 255, 255, 0.78)),
+        radial-gradient(circle at right center, rgba(249, 115, 22, 0.16), transparent 34%);
+    box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.18);
     color: #c2410c;
-    font-weight: 700;
+    font-weight: 800;
 }
 
-.summary-grid {
+.summary-grid,
+.preview-grid,
+.account-entry-grid,
+.danger-summary {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.8rem;
 }
 
-.summary-grid article {
+.summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.summary-grid article,
+.preview-grid article,
+.account-entry-grid article,
+.note-list article,
+.audit-list article,
+.danger-summary article {
     padding: 1rem;
     border-radius: 1.2rem;
 }
 
 .summary-grid small,
-.preview-grid small {
+.preview-grid small,
+.account-entry-grid small,
+.danger-summary small,
+.audit-pill {
     display: block;
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #b45309;
+    color: var(--accent);
 }
 
 .summary-grid strong,
-.preview-grid strong {
+.preview-grid strong,
+.account-entry-grid strong,
+.danger-summary strong {
     display: block;
     margin-top: 0.35rem;
-    color: #0f172a;
-    font-size: 1.12rem;
+    color: var(--text-main);
+    font-size: 1.14rem;
 }
 
 .settings-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(22rem, 0.9fr);
+    grid-template-columns: minmax(0, 1.46fr) minmax(18rem, 0.78fr);
     gap: 1rem;
     align-items: start;
 }
 
-.side-stack {
+.side-stack,
+.note-list,
+.audit-list {
     display: grid;
     gap: 1rem;
 }
 
-.form-card,
-.preview-card,
-.account-entry-card,
-.notes-card,
-.danger-card {
-    padding: 1.1rem;
-    border-radius: 1.45rem;
-}
-
 .section-head {
-    display: flex;
     justify-content: space-between;
-    gap: 1rem;
     align-items: start;
 }
 
 .form-message {
-    margin-top: 0.9rem;
-    padding: 0.85rem 0.95rem;
+    margin-top: 0.95rem;
+    padding: 0.9rem 1rem;
     border-radius: 1rem;
-    background: rgba(255, 247, 237, 0.9);
+    background: rgba(255, 247, 237, 0.92);
     color: #c2410c;
     font-weight: 700;
+}
+
+.read-only-banner,
+.audit-restricted {
+    margin-top: 0.95rem;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: rgba(241, 245, 249, 0.92);
+    color: #475569;
+    box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.92);
 }
 
 .form-grid {
@@ -180,21 +269,45 @@
     color: #334155;
 }
 
-.form-grid input,
-.form-grid select,
-.form-grid textarea {
+.form-grid ::deep input,
+.form-grid ::deep select,
+.form-grid ::deep textarea {
     width: 100%;
-    min-height: 2.95rem;
-    padding: 0.78rem 0.9rem;
+    min-height: 3rem;
+    padding: 0.82rem 0.95rem;
     border-radius: 1rem;
-    border: 1px solid rgba(203, 213, 225, 0.95);
-    background: rgba(255, 255, 255, 0.92);
-    color: #0f172a;
+    border: 1px solid rgba(203, 213, 225, 0.82);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
+    box-shadow:
+        0 14px 24px rgba(15, 23, 42, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.form-grid textarea {
-    min-height: 6rem;
+.form-grid ::deep input:focus,
+.form-grid ::deep select:focus,
+.form-grid ::deep textarea:focus {
+    border-color: rgba(249, 115, 22, 0.38);
+    box-shadow:
+        var(--app-focus-ring),
+        0 16px 28px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    transform: translateY(-1px);
+}
+
+.form-grid ::deep textarea {
+    min-height: 6.2rem;
     resize: vertical;
+}
+
+.form-grid ::deep select {
+    appearance: none;
+    padding-right: 2.3rem;
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394a3b8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 6 5-6'/%3E%3C/svg%3E") right 0.9rem center / 1rem no-repeat,
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
 }
 
 .form-grid .full {
@@ -205,72 +318,56 @@
     display: flex !important;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 0.9rem;
+    padding: 0.82rem 0.95rem;
     border-radius: 1rem;
-    background: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(226, 232, 240, 0.9);
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+.toggle-row ::deep input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: #f97316;
 }
 
 .form-actions {
-    display: flex;
     justify-content: flex-end;
-    gap: 0.7rem;
     margin-top: 1rem;
-}
-
-.preview-grid,
-.note-list,
-.account-entry-grid {
-    display: grid;
-    gap: 0.75rem;
-    margin-top: 0.9rem;
 }
 
 .preview-grid,
 .account-entry-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.9rem;
 }
 
 .preview-grid article,
 .account-entry-grid article,
-.note-list article {
-    padding: 0.95rem;
-    border-radius: 1rem;
-    background: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(226, 232, 240, 0.9);
+.note-list article,
+.audit-list article {
+    background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.68)),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.1), transparent 34%);
 }
 
 .account-entry-card {
     background:
         radial-gradient(circle at top right, rgba(251, 113, 133, 0.18), transparent 38%),
         radial-gradient(circle at left bottom, rgba(249, 115, 22, 0.16), transparent 42%),
-        linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 237, 0.82));
+        linear-gradient(150deg, rgba(255, 255, 255, 0.97), rgba(255, 247, 237, 0.84));
 }
 
-.account-entry-grid small {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #b45309;
-}
-
-.account-entry-grid strong {
-    display: block;
-    margin-top: 0.3rem;
-    font-size: 1.16rem;
-    color: #0f172a;
-}
-
-.account-entry-grid p {
+.account-entry-grid p,
+.note-list article,
+.audit-list p,
+.danger-copy,
+.confirm-card p {
     margin: 0.45rem 0 0;
-    color: #64748b;
+    color: var(--text-muted);
     line-height: 1.65;
 }
 
 .account-entry-actions {
-    display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
 }
@@ -279,71 +376,73 @@
     text-decoration: none;
 }
 
-.note-list article {
-    color: #475569;
+.audit-card {
+    background:
+        radial-gradient(circle at top right, rgba(14, 165, 233, 0.14), transparent 38%),
+        radial-gradient(circle at left bottom, rgba(56, 189, 248, 0.1), transparent 42%),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.97), rgba(240, 249, 255, 0.86));
+}
+
+.audit-head strong {
+    color: var(--text-main);
+}
+
+.audit-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.8rem;
+    padding: 0.16rem 0.62rem;
+    border-radius: 999px;
+    background: rgba(14, 165, 233, 0.12);
+    color: #0369a1;
+}
+
+.audit-head small,
+.audit-meta {
+    color: var(--text-muted);
+}
+
+.audit-meta {
+    gap: 0.7rem;
+    margin-top: 0.55rem;
+    font-size: 0.88rem;
 }
 
 .danger-card {
-    border-color: rgba(248, 113, 113, 0.35);
-    background: linear-gradient(135deg, rgba(254, 242, 242, 0.92), rgba(255, 255, 255, 0.78));
+    border-color: rgba(248, 113, 113, 0.3);
+    background:
+        radial-gradient(circle at top right, rgba(248, 113, 113, 0.14), transparent 36%),
+        linear-gradient(150deg, rgba(254, 242, 242, 0.96), rgba(255, 255, 255, 0.82));
 }
 
 .danger-summary {
-    display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin-top: 0.9rem;
+    margin-top: 0.95rem;
 }
 
 .danger-summary article {
-    padding: 0.95rem;
-    border-radius: 1rem;
-    background: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(254, 202, 202, 0.9);
+    border-color: rgba(254, 202, 202, 0.82);
 }
 
-.danger-summary small {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #b91c1c;
-}
-
-.danger-summary strong {
-    display: block;
-    margin-top: 0.35rem;
-    color: #7f1d1d;
-    font-size: 1.12rem;
-}
-
+.danger-summary small,
+.danger-summary strong,
 .danger-copy {
-    margin: 0.9rem 0 0;
-    color: #7f1d1d;
-    line-height: 1.6;
+    color: #991b1b;
 }
 
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.22);
+    z-index: 50;
     display: grid;
     place-items: center;
     padding: 1rem;
-    z-index: 50;
+    background: rgba(15, 23, 42, 0.26);
+    backdrop-filter: blur(8px);
 }
 
 .confirm-card {
     width: min(100%, 32rem);
-    padding: 1.2rem;
-    border-radius: 1.45rem;
-}
-
-.confirm-card p {
-    margin: 0.8rem 0 0;
-    color: #64748b;
-    line-height: 1.6;
 }
 
 .validation-message,
@@ -354,8 +453,8 @@
 
 .skeleton-card {
     min-height: 28rem;
-    border-radius: 1.2rem;
-    background: linear-gradient(90deg, rgba(241, 245, 249, 0.9), rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.9));
+    border-radius: 1.3rem;
+    background: linear-gradient(90deg, rgba(241, 245, 249, 0.92), rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.92));
     background-size: 200% 100%;
     animation: shimmer 1.25s infinite linear;
 }
@@ -378,9 +477,20 @@
 
 @media (max-width: 900px) {
     .settings-toolbar,
-    .form-actions {
+    .toolbar-actions,
+    .form-actions,
+    .account-entry-actions {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .settings-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-toolbar h1 {
+        font-size: 1.35rem;
+        line-height: 1.15;
     }
 
     .summary-grid,
@@ -388,5 +498,35 @@
     .preview-grid,
     .danger-summary {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .settings-toolbar,
+    .form-card,
+    .preview-card,
+    .account-entry-card,
+    .notes-card,
+    .audit-card,
+    .danger-card,
+    .confirm-card {
+        padding: 0.95rem;
+        border-radius: 1.18rem;
+    }
+
+    .summary-grid {
+        gap: 0.65rem;
+    }
+
+    .summary-grid article {
+        padding: 0.78rem 0.82rem;
+        border-radius: 0.94rem;
+    }
+
+    .ghost-button,
+    .primary-button,
+    .danger-button,
+    .account-link {
+        width: 100%;
     }
 }

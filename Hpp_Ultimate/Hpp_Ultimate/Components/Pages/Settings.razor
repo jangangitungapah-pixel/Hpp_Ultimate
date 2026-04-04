@@ -58,6 +58,11 @@
                     <div class="form-message">@_formMessage</div>
                 }
 
+                @if (!_snapshot.CanManageSettings)
+                {
+                    <div class="read-only-banner">Akun staff hanya dapat melihat pengaturan. Ubah konfigurasi usaha dan clear data lewat akun admin.</div>
+                }
+
                 <EditForm Model="_formModel" OnValidSubmit="SaveAsync">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
@@ -65,34 +70,34 @@
                     <div class="form-grid">
                         <label>
                             <span>Nama Usaha</span>
-                            <InputText @bind-Value="_formModel.BusinessName" />
+                            <InputText @bind-Value="_formModel.BusinessName" disabled="@(!_snapshot.CanManageSettings)" />
                             <ValidationMessage For="@(() => _formModel.BusinessName)" />
                         </label>
 
                         <label>
                             <span>Legal Entity</span>
-                            <InputText @bind-Value="_formModel.LegalName" />
+                            <InputText @bind-Value="_formModel.LegalName" disabled="@(!_snapshot.CanManageSettings)" />
                         </label>
 
                         <label>
                             <span>Telepon</span>
-                            <InputText @bind-Value="_formModel.Phone" />
+                            <InputText @bind-Value="_formModel.Phone" disabled="@(!_snapshot.CanManageSettings)" />
                         </label>
 
                         <label>
                             <span>Email</span>
-                            <InputText @bind-Value="_formModel.Email" />
+                            <InputText @bind-Value="_formModel.Email" disabled="@(!_snapshot.CanManageSettings)" />
                             <ValidationMessage For="@(() => _formModel.Email)" />
                         </label>
 
                         <label class="full">
                             <span>Alamat</span>
-                            <InputTextArea @bind-Value="_formModel.Address" />
+                            <InputTextArea @bind-Value="_formModel.Address" disabled="@(!_snapshot.CanManageSettings)" />
                         </label>
 
                         <label>
                             <span>Mata Uang</span>
-                            <select @bind="_formModel.CurrencyCode">
+                            <select @bind="_formModel.CurrencyCode" disabled="@(!_snapshot.CanManageSettings)">
                                 @foreach (var currency in _snapshot.Currencies)
                                 {
                                     <option value="@currency">@currency</option>
@@ -102,12 +107,12 @@
 
                         <label>
                             <span>Timezone</span>
-                            <InputText @bind-Value="_formModel.Timezone" />
+                            <InputText @bind-Value="_formModel.Timezone" disabled="@(!_snapshot.CanManageSettings)" />
                         </label>
 
                         <label>
                             <span>Default Satuan Produk</span>
-                            <select @bind="_formModel.DefaultProductUnit">
+                            <select @bind="_formModel.DefaultProductUnit" disabled="@(!_snapshot.CanManageSettings)">
                                 @foreach (var unit in _snapshot.ProductUnits)
                                 {
                                     <option value="@unit">@unit</option>
@@ -117,7 +122,7 @@
 
                         <label>
                             <span>Default Satuan Bahan</span>
-                            <select @bind="_formModel.DefaultMaterialUnit">
+                            <select @bind="_formModel.DefaultMaterialUnit" disabled="@(!_snapshot.CanManageSettings)">
                                 @foreach (var unit in _snapshot.MaterialUnits)
                                 {
                                     <option value="@unit">@unit</option>
@@ -127,25 +132,25 @@
 
                         <label>
                             <span>Pembulatan Harga</span>
-                            <InputNumber @bind-Value="_formModel.DefaultPriceRounding" />
+                            <InputNumber @bind-Value="_formModel.DefaultPriceRounding" disabled="@(!_snapshot.CanManageSettings)" />
                             <ValidationMessage For="@(() => _formModel.DefaultPriceRounding)" />
                         </label>
 
                         <label>
                             <span>Pajak %</span>
-                            <InputNumber @bind-Value="_formModel.TaxPercent" />
+                            <InputNumber @bind-Value="_formModel.TaxPercent" disabled="@(!_snapshot.CanManageSettings)" />
                             <ValidationMessage For="@(() => _formModel.TaxPercent)" />
                         </label>
 
                         <label class="toggle-row">
                             <span>Harga Sudah Include Pajak</span>
-                            <InputCheckbox @bind-Value="_formModel.TaxIncluded" />
+                            <InputCheckbox @bind-Value="_formModel.TaxIncluded" disabled="@(!_snapshot.CanManageSettings)" />
                         </label>
                     </div>
 
                     <div class="form-actions">
                         <button type="button" class="ghost-button" @onclick="ResetForm">Reset</button>
-                        <button type="submit" class="primary-button">Simpan Pengaturan</button>
+                        <button type="submit" class="primary-button" disabled="@(!_snapshot.CanManageSettings)">Simpan Pengaturan</button>
                     </div>
                 </EditForm>
             </section>
@@ -221,6 +226,47 @@
                     </div>
                 </section>
 
+                <section class="audit-card">
+                    <div class="section-head">
+                        <div>
+                            <span>Audit trail</span>
+                            <h2>Jejak perubahan workspace terbaru</h2>
+                        </div>
+                    </div>
+
+                    @if (_snapshot.CanViewAuditTrail)
+                    {
+                        @if (_snapshot.RecentAuditEntries.Count > 0)
+                        {
+                            <div class="audit-list">
+                                @foreach (var entry in _snapshot.RecentAuditEntries)
+                                {
+                                    <article>
+                                        <div class="audit-head">
+                                            <span class="audit-pill">@entry.Area</span>
+                                            <strong>@entry.Action</strong>
+                                            <small>@entry.OccurredAt.ToString("dd MMM yyyy HH:mm")</small>
+                                        </div>
+                                        <p>@entry.Detail</p>
+                                        <div class="audit-meta">
+                                            <span>@entry.ActorName</span>
+                                            <span>@entry.Subject</span>
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="audit-restricted">Belum ada jejak perubahan yang tersimpan.</div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="audit-restricted">Audit trail hanya terlihat untuk admin aktif.</div>
+                    }
+                </section>
+
                 <section class="danger-card">
                     <div class="section-head">
                         <div>
@@ -255,7 +301,7 @@
                     <p class="danger-copy">Aksi ini membersihkan data produk, katalog material, stok, resep/BOM, dan histori produksi. Pengaturan usaha serta akun login tetap dipertahankan.</p>
 
                     <div class="form-actions">
-                        <button type="button" class="danger-button" @onclick="OpenClearDataModal">Clear Data</button>
+                        <button type="button" class="danger-button" disabled="@(!_snapshot.CanManageSettings)" @onclick="OpenClearDataModal">Clear Data</button>
                     </div>
                 </section>
             </aside>
@@ -329,6 +375,12 @@
 
     private void OpenClearDataModal()
     {
+        if (_snapshot is not { CanManageSettings: true })
+        {
+            _formMessage = "Aksi ini hanya tersedia untuk admin.";
+            return;
+        }
+
         _showClearDataModal = true;
     }
 

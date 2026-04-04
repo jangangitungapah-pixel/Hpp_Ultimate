@@ -3,7 +3,10 @@ using Hpp_Ultimate.Domain;
 
 namespace Hpp_Ultimate.Services;
 
-public sealed class HppCalculatorService(IMemoryCache cache, SeededBusinessDataStore store)
+public sealed class HppCalculatorService(
+    IMemoryCache cache,
+    SeededBusinessDataStore store,
+    WorkspaceAccessService access)
 {
     public async Task<HppCalculatorSnapshot> GetSnapshotAsync(
         string? search = null,
@@ -11,6 +14,12 @@ public sealed class HppCalculatorService(IMemoryCache cache, SeededBusinessDataS
         decimal? realizedOutput = null,
         CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
         var normalizedSearch = string.IsNullOrWhiteSpace(search) ? string.Empty : search.Trim();
         var normalizedOutput = realizedOutput is > 0 ? decimal.Round(realizedOutput.Value, 4) : 0m;
         var cacheKey = $"hpp:{store.Version}:{normalizedSearch}:{selectedRecipeId}:{normalizedOutput}";
@@ -47,6 +56,21 @@ public sealed class HppCalculatorService(IMemoryCache cache, SeededBusinessDataS
         snapshot = new HppCalculatorSnapshot(options, normalizedSearch, resolvedRecipeId, breakdown);
         cache.Set(cacheKey, snapshot, TimeSpan.FromSeconds(20));
         return snapshot;
+    }
+
+    public Task<HppRecipeBreakdown?> GetBreakdownAsync(
+        Guid recipeId,
+        decimal? realizedOutput = null,
+        CancellationToken cancellationToken = default)
+    {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(BuildBreakdown(recipeId, realizedOutput));
     }
 
     private HppRecipeOption MapOption(RecipeBook recipe)

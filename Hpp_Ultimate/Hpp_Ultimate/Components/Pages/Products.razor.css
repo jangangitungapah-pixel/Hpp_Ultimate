@@ -25,10 +25,24 @@
 .empty-conversion,
 .empty-import,
 .upload-box {
+    position: relative;
+    overflow: hidden;
     border: 1px solid var(--surface-border);
     background: var(--surface-main);
     box-shadow: 0 22px 42px rgba(15, 23, 42, 0.08);
     backdrop-filter: blur(18px);
+}
+
+.materials-toolbar::before,
+.materials-table-card::before,
+.modal-card::before,
+.detail-section::before,
+.form-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), transparent 34%, transparent 68%, rgba(255, 255, 255, 0.08));
 }
 
 .materials-toolbar,
@@ -188,16 +202,8 @@
     margin-top: 1.15rem;
 }
 
-.table-toolbar input,
-.table-toolbar select,
-.form-grid input,
-.form-grid select,
-.form-grid textarea,
-.pricing-input-grid input,
-.pricing-input-grid select,
-.measurement-grid input,
-.measurement-grid select,
-.conversion-row input,
+.table-toolbar ::deep input,
+.table-toolbar ::deep select,
 .form-grid ::deep input,
 .form-grid ::deep select,
 .form-grid ::deep textarea,
@@ -220,16 +226,8 @@
     transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
 }
 
-.table-toolbar input:focus,
-.table-toolbar select:focus,
-.form-grid input:focus,
-.form-grid select:focus,
-.form-grid textarea:focus,
-.pricing-input-grid input:focus,
-.pricing-input-grid select:focus,
-.measurement-grid input:focus,
-.measurement-grid select:focus,
-.conversion-row input:focus,
+.table-toolbar ::deep input:focus,
+.table-toolbar ::deep select:focus,
 .form-grid ::deep input:focus,
 .form-grid ::deep select:focus,
 .form-grid ::deep textarea:focus,
@@ -247,10 +245,7 @@
     transform: translateY(-1px);
 }
 
-.table-toolbar select,
-.form-grid select,
-.pricing-input-grid select,
-.measurement-grid select,
+.table-toolbar ::deep select,
 .form-grid ::deep select,
 .pricing-input-grid ::deep select,
 .measurement-grid ::deep select {
@@ -261,7 +256,6 @@
         linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.84));
 }
 
-.form-grid textarea,
 .form-grid ::deep textarea {
     min-height: 6.25rem;
     resize: vertical;
@@ -388,6 +382,84 @@
     background: rgba(255, 255, 255, 0.82);
 }
 
+.material-card-list {
+    display: none;
+    gap: 0.85rem;
+    margin-top: 1rem;
+}
+
+.material-mobile-card {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem;
+    border-radius: 1.2rem;
+    border: 1px solid var(--line-border);
+    background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72)),
+        radial-gradient(circle at top right, rgba(251, 191, 36, 0.12), transparent 34%);
+    box-shadow:
+        0 18px 28px rgba(15, 23, 42, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.material-mobile-card.selected-row {
+    border-color: rgba(249, 115, 22, 0.32);
+    box-shadow:
+        0 20px 34px rgba(249, 115, 22, 0.12),
+        inset 0 0 0 1px rgba(251, 191, 36, 0.18);
+}
+
+.material-mobile-head,
+.material-mobile-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.material-mobile-link {
+    gap: 0.28rem;
+}
+
+.material-mobile-link span,
+.material-mobile-footer small {
+    color: var(--text-muted);
+}
+
+.material-mobile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.material-mobile-grid article {
+    padding: 0.9rem 0.95rem;
+    border-radius: 1rem;
+    border: 1px solid var(--line-border);
+    background: rgba(248, 250, 252, 0.72);
+}
+
+.material-mobile-grid small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.material-mobile-grid strong {
+    display: block;
+    margin-top: 0.28rem;
+}
+
+.compact-mobile-button {
+    min-height: 2.35rem;
+    padding: 0.56rem 0.82rem;
+    border-radius: 999px;
+}
+
 .materials-table {
     width: 100%;
     min-width: 70rem;
@@ -415,6 +487,22 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #64748b;
+}
+
+.materials-table th:nth-child(3),
+.materials-table td:nth-child(3),
+.materials-table th:nth-child(4),
+.materials-table td:nth-child(4),
+.materials-table th:nth-child(5),
+.materials-table td:nth-child(5) {
+    text-align: right;
+}
+
+.materials-table th:nth-child(6),
+.materials-table td:nth-child(6),
+.materials-table th:nth-child(7),
+.materials-table td:nth-child(7) {
+    text-align: center;
 }
 
 .materials-table tbody tr {
@@ -789,11 +877,6 @@
     grid-column: 1 / -1;
 }
 
-.form-grid textarea {
-    min-height: 6.25rem;
-    resize: vertical;
-}
-
 .identity-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -1059,5 +1142,29 @@
 
     .row-actions {
         justify-content: flex-start;
+    }
+
+    .table-wrap {
+        display: none;
+    }
+
+    .material-card-list {
+        display: grid;
+    }
+
+    .material-mobile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .material-mobile-footer,
+    .material-mobile-head {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .compact-mobile-button,
+    .material-mobile-footer .icon-button,
+    .material-mobile-footer .ghost-button {
+        width: 100%;
     }
 }

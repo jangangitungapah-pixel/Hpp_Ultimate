@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
 @inject NavigationManager Navigation
+@inject SeededBusinessDataStore Store
 
 <div class="shell-background">
     <div class="ambient ambient-a"></div>
@@ -15,7 +16,7 @@
                 <span class="auth-shell-mark">+</span>
                 <span>
                     <strong>HPP Ultimate</strong>
-                    <small>Material catalog workspace.</small>
+                    <small>Operational workspace.</small>
                 </span>
             </a>
         </div>
@@ -38,6 +39,15 @@ else
                     <span class="topbar-label">@CurrentSection</span>
                     <strong>@CurrentHeadline</strong>
                 </div>
+
+                <div class="topbar-tools">
+                    <label class="topbar-search">
+                        <span class="search-glyph">&#9906;</span>
+                        <input value="@TopbarUserLabel" readonly aria-label="Current user" />
+                    </label>
+
+                    <div class="topbar-avatar" aria-hidden="true">@CurrentUserInitials</div>
+                </div>
             </header>
 
             <article class="app-content">
@@ -55,6 +65,7 @@ else
 
 @code {
     private bool IsLoginPage => CurrentPath.Equals("login", StringComparison.OrdinalIgnoreCase);
+    private bool RequiresAuthenticatedSession => !IsLoginPage;
 
     private string CurrentPath
     {
@@ -69,8 +80,13 @@ else
     {
         "/" => "Login",
         "produk" => "Katalog Material",
+        "gudang" => "Gudang",
+        "produksi" => "Produksi",
+        "belanja" => "Belanja",
+        "pembukuan" => "Pembukuan",
         "resep" => "Resep",
-        "hpp-calculator" => "HPP Calculator",
+        "pos" => "Point of Sales",
+        "backup-data" => "Backup & Data Ops",
         "pengaturan" => "Pengaturan",
         "pengaturan/akun" => "Pengaturan Akun",
         "login" => "Login",
@@ -79,12 +95,46 @@ else
 
     private string CurrentHeadline => CurrentPath switch
     {
-        "/" or "login" => "Masuk ke workspace material",
+        "/" or "login" => "Masuk ke workspace operasional",
         "produk" => "Kelola bahan baku, harga, dan konversi unit",
+        "gudang" => "Catat saldo bahan, minimum stock, dan mutasi gudang",
+        "produksi" => "Eksekusi batch produksi dan konsumsi bahan baku",
+        "belanja" => "Catat belanja material, penerimaan barang, dan masuk stok gudang",
+        "pembukuan" => "Gabungkan pemasukan, pengeluaran, dan saldo berjalan ke satu ledger",
         "resep" => "Rancang formula bahan, kelompok material, dan biaya produksi",
-        "hpp-calculator" => "Tarik resep aktif, breakdown biaya, dan tentukan HPP final",
+        "pos" => "Layani checkout persisten dan kurangi stok produk jadi secara otomatis",
+        "backup-data" => "Backup penuh, restore, export, dan import data operasional",
         "pengaturan" => "Atur preferensi dasar bisnis dan jalur akun",
         "pengaturan/akun" => "Kelola identitas, keamanan, akses, dan data tim",
         _ => "Halaman ini tidak tersedia di workspace aktif"
     };
+
+    private string TopbarUserLabel => Store.AuthSession?.FullName ?? "Search workspace";
+
+    private string CurrentUserInitials
+    {
+        get
+        {
+            var name = Store.AuthSession?.FullName;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return "HU";
+            }
+
+            var parts = name
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Take(2)
+                .Select(part => char.ToUpperInvariant(part[0]));
+
+            return string.Concat(parts);
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (RequiresAuthenticatedSession && Store.AuthSession is null)
+        {
+            Navigation.NavigateTo("/login", replace: true);
+        }
+    }
 }

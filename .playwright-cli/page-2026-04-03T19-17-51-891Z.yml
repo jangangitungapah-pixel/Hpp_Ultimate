@@ -1,0 +1,239 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+        - generic [ref=e34]:
+          - generic [ref=e35]: Operasional
+          - link "PR Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e37]: PR
+            - strong [ref=e38]: Produksi
+          - link "BL Belanja" [ref=e39] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e40]: BL
+            - strong [ref=e41]: Belanja
+          - link "PO Point of Sales" [ref=e42] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e43]: PO
+            - strong [ref=e44]: Point of Sales
+        - generic [ref=e45]:
+          - generic [ref=e46]: Monitoring
+          - link "PB Pembukuan" [ref=e47] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e48]: PB
+            - strong [ref=e49]: Pembukuan
+        - generic [ref=e50]:
+          - generic [ref=e51]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e52] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e53]: BD
+            - strong [ref=e54]: Backup & Data Ops
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: A
+            - generic [ref=e58]:
+              - strong [ref=e59]: Arief
+              - generic [ref=e60]: Admin
+          - link "Logout" [ref=e61] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Belanja
+        - strong [ref=e66]: Catat belanja material, penerimaan barang, dan masuk stok gudang
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: ⚲
+          - textbox "Current user" [ref=e70]: Arief
+        - generic [ref=e71]: A
+    - article [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: Belanja material
+            - heading "Checkout belanja material, atur penerimaan barang, dan masuk stok dari satu halaman." [active] [level=1] [ref=e77]
+            - paragraph [ref=e78]: Material diambil dari katalog. Belanja offline langsung menambah stok gudang, sedangkan belanja online baru masuk stok setelah ditandai barang sampai.
+          - generic [ref=e79]:
+            - generic [ref=e80]: 1 history belanja
+            - button "Refresh" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - article [ref=e83]:
+            - generic [ref=e84]: Material aktif
+            - strong [ref=e85]: "2"
+          - article [ref=e86]:
+            - generic [ref=e87]: Belanja tercatat
+            - strong [ref=e88]: "1"
+          - article [ref=e89]:
+            - generic [ref=e90]: Menunggu datang
+            - strong [ref=e91]: "0"
+          - article [ref=e92]:
+            - generic [ref=e93]: Total belanja
+            - strong [ref=e94]: Rp 33.000
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e98]: Form belanja
+              - heading "Susun item belanja lalu checkout" [level=2] [ref=e99]
+              - paragraph [ref=e100]: Satu checkout bisa memuat beberapa material sekaligus. Jika material belum ada di katalog, buka form material baru langsung dari sini.
+            - button "Material Baru" [ref=e101] [cursor=pointer]
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - generic [ref=e105]: Material katalog
+                - combobox "Material katalog" [ref=e106]: BHN-002 - Butter Margarine - Palmia Royal
+              - generic [ref=e107]:
+                - generic [ref=e108]: Jumlah pack
+                - spinbutton "Jumlah pack" [ref=e109]: "1"
+              - article [ref=e110]:
+                - generic [ref=e111]: Estimasi subtotal item
+                - strong [ref=e112]: Rp 11.000
+                - generic [ref=e113]: 1 pack · 180 gr
+            - article [ref=e114]:
+              - generic [ref=e115]:
+                - generic [ref=e116]: BHN-002
+                - strong [ref=e117]: Butter Margarine
+              - generic [ref=e118]:
+                - article [ref=e119]:
+                  - generic [ref=e120]: Pack
+                  - strong [ref=e121]: 180 gr
+                - article [ref=e122]:
+                  - generic [ref=e123]: Harga / pack
+                  - strong [ref=e124]: Rp 11.000
+                - article [ref=e125]:
+                  - generic [ref=e126]: Stok gudang
+                  - strong [ref=e127]: 540 gr
+                - article [ref=e128]:
+                  - generic [ref=e129]: Restock item ini
+                  - strong [ref=e130]: 180 gr
+            - button "Masukkan List" [ref=e132] [cursor=pointer]
+            - generic [ref=e133]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: List belanja
+                - heading "Item yang akan di-checkout" [level=3] [ref=e137]
+                - paragraph [ref=e138]: Jumlah pack akan dijumlahkan otomatis bila material yang sama dimasukkan lagi.
+              - generic [ref=e139]:
+                - heading "Belum ada item" [level=3] [ref=e140]
+                - paragraph [ref=e141]: Masukkan minimal satu material ke list belanja sebelum checkout.
+            - generic [ref=e142]:
+              - generic [ref=e144]:
+                - generic [ref=e145]: Detail checkout
+                - heading "Lengkapi supplier dan tipe belanja" [level=3] [ref=e146]
+                - paragraph [ref=e147]: Ongkir bersifat opsional. Untuk belanja online, stok baru masuk saat barang ditandai sampai.
+              - generic [ref=e148]:
+                - generic [ref=e149]:
+                  - generic [ref=e150]: Nama toko / supplier
+                  - textbox "Nama toko / supplier" [ref=e151]
+                - generic [ref=e152]:
+                  - generic [ref=e153]: Ongkir
+                  - spinbutton "Ongkir" [ref=e154]: "0"
+                - generic [ref=e155]:
+                  - generic [ref=e156]: Tanggal & jam belanja
+                  - textbox "Tanggal & jam belanja" [ref=e157]: 2026-04-04T02:17
+                - generic [ref=e158]:
+                  - generic [ref=e159]: Catatan belanja
+                  - textbox "Catatan belanja" [ref=e160]
+              - generic [ref=e161]:
+                - generic [ref=e162]: Tipe belanja
+                - generic [ref=e163]:
+                  - button "Offline" [ref=e164] [cursor=pointer]
+                  - button "Online" [ref=e165] [cursor=pointer]
+              - generic [ref=e166]:
+                - generic [ref=e167]:
+                  - generic [ref=e168]: Total item
+                  - strong [ref=e169]: 0 material
+                - generic [ref=e170]:
+                  - generic [ref=e171]: Total pack
+                  - strong [ref=e172]: 0 pack
+                - generic [ref=e173]:
+                  - generic [ref=e174]: Subtotal
+                  - strong [ref=e175]: Rp 0
+                - generic [ref=e176]:
+                  - generic [ref=e177]: Grand total
+                  - strong [ref=e178]: Rp 0
+              - generic [ref=e179]:
+                - button "Reset" [ref=e180] [cursor=pointer]
+                - button "Check Out" [disabled] [ref=e181]
+        - generic [ref=e182]:
+          - generic [ref=e184]:
+            - generic [ref=e185]: History belanja
+            - heading "Datagrid belanja material" [level=2] [ref=e186]
+            - paragraph [ref=e187]: Upload struk bisa dilakukan kapan saja. Order online baru menambah stok setelah tombol barang sampai ditekan.
+          - table [ref=e189]:
+            - rowgroup [ref=e190]:
+              - row "Belanja Supplier Item Total Status Struk Aksi" [ref=e191]:
+                - columnheader "Belanja" [ref=e192]:
+                  - generic [ref=e195]: Belanja
+                - columnheader "Supplier" [ref=e196]:
+                  - generic [ref=e199]: Supplier
+                - columnheader "Item" [ref=e200]:
+                  - generic [ref=e203]: Item
+                - columnheader "Total" [ref=e204]:
+                  - generic [ref=e207]: Total
+                - columnheader "Status" [ref=e208]:
+                  - generic [ref=e211]: Status
+                - columnheader "Struk" [ref=e212]:
+                  - generic [ref=e215]: Struk
+                - columnheader "Aksi" [ref=e216]:
+                  - generic [ref=e219]: Aksi
+            - rowgroup [ref=e220]:
+              - row "BLJ-000001 04 Apr 2026 02:12 Larist Online · Shopee Butter Margarine 1 item · 3 pack Rp 33.000 Subtotal Rp 33.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:13 Belum ada Upload kapan saja Selesai 📄" [ref=e221]:
+                - cell "BLJ-000001 04 Apr 2026 02:12" [ref=e222]:
+                  - generic [ref=e223]:
+                    - strong [ref=e224]: BLJ-000001
+                    - generic [ref=e225]: 04 Apr 2026 02:12
+                - cell "Larist Online · Shopee" [ref=e226]:
+                  - generic [ref=e227]:
+                    - strong [ref=e228]: Larist
+                    - generic [ref=e229]: Online · Shopee
+                - cell "Butter Margarine 1 item · 3 pack" [ref=e230]:
+                  - generic [ref=e231]:
+                    - strong [ref=e232]: Butter Margarine
+                    - generic [ref=e233]: 1 item · 3 pack
+                - cell "Rp 33.000 Subtotal Rp 33.000 · Ongkir Rp 0" [ref=e234]:
+                  - generic [ref=e235]:
+                    - strong [ref=e236]: Rp 33.000
+                    - generic [ref=e237]: Subtotal Rp 33.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:13" [ref=e238]:
+                  - generic [ref=e239]:
+                    - strong [ref=e240]:
+                      - generic [ref=e241]: Sudah diterima
+                    - generic [ref=e242]: Masuk gudang 04 Apr 02:13
+                - cell "Belum ada Upload kapan saja" [ref=e243]:
+                  - generic [ref=e244]:
+                    - strong [ref=e245]: Belum ada
+                    - generic [ref=e246]: Upload kapan saja
+                - cell "Selesai 📄" [ref=e247]:
+                  - generic [ref=e248]:
+                    - generic [ref=e249]: Selesai
+                    - generic "Upload struk" [ref=e250] [cursor=pointer]:
+                      - generic [ref=e251]: 📄
+                      - button "📄" [ref=e252]

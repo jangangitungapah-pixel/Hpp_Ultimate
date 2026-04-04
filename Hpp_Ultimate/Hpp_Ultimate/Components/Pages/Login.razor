@@ -8,14 +8,40 @@
 <section class="login-page">
     <div class="login-brand">
         <span class="brand-eyebrow">HPP Ultimate</span>
-        <h1>Masuk ke workspace material.</h1>
-        <p>Gunakan email atau username yang tersimpan untuk melanjutkan ke katalog material.</p>
+        <h1>Masuk ke workspace operasional yang ringkas dan terhubung.</h1>
+        <p>Gunakan email atau username yang tersimpan untuk melanjutkan ke alur kerja persiapan, master formula, gudang, belanja, produksi, dan POS.</p>
+
+        <div class="brand-grid">
+            <article>
+                <small>Persiapan</small>
+                <strong>Pengaturan & akun</strong>
+                <span>Satu titik kontrol untuk identitas usaha dan akses tim.</span>
+            </article>
+            <article>
+                <small>Master & Formula</small>
+                <strong>Material, resep, produk</strong>
+                <span>Data inti biaya dan formula tetap sinkron lintas modul.</span>
+            </article>
+            <article>
+                <small>Operasional</small>
+                <strong>Gudang, produksi, POS</strong>
+                <span>Catat pergerakan stok dan transaksi dari satu workspace.</span>
+            </article>
+        </div>
+
+        <div class="brand-lane">
+            <span>3D glass surfaces</span>
+            <span>fast operator flow</span>
+            <span>live costing</span>
+            <span>persistent sales</span>
+        </div>
     </div>
 
     <section class="login-card">
         <div class="login-card-head">
             <span>Sign In</span>
             <h2>Masuk ke akun kamu</h2>
+            <p>Autentikasi ini membuka seluruh workspace sesuai peran admin atau staff.</p>
         </div>
 
         @if (!string.IsNullOrWhiteSpace(_loginMessage))
@@ -45,6 +71,10 @@
             </label>
 
             <button type="submit" class="login-button">Masuk</button>
+
+            <div class="login-note">
+                <small>Akses kamu akan diarahkan ke workspace yang sudah disusun mengikuti flow operasional aplikasi.</small>
+            </div>
         </EditForm>
     </section>
 </section>

@@ -14,6 +14,34 @@ public enum RecipeCostType
     Production
 }
 
+public static class RecipePortionUnitCatalog
+{
+    private static readonly string[] _options =
+    [
+        "pcs",
+        "pouch",
+        "box",
+        "pack",
+        "cup",
+        "bottle",
+        "tray"
+    ];
+
+    public static IReadOnlyList<string> Options => _options;
+
+    public static string Normalize(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "pcs";
+        }
+
+        var normalized = value.Trim().ToLowerInvariant();
+        var matched = _options.FirstOrDefault(item => item.Equals(normalized, StringComparison.OrdinalIgnoreCase));
+        return string.IsNullOrWhiteSpace(matched) ? normalized : matched;
+    }
+}
+
 public sealed record RecipeBook(
     Guid Id,
     string Code,
@@ -26,7 +54,10 @@ public sealed record RecipeBook(
     IReadOnlyList<RecipeCostComponent> Costs,
     DateTime CreatedAt,
     DateTime UpdatedAt,
-    decimal PortionYield = 1m);
+    decimal PortionYield = 1m,
+    string PortionUnit = "pcs",
+    decimal TargetMarginPercent = 0m,
+    decimal SuggestedSellingPrice = 0m);
 
 public sealed record RecipeMaterialGroup(
     Guid Id,
@@ -65,9 +96,12 @@ public sealed record RecipeListItem(
     decimal TotalCost,
     decimal CostPerOutputUnit,
     decimal PortionYield,
+    string PortionUnit,
     decimal CostPerPortion,
     IReadOnlyList<string> GroupNames,
-    DateTime UpdatedAt);
+    DateTime UpdatedAt,
+    decimal TargetMarginPercent,
+    decimal SuggestedSellingPrice);
 
 public sealed record RecipeQueryResult(
     IReadOnlyList<RecipeListItem> Items,
@@ -98,6 +132,14 @@ public sealed class RecipeUpsertRequest
 
     [Range(0.0001, double.MaxValue, ErrorMessage = "Jumlah porsi harus lebih besar dari 0.")]
     public decimal PortionYield { get; set; } = 1m;
+
+    [Required(ErrorMessage = "Satuan porsi wajib dipilih.")]
+    public string PortionUnit { get; set; } = "pcs";
+
+    [Range(0, 500, ErrorMessage = "Margin harus di antara 0 sampai 500.")]
+    public decimal TargetMarginPercent { get; set; }
+
+    public decimal SuggestedSellingPrice { get; set; }
 
     public RecipeStatus Status { get; set; } = RecipeStatus.Active;
 
@@ -150,11 +192,14 @@ public sealed record RecipeSummaryTotals(
     int MaterialCount,
     int CostItemCount,
     decimal PortionYield,
+    string PortionUnit,
     decimal MaterialCost,
     decimal OperationalCost,
     decimal TotalCost,
     decimal CostPerOutputUnit,
-    decimal CostPerPortion);
+    decimal CostPerPortion,
+    decimal TargetMarginPercent,
+    decimal SuggestedSellingPrice);
 
 public static class RecipeCatalogMath
 {

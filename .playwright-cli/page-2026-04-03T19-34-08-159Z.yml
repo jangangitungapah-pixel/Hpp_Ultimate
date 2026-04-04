@@ -1,0 +1,219 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+        - generic [ref=e34]:
+          - generic [ref=e35]: Operasional
+          - link "PR Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e37]: PR
+            - strong [ref=e38]: Produksi
+          - link "BL Belanja" [ref=e39] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e40]: BL
+            - strong [ref=e41]: Belanja
+          - link "PO Point of Sales" [ref=e42] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e43]: PO
+            - strong [ref=e44]: Point of Sales
+        - generic [ref=e45]:
+          - generic [ref=e46]: Monitoring
+          - link "PB Pembukuan" [ref=e47] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e48]: PB
+            - strong [ref=e49]: Pembukuan
+        - generic [ref=e50]:
+          - generic [ref=e51]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e52] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e53]: BD
+            - strong [ref=e54]: Backup & Data Ops
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: A
+            - generic [ref=e58]:
+              - strong [ref=e59]: Arief
+              - generic [ref=e60]: Admin
+          - link "Logout" [ref=e61] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Pembukuan
+        - strong [ref=e66]: Gabungkan pemasukan, pengeluaran, dan saldo berjalan ke satu ledger
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: ⚲
+          - textbox "Current user" [ref=e70]: Arief
+        - generic [ref=e71]: A
+    - article [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: Pembukuan
+            - heading "Gabungkan pemasukan POS, belanja selesai, dan entry manual ke satu ledger." [active] [level=1] [ref=e77]
+            - paragraph [ref=e78]: Seluruh riwayat POS dan belanja yang sudah selesai masuk ke halaman ini. Kamu juga bisa menambah pemasukan atau pengeluaran lain secara manual.
+          - generic [ref=e79]:
+            - generic [ref=e80]: 3 entry tercatat
+            - button "Refresh" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - generic [ref=e84]:
+            - generic [ref=e85]: Form pembukuan
+            - heading "Tambah pemasukan atau pengeluaran manual" [level=2] [ref=e86]
+            - paragraph [ref=e87]: Form dibuat singkat agar cepat dipakai untuk gas, token listrik, ongkos kecil, atau pemasukan lain di luar POS.
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]:
+                - generic [ref=e91]: Jenis / nama list
+                - textbox "Jenis / nama list" [ref=e92]
+              - generic [ref=e93]:
+                - generic [ref=e94]: Nominal uang
+                - spinbutton "Nominal uang" [ref=e95]: "0"
+              - generic [ref=e96]:
+                - generic [ref=e97]: Tanggal & jam transaksi
+                - textbox "Tanggal & jam transaksi" [ref=e98]: 2026-04-04T02:34
+              - generic [ref=e99]:
+                - generic [ref=e100]: Supplier / toko
+                - textbox "Supplier / toko" [ref=e101]
+            - generic [ref=e102]:
+              - generic [ref=e103]: Tipe transaksi
+              - generic [ref=e104]:
+                - button "Pemasukan" [ref=e105] [cursor=pointer]
+                - button "Pengeluaran" [ref=e106] [cursor=pointer]
+            - generic [ref=e107]:
+              - button "Reset" [ref=e108] [cursor=pointer]
+              - button "Tambahkan" [ref=e109] [cursor=pointer]
+        - generic [ref=e110]:
+          - generic [ref=e112]:
+            - generic [ref=e113]: List pembukuan
+            - heading "Ledger pembukuan" [level=2] [ref=e114]
+            - paragraph [ref=e115]: "Format tabel disusun seperti buku kas kerja: tanggal, referensi, sumber, pihak, mutasi, dan saldo berjalan."
+          - generic [ref=e116]:
+            - article [ref=e117]:
+              - generic [ref=e118]: Total pemasukan
+              - strong [ref=e119]: Rp 44.240
+            - article [ref=e120]:
+              - generic [ref=e121]: Total pengeluaran
+              - strong [ref=e122]: Rp 33.000
+            - article [ref=e123]:
+              - generic [ref=e124]: Saldo berjalan
+              - strong [ref=e125]: Rp 11.240
+            - article [ref=e126]:
+              - generic [ref=e127]: Total entry
+              - strong [ref=e128]: "3"
+          - table [ref=e130]:
+            - rowgroup [ref=e131]:
+              - row "Tanggal Ref Keterangan Pihak Masuk Keluar Saldo" [ref=e132]:
+                - columnheader "Tanggal" [ref=e133]:
+                  - generic [ref=e136]: Tanggal
+                - columnheader "Ref" [ref=e137]:
+                  - generic [ref=e140]: Ref
+                - columnheader "Keterangan" [ref=e141]:
+                  - generic [ref=e144]: Keterangan
+                - columnheader "Pihak" [ref=e145]:
+                  - generic [ref=e148]: Pihak
+                - columnheader "Masuk" [ref=e149]:
+                  - generic [ref=e152]: Masuk
+                - columnheader "Keluar" [ref=e153]:
+                  - generic [ref=e156]: Keluar
+                - columnheader "Saldo" [ref=e157]:
+                  - generic [ref=e160]: Saldo
+            - rowgroup [ref=e161]:
+              - row "04 Apr 2026 02:13 BLJ-000001 Belanja Belanja material Larist 1 item - 3 pack Larist Selesai - Rp 33.000 Rp 11.240" [ref=e162]:
+                - cell "04 Apr 2026 02:13" [ref=e163]:
+                  - generic [ref=e164]:
+                    - strong [ref=e165]: 04 Apr 2026
+                    - generic [ref=e166]: 02:13
+                - cell "BLJ-000001 Belanja" [ref=e167]:
+                  - generic [ref=e168]:
+                    - strong [ref=e169]: BLJ-000001
+                    - generic [ref=e170]: Belanja
+                - cell "Belanja material Larist 1 item - 3 pack" [ref=e171]:
+                  - generic [ref=e172]:
+                    - strong [ref=e173]: Belanja material Larist
+                    - generic [ref=e174]: 1 item - 3 pack
+                - cell "Larist Selesai" [ref=e175]:
+                  - generic [ref=e176]:
+                    - strong [ref=e177]: Larist
+                    - generic [ref=e178]: Selesai
+                - cell "-" [ref=e179]:
+                  - strong [ref=e181]: "-"
+                - cell "Rp 33.000" [ref=e182]:
+                  - strong [ref=e184]: Rp 33.000
+                - cell "Rp 11.240" [ref=e185]:
+                  - strong [ref=e187]: Rp 11.240
+              - row "04 Apr 2026 00:39 TRX-000001 POS Penjualan ke lopi 30 item - Cash lopi Lunas Rp 33.180 - Rp 44.240" [ref=e188]:
+                - cell "04 Apr 2026 00:39" [ref=e189]:
+                  - generic [ref=e190]:
+                    - strong [ref=e191]: 04 Apr 2026
+                    - generic [ref=e192]: 00:39
+                - cell "TRX-000001 POS" [ref=e193]:
+                  - generic [ref=e194]:
+                    - strong [ref=e195]: TRX-000001
+                    - generic [ref=e196]: POS
+                - cell "Penjualan ke lopi 30 item - Cash" [ref=e197]:
+                  - generic [ref=e198]:
+                    - strong [ref=e199]: Penjualan ke lopi
+                    - generic [ref=e200]: 30 item - Cash
+                - cell "lopi Lunas" [ref=e201]:
+                  - generic [ref=e202]:
+                    - strong [ref=e203]: lopi
+                    - generic [ref=e204]: Lunas
+                - cell "Rp 33.180" [ref=e205]:
+                  - strong [ref=e207]: Rp 33.180
+                - cell "-" [ref=e208]:
+                  - strong [ref=e210]: "-"
+                - cell "Rp 44.240" [ref=e211]:
+                  - strong [ref=e213]: Rp 44.240
+              - row "03 Apr 2026 02:10 TRX-000002 POS Penjualan ke Pak Syukron 10 item - Transfer Bank Pak Syukron Lunas Rp 11.060 - Rp 11.060" [ref=e214]:
+                - cell "03 Apr 2026 02:10" [ref=e215]:
+                  - generic [ref=e216]:
+                    - strong [ref=e217]: 03 Apr 2026
+                    - generic [ref=e218]: 02:10
+                - cell "TRX-000002 POS" [ref=e219]:
+                  - generic [ref=e220]:
+                    - strong [ref=e221]: TRX-000002
+                    - generic [ref=e222]: POS
+                - cell "Penjualan ke Pak Syukron 10 item - Transfer Bank" [ref=e223]:
+                  - generic [ref=e224]:
+                    - strong [ref=e225]: Penjualan ke Pak Syukron
+                    - generic [ref=e226]: 10 item - Transfer Bank
+                - cell "Pak Syukron Lunas" [ref=e227]:
+                  - generic [ref=e228]:
+                    - strong [ref=e229]: Pak Syukron
+                    - generic [ref=e230]: Lunas
+                - cell "Rp 11.060" [ref=e231]:
+                  - strong [ref=e233]: Rp 11.060
+                - cell "-" [ref=e234]:
+                  - strong [ref=e236]: "-"
+                - cell "Rp 11.060" [ref=e237]:
+                  - strong [ref=e239]: Rp 11.060

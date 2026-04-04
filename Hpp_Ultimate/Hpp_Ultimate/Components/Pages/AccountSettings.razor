@@ -318,8 +318,8 @@
                         <InputText @bind-Value="_userForm.Username" />
                     </label>
                     <label>
-                        <span>Password</span>
-                        <InputText @bind-Value="_userForm.Password" type="password" />
+                        <span>Password @(_editingUserId is null ? string.Empty : "(opsional)")</span>
+                        <InputText @bind-Value="_userForm.Password" type="password" placeholder="@(_editingUserId is null ? "Minimal 6 karakter" : "Kosongkan jika tidak diubah")" />
                     </label>
                     <label>
                         <span>Role</span>
@@ -493,7 +493,6 @@
             FullName = user.FullName,
             Email = user.Email,
             Username = user.Username,
-            Password = user.Password,
             Role = user.Role,
             Status = user.Status
         };

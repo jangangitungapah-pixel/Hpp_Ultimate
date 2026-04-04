@@ -1,0 +1,268 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+        - generic [ref=e34]:
+          - generic [ref=e35]: Operasional
+          - link "PR Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e37]: PR
+            - strong [ref=e38]: Produksi
+          - link "BL Belanja" [ref=e39] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e40]: BL
+            - strong [ref=e41]: Belanja
+          - link "PO Point of Sales" [ref=e42] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e43]: PO
+            - strong [ref=e44]: Point of Sales
+        - generic [ref=e45]:
+          - generic [ref=e46]: Monitoring
+          - link "PB Pembukuan" [ref=e47] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e48]: PB
+            - strong [ref=e49]: Pembukuan
+        - generic [ref=e50]:
+          - generic [ref=e51]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e52] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e53]: BD
+            - strong [ref=e54]: Backup & Data Ops
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: A
+            - generic [ref=e58]:
+              - strong [ref=e59]: Arief
+              - generic [ref=e60]: Admin
+          - link "Logout" [ref=e61] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Produksi
+        - strong [ref=e66]: Eksekusi batch produksi dan konsumsi bahan baku
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: ⚲
+          - textbox "Current user" [ref=e70]: Arief
+        - generic [ref=e71]: A
+    - article [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: Produksi praktis
+            - heading "Siapkan antrian produksi, atur timer target, lalu mulai dari satu workspace." [level=1] [ref=e77]
+            - paragraph [ref=e78]: Resep aktif diambil langsung dari halaman resep. Saat produksi dimulai, stok gudang otomatis berkurang. Jika stok kurang, produksi tetap bisa diantrikan tetapi belum bisa dijalankan.
+          - generic [ref=e79]:
+            - generic [ref=e80]: 2 histori produksi
+            - button "Refresh" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - article [ref=e83]:
+            - generic [ref=e84]: Resep tersedia
+            - strong [ref=e85]: "1"
+          - article [ref=e86]:
+            - generic [ref=e87]: Dalam antrian
+            - strong [ref=e88]: "0"
+          - article [ref=e89]:
+            - generic [ref=e90]: Sedang berjalan
+            - strong [ref=e91]: "0"
+          - article [ref=e92]:
+            - generic [ref=e93]: Selesai
+            - strong [ref=e94]: "2"
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e98]:
+              - generic [ref=e99]: Daftar resep
+              - heading "Pilih resep yang ingin diproduksi" [level=2] [ref=e100]
+              - paragraph [ref=e101]: List ini diambil dari halaman resep. Pilih satu resep untuk melihat kebutuhan bahan dan target porsi per batch.
+            - textbox "Cari nama atau kode resep" [ref=e103]
+            - article [ref=e105] [cursor=pointer]:
+              - generic [ref=e106]:
+                - generic [ref=e107]:
+                  - generic [ref=e108]: RCP-001
+                  - strong [ref=e109]: Contoh Resep
+                - generic [ref=e110]: Siap
+              - generic [ref=e111]:
+                - article [ref=e112]:
+                  - text: Porsi / batch
+                  - strong [ref=e113]: 22 pcs
+                - article [ref=e114]:
+                  - text: Material
+                  - strong [ref=e115]: 2 bahan
+              - paragraph [ref=e116]: Siap dijadwalkan.
+          - generic [ref=e117]:
+            - generic [ref=e119]:
+              - generic [ref=e120]: Draft produksi
+              - heading "Contoh Resep" [level=2] [ref=e121]
+              - paragraph [ref=e122]: RCP-001 - 22 pcs per batch
+            - generic [ref=e123]:
+              - article [ref=e124]:
+                - generic [ref=e125]: Batch
+                - strong [ref=e126]: "1"
+              - article [ref=e127]:
+                - generic [ref=e128]: Porsi / batch
+                - strong [ref=e129]: 22 pcs
+              - article [ref=e130]:
+                - generic [ref=e131]: Total porsi
+                - strong [ref=e132]: 22 pcs
+              - article [ref=e133]:
+                - generic [ref=e134]: Modal bahan
+                - strong [ref=e135]: Rp16.222
+            - generic [ref=e136]:
+              - generic [ref=e138]:
+                - generic [ref=e139]: Tambah antrian
+                - heading "Atur batch, timer target, dan detail produksi" [level=3] [ref=e140]
+                - paragraph [ref=e141]: Item yang sudah masuk antrian masih bisa diedit sebelum mulai produksi.
+              - generic [ref=e142]:
+                - generic [ref=e143]:
+                  - generic [ref=e144]:
+                    - generic [ref=e145]: Jumlah batch
+                    - spinbutton "Jumlah batch" [ref=e146]: "1"
+                  - generic [ref=e147]:
+                    - generic [ref=e148]: Timer target (menit)
+                    - spinbutton "Timer target (menit)" [ref=e149]: "30"
+                  - generic [ref=e150]:
+                    - generic [ref=e151]: Catatan produksi
+                    - textbox "Catatan produksi" [ref=e152]
+                - generic [ref=e153]:
+                  - generic [ref=e154]: Target produksi
+                  - strong [ref=e155]: 30 menit
+                  - generic [ref=e156]:
+                    - text: Timer mulai otomatis saat tombol
+                    - emphasis [ref=e157]: Mulai Produksi
+                    - text: ditekan dari tabel antrian.
+                - generic [ref=e158]:
+                  - button "Preview ulang" [ref=e159] [cursor=pointer]
+                  - button "Tambah Antrian" [ref=e160] [cursor=pointer]
+            - generic [ref=e161]:
+              - generic [ref=e163]:
+                - generic [ref=e164]: Kebutuhan bahan
+                - heading "Simulasi stok untuk draft ini" [level=3] [ref=e165]
+                - paragraph [ref=e166]: Stok dicek dari batch yang dipilih. Produksi hanya bisa dimulai kalau kebutuhan bahan sudah cukup.
+              - table [ref=e168]:
+                - rowgroup [ref=e169]:
+                  - row "Material Butuh / batch Total butuh Stok Status" [ref=e170]:
+                    - columnheader "Material" [ref=e171]
+                    - columnheader "Butuh / batch" [ref=e172]
+                    - columnheader "Total butuh" [ref=e173]
+                    - columnheader "Stok" [ref=e174]
+                    - columnheader "Status" [ref=e175]
+                - rowgroup [ref=e176]:
+                  - row "Butter Margarine BHN-002 - Palmia Royal 200 gr 200 gr 540 gr Cukup" [ref=e177]:
+                    - cell "Butter Margarine BHN-002 - Palmia Royal" [ref=e178]:
+                      - generic [ref=e179]:
+                        - strong [ref=e180]: Butter Margarine
+                        - generic [ref=e181]: BHN-002 - Palmia Royal
+                    - cell "200 gr" [ref=e182]
+                    - cell "200 gr" [ref=e183]
+                    - cell "540 gr" [ref=e184]
+                    - cell "Cukup" [ref=e185]:
+                      - generic [ref=e186]: Cukup
+                  - row "Tepung Terigu BHN-001 - Segitga Biru 250 gr 250 gr 950 gr Cukup" [ref=e187]:
+                    - cell "Tepung Terigu BHN-001 - Segitga Biru" [ref=e188]:
+                      - generic [ref=e189]:
+                        - strong [ref=e190]: Tepung Terigu
+                        - generic [ref=e191]: BHN-001 - Segitga Biru
+                    - cell "250 gr" [ref=e192]
+                    - cell "250 gr" [ref=e193]
+                    - cell "950 gr" [ref=e194]
+                    - cell "Cukup" [ref=e195]:
+                      - generic [ref=e196]: Cukup
+        - generic [ref=e197]:
+          - generic [ref=e199]:
+            - generic [ref=e200]: Antrian produksi
+            - heading "Draft yang siap dijalankan" [level=2] [ref=e201]
+            - paragraph [ref=e202]: Mulai produksi dipindahkan ke setiap row antrian agar detail produksi masih bisa diedit sebelumnya.
+          - generic [ref=e203]: Belum ada antrian produksi.
+        - generic [ref=e204]:
+          - generic [ref=e206]:
+            - generic [ref=e207]: History produksi
+            - heading "Produksi berjalan dan selesai" [level=2] [ref=e208]
+            - paragraph [ref=e209]: Timer target akan berjalan otomatis saat produksi dimulai, lalu alarm berbunyi saat target waktunya habis.
+          - table [ref=e211]:
+            - rowgroup [ref=e212]:
+              - row "Produksi Batch Timer Mulai Status Aksi" [ref=e213]:
+                - columnheader "Produksi" [ref=e214]:
+                  - generic [ref=e217]: Produksi
+                - columnheader "Batch" [ref=e218]:
+                  - generic [ref=e221]: Batch
+                - columnheader "Timer" [ref=e222]:
+                  - generic [ref=e225]: Timer
+                - columnheader "Mulai" [ref=e226]:
+                  - generic [ref=e229]: Mulai
+                - columnheader "Status" [ref=e230]:
+                  - generic [ref=e233]: Status
+                - columnheader "Aksi" [ref=e234]:
+                  - generic [ref=e237]: Aksi
+            - rowgroup [ref=e238]:
+              - row "Contoh Resep PRD-002 - RCP-001 1 batch 22 pcs 1 menit Target 1 menit 04 Apr 2026 01:02 Selesai 04 Apr 2026 01:03 Selesai Selesai" [ref=e239]:
+                - cell "Contoh Resep PRD-002 - RCP-001" [ref=e240]:
+                  - generic [ref=e241]:
+                    - strong [ref=e242]: Contoh Resep
+                    - generic [ref=e243]: PRD-002 - RCP-001
+                - cell "1 batch 22 pcs" [ref=e244]:
+                  - generic [ref=e245]:
+                    - strong [ref=e246]: 1 batch
+                    - generic [ref=e247]: 22 pcs
+                - cell "1 menit Target 1 menit" [ref=e248]:
+                  - generic [ref=e249]:
+                    - strong [ref=e250]: 1 menit
+                    - generic [ref=e251]: Target 1 menit
+                - cell "04 Apr 2026 01:02 Selesai 04 Apr 2026 01:03" [ref=e252]:
+                  - generic [ref=e253]:
+                    - strong [ref=e254]: 04 Apr 2026 01:02
+                    - generic [ref=e255]: Selesai 04 Apr 2026 01:03
+                - cell "Selesai" [ref=e256]:
+                  - generic [ref=e257]: Selesai
+                - cell "Selesai" [ref=e258]:
+                  - generic [ref=e260]: Selesai
+              - row "Contoh Resep PRD-001 - RCP-001 4 batch 88 pcs 1 menit Target 1 menit 04 Apr 2026 00:38 Selesai 04 Apr 2026 00:38 Selesai Selesai" [ref=e261]:
+                - cell "Contoh Resep PRD-001 - RCP-001" [ref=e262]:
+                  - generic [ref=e263]:
+                    - strong [ref=e264]: Contoh Resep
+                    - generic [ref=e265]: PRD-001 - RCP-001
+                - cell "4 batch 88 pcs" [ref=e266]:
+                  - generic [ref=e267]:
+                    - strong [ref=e268]: 4 batch
+                    - generic [ref=e269]: 88 pcs
+                - cell "1 menit Target 1 menit" [ref=e270]:
+                  - generic [ref=e271]:
+                    - strong [ref=e272]: 1 menit
+                    - generic [ref=e273]: Target 1 menit
+                - cell "04 Apr 2026 00:38 Selesai 04 Apr 2026 00:38" [ref=e274]:
+                  - generic [ref=e275]:
+                    - strong [ref=e276]: 04 Apr 2026 00:38
+                    - generic [ref=e277]: Selesai 04 Apr 2026 00:38
+                - cell "Selesai" [ref=e278]:
+                  - generic [ref=e279]: Selesai
+                - cell "Selesai" [ref=e280]:
+                  - generic [ref=e282]: Selesai

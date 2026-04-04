@@ -1,0 +1,114 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+          - link "HC HPP Calculator" [ref=e34] [cursor=pointer]:
+            - /url: /hpp-calculator
+            - generic [ref=e35]: HC
+            - strong [ref=e36]: HPP Calculator
+          - link "PJ Produk Jadi" [ref=e37] [cursor=pointer]:
+            - /url: /produk-jadi
+            - generic [ref=e38]: PJ
+            - strong [ref=e39]: Produk Jadi
+        - generic [ref=e40]:
+          - generic [ref=e41]: Operasional
+          - link "PR Produksi" [ref=e42] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e43]: PR
+            - strong [ref=e44]: Produksi
+          - link "PO Point of Sales" [ref=e45] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e46]: PO
+            - strong [ref=e47]: Point of Sales
+          - link "JL Penjualan" [ref=e48] [cursor=pointer]:
+            - /url: /penjualan
+            - generic [ref=e49]: JL
+            - strong [ref=e50]: Penjualan
+        - generic [ref=e51]:
+          - generic [ref=e52]: Monitoring
+          - link "LP Laporan" [ref=e53] [cursor=pointer]:
+            - /url: /laporan
+            - generic [ref=e54]: LP
+            - strong [ref=e55]: Laporan
+        - generic [ref=e56]:
+          - generic [ref=e57]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e58] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e59]: BD
+            - strong [ref=e60]: Backup & Data Ops
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: A
+            - generic [ref=e64]:
+              - strong [ref=e65]: Arief
+              - generic [ref=e66]: Admin
+          - link "Logout" [ref=e67] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]: Resep
+        - strong [ref=e72]: Rancang formula bahan, kelompok material, dan biaya produksi
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]: ⚲
+          - textbox "Current user" [ref=e76]: Arief
+        - generic [ref=e77]: A
+    - article [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - generic [ref=e82]: Resep
+            - heading "Resep produksi" [level=1] [ref=e83]
+            - paragraph [ref=e84]: Buat resep lewat popup panel, susun kelompok bahan, cek biaya, lalu pantau resep aktif dari datagrid.
+          - generic [ref=e85]:
+            - button "Refresh" [ref=e86] [cursor=pointer]
+            - button "+ Resep Baru" [ref=e87] [cursor=pointer]
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e91]: Daftar resep
+              - heading "Resep yang sudah dibuat" [level=2] [ref=e92]
+              - paragraph [ref=e93]: Pilih satu resep untuk melihat komposisi bahan dan biaya batch tanpa pindah halaman.
+            - textbox "Cari nama resep atau kode" [ref=e95]
+          - generic [ref=e96]:
+            - generic [ref=e97]: 0 resep
+            - generic [ref=e98]:
+              - generic [ref=e99]: 0 resep
+              - generic [ref=e100]: 1 material sudah di gudang
+          - generic [ref=e101]:
+            - heading "Belum ada resep" [level=2] [ref=e102]
+            - paragraph [ref=e103]: Buat resep baru untuk mulai menyusun bahan dan biaya batch.
+            - button "Buat Resep" [ref=e104] [cursor=pointer]
+        - generic [ref=e106]:
+          - heading "Pilih satu resep" [level=2] [ref=e107]
+          - paragraph [ref=e108]: Pilih resep dari tabel di atas untuk melihat struktur bahan, total batch, dan biaya tambahannya.

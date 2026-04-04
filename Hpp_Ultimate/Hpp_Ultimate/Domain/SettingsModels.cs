@@ -22,7 +22,10 @@ public sealed record BusinessSettingsSnapshot(
     IReadOnlyList<string> Currencies,
     IReadOnlyList<string> ProductUnits,
     IReadOnlyList<string> MaterialUnits,
-    IReadOnlyList<string> Notes);
+    IReadOnlyList<string> Notes,
+    bool CanManageSettings,
+    bool CanViewAuditTrail,
+    IReadOnlyList<AuditLogEntry> RecentAuditEntries);
 
 public sealed record BusinessSettingsMutationResult(bool Success, string Message, BusinessSettings? Settings = null);
 

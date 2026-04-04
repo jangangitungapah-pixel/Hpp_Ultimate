@@ -1,0 +1,239 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+        - generic [ref=e34]:
+          - generic [ref=e35]: Operasional
+          - link "PR Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e37]: PR
+            - strong [ref=e38]: Produksi
+          - link "BL Belanja" [ref=e39] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e40]: BL
+            - strong [ref=e41]: Belanja
+          - link "PO Point of Sales" [ref=e42] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e43]: PO
+            - strong [ref=e44]: Point of Sales
+        - generic [ref=e45]:
+          - generic [ref=e46]: Monitoring
+          - link "PB Pembukuan" [ref=e47] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e48]: PB
+            - strong [ref=e49]: Pembukuan
+        - generic [ref=e50]:
+          - generic [ref=e51]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e52] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e53]: BD
+            - strong [ref=e54]: Backup & Data Ops
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: A
+            - generic [ref=e58]:
+              - strong [ref=e59]: Arief
+              - generic [ref=e60]: Admin
+          - link "Logout" [ref=e61] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Point of Sales
+        - strong [ref=e66]: Layani checkout persisten dan kurangi stok produk jadi secara otomatis
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: ⚲
+          - textbox "Current user" [ref=e70]: Arief
+        - generic [ref=e71]: A
+    - article [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: POS
+            - heading "Kasir menu dari stok produksi yang sudah selesai." [active] [level=1] [ref=e77]
+            - paragraph [ref=e78]: Menu diambil dari resep yang sudah selesai diproduksi. Stok yang tampil adalah total porsi siap jual di kasir.
+          - generic [ref=e79]:
+            - generic [ref=e80]: 1 menu termuat
+            - button "Refresh" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e85]:
+              - generic [ref=e86]: List menu
+              - heading "Menu dan jumlah stok" [level=2] [ref=e87]
+              - paragraph [ref=e88]: Pilih menu dari daftar kanan untuk menyiapkan pesanan.
+            - textbox "Cari kode atau nama menu" [ref=e90]
+            - button "RCP-001 Contoh Resep Ready Stok siap dijual 70 pcs" [ref=e92] [cursor=pointer]:
+              - generic [ref=e93]:
+                - generic [ref=e94]:
+                  - generic [ref=e95]: RCP-001
+                  - strong [ref=e96]: Contoh Resep
+                - generic [ref=e97]: Ready
+              - generic [ref=e98]:
+                - article [ref=e99]:
+                  - text: Stok
+                  - strong [ref=e100]: 70 pcs
+                - article [ref=e101]:
+                  - text: Harga jual
+                  - strong [ref=e102]: Rp 1.106
+              - paragraph [ref=e103]: Stok siap dijual 70 pcs
+          - generic [ref=e104]:
+            - generic [ref=e106]:
+              - generic [ref=e107]: Pesanan aktif
+              - heading "Detail pesanan sebelum checkout" [level=2] [ref=e108]
+              - paragraph [ref=e109]: Atur jumlah pesanan, nama pembeli, dan metode pembayaran dari satu panel.
+            - article [ref=e110]:
+              - generic [ref=e111]:
+                - generic [ref=e112]:
+                  - text: RCP-001
+                  - heading "Contoh Resep" [level=3] [ref=e113]
+                  - paragraph [ref=e114]: Menu aktif siap dijual dari hasil produksi terakhir.
+                - generic [ref=e115]: Siap jual
+              - generic [ref=e116]:
+                - article [ref=e117]:
+                  - text: Stok menu
+                  - strong [ref=e118]: 70 pcs
+                - article [ref=e119]:
+                  - text: HPP / satuan
+                  - strong [ref=e120]: Rp 737
+                - article [ref=e121]:
+                  - text: Harga jual
+                  - strong [ref=e122]: Rp 1.106
+                - article [ref=e123]:
+                  - text: Margin
+                  - strong [ref=e124]: 33.3%
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - generic [ref=e127]:
+                  - generic [ref=e128]: Jumlah pesanan
+                  - spinbutton "Jumlah pesanan" [ref=e129]: "1"
+                - generic [ref=e130]:
+                  - generic [ref=e131]: Nama pembeli / pemesan
+                  - textbox "Nama pembeli / pemesan" [ref=e132]:
+                    - /placeholder: "Contoh: Bapak Andi"
+                - generic [ref=e133]:
+                  - generic [ref=e134]: Tanggal & jam pesanan
+                  - textbox "Tanggal & jam pesanan" [ref=e135]: 2026-04-04T02:18
+              - generic [ref=e136]:
+                - generic [ref=e137]: Pembayaran
+                - generic [ref=e138]:
+                  - button "Cash" [ref=e139] [cursor=pointer]
+                  - button "Transfer Bank" [ref=e140] [cursor=pointer]
+              - generic [ref=e141]:
+                - generic [ref=e142]:
+                  - generic [ref=e143]: Total porsi
+                  - strong [ref=e144]: 1 pcs
+                - generic [ref=e145]:
+                  - generic [ref=e146]: Total bayar
+                  - strong [ref=e147]: Rp 1.106
+                - generic [ref=e148]:
+                  - generic [ref=e149]: Estimasi profit
+                  - strong [ref=e150]: Rp 369
+                - generic [ref=e151]:
+                  - generic [ref=e152]: Status pembayaran
+                  - strong [ref=e153]: Lunas otomatis
+              - generic [ref=e154]:
+                - button "Reset" [ref=e155] [cursor=pointer]
+                - button "Check Out" [disabled] [ref=e156]
+        - generic [ref=e157]:
+          - generic [ref=e159]:
+            - generic [ref=e160]: History pesanan
+            - heading "Datagrid pesanan dan penjualan" [level=2] [ref=e161]
+            - paragraph [ref=e162]: Pesanan yang sudah checkout akan muncul di sini. Gunakan checklist untuk menandai pembayaran transfer sudah lunas.
+          - table [ref=e164]:
+            - rowgroup [ref=e165]:
+              - row "Pesanan Pembeli Qty Total Lunas Waktu Aksi" [ref=e166]:
+                - columnheader "Pesanan" [ref=e167]:
+                  - generic [ref=e170]: Pesanan
+                - columnheader "Pembeli" [ref=e171]:
+                  - generic [ref=e174]: Pembeli
+                - columnheader "Qty" [ref=e175]:
+                  - generic [ref=e178]: Qty
+                - columnheader "Total" [ref=e179]:
+                  - generic [ref=e182]: Total
+                - columnheader "Lunas" [ref=e183]:
+                  - generic [ref=e186]: Lunas
+                - columnheader "Waktu" [ref=e187]:
+                  - generic [ref=e190]: Waktu
+                - columnheader "Aksi" [ref=e191]:
+                  - generic [ref=e194]: Aksi
+            - rowgroup [ref=e195]:
+              - row "Contoh Resep TRX-000001 lopi Arief 30 Cash Rp 33.180 Profit Rp 11.059 Lunas 04 Apr 2026 00:39 Selesai" [ref=e196]:
+                - cell "Contoh Resep TRX-000001" [ref=e197]:
+                  - generic [ref=e198]:
+                    - strong [ref=e199]: Contoh Resep
+                    - generic [ref=e200]: TRX-000001
+                - cell "lopi Arief" [ref=e201]:
+                  - generic [ref=e202]:
+                    - strong [ref=e203]: lopi
+                    - generic [ref=e204]: Arief
+                - cell "30 Cash" [ref=e205]:
+                  - generic [ref=e206]:
+                    - strong [ref=e207]: "30"
+                    - generic [ref=e208]: Cash
+                - cell "Rp 33.180 Profit Rp 11.059" [ref=e209]:
+                  - generic [ref=e210]:
+                    - strong [ref=e211]: Rp 33.180
+                    - generic [ref=e212]: Profit Rp 11.059
+                - cell "Lunas" [ref=e213]:
+                  - generic [ref=e214]: Lunas
+                - cell "04 Apr 2026 00:39" [ref=e215]:
+                  - generic [ref=e216]:
+                    - strong [ref=e217]: 04 Apr 2026
+                    - generic [ref=e218]: 00:39
+                - cell "Selesai" [ref=e219]:
+                  - generic [ref=e221]: Selesai
+              - row "Contoh Resep TRX-000002 Pak Syukron Arief 10 Transfer Bank Rp 11.060 Profit Rp 3.686 Lunas 03 Apr 2026 02:10 Selesai" [ref=e222]:
+                - cell "Contoh Resep TRX-000002" [ref=e223]:
+                  - generic [ref=e224]:
+                    - strong [ref=e225]: Contoh Resep
+                    - generic [ref=e226]: TRX-000002
+                - cell "Pak Syukron Arief" [ref=e227]:
+                  - generic [ref=e228]:
+                    - strong [ref=e229]: Pak Syukron
+                    - generic [ref=e230]: Arief
+                - cell "10 Transfer Bank" [ref=e231]:
+                  - generic [ref=e232]:
+                    - strong [ref=e233]: "10"
+                    - generic [ref=e234]: Transfer Bank
+                - cell "Rp 11.060 Profit Rp 3.686" [ref=e235]:
+                  - generic [ref=e236]:
+                    - strong [ref=e237]: Rp 11.060
+                    - generic [ref=e238]: Profit Rp 3.686
+                - cell "Lunas" [ref=e239]:
+                  - generic [ref=e240]: Lunas
+                - cell "03 Apr 2026 02:10" [ref=e241]:
+                  - generic [ref=e242]:
+                    - strong [ref=e243]: 03 Apr 2026
+                    - generic [ref=e244]: 02:10
+                - cell "Selesai" [ref=e245]:
+                  - generic [ref=e247]: Selesai

@@ -3,10 +3,20 @@ using Hpp_Ultimate.Domain;
 
 namespace Hpp_Ultimate.Services;
 
-public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataStore store)
+public sealed class RecipeCatalogService(
+    IMemoryCache cache,
+    SeededBusinessDataStore store,
+    WorkspaceAccessService access,
+    AuditTrailService auditTrail)
 {
     public async Task<RecipeQueryResult> QueryAsync(string? search = null, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
         var normalizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
         var cacheKey = $"recipes:{store.Version}:{normalizedSearch}";
 
@@ -23,10 +33,24 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
     }
 
     public Task<string> GenerateNextCodeAsync(CancellationToken cancellationToken = default)
-        => Task.FromResult(store.GenerateNextRecipeCode());
+    {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
+        return Task.FromResult(store.GenerateNextRecipeCode());
+    }
 
     public Task<RecipeUpsertRequest?> GetDraftAsync(Guid id, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            throw new InvalidOperationException(accessDecision.Message);
+        }
+
         var recipe = store.FindRecipeBook(id);
         if (recipe is null)
         {
@@ -42,6 +66,9 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
             OutputQuantity = recipe.OutputQuantity,
             OutputUnit = recipe.OutputUnit,
             PortionYield = recipe.PortionYield,
+            PortionUnit = recipe.PortionUnit,
+            TargetMarginPercent = recipe.TargetMarginPercent,
+            SuggestedSellingPrice = recipe.SuggestedSellingPrice,
             Status = recipe.Status,
             Groups = recipe.Groups
                 .Select(group => new RecipeGroupInput
@@ -79,6 +106,13 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
 
     public Task<RecipeMutationResult> SaveAsync(RecipeUpsertRequest request, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            return Task.FromResult(new RecipeMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         var validation = ValidateRequest(request);
         if (validation is not null)
         {
@@ -86,13 +120,15 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
         }
 
         var now = DateTime.Now;
+        var totals = CalculateTotals(request);
+        var portionUnit = RecipePortionUnitCatalog.Normalize(request.PortionUnit);
         var recipe = new RecipeBook(
             request.Id ?? Guid.NewGuid(),
             string.IsNullOrWhiteSpace(request.Code) ? store.GenerateNextRecipeCode() : request.Code.Trim().ToUpperInvariant(),
             request.Name.Trim(),
             NormalizeOptional(request.Description),
-            request.OutputQuantity,
-            request.OutputUnit.Trim().ToLowerInvariant(),
+            request.PortionYield,
+            portionUnit,
             request.Status,
             request.Groups.Select(MapGroup).ToArray(),
             request.Costs
@@ -106,11 +142,15 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
                 .ToArray(),
             request.Id is null ? now : store.FindRecipeBook(request.Id.Value)?.CreatedAt ?? now,
             now,
-            request.PortionYield);
+            request.PortionYield,
+            portionUnit,
+            totals.TargetMarginPercent,
+            totals.SuggestedSellingPrice);
 
         if (request.Id is null)
         {
             store.AddRecipeBook(recipe);
+            auditTrail.Record(actor, "Recipe", "Tambah resep", recipe.Name, recipe.Id, $"Resep {recipe.Name} dibuat.");
             return Task.FromResult(new RecipeMutationResult(true, "Resep baru berhasil dibuat.", recipe));
         }
 
@@ -120,11 +160,19 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
         }
 
         store.UpdateRecipeBook(recipe);
+        auditTrail.Record(actor, "Recipe", "Update resep", recipe.Name, recipe.Id, $"Resep {recipe.Name} diperbarui.");
         return Task.FromResult(new RecipeMutationResult(true, "Resep berhasil diperbarui.", recipe));
     }
 
     public Task<RecipeMutationResult> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
+        var accessDecision = access.RequireAuthenticated();
+        if (!accessDecision.Allowed)
+        {
+            return Task.FromResult(new RecipeMutationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
         var recipe = store.FindRecipeBook(id);
         if (recipe is null)
         {
@@ -132,6 +180,7 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
         }
 
         store.RemoveRecipeBook(id);
+        auditTrail.Record(actor, "Recipe", "Hapus resep", recipe.Name, recipe.Id, $"Resep {recipe.Name} dihapus.");
         return Task.FromResult(new RecipeMutationResult(true, "Resep berhasil dihapus.", recipe));
     }
 
@@ -160,19 +209,25 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
             .Sum(item => item.Amount);
 
         var totalCost = materialCost + operationalCost;
-        var costPerOutput = request.OutputQuantity <= 0 ? 0m : totalCost / request.OutputQuantity;
+        var normalizedPortionUnit = RecipePortionUnitCatalog.Normalize(request.PortionUnit);
+        var costPerOutput = request.PortionYield <= 0 ? 0m : totalCost / request.PortionYield;
         var costPerPortion = request.PortionYield <= 0 ? 0m : totalCost / request.PortionYield;
+        var marginPercent = Math.Clamp(request.TargetMarginPercent, 0m, 500m);
+        var suggestedSellingPrice = CalculateSuggestedSellingPrice(costPerPortion, marginPercent);
 
         return new RecipeSummaryTotals(
             request.Groups.Count,
             materialCount,
             request.Costs.Count(item => !string.IsNullOrWhiteSpace(item.Name) && item.Amount > 0),
             request.PortionYield,
+            normalizedPortionUnit,
             materialCost,
             operationalCost,
             totalCost,
             costPerOutput,
-            costPerPortion);
+            costPerPortion,
+            marginPercent,
+            suggestedSellingPrice);
     }
 
     private RecipeQueryResult BuildQueryResult(string? search)
@@ -218,6 +273,9 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
         var totalCost = materialCost + operationalCost;
         var costPerOutput = recipe.OutputQuantity <= 0 ? 0m : totalCost / recipe.OutputQuantity;
         var costPerPortion = recipe.PortionYield <= 0 ? 0m : totalCost / recipe.PortionYield;
+        var suggestedSellingPrice = recipe.SuggestedSellingPrice > 0
+            ? recipe.SuggestedSellingPrice
+            : CalculateSuggestedSellingPrice(costPerPortion, recipe.TargetMarginPercent);
 
         return new RecipeListItem(
             recipe.Id,
@@ -235,9 +293,12 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
             totalCost,
             costPerOutput,
             recipe.PortionYield,
+            recipe.PortionUnit,
             costPerPortion,
             recipe.Groups.Select(item => item.Name).Where(item => !string.IsNullOrWhiteSpace(item)).Take(4).ToArray(),
-            recipe.UpdatedAt);
+            recipe.UpdatedAt,
+            recipe.TargetMarginPercent,
+            suggestedSellingPrice);
     }
 
     private RecipeMutationResult? ValidateRequest(RecipeUpsertRequest request)
@@ -252,19 +313,19 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
             return new RecipeMutationResult(false, "Kode resep sudah dipakai.");
         }
 
-        if (request.OutputQuantity <= 0)
-        {
-            return new RecipeMutationResult(false, "Output batch harus lebih besar dari 0.");
-        }
-
-        if (string.IsNullOrWhiteSpace(request.OutputUnit))
-        {
-            return new RecipeMutationResult(false, "Satuan output wajib diisi.");
-        }
-
         if (request.PortionYield <= 0)
         {
             return new RecipeMutationResult(false, "Jumlah porsi harus lebih besar dari 0.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.PortionUnit))
+        {
+            return new RecipeMutationResult(false, "Satuan porsi wajib dipilih.");
+        }
+
+        if (request.TargetMarginPercent < 0 || request.TargetMarginPercent > 500)
+        {
+            return new RecipeMutationResult(false, "Margin resep harus di antara 0 sampai 500.");
         }
 
         if (request.Groups.Count == 0)
@@ -353,4 +414,9 @@ public sealed class RecipeCatalogService(IMemoryCache cache, SeededBusinessDataS
 
     private static string? NormalizeOptional(string? value)
         => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+
+    private static decimal CalculateSuggestedSellingPrice(decimal costPerPortion, decimal marginPercent)
+        => costPerPortion <= 0
+            ? 0m
+            : decimal.Round(costPerPortion * (1m + (marginPercent / 100m)), 0, MidpointRounding.AwayFromZero);
 }

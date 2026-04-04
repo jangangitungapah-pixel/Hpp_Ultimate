@@ -1,0 +1,311 @@
+@page "/pembukuan"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@using System.Globalization
+@inject BookkeepingService BookkeepingService
+@inject SeededBusinessDataStore Store
+
+<PageTitle>Pembukuan | HPP Ultimate</PageTitle>
+
+<section class="bookkeeping-page">
+    <header class="bookkeeping-header">
+        <div class="header-copy">
+            <span class="section-tag">Pembukuan</span>
+            <h1>Gabungkan pemasukan POS, belanja selesai, dan entry manual ke satu ledger.</h1>
+            <p>Seluruh riwayat POS dan belanja yang sudah selesai masuk ke halaman ini. Kamu juga bisa menambah pemasukan atau pengeluaran lain secara manual.</p>
+        </div>
+
+        <div class="header-actions">
+            <div class="status-chip">@_statusMessage</div>
+            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+        </div>
+    </header>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else if (_snapshot is not null)
+    {
+        <section class="entry-form-card">
+            <div class="section-head">
+                <div>
+                    <span class="section-tag">Form pembukuan</span>
+                    <h2>Tambah pemasukan atau pengeluaran manual</h2>
+                    <p>Form dibuat singkat agar cepat dipakai untuk gas, token listrik, ongkos kecil, atau pemasukan lain di luar POS.</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_message))
+            {
+                <div class="form-message">@_message</div>
+            }
+
+            <EditForm Model="_formModel" OnValidSubmit="SubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-grid">
+                    <label>
+                        <span>Jenis / nama list</span>
+                        <InputText @bind-Value="_formModel.Title" />
+                    </label>
+
+                    <label>
+                        <span>Nominal uang</span>
+                        <InputNumber @bind-Value="_formModel.Amount" />
+                    </label>
+
+                    <label class="wide-field">
+                        <span>Tanggal & jam transaksi</span>
+                        <input type="datetime-local" value="@FormatDateTimeLocal(_formModel.OccurredAt)" @onchange="OnOccurredAtChanged" />
+                    </label>
+
+                    <label class="wide-field">
+                        <span>Supplier / toko</span>
+                        <InputText @bind-Value="_formModel.Counterparty" />
+                    </label>
+                </div>
+
+                <div class="direction-row">
+                    <span class="field-label">Tipe transaksi</span>
+                    <div class="method-row">
+                        <button type="button" class="method-chip @(_formModel.Direction == LedgerEntryDirection.Income ? "active" : null)" @onclick="() => SelectDirection(LedgerEntryDirection.Income)">Pemasukan</button>
+                        <button type="button" class="method-chip @(_formModel.Direction == LedgerEntryDirection.Expense ? "active" : null)" @onclick="() => SelectDirection(LedgerEntryDirection.Expense)">Pengeluaran</button>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="ghost-button" @onclick="ResetForm">Reset</button>
+                    <button type="submit" class="primary-button">Tambahkan</button>
+                </div>
+            </EditForm>
+        </section>
+
+        <section class="ledger-card">
+            <div class="section-head">
+                <div>
+                    <span class="section-tag">List pembukuan</span>
+                    <h2>Ledger pembukuan</h2>
+                    <p>Format tabel disusun seperti buku kas kerja: tanggal, referensi, sumber, pihak, mutasi, dan saldo berjalan.</p>
+                </div>
+
+                <label class="display-count-control">
+                    <span>Baris tampil</span>
+                    <select value="@_ledgerDisplayCount" @onchange="OnLedgerDisplayCountChanged">
+                        @foreach (var option in GridDisplayOptions)
+                        {
+                            <option value="@option">@option baris</option>
+                        }
+                    </select>
+                </label>
+            </div>
+
+            <div class="summary-strip">
+                <article>
+                    <small>Total pemasukan</small>
+                    <strong>@FormatCurrency(_snapshot.TotalIncome)</strong>
+                </article>
+                <article>
+                    <small>Total pengeluaran</small>
+                    <strong>@FormatCurrency(_snapshot.TotalExpense)</strong>
+                </article>
+                <article>
+                    <small>Saldo berjalan</small>
+                    <strong>@FormatCurrency(_snapshot.ClosingBalance)</strong>
+                </article>
+                <article>
+                    <small>Total entry</small>
+                    <strong>@_snapshot.TotalEntries</strong>
+                </article>
+            </div>
+
+            @if (_snapshot.Items.Count == 0)
+            {
+                <div class="empty-state">
+                    Belum ada data pembukuan.
+                </div>
+            }
+            else
+            {
+                <div class="ledger-grid-shell">
+                    <QuickGrid Items="VisibleLedgerItems.AsQueryable()" Class="ledger-quickgrid">
+                        <TemplateColumn Title="Tanggal" Context="item">
+                            <div class="table-primary">
+                                <strong>@item.OccurredAt.ToString("dd MMM yyyy")</strong>
+                                <small>@item.OccurredAt.ToString("HH:mm")</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Ref" Context="item">
+                            <div class="table-primary">
+                                <strong>@item.ReferenceNumber</strong>
+                                <small>@item.SourceType</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Keterangan" Context="item">
+                            <div class="table-primary">
+                                <strong>@item.Title</strong>
+                                <small>@item.Detail</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Pihak" Context="item">
+                            <div class="history-meta-cell">
+                                <strong>@(string.IsNullOrWhiteSpace(item.Counterparty) ? "-" : item.Counterparty)</strong>
+                                <small>@item.StatusLabel</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Masuk" Context="item">
+                            <div class="amount-cell income">
+                                <strong>@(item.AmountIn <= 0 ? "-" : FormatCurrency(item.AmountIn))</strong>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Keluar" Context="item">
+                            <div class="amount-cell expense">
+                                <strong>@(item.AmountOut <= 0 ? "-" : FormatCurrency(item.AmountOut))</strong>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Saldo" Context="item">
+                            <div class="amount-cell balance">
+                                <strong>@FormatCurrency(item.RunningBalance)</strong>
+                            </div>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+
+                <div class="ledger-card-list">
+                    @foreach (var item in VisibleLedgerItems)
+                    {
+                        <article class="ledger-mobile-card">
+                            <div class="ledger-mobile-head">
+                                <div class="table-primary">
+                                    <strong>@item.Title</strong>
+                                    <small>@item.ReferenceNumber - @item.SourceType</small>
+                                </div>
+
+                                <div class="amount-cell balance">
+                                    <small>Saldo</small>
+                                    <strong>@FormatCurrency(item.RunningBalance)</strong>
+                                </div>
+                            </div>
+
+                            <div class="ledger-mobile-grid">
+                                <article>
+                                    <small>Tanggal</small>
+                                    <strong>@item.OccurredAt.ToString("dd MMM yyyy")</strong>
+                                    <span>@item.OccurredAt.ToString("HH:mm")</span>
+                                </article>
+                                <article>
+                                    <small>Pihak</small>
+                                    <strong>@(string.IsNullOrWhiteSpace(item.Counterparty) ? "-" : item.Counterparty)</strong>
+                                    <span>@item.StatusLabel</span>
+                                </article>
+                                <article>
+                                    <small>Masuk</small>
+                                    <strong>@(item.AmountIn <= 0 ? "-" : FormatCurrency(item.AmountIn))</strong>
+                                </article>
+                                <article>
+                                    <small>Keluar</small>
+                                    <strong>@(item.AmountOut <= 0 ? "-" : FormatCurrency(item.AmountOut))</strong>
+                                </article>
+                            </div>
+
+                            <p class="ledger-mobile-copy">@item.Detail</p>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+    }
+</section>
+
+@code {
+    private BookkeepingSnapshot? _snapshot;
+    private static readonly int[] GridDisplayOptions = [8, 12, 20, 50];
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat pembukuan...";
+    private string _message = string.Empty;
+    private int _ledgerDisplayCount = 12;
+    private ManualLedgerEntryRequest _formModel = new()
+    {
+        Direction = LedgerEntryDirection.Expense,
+        OccurredAt = DateTime.Now
+    };
+
+    private IReadOnlyList<BookkeepingListItem> VisibleLedgerItems
+        => (_snapshot?.Items ?? Array.Empty<BookkeepingListItem>())
+            .Take(_ledgerDisplayCount)
+            .ToArray();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Store.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        _snapshot = await BookkeepingService.GetSnapshotAsync();
+        _statusMessage = _snapshot.TotalEntries == 0
+            ? "Ledger masih kosong"
+            : $"{_snapshot.TotalEntries} entry tercatat";
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task ReloadAsync() => LoadAsync();
+
+    private void OnLedgerDisplayCountChanged(ChangeEventArgs args)
+        => _ledgerDisplayCount = ParseDisplayCount(args.Value?.ToString(), _ledgerDisplayCount);
+
+    private void SelectDirection(LedgerEntryDirection direction)
+        => _formModel.Direction = direction;
+
+    private void OnOccurredAtChanged(ChangeEventArgs args)
+        => _formModel.OccurredAt = ParseDateTimeLocal(args.Value?.ToString(), _formModel.OccurredAt == default ? DateTime.Now : _formModel.OccurredAt);
+
+    private async Task SubmitAsync()
+    {
+        var result = await BookkeepingService.AddManualEntryAsync(_formModel);
+        _message = result.Message;
+        if (!result.Success)
+        {
+            return;
+        }
+
+        ResetForm();
+        await LoadAsync();
+    }
+
+    private void ResetForm()
+    {
+        _formModel = new ManualLedgerEntryRequest
+        {
+            Direction = LedgerEntryDirection.Expense,
+            OccurredAt = DateTime.Now
+        };
+    }
+
+    private static string FormatCurrency(decimal value)
+        => string.Create(new CultureInfo("id-ID"), $"Rp {value:N0}");
+
+    private static string FormatDateTimeLocal(DateTime value)
+        => value.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
+
+    private static DateTime ParseDateTimeLocal(string? value, DateTime fallback)
+        => DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsed)
+            ? parsed
+            : fallback;
+
+    private static int ParseDisplayCount(string? value, int fallback)
+        => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
+
+    private async void HandleStoreChanged()
+        => await InvokeAsync(LoadAsync);
+
+    public ValueTask DisposeAsync()
+    {
+        Store.Changed -= HandleStoreChanged;
+        return ValueTask.CompletedTask;
+    }
+}

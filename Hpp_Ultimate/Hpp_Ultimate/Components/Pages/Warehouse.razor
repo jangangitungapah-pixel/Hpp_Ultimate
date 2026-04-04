@@ -1,0 +1,415 @@
+@page "/gudang"
+@rendermode InteractiveServer
+@implements IDisposable
+@using System.Globalization
+@inject WarehouseService WarehouseService
+@inject SeededBusinessDataStore Store
+
+<PageTitle>Gudang | HPP Ultimate</PageTitle>
+
+<section class="warehouse-page">
+    <header class="warehouse-header">
+        <div class="header-copy">
+            <span class="section-tag">Gudang</span>
+            <h1>Input stok material dari katalog lalu pantau posisinya di satu datagrid.</h1>
+            <p>Flow gudang sekarang ringkas: pilih material dari katalog, catat stok masuk atau keluar, lalu cek hasilnya langsung di daftar gudang.</p>
+        </div>
+
+        <div class="header-actions">
+            <div class="status-chip">@_statusMessage</div>
+            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+        </div>
+    </header>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else
+    {
+        <div class="summary-strip">
+            <article>
+                <small>Material di gudang</small>
+                <strong>@WarehouseRows.Count</strong>
+            </article>
+            <article>
+                <small>Perlu restock</small>
+                <strong>@WarehouseRows.Count(item => item.IsBelowMinimumStock)</strong>
+            </article>
+            <article>
+                <small>Nilai stok</small>
+                <strong>@FormatCurrency(WarehouseRows.Sum(item => item.OnHandQuantity * item.CostPerUnit))</strong>
+            </article>
+        </div>
+
+        <section class="warehouse-entry-card">
+            <div class="section-head">
+                <div>
+                    <span class="section-tag">Input stok</span>
+                    <h2>Pilih material katalog lalu simpan mutasinya</h2>
+                    <p>Material diambil dari katalog. Setelah disimpan, item akan muncul atau terbarui di datagrid gudang.</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_message))
+            {
+                <div class="form-message">@_message</div>
+            }
+
+            <EditForm Model="_movementForm" OnValidSubmit="SaveMovementAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="entry-grid">
+                    <label class="wide-field">
+                        <span>Material katalog</span>
+                        <input class="lookup-input"
+                               list="warehouse-material-options"
+                               value="@_materialLookupText"
+                               @onchange="OnMaterialLookupChanged"
+                               placeholder="Ketik nama atau kode material" />
+                        <datalist id="warehouse-material-options">
+                            @foreach (var material in CatalogMaterials)
+                            {
+                                <option value="@GetMaterialLookupLabel(material)"></option>
+                            }
+                        </datalist>
+                    </label>
+
+                    <label>
+                        <span>Flow stok</span>
+                        <InputSelect @bind-Value="_movementForm.Type">
+                            <option value="@StockMovementType.StockIn">Stok masuk</option>
+                            <option value="@StockMovementType.StockOut">Stok keluar</option>
+                        </InputSelect>
+                    </label>
+
+                    <label>
+                        <span>Jumlah</span>
+                        <InputNumber @bind-Value="_movementForm.Quantity" />
+                    </label>
+
+                    <label>
+                        <span>Waktu catat</span>
+                        <input type="datetime-local" value="@GetOccurredAtInputValue()" @onchange="OnOccurredAtChanged" />
+                    </label>
+
+                    <label class="wide-field">
+                        <span>Catatan</span>
+                        <InputTextArea @bind-Value="_movementForm.Note" />
+                    </label>
+                </div>
+
+                @if (SelectedCatalogMaterial is not null)
+                {
+                    <div class="selected-material-card">
+                        <div>
+                            <small>Material terpilih</small>
+                            <strong>@SelectedCatalogMaterial.Name</strong>
+                            <span>@SelectedCatalogMaterial.Code - @(string.IsNullOrWhiteSpace(SelectedCatalogMaterial.Brand) ? "Tanpa merk" : SelectedCatalogMaterial.Brand)</span>
+                        </div>
+
+                        <div class="selected-pills">
+                            <span>On hand @FormatQuantity(SelectedCatalogMaterial.OnHandQuantity, SelectedCatalogMaterial.BaseUnit)</span>
+                            <span>Minimum @FormatQuantity(SelectedCatalogMaterial.MinimumStock, SelectedCatalogMaterial.BaseUnit)</span>
+                            <span>Last move @FormatLastMovement(SelectedCatalogMaterial.LastMovementAt)</span>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(MaterialLookupWarning))
+                {
+                    <div class="inline-note">@MaterialLookupWarning</div>
+                }
+
+                <div class="form-actions">
+                    <button type="button" class="ghost-button" @onclick="ResetMovementForm">Reset</button>
+                    <button type="submit" class="primary-button">Simpan Stok</button>
+                </div>
+            </EditForm>
+        </section>
+
+        <section class="warehouse-table-card">
+            <div class="table-head">
+                <div>
+                    <span class="section-tag">Datagrid gudang</span>
+                    <h2>Material yang sudah tercatat di gudang</h2>
+                    <p>Tabel ini mengikuti pola katalog material, tetapi informasinya disesuaikan untuk stok gudang.</p>
+                </div>
+
+                <div class="table-toolbar">
+                    <input value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari material gudang" />
+                    <label class="display-count-control">
+                        <span>Baris tampil</span>
+                        <select value="@_warehouseDisplayCount" @onchange="OnWarehouseDisplayCountChanged">
+                            @foreach (var option in GridDisplayOptions)
+                            {
+                                <option value="@option">@option baris</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                @if (WarehouseRows.Count == 0)
+                {
+                    <div class="empty-row">Belum ada material yang tersimpan di gudang. Tambahkan stok dari form di atas.</div>
+                }
+                else
+                {
+                    <table class="warehouse-table">
+                        <thead>
+                            <tr>
+                                <th>Nama Material</th>
+                                <th>Merk</th>
+                                <th>On Hand</th>
+                                <th>Minimum</th>
+                                <th>Nilai Stok</th>
+                                <th>Last Move</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in VisibleWarehouseRows)
+                            {
+                                <tr class="@(item.MaterialId == _movementForm.MaterialId ? "selected-row" : null)">
+                                    <td>
+                                        <div class="table-primary">
+                                            <strong>@item.Name</strong>
+                                            <small>@item.Code</small>
+                                        </div>
+                                    </td>
+                                    <td>@GetBrandLabel(item.Brand)</td>
+                                    <td>
+                                        <strong>@FormatQuantity(item.OnHandQuantity, item.BaseUnit)</strong>
+                                    </td>
+                                    <td>@FormatQuantity(item.MinimumStock, item.BaseUnit)</td>
+                                    <td>@FormatCurrency(item.OnHandQuantity * item.CostPerUnit)</td>
+                                    <td>@FormatLastMovement(item.LastMovementAt)</td>
+                                    <td>
+                                        <span class="badge @(item.IsBelowMinimumStock ? "warn" : "ok")">
+                                            @(item.IsBelowMinimumStock ? "Perlu restock" : "Aman")
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+            @if (WarehouseRows.Count > 0)
+            {
+                <div class="warehouse-card-list">
+                    @foreach (var item in VisibleWarehouseRows)
+                    {
+                        <article class="warehouse-mobile-card @(item.MaterialId == _movementForm.MaterialId ? "selected-row" : null)">
+                            <div class="warehouse-mobile-head">
+                                <div class="table-primary">
+                                    <strong>@item.Name</strong>
+                                    <small>@item.Code</small>
+                                </div>
+
+                                <span class="badge @(item.IsBelowMinimumStock ? "warn" : "ok")">
+                                    @(item.IsBelowMinimumStock ? "Perlu restock" : "Aman")
+                                </span>
+                            </div>
+
+                            <p class="warehouse-mobile-copy">@GetBrandLabel(item.Brand)</p>
+
+                            <div class="warehouse-mobile-grid">
+                                <article>
+                                    <small>On Hand</small>
+                                    <strong>@FormatQuantity(item.OnHandQuantity, item.BaseUnit)</strong>
+                                </article>
+                                <article>
+                                    <small>Minimum</small>
+                                    <strong>@FormatQuantity(item.MinimumStock, item.BaseUnit)</strong>
+                                </article>
+                                <article>
+                                    <small>Nilai Stok</small>
+                                    <strong>@FormatCurrency(item.OnHandQuantity * item.CostPerUnit)</strong>
+                                </article>
+                                <article>
+                                    <small>Last Move</small>
+                                    <strong>@FormatLastMovement(item.LastMovementAt)</strong>
+                                </article>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+    }
+</section>
+
+@code {
+    private WarehouseSnapshot? _snapshot;
+    private static readonly int[] GridDisplayOptions = [8, 12, 20, 50];
+    private bool _isLoading = true;
+    private string _statusMessage = "Memuat gudang...";
+    private string _searchText = string.Empty;
+    private string _materialLookupText = string.Empty;
+    private string _message = string.Empty;
+    private int _warehouseDisplayCount = 12;
+    private StockMovementRequest _movementForm = CreateMovementRequest();
+
+    private IReadOnlyList<RawMaterial> CatalogMaterials
+        => Store.RawMaterials
+            .Where(item => item.Status == MaterialStatus.Active)
+            .OrderBy(item => item.Name)
+            .ThenBy(item => item.Brand)
+            .ToArray();
+
+    private IReadOnlyList<WarehouseMaterialItem> WarehouseRows
+        => (_snapshot?.Materials ?? Array.Empty<WarehouseMaterialItem>())
+            .Where(IsTrackedInWarehouse)
+            .ToArray();
+
+    private IReadOnlyList<WarehouseMaterialItem> VisibleWarehouseRows
+        => WarehouseRows.Take(_warehouseDisplayCount).ToArray();
+
+    private WarehouseMaterialItem? SelectedCatalogMaterial
+        => _movementForm.MaterialId is Guid id
+            ? (_snapshot?.Materials ?? Array.Empty<WarehouseMaterialItem>()).FirstOrDefault(item => item.MaterialId == id)
+            : null;
+
+    private string? MaterialLookupWarning
+        => _movementForm.MaterialId is null
+            ? "Pilih material dari daftar autocomplete katalog."
+            : SelectedCatalogMaterial is null
+                ? "Material belum ditemukan di katalog aktif."
+                : !IsTrackedInWarehouse(SelectedCatalogMaterial)
+                    ? "Material ini belum ada di list gudang. Setelah stok disimpan, item akan masuk ke datagrid."
+                    : SelectedCatalogMaterial.OnHandQuantity <= 0
+                        ? "Material ini sudah ada di gudang, tetapi stoknya kosong."
+                        : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Store.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        _snapshot = await WarehouseService.GetSnapshotAsync(_searchText);
+        _statusMessage = WarehouseRows.Count == 0
+            ? "Belum ada stok tercatat."
+            : $"{WarehouseRows.Count} material ada di gudang";
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task ReloadAsync() => LoadAsync();
+
+    private async Task OnSearchChangedAsync(ChangeEventArgs args)
+    {
+        _searchText = args.Value?.ToString() ?? string.Empty;
+        await LoadAsync();
+    }
+
+    private void OnWarehouseDisplayCountChanged(ChangeEventArgs args)
+        => _warehouseDisplayCount = ParseDisplayCount(args.Value?.ToString(), _warehouseDisplayCount);
+
+    private void OnMaterialLookupChanged(ChangeEventArgs args)
+    {
+        _materialLookupText = args.Value?.ToString() ?? string.Empty;
+        _movementForm.MaterialId = ResolveMaterialId(_materialLookupText);
+    }
+
+    private async Task SaveMovementAsync()
+    {
+        _message = string.Empty;
+        _movementForm.MaterialId = ResolveMaterialId(_materialLookupText);
+
+        var result = await WarehouseService.RecordMovementAsync(_movementForm);
+        _message = result.Message;
+        if (!result.Success)
+        {
+            return;
+        }
+
+        _movementForm = CreateMovementRequest(_movementForm.MaterialId, _movementForm.Type);
+        await LoadAsync();
+    }
+
+    private void ResetMovementForm()
+    {
+        _materialLookupText = string.Empty;
+        _message = string.Empty;
+        _movementForm = CreateMovementRequest();
+    }
+
+    private void OnOccurredAtChanged(ChangeEventArgs args)
+    {
+        if (DateTime.TryParse(args.Value?.ToString(), out var occurredAt))
+        {
+            _movementForm.OccurredAt = occurredAt;
+        }
+    }
+
+    private static StockMovementRequest CreateMovementRequest(Guid? materialId = null, StockMovementType type = StockMovementType.StockIn)
+        => new()
+        {
+            MaterialId = materialId,
+            Type = type,
+            Quantity = 1m,
+            OccurredAt = DateTime.Now
+        };
+
+    private static bool IsTrackedInWarehouse(WarehouseMaterialItem item)
+        => item.LastMovementAt is not null;
+
+    private Guid? ResolveMaterialId(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        var normalized = value.Trim();
+        var material = CatalogMaterials.FirstOrDefault(item =>
+            GetMaterialLookupLabel(item).Equals(normalized, StringComparison.OrdinalIgnoreCase) ||
+            item.Code.Equals(normalized, StringComparison.OrdinalIgnoreCase) ||
+            item.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase));
+
+        return material?.Id;
+    }
+
+    private static string GetMaterialLookupLabel(RawMaterial material)
+    {
+        var brand = string.IsNullOrWhiteSpace(material.Brand) ? "Tanpa merk" : material.Brand.Trim();
+        return $"{material.Code} - {material.Name} - {brand}";
+    }
+
+    private static string GetBrandLabel(string? brand)
+        => string.IsNullOrWhiteSpace(brand) ? "Tanpa merk" : brand.Trim();
+
+    private string GetOccurredAtInputValue()
+        => _movementForm.OccurredAt.ToString("yyyy-MM-ddTHH:mm");
+
+    private static string FormatCurrency(decimal value)
+        => value.ToString("C0", new CultureInfo("id-ID"));
+
+    private static string FormatQuantity(decimal value, string unit)
+        => $"{value:0.####} {unit}";
+
+    private static string FormatLastMovement(DateTime? value)
+        => value?.ToString("dd MMM yyyy HH:mm") ?? "-";
+
+    private static int ParseDisplayCount(string? value, int fallback)
+        => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(LoadAsync);
+    }
+
+    public void Dispose()
+    {
+        Store.Changed -= HandleStoreChanged;
+    }
+}
