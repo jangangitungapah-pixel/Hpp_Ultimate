@@ -32,7 +32,9 @@
                 @foreach (var item in group.Items)
                 {
                     <NavLink class="nav-link" href="@item.Href" Match="@item.Match">
-                        <span class="nav-icon">@item.Icon</span>
+                        <span class="nav-icon">
+                            <AppIcon Name="@item.Icon" Class="nav-icon-svg" />
+                        </span>
                         <strong>@item.Title</strong>
                     </NavLink>
                 }
@@ -47,7 +49,10 @@
                     <small>@(Store.AuthSession?.Role.ToString() ?? "Operator")</small>
                 </div>
             </div>
-            <a class="nav-logout" href="/logout">Logout</a>
+            <a class="nav-logout" href="/logout">
+                <AppIcon Name="logout" Class="nav-logout-icon" />
+                <span>Logout</span>
+            </a>
         </div>
     </div>
 </div>
@@ -80,22 +85,18 @@
 
     private static readonly IReadOnlyList<NavGroup> StaffGroups =
     [
-        new("Persiapan", [
-            new("/pengaturan", "PG", "Pengaturan"),
-            new("/pengaturan/akun", "AK", "Pengaturan Akun")
+        new("Workflow", [
+            new("/produk", "materials", "Katalog Material"),
+            new("/gudang", "warehouse", "Gudang"),
+            new("/resep", "recipe", "Resep"),
+            new("/produksi", "production", "Produksi"),
+            new("/pos", "pos", "Point of Sales"),
+            new("/belanja", "shopping", "Belanja"),
+            new("/pembukuan", "bookkeeping", "Pembukuan")
         ]),
-        new("Master & Formula", [
-            new("/produk", "KM", "Katalog Material"),
-            new("/gudang", "GD", "Gudang"),
-            new("/resep", "RS", "Resep")
-        ]),
-        new("Operasional", [
-            new("/produksi", "PR", "Produksi"),
-            new("/belanja", "BL", "Belanja"),
-            new("/pos", "PO", "Point of Sales")
-        ]),
-        new("Monitoring", [
-            new("/pembukuan", "PB", "Pembukuan")
+        new("Pengaturan", [
+            new("/pengaturan", "settings", "Pengaturan"),
+            new("/pengaturan/akun", "account", "Pengaturan Akun")
         ])
     ];
 
@@ -103,7 +104,7 @@
     [
         ..StaffGroups,
         new("Kontrol Data", [
-            new("/backup-data", "BD", "Backup & Data Ops")
+            new("/backup-data", "backup", "Backup & Data Ops")
         ])
     ];
 

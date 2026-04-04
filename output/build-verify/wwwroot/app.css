@@ -1,0 +1,464 @@
+:root {
+    color-scheme: light;
+    --app-bg: #eef4ff;
+    --app-ink: #334155;
+    --app-muted: #71829d;
+    --app-border: rgba(196, 208, 229, 0.5);
+    --app-shadow: 0 32px 62px rgba(69, 94, 148, 0.14);
+    --app-shadow-soft: 0 18px 34px rgba(100, 116, 139, 0.1);
+    --app-shadow-deep: 0 40px 72px rgba(88, 96, 155, 0.16);
+    --app-radius-lg: 1.35rem;
+    --app-radius-xl: 1.75rem;
+    --app-surface:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(245, 249, 255, 0.84)),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 36%);
+    --app-surface-soft:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 245, 255, 0.78)),
+        radial-gradient(circle at bottom left, rgba(129, 140, 248, 0.12), transparent 34%);
+    --app-focus-ring: 0 0 0 0.24rem rgba(99, 117, 255, 0.16);
+    --app-button-shadow: 0 20px 34px rgba(79, 143, 255, 0.24);
+    --app-highlight: linear-gradient(135deg, #4f8fff, #6f64ff);
+    --app-danger-highlight: linear-gradient(135deg, rgba(220, 38, 38, 0.96), rgba(168, 85, 247, 0.88));
+    --app-accent: #6f64ff;
+    --app-accent-strong: #4f5bd4;
+    --app-accent-soft: rgba(236, 240, 255, 0.94);
+    --app-accent-border: rgba(111, 100, 255, 0.18);
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(255, 196, 96, 0.22), transparent 28%),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.18), transparent 28%),
+        linear-gradient(180deg, #f8f4ef 0%, #eef3f8 100%);
+    color: var(--app-ink);
+}
+
+body {
+    overflow-y: scroll;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 12% 14%, rgba(96, 165, 250, 0.14), transparent 18%),
+        radial-gradient(circle at 86% 16%, rgba(129, 140, 248, 0.12), transparent 20%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 42%);
+    z-index: 0;
+}
+
+a,
+.btn-link {
+    color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.15rem rgba(255, 255, 255, 0.92), 0 0 0 0.35rem rgba(99, 117, 255, 0.24);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+    letter-spacing: -0.03em;
+}
+
+h1:focus {
+    outline: none;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #16a34a;
+}
+
+.invalid {
+    outline: 1px solid #ef4444;
+}
+
+.validation-message {
+    color: #dc2626;
+}
+
+::selection {
+    background: rgba(99, 117, 255, 0.18);
+}
+
+#app,
+body > div:first-child {
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 0.7rem;
+    height: 0.7rem;
+}
+
+*::-webkit-scrollbar-thumb {
+    border: 0.18rem solid transparent;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.48);
+    background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.blazor-error-boundary {
+    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveG1sbnM6eGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
+    padding: 1rem 1rem 1rem 3.7rem;
+    color: white;
+}
+
+.blazor-error-boundary::after {
+    content: "An error has occurred.";
+}
+
+.darker-border-checkbox.form-check-input {
+    border-color: #929292;
+}
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) {
+    --surface-border: rgba(255, 255, 255, 0.84) !important;
+    --surface-shadow: 0 28px 48px rgba(84, 102, 163, 0.1) !important;
+    --soft-border: rgba(214, 223, 241, 0.94) !important;
+    --line-border: rgba(223, 230, 244, 0.92) !important;
+    --line-border-strong: rgba(206, 217, 237, 0.96) !important;
+    --surface-main: var(--app-surface) !important;
+    --surface-soft: linear-gradient(180deg, rgba(249, 251, 255, 0.95), rgba(239, 245, 255, 0.84)) !important;
+    --text-main: var(--app-ink) !important;
+    --text-muted: var(--app-muted) !important;
+    --accent: var(--app-accent) !important;
+    --accent-soft: var(--app-accent-soft) !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(
+    .ghost-button,
+    .filter-chip,
+    .action-chip,
+    .method-chip,
+    .icon-button,
+    .close-button,
+    .pager button,
+    .header-pills span,
+    .table-summary-pills span,
+    .back-link,
+    .brand-lane span,
+    .focus-chip
+) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 247, 255, 0.9)) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(212, 221, 240, 0.92),
+        0 14px 22px rgba(15, 23, 42, 0.04) !important;
+    color: #475569 !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(.primary-button, .login-button) {
+    background: var(--app-highlight) !important;
+    box-shadow: var(--app-button-shadow) !important;
+    color: #fff !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(.danger-button) {
+    background: var(--app-danger-highlight) !important;
+    box-shadow: 0 18px 30px rgba(168, 85, 247, 0.18) !important;
+    color: #fff !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(.status-chip, .form-message, .inline-note, .detail-note) {
+    background:
+        linear-gradient(145deg, rgba(240, 244, 255, 0.98), rgba(255, 255, 255, 0.82)) !important;
+    box-shadow: inset 0 0 0 1px var(--app-accent-border) !important;
+    color: var(--app-accent-strong) !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(
+    .section-tag,
+    .section-head span,
+    .panel-head span,
+    .modal-head span,
+    .hero-copy > span,
+    .team-header span,
+    .brand-eyebrow,
+    .login-card-head span,
+    .summary-grid small,
+    .preview-grid small,
+    .detail-summary small,
+    .hero-ribbon small,
+    .team-metrics small,
+    .profile-stat small,
+    .permission-panel small,
+    .upload-card span,
+    .file-list small,
+    .receipt-head small,
+    .selected-metrics small,
+    .checkout-metrics small,
+    .product-card-top small,
+    .product-card-metrics small,
+    .audit-pill
+) {
+    color: var(--app-accent) !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(input, textarea, select):focus {
+    border-color: rgba(99, 117, 255, 0.34) !important;
+    box-shadow:
+        var(--app-focus-ring),
+        0 16px 28px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(input[type="checkbox"], input[type="radio"]) {
+    accent-color: #6f64ff !important;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) input[type="file"] {
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid rgba(212, 221, 240, 0.94);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 255, 0.88));
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.82),
+        0 14px 24px rgba(15, 23, 42, 0.05);
+    color: #475569;
+    padding: 0.35rem;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) input[type="file"]::file-selector-button {
+    margin-right: 0.8rem;
+    border: 0;
+    border-radius: 0.85rem;
+    padding: 0.78rem 1rem;
+    background: var(--app-highlight);
+    color: white;
+    font: inherit;
+    font-weight: 800;
+    box-shadow: var(--app-button-shadow);
+    cursor: pointer;
+}
+
+:where(
+    .materials-page,
+    .warehouse-page,
+    .pos-page,
+    .reports-page,
+    .recipes-page,
+    .finished-products-page,
+    .production-page,
+    .sales-page,
+    .settings-page,
+    .account-page,
+    .dataops-page,
+    .login-page,
+    .hpp-page
+) :is(
+    .material-mobile-card.selected-row,
+    .recipe-card.active,
+    .product-card.active,
+    .group-detail-card[open]
+) {
+    border-color: rgba(111, 100, 255, 0.26) !important;
+    background:
+        linear-gradient(180deg, rgba(240, 244, 255, 0.96), rgba(255, 255, 255, 0.88)) !important;
+    box-shadow:
+        0 20px 32px rgba(111, 100, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+:where(.materials-page) .materials-table tbody tr.selected-row,
+:where(.recipes-page) .recipe-table tbody tr.active {
+    background: linear-gradient(90deg, rgba(240, 244, 255, 0.96), rgba(255, 255, 255, 0.92)) !important;
+    box-shadow: inset 3px 0 0 rgba(111, 100, 255, 0.72) !important;
+}
+
+:where(.login-page) .login-brand,
+:where(.account-page) .account-hero,
+:where(.warehouse-page) .summary-card.highlight {
+    background:
+        radial-gradient(circle at top left, rgba(129, 140, 248, 0.16), transparent 28%),
+        radial-gradient(circle at right center, rgba(96, 165, 250, 0.14), transparent 30%),
+        linear-gradient(155deg, rgba(255, 255, 255, 0.98), rgba(243, 247, 255, 0.84)) !important;
+}
+
+:where(.account-page) .hero-panel-card.primary {
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(79, 143, 255, 0.98), rgba(111, 100, 255, 0.92)) !important;
+}

@@ -7,49 +7,54 @@
 <PageTitle>Pengaturan | HPP Ultimate</PageTitle>
 
 <section class="settings-page">
-    <div class="settings-toolbar">
-        <div>
-            <span>System preferences</span>
-            <h1>Atur identitas usaha, default kalkulasi, dan aturan pajak aplikasi.</h1>
-        </div>
-
-        <div class="toolbar-actions">
-            <div class="status-chip">@_statusMessage</div>
-            <button type="button" class="ghost-button" @onclick="ReloadAsync">Reload</button>
-        </div>
-    </div>
-
     @if (_isLoading && _snapshot is null)
     {
         <div class="skeleton-card"></div>
     }
     else if (_snapshot is not null)
     {
-        <div class="summary-grid">
-            <article>
-                <small>Mata uang</small>
-                <strong>@_snapshot.Settings.CurrencyCode</strong>
+        <header class="settings-hero">
+            <div class="hero-copy">
+                <span class="section-tag">System preferences</span>
+                <h1>Pengaturan workspace bisnis</h1>
+                <p>Kelola identitas usaha, default operasional, dan aturan harga dari satu workspace yang lebih rapi dan cepat dibaca.</p>
+
+                <div class="hero-meta-strip">
+                    <span class="status-chip">@_statusMessage</span>
+                    <span class="hero-meta-pill">@(_snapshot.CanManageSettings ? "Mode admin" : "Mode lihat saja")</span>
+                    <span class="hero-meta-pill">@_snapshot.Settings.Timezone</span>
+                </div>
+            </div>
+
+            <article class="hero-business-card">
+                <div class="hero-business-mark">@BusinessInitials</div>
+                <div class="hero-business-copy">
+                    <small>Workspace aktif</small>
+                    <strong>@_snapshot.Settings.BusinessName</strong>
+                    <span>@(string.IsNullOrWhiteSpace(_snapshot.Settings.LegalName) ? "Identitas usaha belum dilengkapi" : _snapshot.Settings.LegalName)</span>
+                </div>
+
+                <div class="hero-business-stats">
+                    <article><small>Mata uang</small><strong>@_snapshot.Settings.CurrencyCode</strong></article>
+                    <article><small>Pajak</small><strong>@_snapshot.Settings.TaxPercent.ToString("0.#")%</strong></article>
+                    <article><small>Satuan menu</small><strong>@_snapshot.Settings.DefaultProductUnit</strong></article>
+                    <article><small>Satuan bahan</small><strong>@_snapshot.Settings.DefaultMaterialUnit</strong></article>
+                </div>
+
+                <div class="hero-actions">
+                    <button type="button" class="ghost-button" @onclick="ReloadAsync">Reload</button>
+                    <a class="ghost-button account-link secondary-link" href="/pengaturan/akun">Akun & akses</a>
+                </div>
             </article>
-            <article>
-                <small>Satuan produk</small>
-                <strong>@_snapshot.Settings.DefaultProductUnit</strong>
-            </article>
-            <article>
-                <small>Satuan bahan</small>
-                <strong>@_snapshot.Settings.DefaultMaterialUnit</strong>
-            </article>
-            <article>
-                <small>Pajak</small>
-                <strong>@_snapshot.Settings.TaxPercent.ToString("0.#")%</strong>
-            </article>
-        </div>
+        </header>
 
         <div class="settings-layout">
-            <section class="form-card">
-                <div class="section-head">
+            <section class="settings-primary-shell">
+                <div class="primary-shell-head">
                     <div>
-                        <span>Form pengaturan</span>
-                        <h2>Perbarui konfigurasi dasar bisnis</h2>
+                        <span class="section-tag">Form pengaturan</span>
+                        <h2>Konfigurasi inti bisnis</h2>
+                        <p>Fokus utama halaman ini ada di identitas usaha, default transaksi, dan aturan harga. Panel lain hanya menjadi konteks pendukung.</p>
                     </div>
                 </div>
 
@@ -67,99 +72,137 @@
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
-                    <div class="form-grid">
-                        <label>
-                            <span>Nama Usaha</span>
-                            <InputText @bind-Value="_formModel.BusinessName" disabled="@(!_snapshot.CanManageSettings)" />
-                            <ValidationMessage For="@(() => _formModel.BusinessName)" />
-                        </label>
+                    <div class="settings-form-stack">
+                        <section class="settings-module">
+                            <div class="module-head">
+                                <div class="module-icon-wrap"><AppIcon Name="settings" Class="module-icon" /></div>
+                                <div>
+                                    <span class="module-eyebrow">Profil usaha</span>
+                                    <h3>Identitas dan kontak bisnis</h3>
+                                    <p>Area ini mengontrol nama usaha, legal entity, kontak, dan alamat yang dipakai di seluruh workspace.</p>
+                                </div>
+                            </div>
 
-                        <label>
-                            <span>Legal Entity</span>
-                            <InputText @bind-Value="_formModel.LegalName" disabled="@(!_snapshot.CanManageSettings)" />
-                        </label>
+                            <div class="form-grid">
+                                <label>
+                                    <span>Nama Usaha</span>
+                                    <InputText @bind-Value="_formModel.BusinessName" disabled="@(!_snapshot.CanManageSettings)" />
+                                    <ValidationMessage For="@(() => _formModel.BusinessName)" />
+                                </label>
+                                <label>
+                                    <span>Legal Entity</span>
+                                    <InputText @bind-Value="_formModel.LegalName" disabled="@(!_snapshot.CanManageSettings)" />
+                                </label>
+                                <label>
+                                    <span>Telepon</span>
+                                    <InputText @bind-Value="_formModel.Phone" disabled="@(!_snapshot.CanManageSettings)" />
+                                </label>
+                                <label>
+                                    <span>Email</span>
+                                    <InputText @bind-Value="_formModel.Email" disabled="@(!_snapshot.CanManageSettings)" />
+                                    <ValidationMessage For="@(() => _formModel.Email)" />
+                                </label>
+                                <label>
+                                    <span>Timezone</span>
+                                    <InputText @bind-Value="_formModel.Timezone" disabled="@(!_snapshot.CanManageSettings)" />
+                                </label>
+                                <label class="full">
+                                    <span>Alamat</span>
+                                    <InputTextArea @bind-Value="_formModel.Address" disabled="@(!_snapshot.CanManageSettings)" />
+                                </label>
+                            </div>
+                        </section>
 
-                        <label>
-                            <span>Telepon</span>
-                            <InputText @bind-Value="_formModel.Phone" disabled="@(!_snapshot.CanManageSettings)" />
-                        </label>
+                        <section class="settings-module">
+                            <div class="module-head">
+                                <div class="module-icon-wrap"><AppIcon Name="materials" Class="module-icon" /></div>
+                                <div>
+                                    <span class="module-eyebrow">Default operasional</span>
+                                    <h3>Mata uang, satuan, dan pembulatan</h3>
+                                    <p>Default ini dipakai saat membuat master, menyusun resep, dan menghitung harga jual di halaman operasional lain.</p>
+                                </div>
+                            </div>
 
-                        <label>
-                            <span>Email</span>
-                            <InputText @bind-Value="_formModel.Email" disabled="@(!_snapshot.CanManageSettings)" />
-                            <ValidationMessage For="@(() => _formModel.Email)" />
-                        </label>
+                            <div class="form-grid">
+                                <label>
+                                    <span>Mata Uang</span>
+                                    <select @bind="_formModel.CurrencyCode" disabled="@(!_snapshot.CanManageSettings)">
+                                        @foreach (var currency in _snapshot.Currencies)
+                                        {
+                                            <option value="@currency">@currency</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <span>Default Satuan Produk</span>
+                                    <select @bind="_formModel.DefaultProductUnit" disabled="@(!_snapshot.CanManageSettings)">
+                                        @foreach (var unit in _snapshot.ProductUnits)
+                                        {
+                                            <option value="@unit">@unit</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <span>Default Satuan Bahan</span>
+                                    <select @bind="_formModel.DefaultMaterialUnit" disabled="@(!_snapshot.CanManageSettings)">
+                                        @foreach (var unit in _snapshot.MaterialUnits)
+                                        {
+                                            <option value="@unit">@unit</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <span>Pembulatan Harga</span>
+                                    <InputNumber @bind-Value="_formModel.DefaultPriceRounding" disabled="@(!_snapshot.CanManageSettings)" />
+                                    <ValidationMessage For="@(() => _formModel.DefaultPriceRounding)" />
+                                </label>
+                            </div>
+                        </section>
 
-                        <label class="full">
-                            <span>Alamat</span>
-                            <InputTextArea @bind-Value="_formModel.Address" disabled="@(!_snapshot.CanManageSettings)" />
-                        </label>
+                        <section class="settings-module pricing-module">
+                            <div class="module-head">
+                                <div class="module-icon-wrap"><AppIcon Name="bookkeeping" Class="module-icon" /></div>
+                                <div>
+                                    <span class="module-eyebrow">Pajak & harga</span>
+                                    <h3>Aturan dasar transaksi</h3>
+                                    <p>Gunakan area ini untuk menentukan persentase pajak dan apakah harga jual yang muncul di POS sudah termasuk pajak.</p>
+                                </div>
+                            </div>
 
-                        <label>
-                            <span>Mata Uang</span>
-                            <select @bind="_formModel.CurrencyCode" disabled="@(!_snapshot.CanManageSettings)">
-                                @foreach (var currency in _snapshot.Currencies)
-                                {
-                                    <option value="@currency">@currency</option>
-                                }
-                            </select>
-                        </label>
+                            <div class="pricing-module-grid">
+                                <div class="form-grid compact-form-grid">
+                                    <label>
+                                        <span>Pajak %</span>
+                                        <InputNumber @bind-Value="_formModel.TaxPercent" disabled="@(!_snapshot.CanManageSettings)" />
+                                        <ValidationMessage For="@(() => _formModel.TaxPercent)" />
+                                    </label>
+                                    <label class="toggle-row">
+                                        <span>Harga Sudah Include Pajak</span>
+                                        <InputCheckbox @bind-Value="_formModel.TaxIncluded" disabled="@(!_snapshot.CanManageSettings)" />
+                                    </label>
+                                </div>
 
-                        <label>
-                            <span>Timezone</span>
-                            <InputText @bind-Value="_formModel.Timezone" disabled="@(!_snapshot.CanManageSettings)" />
-                        </label>
-
-                        <label>
-                            <span>Default Satuan Produk</span>
-                            <select @bind="_formModel.DefaultProductUnit" disabled="@(!_snapshot.CanManageSettings)">
-                                @foreach (var unit in _snapshot.ProductUnits)
-                                {
-                                    <option value="@unit">@unit</option>
-                                }
-                            </select>
-                        </label>
-
-                        <label>
-                            <span>Default Satuan Bahan</span>
-                            <select @bind="_formModel.DefaultMaterialUnit" disabled="@(!_snapshot.CanManageSettings)">
-                                @foreach (var unit in _snapshot.MaterialUnits)
-                                {
-                                    <option value="@unit">@unit</option>
-                                }
-                            </select>
-                        </label>
-
-                        <label>
-                            <span>Pembulatan Harga</span>
-                            <InputNumber @bind-Value="_formModel.DefaultPriceRounding" disabled="@(!_snapshot.CanManageSettings)" />
-                            <ValidationMessage For="@(() => _formModel.DefaultPriceRounding)" />
-                        </label>
-
-                        <label>
-                            <span>Pajak %</span>
-                            <InputNumber @bind-Value="_formModel.TaxPercent" disabled="@(!_snapshot.CanManageSettings)" />
-                            <ValidationMessage For="@(() => _formModel.TaxPercent)" />
-                        </label>
-
-                        <label class="toggle-row">
-                            <span>Harga Sudah Include Pajak</span>
-                            <InputCheckbox @bind-Value="_formModel.TaxIncluded" disabled="@(!_snapshot.CanManageSettings)" />
-                        </label>
+                                <article class="pricing-preview-card">
+                                    <small>Preview aturan aktif</small>
+                                    <strong>@_snapshot.Settings.TaxPercent.ToString("0.#")% pajak</strong>
+                                    <span>@(_snapshot.Settings.TaxIncluded ? "Harga jual publik dibaca sebagai harga final termasuk pajak." : "Harga jual publik masih berada di luar pajak.")</span>
+                                </article>
+                            </div>
+                        </section>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions settings-form-actions">
                         <button type="button" class="ghost-button" @onclick="ResetForm">Reset</button>
                         <button type="submit" class="primary-button" disabled="@(!_snapshot.CanManageSettings)">Simpan Pengaturan</button>
                     </div>
                 </EditForm>
             </section>
 
-            <aside class="side-stack">
-                <section class="preview-card">
+            <aside class="settings-side-rail">
+                <section class="preview-card spotlight-card">
                     <div class="section-head">
                         <div>
-                            <span>Preview</span>
+                            <span>Snapshot</span>
                             <h2>Ringkasan profil dan default aktif</h2>
                         </div>
                     </div>
@@ -188,7 +231,7 @@
                     <div class="section-head">
                         <div>
                             <span>Account hub</span>
-                            <h2>Buka pengaturan akun dan pusat akses tim</h2>
+                            <h2>Akses tim dan sesi aktif</h2>
                         </div>
                     </div>
 
@@ -201,7 +244,7 @@
                         <article>
                             <small>Total akun</small>
                             <strong>@Store.Users.Count</strong>
-                            <p>Semua data akun, akses admin/staff, dan password dipusatkan di satu halaman terpisah.</p>
+                            <p>Semua data akun, akses admin/staff, dan password dipusatkan di halaman akun terpisah.</p>
                         </article>
                     </div>
 
@@ -230,7 +273,7 @@
                     <div class="section-head">
                         <div>
                             <span>Audit trail</span>
-                            <h2>Jejak perubahan workspace terbaru</h2>
+                            <h2>Perubahan workspace terbaru</h2>
                         </div>
                     </div>
 
@@ -270,8 +313,8 @@
                 <section class="danger-card">
                     <div class="section-head">
                         <div>
-                            <span>Clear data</span>
-                            <h2>Hapus seluruh data operasional aplikasi</h2>
+                            <span>Danger zone</span>
+                            <h2>Clear seluruh data operasional</h2>
                         </div>
                     </div>
 
@@ -335,6 +378,24 @@
     private string _formMessage = string.Empty;
     private bool _showClearDataModal;
     private bool _isClearingData;
+    private string BusinessInitials
+    {
+        get
+        {
+            var name = _snapshot?.Settings.BusinessName;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return "HU";
+            }
+
+            var parts = name
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Take(2)
+                .Select(part => char.ToUpperInvariant(part[0]));
+
+            return string.Concat(parts);
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {

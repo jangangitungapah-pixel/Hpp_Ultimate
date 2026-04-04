@@ -33,40 +33,49 @@
 
             <div class="table-summary-pills">
                 <span>@(_result?.TotalCount ?? 0) material</span>
-                <span>@CurrentSortLabel</span>
             </div>
         </div>
 
         <div class="table-toolbar">
-            <input value="@_searchText" @oninput="OnSearchChanged" placeholder="Cari nama material atau merk" />
+            <div class="table-toolbar-primary">
+                <input value="@_searchText" @oninput="OnSearchChanged" placeholder="Cari nama material atau merk" />
 
-            <select value="@_selectedStatus" @onchange="OnStatusChangedAsync">
-                <option value="">Semua status</option>
-                <option value="active">Aktif</option>
-                <option value="inactive">Nonaktif</option>
-            </select>
+                <div class="table-toolbar-filters">
+                    <select value="@_selectedStatus" @onchange="OnStatusChangedAsync">
+                        <option value="">Semua status</option>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Nonaktif</option>
+                    </select>
 
-            <select value="@_sortBy" @onchange="OnSortByChangedAsync">
-                <option value="updated">Urutkan: Update</option>
-                <option value="name">Urutkan: Nama</option>
-                <option value="brand">Urutkan: Merk</option>
-                <option value="net">Urutkan: Netto</option>
-                <option value="price">Urutkan: Harga</option>
-                <option value="cost">Urutkan: Modal</option>
-            </select>
+                    <select value="@_sortBy" @onchange="OnSortByChangedAsync">
+                        <option value="updated">Urutkan: Update</option>
+                        <option value="name">Urutkan: Nama</option>
+                        <option value="brand">Urutkan: Merk</option>
+                        <option value="net">Urutkan: Netto</option>
+                        <option value="price">Urutkan: Harga</option>
+                        <option value="cost">Urutkan: Modal</option>
+                    </select>
 
-            <select value="@_pageSize" @onchange="OnPageSizeChangedAsync">
-                @foreach (var option in PageSizeOptions)
-                {
-                    <option value="@option">@option baris</option>
-                }
-            </select>
+                    <select value="@_pageSize" @onchange="OnPageSizeChangedAsync">
+                        @foreach (var option in PageSizeOptions)
+                        {
+                            <option value="@option">@option baris</option>
+                        }
+                    </select>
 
-            <button type="button" class="ghost-button sort-direction-button" @onclick="ToggleSortDirectionAsync">
-                @(_sortDescending ? "Desc" : "Asc")
-            </button>
+                    <button type="button" class="ghost-button sort-direction-button" @onclick="ToggleSortDirectionAsync">
+                        @(_sortDescending ? "Desc" : "Asc")
+                    </button>
+                </div>
+            </div>
 
-            <div class="status-chip">@_statusMessage</div>
+            <div class="table-toolbar-meta">
+                <div class="status-chip">@_statusMessage</div>
+                <div class="table-toolbar-note">
+                    <span>@CurrentSortLabel</span>
+                    <span>@TotalPages halaman</span>
+                </div>
+            </div>
         </div>
 
         @if (_isLoading && _result is null)
@@ -138,10 +147,10 @@
                                     <td class="actions-column">
                                         <div class="row-actions">
                                             <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModalAsync(material.Id)">
-                                                <span class="icon-glyph" aria-hidden="true">&#9998;</span>
+                                                <AppIcon Name="edit" Class="icon-glyph" />
                                             </button>
                                             <button type="button" class="icon-button danger" title="Hapus" aria-label="Hapus" @onclick="() => AskDelete(material)">
-                                                <span class="icon-glyph" aria-hidden="true">&#128465;</span>
+                                                <AppIcon Name="delete" Class="icon-glyph" />
                                             </button>
                                         </div>
                                     </td>
@@ -157,46 +166,62 @@
                 <div class="material-card-list">
                     @foreach (var material in _result!.Items)
                     {
-                        <article class="material-mobile-card @GetSelectedRowClass(material.Id)">
-                            <div class="material-mobile-head">
-                                <button type="button" class="row-link primary material-mobile-link" @onclick="() => OpenDetailAsync(material.Id)">
+                        var isMobileExpanded = _activeMobileMaterialId == material.Id;
+
+                        <article class="material-mobile-card @(isMobileExpanded ? "active" : string.Empty) @GetSelectedRowClass(material.Id)">
+                            <button type="button"
+                                    class="material-mobile-toggle"
+                                    aria-expanded="@isMobileExpanded"
+                                    @onclick="() => ToggleMobileMaterial(material.Id)">
+                                <div class="material-mobile-toggle-copy">
                                     <small>@material.Code</small>
                                     <strong>@material.Name</strong>
                                     <span>@GetBrandLabel(material.Brand)</span>
-                                </button>
+                                </div>
 
-                                <span class="badge @GetStatusClass(material.Status)">@GetStatusLabel(material.Status)</span>
-                            </div>
+                                <div class="material-mobile-toggle-meta">
+                                    <span class="badge @GetStatusClass(material.Status)">@GetStatusLabel(material.Status)</span>
+                                    <div class="material-mobile-toggle-state">
+                                        <span>@(isMobileExpanded ? "Tutup detail" : "Lihat detail")</span>
+                                        <span class="material-mobile-chevron @(isMobileExpanded ? "expanded" : string.Empty)" aria-hidden="true">+</span>
+                                    </div>
+                                </div>
+                            </button>
 
-                            <div class="material-mobile-grid">
-                                <article>
-                                    <small>Netto</small>
-                                    <strong>@material.NetQuantity.ToString("0.####") @material.NetUnit</strong>
-                                </article>
-                                <article>
-                                    <small>Harga / Pack</small>
-                                    <strong>@FormatCurrency(material.PricePerPack)</strong>
-                                </article>
-                                <article>
-                                    <small>Modal / Unit</small>
-                                    <strong>@FormatCurrency(material.CostPerUnit) / @material.BaseUnit</strong>
-                                </article>
-                                <article>
-                                    <small>Konversi</small>
-                                    <strong>@material.ConversionCount unit</strong>
-                                </article>
-                            </div>
+                            <div class="material-mobile-panel @(isMobileExpanded ? "expanded" : string.Empty)">
+                                <div class="material-mobile-panel-inner">
+                                    <div class="material-mobile-grid">
+                                        <article>
+                                            <small>Netto</small>
+                                            <strong>@material.NetQuantity.ToString("0.####") @material.NetUnit</strong>
+                                        </article>
+                                        <article>
+                                            <small>Harga / Pack</small>
+                                            <strong>@FormatCurrency(material.PricePerPack)</strong>
+                                        </article>
+                                        <article>
+                                            <small>Modal / Unit</small>
+                                            <strong>@FormatCurrency(material.CostPerUnit) / @material.BaseUnit</strong>
+                                        </article>
+                                        <article>
+                                            <small>Konversi</small>
+                                            <strong>@material.ConversionCount unit</strong>
+                                        </article>
+                                    </div>
 
-                            <div class="material-mobile-footer">
-                                <small>Update @material.UpdatedAt.ToString("dd MMM yyyy HH:mm")</small>
-                                <div class="row-actions">
-                                    <button type="button" class="ghost-button compact-mobile-button" @onclick="() => OpenDetailAsync(material.Id)">Detail</button>
-                                    <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModalAsync(material.Id)">
-                                        <span class="icon-glyph" aria-hidden="true">&#9998;</span>
-                                    </button>
-                                    <button type="button" class="icon-button danger" title="Hapus" aria-label="Hapus" @onclick="() => AskDelete(material)">
-                                        <span class="icon-glyph" aria-hidden="true">&#128465;</span>
-                                    </button>
+                                    <div class="material-mobile-footer">
+                                        <small>Update @material.UpdatedAt.ToString("dd MMM yyyy HH:mm")</small>
+                                        <div class="material-mobile-actions">
+                                            <div class="row-actions material-mobile-row-actions">
+                                                <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModalAsync(material.Id)">
+                                                    <AppIcon Name="edit" Class="icon-glyph" />
+                                                </button>
+                                                <button type="button" class="icon-button danger" title="Hapus" aria-label="Hapus" @onclick="() => AskDelete(material)">
+                                                    <AppIcon Name="delete" Class="icon-glyph" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </article>
@@ -208,8 +233,7 @@
                 <small>@(_result?.TotalCount ?? 0) material</small>
                 <div class="pager">
                     <button type="button" @onclick="PrevPageAsync" disabled="@(_page <= 1)">Prev</button>
-                    <label class="pager-select">
-                        <span>Halaman</span>
+                    <label class="pager-select" aria-label="Pilih halaman">
                         <select value="@_page" @onchange="OnPageChangedAsync">
                             @for (var pageNumber = 1; pageNumber <= TotalPages; pageNumber++)
                             {
@@ -220,6 +244,7 @@
                     <span>@_page / @TotalPages</span>
                     <button type="button" @onclick="NextPageAsync" disabled="@(_page >= TotalPages)">Next</button>
                 </div>
+                <div class="table-footer-spacer" aria-hidden="true"></div>
             </div>
         }
     </section>
@@ -238,7 +263,9 @@
 
                 <div class="detail-modal-actions">
                     <span class="badge @GetStatusClass(_detail.Material.Status)">@GetStatusLabel(_detail.Material.Status)</span>
-                    <button type="button" class="close-button" @onclick="CloseDetailModal">&times;</button>
+                    <button type="button" class="close-button" @onclick="CloseDetailModal" aria-label="Tutup detail">
+                        <AppIcon Name="close" Class="icon-glyph" />
+                    </button>
                 </div>
             </div>
 
@@ -360,7 +387,9 @@
                     <h2>@(_editingId is null ? "Buat master material baru" : "Perbarui master material")</h2>
                 </div>
 
-                <button type="button" class="close-button" @onclick="CloseFormModal">&times;</button>
+                <button type="button" class="close-button" @onclick="CloseFormModal" aria-label="Tutup form">
+                    <AppIcon Name="close" Class="icon-glyph" />
+                </button>
             </div>
 
             @if (!string.IsNullOrWhiteSpace(_formMessage))
@@ -517,7 +546,9 @@
                     <h2>Upload file lalu review preview sebelum commit</h2>
                 </div>
 
-                <button type="button" class="close-button" @onclick="CloseImportModal">&times;</button>
+                <button type="button" class="close-button" @onclick="CloseImportModal" aria-label="Tutup import">
+                    <AppIcon Name="close" Class="icon-glyph" />
+                </button>
             </div>
 
             @if (!string.IsNullOrWhiteSpace(_importMessage))
@@ -649,6 +680,7 @@
     private string _importMessage = string.Empty;
     private bool _isImporting;
     private bool _skipInvalidRows = true;
+    private Guid? _activeMobileMaterialId;
 
     private RawMaterialListItem? _pendingDelete;
     private static readonly int[] PageSizeOptions = [5, 10, 15, 25];
@@ -692,11 +724,25 @@
         _statusMessage = $"{_result.TotalCount} material ditemukan";
         _isLoading = false;
 
+        if (_result.Items.Count == 0)
+        {
+            _activeMobileMaterialId = null;
+        }
+        else if (_activeMobileMaterialId is not null && !_result.Items.Any(item => item.Id == _activeMobileMaterialId))
+        {
+            _activeMobileMaterialId = null;
+        }
+
         if (_result.Items.Count == 0 || (_detail is not null && !_result.Items.Any(item => item.Id == _detail.Material.Id)))
         {
             _detail = null;
             _showDetailModal = false;
         }
+    }
+
+    private void ToggleMobileMaterial(Guid id)
+    {
+        _activeMobileMaterialId = _activeMobileMaterialId == id ? null : id;
     }
 
     private async Task OpenDetailAsync(Guid id)

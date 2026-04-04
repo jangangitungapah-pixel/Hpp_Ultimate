@@ -15,6 +15,36 @@
     --accent-line: rgba(251, 146, 60, 0.22);
 }
 
+.catalog-datagrid ::deep .pager button {
+    background: rgba(255, 255, 255, 0.86);
+    color: #334155;
+    box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.96);
+    border: 0;
+    font: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.95rem;
+    padding: 0.78rem 0.98rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+
+.catalog-datagrid ::deep .pager button:hover {
+    transform: translateY(-1px);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.96), 0 10px 18px rgba(15, 23, 42, 0.08);
+}
+
+.catalog-datagrid ::deep .pager button:disabled {
+    opacity: 0.48;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
 .recipes-header,
 .recipes-panel,
 .studio-shell,
@@ -632,6 +662,15 @@ label > span {
     color: var(--text-main);
 }
 
+.cost-detail-card > strong {
+    margin-top: 0;
+    align-self: center;
+    text-align: right;
+    white-space: nowrap;
+    font-size: 1rem;
+    line-height: 1.1;
+}
+
 .detail-stack {
     display: grid;
     gap: 1rem;
@@ -642,6 +681,32 @@ label > span {
 .studio-card,
 .cost-card {
     padding: 0.95rem;
+}
+
+.cost-detail-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding: 0.95rem 1.05rem;
+}
+
+.cost-detail-card > div {
+    display: grid;
+    gap: 0.18rem;
+    min-width: 0;
+}
+
+.cost-detail-card small {
+    margin: 0;
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    line-height: 1.12;
+}
+
+.cost-detail-card p {
+    margin-top: 0.28rem;
+    line-height: 1.42;
 }
 
 .group-detail-stack,
@@ -1290,6 +1355,13 @@ label > span {
     cursor: pointer;
 }
 
+.icon-action-button ::deep .icon-glyph {
+    width: 0.96rem;
+    height: 0.96rem;
+    display: block;
+    stroke-width: 2;
+}
+
 .context-menu-item:hover {
     background: rgba(255, 247, 237, 0.7);
 }
@@ -1427,7 +1499,7 @@ label > span {
     opacity: 0.9;
 }
 
-.recipe-close-button > span {
+.recipe-close-button ::deep .icon-glyph {
     position: relative;
     z-index: 1;
     display: inline-flex;
@@ -1435,6 +1507,7 @@ label > span {
     justify-content: center;
     width: 100%;
     height: 100%;
+    stroke-width: 2.1;
 }
 
 .recipe-close-button:hover {

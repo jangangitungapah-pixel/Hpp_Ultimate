@@ -129,7 +129,7 @@
             </EditForm>
         </section>
 
-        <section class="warehouse-table-card">
+        <section class="warehouse-table-card catalog-datagrid">
             <div class="table-head">
                 <div>
                     <span class="section-tag">Datagrid gudang</span>
@@ -145,15 +145,6 @@
                             @foreach (var option in GridDisplayOptions)
                             {
                                 <option value="@option">@option baris</option>
-                            }
-                        </select>
-                    </label>
-                    <label class="display-count-control">
-                        <span>Halaman</span>
-                        <select value="@CurrentWarehousePage" @onchange="OnWarehousePageChanged">
-                            @for (var pageNumber = 1; pageNumber <= WarehouseTotalPages; pageNumber++)
-                            {
-                                <option value="@pageNumber">Halaman @pageNumber</option>
                             }
                         </select>
                     </label>
@@ -248,6 +239,24 @@
                         </article>
                     }
                 </div>
+
+                <div class="table-footer">
+                    <small>@WarehouseRows.Count material</small>
+                    <div class="pager">
+                        <button type="button" @onclick="PrevWarehousePage" disabled="@(CurrentWarehousePage <= 1)">Prev</button>
+                        <label class="pager-select" aria-label="Pilih halaman gudang">
+                            <select value="@CurrentWarehousePage" @onchange="OnWarehousePageChanged">
+                                @for (var pageNumber = 1; pageNumber <= WarehouseTotalPages; pageNumber++)
+                                {
+                                    <option value="@pageNumber">Halaman @pageNumber</option>
+                                }
+                            </select>
+                        </label>
+                        <span>@CurrentWarehousePage / @WarehouseTotalPages</span>
+                        <button type="button" @onclick="NextWarehousePage" disabled="@(CurrentWarehousePage >= WarehouseTotalPages)">Next</button>
+                    </div>
+                    <div class="table-footer-spacer" aria-hidden="true"></div>
+                </div>
             }
         </section>
     }
@@ -338,6 +347,12 @@
 
     private void OnWarehousePageChanged(ChangeEventArgs args)
         => _warehousePage = ParsePage(args.Value?.ToString(), CurrentWarehousePage, WarehouseTotalPages);
+
+    private void PrevWarehousePage()
+        => _warehousePage = Math.Max(1, CurrentWarehousePage - 1);
+
+    private void NextWarehousePage()
+        => _warehousePage = Math.Min(WarehouseTotalPages, CurrentWarehousePage + 1);
 
     private void OnMaterialLookupChanged(ChangeEventArgs args)
     {

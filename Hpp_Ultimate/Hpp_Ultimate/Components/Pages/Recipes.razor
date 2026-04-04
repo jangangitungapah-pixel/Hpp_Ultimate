@@ -21,42 +21,27 @@
         </div>
     </header>
 
-    <section class="recipes-panel list-panel">
+    <section class="recipes-panel list-panel catalog-datagrid">
         <div class="panel-head">
             <div>
                 <span class="section-tag">Daftar resep</span>
                 <h2>Resep yang sudah dibuat</h2>
                 <p>Pilih satu resep untuk melihat komposisi bahan dan biaya batch tanpa pindah halaman.</p>
             </div>
+        </div>
 
-            <div class="panel-toolbar">
+        <div class="table-toolbar">
+            <div class="table-toolbar-primary">
                 <input class="recipe-search-input" value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari nama resep atau kode" />
-                <label class="display-count-control">
-                    <span>Baris tampil</span>
+
+                <div class="table-toolbar-filters">
                     <select value="@_recipeDisplayCount" @onchange="OnRecipeDisplayCountChanged">
                         @foreach (var option in GridDisplayOptions)
                         {
                             <option value="@option">@option baris</option>
                         }
                     </select>
-                </label>
-                <label class="display-count-control">
-                    <span>Halaman</span>
-                    <select value="@CurrentRecipePage" @onchange="OnRecipePageChanged">
-                        @for (var pageNumber = 1; pageNumber <= RecipeTotalPages; pageNumber++)
-                        {
-                            <option value="@pageNumber">Halaman @pageNumber</option>
-                        }
-                    </select>
-                </label>
-            </div>
-        </div>
-
-        <div class="panel-summary">
-            <div class="status-chip">@_statusMessage</div>
-            <div class="header-pills">
-                <span>@(_result?.TotalCount ?? 0) resep</span>
-                <span>@WarehouseMaterialIds.Count material sudah di gudang</span>
+                </div>
             </div>
         </div>
 
@@ -176,6 +161,24 @@
                         </div>
                     </article>
                 }
+            </div>
+
+            <div class="table-footer">
+                <small>@(_result?.TotalCount ?? 0) resep</small>
+                <div class="pager">
+                    <button type="button" @onclick="PrevRecipePage" disabled="@(CurrentRecipePage <= 1)">Prev</button>
+                    <label class="pager-select" aria-label="Pilih halaman resep">
+                        <select value="@CurrentRecipePage" @onchange="OnRecipePageChanged">
+                            @for (var pageNumber = 1; pageNumber <= RecipeTotalPages; pageNumber++)
+                            {
+                                <option value="@pageNumber">Halaman @pageNumber</option>
+                            }
+                        </select>
+                    </label>
+                    <span>@CurrentRecipePage / @RecipeTotalPages</span>
+                    <button type="button" @onclick="NextRecipePage" disabled="@(CurrentRecipePage >= RecipeTotalPages)">Next</button>
+                </div>
+                <div class="table-footer-spacer" aria-hidden="true"></div>
             </div>
         }
     </section>
@@ -392,7 +395,7 @@
                     </div>
 
                     <button type="button" class="close-button recipe-close-button" @onclick="CloseEditor" aria-label="Tutup form">
-                        <span aria-hidden="true">&times;</span>
+                        <AppIcon Name="close" Class="icon-glyph" />
                     </button>
                 </div>
 
@@ -484,7 +487,7 @@
                             }
                         </section>
 
-                        <section class="studio-card form-section recipe-entry-card material-studio-card">
+                        <section class="studio-card form-section recipe-entry-card material-studio-card catalog-datagrid">
                             <div class="section-head section-inline-head">
                                 <div>
                                     <span class="section-tag">Material</span>
@@ -498,15 +501,6 @@
                                         @foreach (var option in GridDisplayOptions)
                                         {
                                             <option value="@option">@option baris</option>
-                                        }
-                                    </select>
-                                </label>
-                                <label class="display-count-control compact">
-                                    <span>Halaman</span>
-                                    <select value="@CurrentMaterialPage" @onchange="OnMaterialPageChanged">
-                                        @for (var pageNumber = 1; pageNumber <= MaterialTotalPages; pageNumber++)
-                                        {
-                                            <option value="@pageNumber">Halaman @pageNumber</option>
                                         }
                                     </select>
                                 </label>
@@ -654,14 +648,32 @@
                                             <TemplateColumn Title="Aksi" Context="item">
                                                 <div class="material-row-actions">
                                                     <button type="button" class="icon-action-button" title="Edit" aria-label="Edit" @onclick="() => EditMaterialRowAsync(activeGroup, item)">
-                                                        &#9998;
+                                                        <AppIcon Name="edit" Class="icon-glyph" />
                                                     </button>
                                                     <button type="button" class="icon-action-button danger" title="Hapus" aria-label="Hapus" @onclick="() => RemoveMaterialRow(activeGroup, item)">
-                                                        &#128465;
+                                                        <AppIcon Name="delete" Class="icon-glyph" />
                                                     </button>
                                                 </div>
                                             </TemplateColumn>
-                                        </QuickGrid>
+                                    </QuickGrid>
+                                    </div>
+
+                                    <div class="table-footer">
+                                        <small>@(ActiveEditingGroup?.Materials.Count ?? 0) material</small>
+                                        <div class="pager">
+                                            <button type="button" @onclick="PrevMaterialPage" disabled="@(CurrentMaterialPage <= 1)">Prev</button>
+                                            <label class="pager-select" aria-label="Pilih halaman material resep">
+                                                <select value="@CurrentMaterialPage" @onchange="OnMaterialPageChanged">
+                                                    @for (var pageNumber = 1; pageNumber <= MaterialTotalPages; pageNumber++)
+                                                    {
+                                                        <option value="@pageNumber">Halaman @pageNumber</option>
+                                                    }
+                                                </select>
+                                            </label>
+                                            <span>@CurrentMaterialPage / @MaterialTotalPages</span>
+                                            <button type="button" @onclick="NextMaterialPage" disabled="@(CurrentMaterialPage >= MaterialTotalPages)">Next</button>
+                                        </div>
+                                        <div class="table-footer-spacer" aria-hidden="true"></div>
                                     </div>
                                 }
                             }
@@ -885,6 +897,12 @@
     private void OnRecipePageChanged(ChangeEventArgs args)
         => _recipePage = ParsePage(args.Value?.ToString(), CurrentRecipePage, RecipeTotalPages);
 
+    private void PrevRecipePage()
+        => _recipePage = Math.Max(1, CurrentRecipePage - 1);
+
+    private void NextRecipePage()
+        => _recipePage = Math.Min(RecipeTotalPages, CurrentRecipePage + 1);
+
     private void OnMaterialDisplayCountChanged(ChangeEventArgs args)
     {
         _materialDisplayCount = ParseDisplayCount(args.Value?.ToString(), _materialDisplayCount);
@@ -893,6 +911,12 @@
 
     private void OnMaterialPageChanged(ChangeEventArgs args)
         => _materialPage = ParsePage(args.Value?.ToString(), CurrentMaterialPage, MaterialTotalPages);
+
+    private void PrevMaterialPage()
+        => _materialPage = Math.Max(1, CurrentMaterialPage - 1);
+
+    private void NextMaterialPage()
+        => _materialPage = Math.Min(MaterialTotalPages, CurrentMaterialPage + 1);
 
     private async Task SyncSelectionAsync()
     {

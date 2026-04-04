@@ -37,7 +37,7 @@
     else if (_snapshot is not null)
     {
         <div class="workspace-grid">
-            <section class="menu-panel">
+            <section class="menu-panel catalog-datagrid">
                 <div class="panel-head">
                     <div>
                         <span class="section-tag">List menu</span>
@@ -51,15 +51,6 @@
                             @foreach (var option in GridDisplayOptions)
                             {
                                 <option value="@option">@option menu</option>
-                            }
-                        </select>
-                    </label>
-                    <label class="display-count-control">
-                        <span>Halaman</span>
-                        <select value="@CurrentMenuPage" @onchange="OnMenuPageChanged">
-                            @for (var pageNumber = 1; pageNumber <= MenuTotalPages; pageNumber++)
-                            {
-                                <option value="@pageNumber">Halaman @pageNumber</option>
                             }
                         </select>
                     </label>
@@ -106,6 +97,24 @@
                             </button>
                         }
                     </div>
+                </div>
+
+                <div class="table-footer">
+                    <small>@_snapshot.Products.Count menu</small>
+                    <div class="pager">
+                        <button type="button" @onclick="PrevMenuPage" disabled="@(CurrentMenuPage <= 1)">Prev</button>
+                        <label class="pager-select" aria-label="Pilih halaman menu POS">
+                            <select value="@CurrentMenuPage" @onchange="OnMenuPageChanged">
+                                @for (var pageNumber = 1; pageNumber <= MenuTotalPages; pageNumber++)
+                                {
+                                    <option value="@pageNumber">Halaman @pageNumber</option>
+                                }
+                            </select>
+                        </label>
+                        <span>@CurrentMenuPage / @MenuTotalPages</span>
+                        <button type="button" @onclick="NextMenuPage" disabled="@(CurrentMenuPage >= MenuTotalPages)">Next</button>
+                    </div>
+                    <div class="table-footer-spacer" aria-hidden="true"></div>
                 </div>
             </section>
 
@@ -230,7 +239,7 @@
             </section>
         </div>
 
-        <section class="history-card">
+        <section class="history-card catalog-datagrid">
             <div class="panel-head">
                 <div>
                     <span class="section-tag">History pesanan</span>
@@ -244,15 +253,6 @@
                         @foreach (var option in GridDisplayOptions)
                         {
                             <option value="@option">@option baris</option>
-                        }
-                    </select>
-                </label>
-                <label class="display-count-control">
-                    <span>Halaman</span>
-                    <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
-                        @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
-                        {
-                            <option value="@pageNumber">Halaman @pageNumber</option>
                         }
                     </select>
                 </label>
@@ -309,7 +309,7 @@
                                 @if (!item.IsPaid && item.Status == SaleStatus.Completed)
                                 {
                                     <button type="button" class="icon-button success" @onclick="() => MarkSalePaidAsync(item.Id)" title="Tandai lunas">
-                                        <span class="icon-glyph">&#10003;</span>
+                                        <AppIcon Name="check" Class="icon-glyph" />
                                     </button>
                                 }
                                 else
@@ -363,7 +363,7 @@
                                 @if (!item.IsPaid && item.Status == SaleStatus.Completed)
                                 {
                                     <button type="button" class="icon-button success" @onclick="() => MarkSalePaidAsync(item.Id)" title="Tandai lunas">
-                                        <span class="icon-glyph">&#10003;</span>
+                                        <AppIcon Name="check" Class="icon-glyph" />
                                     </button>
                                 }
                                 else
@@ -373,6 +373,24 @@
                             </div>
                         </article>
                     }
+                </div>
+
+                <div class="table-footer">
+                    <small>@_snapshot.RecentSales.Count pesanan</small>
+                    <div class="pager">
+                        <button type="button" @onclick="PrevPosHistoryPage" disabled="@(CurrentHistoryPage <= 1)">Prev</button>
+                        <label class="pager-select" aria-label="Pilih halaman history POS">
+                            <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
+                                @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
+                                {
+                                    <option value="@pageNumber">Halaman @pageNumber</option>
+                                }
+                            </select>
+                        </label>
+                        <span>@CurrentHistoryPage / @HistoryTotalPages</span>
+                        <button type="button" @onclick="NextPosHistoryPage" disabled="@(CurrentHistoryPage >= HistoryTotalPages)">Next</button>
+                    </div>
+                    <div class="table-footer-spacer" aria-hidden="true"></div>
                 </div>
             }
         </section>
@@ -458,6 +476,12 @@
     private void OnMenuPageChanged(ChangeEventArgs args)
         => _menuPage = ParsePage(args.Value?.ToString(), CurrentMenuPage, MenuTotalPages);
 
+    private void PrevMenuPage()
+        => _menuPage = Math.Max(1, CurrentMenuPage - 1);
+
+    private void NextMenuPage()
+        => _menuPage = Math.Min(MenuTotalPages, CurrentMenuPage + 1);
+
     private void OnHistoryDisplayCountChanged(ChangeEventArgs args)
     {
         _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
@@ -466,6 +490,12 @@
 
     private void OnHistoryPageChanged(ChangeEventArgs args)
         => _historyPage = ParsePage(args.Value?.ToString(), CurrentHistoryPage, HistoryTotalPages);
+
+    private void PrevPosHistoryPage()
+        => _historyPage = Math.Max(1, CurrentHistoryPage - 1);
+
+    private void NextPosHistoryPage()
+        => _historyPage = Math.Min(HistoryTotalPages, CurrentHistoryPage + 1);
 
     private async Task SelectProductAsync(Guid productId)
     {

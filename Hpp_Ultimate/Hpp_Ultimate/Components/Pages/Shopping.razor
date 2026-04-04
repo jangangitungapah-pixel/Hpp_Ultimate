@@ -206,7 +206,7 @@
                     </section>
                 }
 
-                <section class="cart-card">
+                <section class="cart-card catalog-datagrid">
                     <div class="section-head">
                         <div>
                             <span class="section-tag">List belanja</span>
@@ -220,15 +220,6 @@
                                 @foreach (var option in GridDisplayOptions)
                                 {
                                     <option value="@option">@option baris</option>
-                                }
-                            </select>
-                        </label>
-                        <label class="display-count-control">
-                            <span>Halaman</span>
-                            <select value="@CurrentCartPage" @onchange="OnCartPageChanged">
-                                @for (var pageNumber = 1; pageNumber <= CartTotalPages; pageNumber++)
-                                {
-                                    <option value="@pageNumber">Halaman @pageNumber</option>
                                 }
                             </select>
                         </label>
@@ -272,7 +263,7 @@
                                 <TemplateColumn Title="Aksi" Context="item">
                                     <div class="history-actions">
                                         <button type="button" class="icon-button danger" title="Hapus item" @onclick="() => RemoveDraftLine(item.MaterialId)">
-                                            <span class="icon-glyph">&#128465;</span>
+                                            <AppIcon Name="delete" Class="icon-glyph" />
                                         </button>
                                     </div>
                                 </TemplateColumn>
@@ -290,7 +281,7 @@
                                         </div>
 
                                         <button type="button" class="icon-button danger" title="Hapus item" @onclick="() => RemoveDraftLine(item.MaterialId)">
-                                            <span class="icon-glyph">&#128465;</span>
+                                            <AppIcon Name="delete" Class="icon-glyph" />
                                         </button>
                                     </div>
 
@@ -313,6 +304,24 @@
                                     </div>
                                 </article>
                             }
+                        </div>
+
+                        <div class="table-footer">
+                            <small>@_draftLines.Count item</small>
+                            <div class="pager">
+                                <button type="button" @onclick="PrevCartPage" disabled="@(CurrentCartPage <= 1)">Prev</button>
+                                <label class="pager-select" aria-label="Pilih halaman list belanja">
+                                    <select value="@CurrentCartPage" @onchange="OnCartPageChanged">
+                                        @for (var pageNumber = 1; pageNumber <= CartTotalPages; pageNumber++)
+                                        {
+                                            <option value="@pageNumber">Halaman @pageNumber</option>
+                                        }
+                                    </select>
+                                </label>
+                                <span>@CurrentCartPage / @CartTotalPages</span>
+                                <button type="button" @onclick="NextCartPage" disabled="@(CurrentCartPage >= CartTotalPages)">Next</button>
+                            </div>
+                            <div class="table-footer-spacer" aria-hidden="true"></div>
                         </div>
                     }
                 </section>
@@ -399,7 +408,7 @@
             </EditForm>
         </section>
 
-        <section class="history-card">
+        <section class="history-card catalog-datagrid">
             <div class="section-head">
                 <div>
                     <span class="section-tag">History belanja</span>
@@ -413,15 +422,6 @@
                         @foreach (var option in GridDisplayOptions)
                         {
                             <option value="@option">@option baris</option>
-                        }
-                    </select>
-                </label>
-                <label class="display-count-control">
-                    <span>Halaman</span>
-                    <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
-                        @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
-                        {
-                            <option value="@pageNumber">Halaman @pageNumber</option>
                         }
                     </select>
                 </label>
@@ -483,7 +483,7 @@
                                 @if (item.CanReceive)
                                 {
                                     <button type="button" class="icon-button success" title="Barang sampai" @onclick="() => MarkReceivedAsync(item.Id)">
-                                        <span class="icon-glyph">&#10003;</span>
+                                        <AppIcon Name="check" Class="icon-glyph" />
                                     </button>
                                 }
                                 else
@@ -492,7 +492,7 @@
                                 }
 
                                 <label class="icon-button upload-trigger @(item.HasReceipt ? "receipt-ready" : null)" title="Upload struk">
-                                    <span class="icon-glyph">&#128196;</span>
+                                    <AppIcon Name="receipt" Class="icon-glyph" />
                                     <InputFile OnChange="@(args => UploadReceiptAsync(item.Id, args))" accept="image/*,.pdf" />
                                 </label>
                             </div>
@@ -545,7 +545,7 @@
                                     @if (item.CanReceive)
                                     {
                                         <button type="button" class="icon-button success" title="Barang sampai" @onclick="() => MarkReceivedAsync(item.Id)">
-                                            <span class="icon-glyph">&#10003;</span>
+                                            <AppIcon Name="check" Class="icon-glyph" />
                                         </button>
                                     }
                                     else
@@ -554,13 +554,31 @@
                                     }
 
                                     <label class="icon-button upload-trigger @(item.HasReceipt ? "receipt-ready" : null)" title="Upload struk">
-                                        <span class="icon-glyph">&#128196;</span>
+                                        <AppIcon Name="receipt" Class="icon-glyph" />
                                         <InputFile OnChange="@(args => UploadReceiptAsync(item.Id, args))" accept="image/*,.pdf" />
                                     </label>
                                 </div>
                             </div>
                         </article>
                     }
+                </div>
+
+                <div class="table-footer">
+                    <small>@_snapshot.History.Count history</small>
+                    <div class="pager">
+                        <button type="button" @onclick="PrevShoppingHistoryPage" disabled="@(CurrentHistoryPage <= 1)">Prev</button>
+                        <label class="pager-select" aria-label="Pilih halaman history belanja">
+                            <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
+                                @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
+                                {
+                                    <option value="@pageNumber">Halaman @pageNumber</option>
+                                }
+                            </select>
+                        </label>
+                        <span>@CurrentHistoryPage / @HistoryTotalPages</span>
+                        <button type="button" @onclick="NextShoppingHistoryPage" disabled="@(CurrentHistoryPage >= HistoryTotalPages)">Next</button>
+                    </div>
+                    <div class="table-footer-spacer" aria-hidden="true"></div>
                 </div>
             }
         </section>
@@ -670,6 +688,12 @@
     private void OnCartPageChanged(ChangeEventArgs args)
         => _cartPage = ParsePage(args.Value?.ToString(), CurrentCartPage, CartTotalPages);
 
+    private void PrevCartPage()
+        => _cartPage = Math.Max(1, CurrentCartPage - 1);
+
+    private void NextCartPage()
+        => _cartPage = Math.Min(CartTotalPages, CurrentCartPage + 1);
+
     private void OnHistoryDisplayCountChanged(ChangeEventArgs args)
     {
         _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
@@ -678,6 +702,12 @@
 
     private void OnHistoryPageChanged(ChangeEventArgs args)
         => _historyPage = ParsePage(args.Value?.ToString(), CurrentHistoryPage, HistoryTotalPages);
+
+    private void PrevShoppingHistoryPage()
+        => _historyPage = Math.Max(1, CurrentHistoryPage - 1);
+
+    private void NextShoppingHistoryPage()
+        => _historyPage = Math.Min(HistoryTotalPages, CurrentHistoryPage + 1);
 
     private void OnOrderedAtChanged(ChangeEventArgs args)
         => _checkoutForm.OrderedAt = ParseDateTimeLocal(args.Value?.ToString(), _checkoutForm.OrderedAt == default ? DateTime.Now : _checkoutForm.OrderedAt);

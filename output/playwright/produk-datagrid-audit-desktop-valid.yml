@@ -1,0 +1,52 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "+ HPP Ultimate Operational workspace." [ref=e4] [cursor=pointer]:
+      - /url: /login
+      - text: +
+      - generic [ref=e5]:
+        - strong [ref=e6]: HPP Ultimate
+        - text: Operational workspace.
+    - main [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - text: HPP Ultimate
+          - heading "Masuk ke workspace operasional yang ringkas dan terhubung." [level=1] [ref=e10]
+          - paragraph [ref=e11]: Gunakan email atau username yang tersimpan untuk melanjutkan ke alur kerja persiapan, master formula, gudang, belanja, produksi, dan POS.
+          - generic [ref=e12]:
+            - article [ref=e13]:
+              - text: Persiapan
+              - strong [ref=e14]: Pengaturan & akun
+              - text: Satu titik kontrol untuk identitas usaha dan akses tim.
+            - article [ref=e15]:
+              - text: Master & Formula
+              - strong [ref=e16]: Material, resep, produk
+              - text: Data inti biaya dan formula tetap sinkron lintas modul.
+            - article [ref=e17]:
+              - text: Operasional
+              - strong [ref=e18]: Gudang, produksi, POS
+              - text: Catat pergerakan stok dan transaksi dari satu workspace.
+          - generic [ref=e19]: 3D glass surfaces fast operator flow live costing persistent sales
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - text: Sign In
+            - heading "Masuk ke akun kamu" [level=2] [ref=e22]
+            - paragraph [ref=e23]: Autentikasi ini membuka seluruh workspace sesuai peran admin atau staff.
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - text: Email / Username
+              - textbox "Email / Username" [ref=e26]:
+                - /placeholder: Masukkan email atau username
+            - generic [ref=e27]:
+              - text: Password
+              - textbox "Password" [ref=e28]:
+                - /placeholder: Masukkan password
+            - generic [ref=e29]:
+              - checkbox "Ingat sesi ini" [ref=e30]
+              - text: Ingat sesi ini
+            - button "Masuk" [ref=e31]
+            - generic [ref=e32]: Akses kamu akan diarahkan ke workspace yang sudah disusun mengikuti flow operasional aplikasi.
+  - generic [ref=e33]:
+    - text: An unhandled error has occurred.
+    - link "Reload" [ref=e34] [cursor=pointer]:
+      - /url: .
+    - text: x

@@ -211,7 +211,7 @@
                             </EditForm>
                         </section>
 
-                        <section class="requirement-card">
+                        <section class="requirement-card catalog-datagrid">
                         <div class="section-head">
                             <div>
                                 <span class="section-tag">Kebutuhan bahan</span>
@@ -225,15 +225,6 @@
                                     @foreach (var option in GridDisplayOptions)
                                     {
                                         <option value="@option">@option baris</option>
-                                    }
-                                </select>
-                            </label>
-                            <label class="display-count-control compact">
-                                <span>Halaman</span>
-                                <select value="@CurrentRequirementPage" @onchange="OnRequirementPageChanged">
-                                    @for (var pageNumber = 1; pageNumber <= RequirementTotalPages; pageNumber++)
-                                    {
-                                        <option value="@pageNumber">Halaman @pageNumber</option>
                                     }
                                 </select>
                             </label>
@@ -312,12 +303,30 @@
                                     </article>
                                 }
                             </div>
+
+                            <div class="table-footer">
+                                <small>@(_snapshot.Draft.Requirements.Count) bahan</small>
+                                <div class="pager">
+                                    <button type="button" @onclick="PrevRequirementPage" disabled="@(CurrentRequirementPage <= 1)">Prev</button>
+                                    <label class="pager-select" aria-label="Pilih halaman kebutuhan bahan">
+                                        <select value="@CurrentRequirementPage" @onchange="OnRequirementPageChanged">
+                                            @for (var pageNumber = 1; pageNumber <= RequirementTotalPages; pageNumber++)
+                                            {
+                                                <option value="@pageNumber">Halaman @pageNumber</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <span>@CurrentRequirementPage / @RequirementTotalPages</span>
+                                    <button type="button" @onclick="NextRequirementPage" disabled="@(CurrentRequirementPage >= RequirementTotalPages)">Next</button>
+                                </div>
+                                <div class="table-footer-spacer" aria-hidden="true"></div>
+                            </div>
                         }
                         </section>
                     }
                 </section>
 
-                <section class="queue-card inline-queue-card">
+                <section class="queue-card inline-queue-card catalog-datagrid">
             <div class="section-head">
                 <div>
                     <span class="section-tag">Antrian produksi</span>
@@ -331,15 +340,6 @@
                         @foreach (var option in GridDisplayOptions)
                         {
                             <option value="@option">@option baris</option>
-                        }
-                    </select>
-                </label>
-                <label class="display-count-control compact">
-                    <span>Halaman</span>
-                    <select value="@CurrentQueuePage" @onchange="OnQueuePageChanged">
-                        @for (var pageNumber = 1; pageNumber <= QueueTotalPages; pageNumber++)
-                        {
-                            <option value="@pageNumber">Halaman @pageNumber</option>
                         }
                     </select>
                 </label>
@@ -433,12 +433,30 @@
                         </article>
                     }
                 </div>
+
+                <div class="table-footer">
+                    <small>@_snapshot.Queue.Count antrian</small>
+                    <div class="pager">
+                        <button type="button" @onclick="PrevQueuePage" disabled="@(CurrentQueuePage <= 1)">Prev</button>
+                        <label class="pager-select" aria-label="Pilih halaman antrian produksi">
+                            <select value="@CurrentQueuePage" @onchange="OnQueuePageChanged">
+                                @for (var pageNumber = 1; pageNumber <= QueueTotalPages; pageNumber++)
+                                {
+                                    <option value="@pageNumber">Halaman @pageNumber</option>
+                                }
+                            </select>
+                        </label>
+                        <span>@CurrentQueuePage / @QueueTotalPages</span>
+                        <button type="button" @onclick="NextQueuePage" disabled="@(CurrentQueuePage >= QueueTotalPages)">Next</button>
+                    </div>
+                    <div class="table-footer-spacer" aria-hidden="true"></div>
+                </div>
             }
         </section>
             </div>
         </div>
 
-        <section class="history-card">
+        <section class="history-card catalog-datagrid">
             <div class="section-head">
                 <div>
                     <span class="section-tag">History produksi</span>
@@ -452,15 +470,6 @@
                         @foreach (var option in GridDisplayOptions)
                         {
                             <option value="@option">@option baris</option>
-                        }
-                    </select>
-                </label>
-                <label class="display-count-control compact">
-                    <span>Halaman</span>
-                    <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
-                        @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
-                        {
-                            <option value="@pageNumber">Halaman @pageNumber</option>
                         }
                     </select>
                 </label>
@@ -565,6 +574,24 @@
                             </div>
                         </article>
                     }
+                </div>
+
+                <div class="table-footer">
+                    <small>@_snapshot.History.Count histori</small>
+                    <div class="pager">
+                        <button type="button" @onclick="PrevHistoryPage" disabled="@(CurrentHistoryPage <= 1)">Prev</button>
+                        <label class="pager-select" aria-label="Pilih halaman history produksi">
+                            <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
+                                @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
+                                {
+                                    <option value="@pageNumber">Halaman @pageNumber</option>
+                                }
+                            </select>
+                        </label>
+                        <span>@CurrentHistoryPage / @HistoryTotalPages</span>
+                        <button type="button" @onclick="NextHistoryPage" disabled="@(CurrentHistoryPage >= HistoryTotalPages)">Next</button>
+                    </div>
+                    <div class="table-footer-spacer" aria-hidden="true"></div>
                 </div>
             }
         </section>
@@ -703,6 +730,12 @@
     private void OnRequirementPageChanged(ChangeEventArgs args)
         => _requirementPage = ParsePage(args.Value?.ToString(), CurrentRequirementPage, RequirementTotalPages);
 
+    private void PrevRequirementPage()
+        => _requirementPage = Math.Max(1, CurrentRequirementPage - 1);
+
+    private void NextRequirementPage()
+        => _requirementPage = Math.Min(RequirementTotalPages, CurrentRequirementPage + 1);
+
     private void OnQueueDisplayCountChanged(ChangeEventArgs args)
     {
         _queueDisplayCount = ParseDisplayCount(args.Value?.ToString(), _queueDisplayCount);
@@ -712,6 +745,12 @@
     private void OnQueuePageChanged(ChangeEventArgs args)
         => _queuePage = ParsePage(args.Value?.ToString(), CurrentQueuePage, QueueTotalPages);
 
+    private void PrevQueuePage()
+        => _queuePage = Math.Max(1, CurrentQueuePage - 1);
+
+    private void NextQueuePage()
+        => _queuePage = Math.Min(QueueTotalPages, CurrentQueuePage + 1);
+
     private void OnHistoryDisplayCountChanged(ChangeEventArgs args)
     {
         _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
@@ -720,6 +759,12 @@
 
     private void OnHistoryPageChanged(ChangeEventArgs args)
         => _historyPage = ParsePage(args.Value?.ToString(), CurrentHistoryPage, HistoryTotalPages);
+
+    private void PrevHistoryPage()
+        => _historyPage = Math.Max(1, CurrentHistoryPage - 1);
+
+    private void NextHistoryPage()
+        => _historyPage = Math.Min(HistoryTotalPages, CurrentHistoryPage + 1);
 
     private void OnRecipeLookupInput(ChangeEventArgs args)
         => _recipeLookupText = args.Value?.ToString() ?? string.Empty;
