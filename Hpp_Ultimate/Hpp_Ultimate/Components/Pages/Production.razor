@@ -228,6 +228,15 @@
                                     }
                                 </select>
                             </label>
+                            <label class="display-count-control compact">
+                                <span>Halaman</span>
+                                <select value="@CurrentRequirementPage" @onchange="OnRequirementPageChanged">
+                                    @for (var pageNumber = 1; pageNumber <= RequirementTotalPages; pageNumber++)
+                                    {
+                                        <option value="@pageNumber">Halaman @pageNumber</option>
+                                    }
+                                </select>
+                            </label>
                         </div>
 
                         @if (_snapshot.Draft.Requirements.Count == 0)
@@ -322,6 +331,15 @@
                         @foreach (var option in GridDisplayOptions)
                         {
                             <option value="@option">@option baris</option>
+                        }
+                    </select>
+                </label>
+                <label class="display-count-control compact">
+                    <span>Halaman</span>
+                    <select value="@CurrentQueuePage" @onchange="OnQueuePageChanged">
+                        @for (var pageNumber = 1; pageNumber <= QueueTotalPages; pageNumber++)
+                        {
+                            <option value="@pageNumber">Halaman @pageNumber</option>
                         }
                     </select>
                 </label>
@@ -434,6 +452,15 @@
                         @foreach (var option in GridDisplayOptions)
                         {
                             <option value="@option">@option baris</option>
+                        }
+                    </select>
+                </label>
+                <label class="display-count-control compact">
+                    <span>Halaman</span>
+                    <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
+                        @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
+                        {
+                            <option value="@pageNumber">Halaman @pageNumber</option>
                         }
                     </select>
                 </label>
@@ -555,8 +582,11 @@
     private string _statusMessage = "Memuat produksi...";
     private string _message = string.Empty;
     private int _requirementDisplayCount = 10;
+    private int _requirementPage = 1;
     private int _queueDisplayCount = 8;
+    private int _queuePage = 1;
     private int _historyDisplayCount = 12;
+    private int _historyPage = 1;
     private CancellationTokenSource? _clockCts;
     private Task? _clockTask;
     private readonly HashSet<Guid> _alarmedBatchIds = [];
@@ -580,18 +610,27 @@
             ? _snapshot?.Recipes.FirstOrDefault(item => item.RecipeId == recipeId)
             : null;
 
+    private int RequirementTotalPages => CalculateTotalPages(_snapshot?.Draft?.Requirements.Count ?? 0, _requirementDisplayCount);
+    private int CurrentRequirementPage => ClampPage(_requirementPage, RequirementTotalPages);
     private IReadOnlyList<ProductionRequirementLine> VisibleDraftRequirements
         => (_snapshot?.Draft?.Requirements ?? Array.Empty<ProductionRequirementLine>())
+            .Skip((CurrentRequirementPage - 1) * _requirementDisplayCount)
             .Take(_requirementDisplayCount)
             .ToArray();
 
+    private int QueueTotalPages => CalculateTotalPages(_snapshot?.Queue.Count ?? 0, _queueDisplayCount);
+    private int CurrentQueuePage => ClampPage(_queuePage, QueueTotalPages);
     private IReadOnlyList<ProductionBatchListItem> VisibleQueueItems
         => (_snapshot?.Queue ?? Array.Empty<ProductionBatchListItem>())
+            .Skip((CurrentQueuePage - 1) * _queueDisplayCount)
             .Take(_queueDisplayCount)
             .ToArray();
 
+    private int HistoryTotalPages => CalculateTotalPages(_snapshot?.History.Count ?? 0, _historyDisplayCount);
+    private int CurrentHistoryPage => ClampPage(_historyPage, HistoryTotalPages);
     private IReadOnlyList<ProductionBatchListItem> VisibleHistoryItems
         => (_snapshot?.History ?? Array.Empty<ProductionBatchListItem>())
+            .Skip((CurrentHistoryPage - 1) * _historyDisplayCount)
             .Take(_historyDisplayCount)
             .ToArray();
 
@@ -628,6 +667,9 @@
         _isLoading = true;
         _snapshot = await ProductionService.GetSnapshotAsync(null, _selectedRecipeId, Math.Max(1, _productionForm.BatchCount));
         _selectedRecipeId = _snapshot.SelectedRecipeId;
+        _requirementPage = CurrentRequirementPage;
+        _queuePage = CurrentQueuePage;
+        _historyPage = CurrentHistoryPage;
 
         if (_editingQueueId is Guid editingId && !_snapshot.Queue.Any(item => item.Id == editingId))
         {
@@ -653,13 +695,31 @@
     private Task ReloadAsync() => LoadAsync();
 
     private void OnRequirementDisplayCountChanged(ChangeEventArgs args)
-        => _requirementDisplayCount = ParseDisplayCount(args.Value?.ToString(), _requirementDisplayCount);
+    {
+        _requirementDisplayCount = ParseDisplayCount(args.Value?.ToString(), _requirementDisplayCount);
+        _requirementPage = 1;
+    }
+
+    private void OnRequirementPageChanged(ChangeEventArgs args)
+        => _requirementPage = ParsePage(args.Value?.ToString(), CurrentRequirementPage, RequirementTotalPages);
 
     private void OnQueueDisplayCountChanged(ChangeEventArgs args)
-        => _queueDisplayCount = ParseDisplayCount(args.Value?.ToString(), _queueDisplayCount);
+    {
+        _queueDisplayCount = ParseDisplayCount(args.Value?.ToString(), _queueDisplayCount);
+        _queuePage = 1;
+    }
+
+    private void OnQueuePageChanged(ChangeEventArgs args)
+        => _queuePage = ParsePage(args.Value?.ToString(), CurrentQueuePage, QueueTotalPages);
 
     private void OnHistoryDisplayCountChanged(ChangeEventArgs args)
-        => _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
+    {
+        _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
+        _historyPage = 1;
+    }
+
+    private void OnHistoryPageChanged(ChangeEventArgs args)
+        => _historyPage = ParsePage(args.Value?.ToString(), CurrentHistoryPage, HistoryTotalPages);
 
     private void OnRecipeLookupInput(ChangeEventArgs args)
         => _recipeLookupText = args.Value?.ToString() ?? string.Empty;
@@ -919,6 +979,17 @@
 
     private static int ParseDisplayCount(string? value, int fallback)
         => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
+
+    private static int ParsePage(string? value, int fallback, int totalPages)
+        => int.TryParse(value, out var parsed) && parsed > 0
+            ? Math.Min(parsed, Math.Max(1, totalPages))
+            : fallback;
+
+    private static int CalculateTotalPages(int totalItems, int pageSize)
+        => Math.Max(1, (int)Math.Ceiling(totalItems / (double)Math.Max(1, pageSize)));
+
+    private static int ClampPage(int page, int totalPages)
+        => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
     private void ResetProductionForm(Guid? recipeId, int batchCount = 1, int targetDuration = 30)
     {

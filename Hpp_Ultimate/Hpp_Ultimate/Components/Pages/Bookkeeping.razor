@@ -99,6 +99,15 @@
                         }
                     </select>
                 </label>
+                <label class="display-count-control">
+                    <span>Halaman</span>
+                    <select value="@CurrentLedgerPage" @onchange="OnLedgerPageChanged">
+                        @for (var pageNumber = 1; pageNumber <= LedgerTotalPages; pageNumber++)
+                        {
+                            <option value="@pageNumber">Halaman @pageNumber</option>
+                        }
+                    </select>
+                </label>
             </div>
 
             <div class="summary-strip">
@@ -225,14 +234,18 @@
     private string _statusMessage = "Memuat pembukuan...";
     private string _message = string.Empty;
     private int _ledgerDisplayCount = 12;
+    private int _ledgerPage = 1;
     private ManualLedgerEntryRequest _formModel = new()
     {
         Direction = LedgerEntryDirection.Expense,
         OccurredAt = DateTime.Now
     };
 
+    private int LedgerTotalPages => CalculateTotalPages(_snapshot?.Items.Count ?? 0, _ledgerDisplayCount);
+    private int CurrentLedgerPage => ClampPage(_ledgerPage, LedgerTotalPages);
     private IReadOnlyList<BookkeepingListItem> VisibleLedgerItems
         => (_snapshot?.Items ?? Array.Empty<BookkeepingListItem>())
+            .Skip((CurrentLedgerPage - 1) * _ledgerDisplayCount)
             .Take(_ledgerDisplayCount)
             .ToArray();
 
@@ -246,6 +259,7 @@
     {
         _isLoading = true;
         _snapshot = await BookkeepingService.GetSnapshotAsync();
+        _ledgerPage = CurrentLedgerPage;
         _statusMessage = _snapshot.TotalEntries == 0
             ? "Ledger masih kosong"
             : $"{_snapshot.TotalEntries} entry tercatat";
@@ -256,7 +270,13 @@
     private Task ReloadAsync() => LoadAsync();
 
     private void OnLedgerDisplayCountChanged(ChangeEventArgs args)
-        => _ledgerDisplayCount = ParseDisplayCount(args.Value?.ToString(), _ledgerDisplayCount);
+    {
+        _ledgerDisplayCount = ParseDisplayCount(args.Value?.ToString(), _ledgerDisplayCount);
+        _ledgerPage = 1;
+    }
+
+    private void OnLedgerPageChanged(ChangeEventArgs args)
+        => _ledgerPage = ParsePage(args.Value?.ToString(), CurrentLedgerPage, LedgerTotalPages);
 
     private void SelectDirection(LedgerEntryDirection direction)
         => _formModel.Direction = direction;
@@ -299,6 +319,17 @@
 
     private static int ParseDisplayCount(string? value, int fallback)
         => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
+
+    private static int ParsePage(string? value, int fallback, int totalPages)
+        => int.TryParse(value, out var parsed) && parsed > 0
+            ? Math.Min(parsed, Math.Max(1, totalPages))
+            : fallback;
+
+    private static int CalculateTotalPages(int totalItems, int pageSize)
+        => Math.Max(1, (int)Math.Ceiling(totalItems / (double)Math.Max(1, pageSize)));
+
+    private static int ClampPage(int page, int totalPages)
+        => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
     private async void HandleStoreChanged()
         => await InvokeAsync(LoadAsync);

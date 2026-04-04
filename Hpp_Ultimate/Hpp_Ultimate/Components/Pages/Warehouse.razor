@@ -148,6 +148,15 @@
                             }
                         </select>
                     </label>
+                    <label class="display-count-control">
+                        <span>Halaman</span>
+                        <select value="@CurrentWarehousePage" @onchange="OnWarehousePageChanged">
+                            @for (var pageNumber = 1; pageNumber <= WarehouseTotalPages; pageNumber++)
+                            {
+                                <option value="@pageNumber">Halaman @pageNumber</option>
+                            }
+                        </select>
+                    </label>
                 </div>
             </div>
 
@@ -253,6 +262,7 @@
     private string _materialLookupText = string.Empty;
     private string _message = string.Empty;
     private int _warehouseDisplayCount = 12;
+    private int _warehousePage = 1;
     private StockMovementRequest _movementForm = CreateMovementRequest();
 
     private IReadOnlyList<RawMaterial> CatalogMaterials
@@ -267,8 +277,15 @@
             .Where(IsTrackedInWarehouse)
             .ToArray();
 
+    private int WarehouseTotalPages => CalculateTotalPages(WarehouseRows.Count, _warehouseDisplayCount);
+
+    private int CurrentWarehousePage => ClampPage(_warehousePage, WarehouseTotalPages);
+
     private IReadOnlyList<WarehouseMaterialItem> VisibleWarehouseRows
-        => WarehouseRows.Take(_warehouseDisplayCount).ToArray();
+        => WarehouseRows
+            .Skip((CurrentWarehousePage - 1) * _warehouseDisplayCount)
+            .Take(_warehouseDisplayCount)
+            .ToArray();
 
     private WarehouseMaterialItem? SelectedCatalogMaterial
         => _movementForm.MaterialId is Guid id
@@ -296,6 +313,7 @@
     {
         _isLoading = true;
         _snapshot = await WarehouseService.GetSnapshotAsync(_searchText);
+        _warehousePage = CurrentWarehousePage;
         _statusMessage = WarehouseRows.Count == 0
             ? "Belum ada stok tercatat."
             : $"{WarehouseRows.Count} material ada di gudang";
@@ -308,11 +326,18 @@
     private async Task OnSearchChangedAsync(ChangeEventArgs args)
     {
         _searchText = args.Value?.ToString() ?? string.Empty;
+        _warehousePage = 1;
         await LoadAsync();
     }
 
     private void OnWarehouseDisplayCountChanged(ChangeEventArgs args)
-        => _warehouseDisplayCount = ParseDisplayCount(args.Value?.ToString(), _warehouseDisplayCount);
+    {
+        _warehouseDisplayCount = ParseDisplayCount(args.Value?.ToString(), _warehouseDisplayCount);
+        _warehousePage = 1;
+    }
+
+    private void OnWarehousePageChanged(ChangeEventArgs args)
+        => _warehousePage = ParsePage(args.Value?.ToString(), CurrentWarehousePage, WarehouseTotalPages);
 
     private void OnMaterialLookupChanged(ChangeEventArgs args)
     {
@@ -402,6 +427,17 @@
 
     private static int ParseDisplayCount(string? value, int fallback)
         => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
+
+    private static int ParsePage(string? value, int fallback, int totalPages)
+        => int.TryParse(value, out var parsed) && parsed > 0
+            ? Math.Min(parsed, Math.Max(1, totalPages))
+            : fallback;
+
+    private static int CalculateTotalPages(int totalItems, int pageSize)
+        => Math.Max(1, (int)Math.Ceiling(totalItems / (double)Math.Max(1, pageSize)));
+
+    private static int ClampPage(int page, int totalPages)
+        => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
     private async void HandleStoreChanged()
     {

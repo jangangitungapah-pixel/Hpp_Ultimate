@@ -208,7 +208,16 @@
                 <small>@(_result?.TotalCount ?? 0) material</small>
                 <div class="pager">
                     <button type="button" @onclick="PrevPageAsync" disabled="@(_page <= 1)">Prev</button>
-                    <span>Halaman @_page / @TotalPages</span>
+                    <label class="pager-select">
+                        <span>Halaman</span>
+                        <select value="@_page" @onchange="OnPageChangedAsync">
+                            @for (var pageNumber = 1; pageNumber <= TotalPages; pageNumber++)
+                            {
+                                <option value="@pageNumber">Halaman @pageNumber</option>
+                            }
+                        </select>
+                    </label>
+                    <span>@_page / @TotalPages</span>
                     <button type="button" @onclick="NextPageAsync" disabled="@(_page >= TotalPages)">Next</button>
                 </div>
             </div>
@@ -678,6 +687,8 @@
             _page,
             _pageSize));
 
+        _page = Math.Min(_page, TotalPages);
+
         _statusMessage = $"{_result.TotalCount} material ditemukan";
         _isLoading = false;
 
@@ -756,6 +767,14 @@
     private async Task NextPageAsync()
     {
         _page = Math.Min(TotalPages, _page + 1);
+        await LoadAsync();
+    }
+
+    private async Task OnPageChangedAsync(ChangeEventArgs args)
+    {
+        _page = int.TryParse(args.Value?.ToString(), out var parsed) && parsed > 0
+            ? Math.Min(parsed, TotalPages)
+            : _page;
         await LoadAsync();
     }
 

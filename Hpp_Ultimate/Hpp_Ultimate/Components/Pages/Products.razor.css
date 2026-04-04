@@ -594,6 +594,32 @@
     align-items: center;
 }
 
+.pager-select {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.pager-select span {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.pager-select select {
+    min-height: 2.75rem;
+    padding: 0.72rem 2.2rem 0.72rem 0.9rem;
+    border-radius: 0.95rem;
+    border: 1px solid rgba(203, 213, 225, 0.78);
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394a3b8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 6 5-6'/%3E%3C/svg%3E") right 0.8rem center / 0.95rem no-repeat,
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.86));
+    color: #172033;
+    font: inherit;
+    appearance: none;
+}
+
 .pager span {
     color: var(--text-muted);
     font-size: 0.88rem;

@@ -54,6 +54,15 @@
                             }
                         </select>
                     </label>
+                    <label class="display-count-control">
+                        <span>Halaman</span>
+                        <select value="@CurrentMenuPage" @onchange="OnMenuPageChanged">
+                            @for (var pageNumber = 1; pageNumber <= MenuTotalPages; pageNumber++)
+                            {
+                                <option value="@pageNumber">Halaman @pageNumber</option>
+                            }
+                        </select>
+                    </label>
                 </div>
 
                 <div class="search-row">
@@ -238,6 +247,15 @@
                         }
                     </select>
                 </label>
+                <label class="display-count-control">
+                    <span>Halaman</span>
+                    <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
+                        @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
+                        {
+                            <option value="@pageNumber">Halaman @pageNumber</option>
+                        }
+                    </select>
+                </label>
             </div>
 
             @if (_snapshot.RecentSales.Count == 0)
@@ -376,14 +394,26 @@
     private DateTime _soldAt = DateTime.Now;
     private string _message = string.Empty;
     private int _menuDisplayCount = 12;
+    private int _menuPage = 1;
     private int _historyDisplayCount = 12;
+    private int _historyPage = 1;
 
     private decimal OrderTotal => _snapshot?.SelectedProduct is null ? 0m : _snapshot.SelectedProduct.SuggestedPrice * _draftQuantity;
     private decimal OrderProfit => _snapshot?.SelectedProduct is null ? 0m : (_snapshot.SelectedProduct.SuggestedPrice - _snapshot.SelectedProduct.HppPerUnit) * _draftQuantity;
+    private int MenuTotalPages => CalculateTotalPages(_snapshot?.Products.Count ?? 0, _menuDisplayCount);
+    private int CurrentMenuPage => ClampPage(_menuPage, MenuTotalPages);
     private IReadOnlyList<PosProductOption> VisibleProducts
-        => (_snapshot?.Products ?? Array.Empty<PosProductOption>()).Take(_menuDisplayCount).ToArray();
+        => (_snapshot?.Products ?? Array.Empty<PosProductOption>())
+            .Skip((CurrentMenuPage - 1) * _menuDisplayCount)
+            .Take(_menuDisplayCount)
+            .ToArray();
+    private int HistoryTotalPages => CalculateTotalPages(_snapshot?.RecentSales.Count ?? 0, _historyDisplayCount);
+    private int CurrentHistoryPage => ClampPage(_historyPage, HistoryTotalPages);
     private IReadOnlyList<PosSalesHistoryItem> VisibleRecentSales
-        => (_snapshot?.RecentSales ?? Array.Empty<PosSalesHistoryItem>()).Take(_historyDisplayCount).ToArray();
+        => (_snapshot?.RecentSales ?? Array.Empty<PosSalesHistoryItem>())
+            .Skip((CurrentHistoryPage - 1) * _historyDisplayCount)
+            .Take(_historyDisplayCount)
+            .ToArray();
     private bool CanCheckout
         => _snapshot?.SelectedProduct is not null
             && _draftQuantity > 0
@@ -400,6 +430,8 @@
     {
         _isLoading = true;
         _snapshot = await SalesService.GetPosSnapshotAsync(_searchText, _selectedProductId);
+        _menuPage = CurrentMenuPage;
+        _historyPage = CurrentHistoryPage;
         _selectedProductId = _snapshot.SelectedProductId;
         _statusMessage = _snapshot.Products.Count == 0
             ? "Belum ada menu aktif."
@@ -413,14 +445,27 @@
     private async Task OnSearchChangedAsync(ChangeEventArgs args)
     {
         _searchText = args.Value?.ToString() ?? string.Empty;
+        _menuPage = 1;
         await LoadAsync();
     }
 
     private void OnMenuDisplayCountChanged(ChangeEventArgs args)
-        => _menuDisplayCount = ParseDisplayCount(args.Value?.ToString(), _menuDisplayCount);
+    {
+        _menuDisplayCount = ParseDisplayCount(args.Value?.ToString(), _menuDisplayCount);
+        _menuPage = 1;
+    }
+
+    private void OnMenuPageChanged(ChangeEventArgs args)
+        => _menuPage = ParsePage(args.Value?.ToString(), CurrentMenuPage, MenuTotalPages);
 
     private void OnHistoryDisplayCountChanged(ChangeEventArgs args)
-        => _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
+    {
+        _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
+        _historyPage = 1;
+    }
+
+    private void OnHistoryPageChanged(ChangeEventArgs args)
+        => _historyPage = ParsePage(args.Value?.ToString(), CurrentHistoryPage, HistoryTotalPages);
 
     private async Task SelectProductAsync(Guid productId)
     {
@@ -516,6 +561,17 @@
 
     private static int ParseDisplayCount(string? value, int fallback)
         => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
+
+    private static int ParsePage(string? value, int fallback, int totalPages)
+        => int.TryParse(value, out var parsed) && parsed > 0
+            ? Math.Min(parsed, Math.Max(1, totalPages))
+            : fallback;
+
+    private static int CalculateTotalPages(int totalItems, int pageSize)
+        => Math.Max(1, (int)Math.Ceiling(totalItems / (double)Math.Max(1, pageSize)));
+
+    private static int ClampPage(int page, int totalPages)
+        => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
     private async void HandleStoreChanged()
         => await InvokeAsync(LoadAsync);
