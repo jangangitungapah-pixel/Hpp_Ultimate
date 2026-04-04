@@ -1,0 +1,664 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Persiapan
+          - link "PG Pengaturan" [ref=e17] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e18]: PG
+            - strong [ref=e19]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e21]: AK
+            - strong [ref=e22]: Pengaturan Akun
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master & Formula
+          - link "KM Katalog Material" [ref=e25] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e26]: KM
+            - strong [ref=e27]: Katalog Material
+          - link "GD Gudang" [ref=e28] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e29]: GD
+            - strong [ref=e30]: Gudang
+          - link "RS Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e32]: RS
+            - strong [ref=e33]: Resep
+        - generic [ref=e34]:
+          - generic [ref=e35]: Operasional
+          - link "PR Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e37]: PR
+            - strong [ref=e38]: Produksi
+          - link "BL Belanja" [ref=e39] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e40]: BL
+            - strong [ref=e41]: Belanja
+          - link "PO Point of Sales" [ref=e42] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e43]: PO
+            - strong [ref=e44]: Point of Sales
+        - generic [ref=e45]:
+          - generic [ref=e46]: Monitoring
+          - link "PB Pembukuan" [ref=e47] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e48]: PB
+            - strong [ref=e49]: Pembukuan
+        - generic [ref=e50]:
+          - generic [ref=e51]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e52] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e53]: BD
+            - strong [ref=e54]: Backup & Data Ops
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e57]: A
+            - generic [ref=e58]:
+              - strong [ref=e59]: Arief
+              - generic [ref=e60]: Admin
+          - link "Logout" [ref=e61] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Point of Sales
+        - strong [ref=e66]: Layani checkout persisten dan kurangi stok produk jadi secara otomatis
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]: ⚲
+          - textbox "Current user" [ref=e70]: Arief
+        - generic [ref=e71]: A
+    - article [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: POS
+            - heading "Kasir menu dari stok produksi yang sudah selesai." [active] [level=1] [ref=e77]
+            - paragraph [ref=e78]: Menu diambil dari resep yang sudah selesai diproduksi. Stok yang tampil adalah total porsi siap jual di kasir.
+          - generic [ref=e79]:
+            - generic [ref=e80]: 50 menu termuat
+            - button "Refresh" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - generic [ref=e86]: List menu
+                - heading "Menu dan jumlah stok" [level=2] [ref=e87]
+                - paragraph [ref=e88]: Pilih menu dari daftar kanan untuk menyiapkan pesanan.
+              - generic [ref=e89]:
+                - generic [ref=e90]: Menu tampil
+                - combobox "Menu tampil" [ref=e91]:
+                  - option "8 menu"
+                  - option "12 menu" [selected]
+                  - option "20 menu"
+                  - option "50 menu"
+            - textbox "Cari kode atau nama menu" [ref=e93]
+            - generic [ref=e94]:
+              - generic [ref=e95]: 50 menu termuat
+              - generic [ref=e96]: 50 siap jual
+              - generic [ref=e97]: "Aktif: Brownies Cokelat"
+            - generic [ref=e99]:
+              - button "RCP-006 Brownies Cokelat Ready Stok siap dijual 44 pcs" [ref=e100] [cursor=pointer]:
+                - generic [ref=e101]:
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: RCP-006
+                    - strong [ref=e104]: Brownies Cokelat
+                  - generic [ref=e105]: Ready
+                - generic [ref=e106]:
+                  - article [ref=e107]:
+                    - text: Stok
+                    - strong [ref=e108]: 44 pcs
+                  - article [ref=e109]:
+                    - text: Harga jual
+                    - strong [ref=e110]: Rp 6.439
+                - paragraph [ref=e111]: Stok siap dijual 44 pcs
+              - button "RCP-007 Brownies Keju Ready Stok siap dijual 61 box" [ref=e112] [cursor=pointer]:
+                - generic [ref=e113]:
+                  - generic [ref=e114]:
+                    - generic [ref=e115]: RCP-007
+                    - strong [ref=e116]: Brownies Keju
+                  - generic [ref=e117]: Ready
+                - generic [ref=e118]:
+                  - article [ref=e119]:
+                    - text: Stok
+                    - strong [ref=e120]: 61 box
+                  - article [ref=e121]:
+                    - text: Harga jual
+                    - strong [ref=e122]: Rp 3.725
+                - paragraph [ref=e123]: Stok siap dijual 61 box
+              - button "RCP-009 Brownies Kopi Ready Stok siap dijual 92 cup" [ref=e124] [cursor=pointer]:
+                - generic [ref=e125]:
+                  - generic [ref=e126]:
+                    - generic [ref=e127]: RCP-009
+                    - strong [ref=e128]: Brownies Kopi
+                  - generic [ref=e129]: Ready
+                - generic [ref=e130]:
+                  - article [ref=e131]:
+                    - text: Stok
+                    - strong [ref=e132]: 92 cup
+                  - article [ref=e133]:
+                    - text: Harga jual
+                    - strong [ref=e134]: Rp 3.246
+                - paragraph [ref=e135]: Stok siap dijual 92 cup
+              - button "RCP-008 Brownies Matcha Ready Stok siap dijual 57 pouch" [ref=e136] [cursor=pointer]:
+                - generic [ref=e137]:
+                  - generic [ref=e138]:
+                    - generic [ref=e139]: RCP-008
+                    - strong [ref=e140]: Brownies Matcha
+                  - generic [ref=e141]: Ready
+                - generic [ref=e142]:
+                  - article [ref=e143]:
+                    - text: Stok
+                    - strong [ref=e144]: 57 pouch
+                  - article [ref=e145]:
+                    - text: Harga jual
+                    - strong [ref=e146]: Rp 3.512
+                - paragraph [ref=e147]: Stok siap dijual 57 pouch
+              - button "RCP-010 Brownies Red Velvet Ready Stok siap dijual 54 tray" [ref=e148] [cursor=pointer]:
+                - generic [ref=e149]:
+                  - generic [ref=e150]:
+                    - generic [ref=e151]: RCP-010
+                    - strong [ref=e152]: Brownies Red Velvet
+                  - generic [ref=e153]: Ready
+                - generic [ref=e154]:
+                  - article [ref=e155]:
+                    - text: Stok
+                    - strong [ref=e156]: 54 tray
+                  - article [ref=e157]:
+                    - text: Harga jual
+                    - strong [ref=e158]: Rp 1.947
+                - paragraph [ref=e159]: Stok siap dijual 54 tray
+              - button "RCP-016 Cookies Cokelat Ready Stok siap dijual 22 pcs" [ref=e160] [cursor=pointer]:
+                - generic [ref=e161]:
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: RCP-016
+                    - strong [ref=e164]: Cookies Cokelat
+                  - generic [ref=e165]: Ready
+                - generic [ref=e166]:
+                  - article [ref=e167]:
+                    - text: Stok
+                    - strong [ref=e168]: 22 pcs
+                  - article [ref=e169]:
+                    - text: Harga jual
+                    - strong [ref=e170]: Rp 5.230
+                - paragraph [ref=e171]: Stok siap dijual 22 pcs
+              - button "RCP-017 Cookies Keju Ready Stok siap dijual 44 box" [ref=e172] [cursor=pointer]:
+                - generic [ref=e173]:
+                  - generic [ref=e174]:
+                    - generic [ref=e175]: RCP-017
+                    - strong [ref=e176]: Cookies Keju
+                  - generic [ref=e177]: Ready
+                - generic [ref=e178]:
+                  - article [ref=e179]:
+                    - text: Stok
+                    - strong [ref=e180]: 44 box
+                  - article [ref=e181]:
+                    - text: Harga jual
+                    - strong [ref=e182]: Rp 3.528
+                - paragraph [ref=e183]: Stok siap dijual 44 box
+              - button "RCP-019 Cookies Kopi Ready Stok siap dijual 46 cup" [ref=e184] [cursor=pointer]:
+                - generic [ref=e185]:
+                  - generic [ref=e186]:
+                    - generic [ref=e187]: RCP-019
+                    - strong [ref=e188]: Cookies Kopi
+                  - generic [ref=e189]: Ready
+                - generic [ref=e190]:
+                  - article [ref=e191]:
+                    - text: Stok
+                    - strong [ref=e192]: 46 cup
+                  - article [ref=e193]:
+                    - text: Harga jual
+                    - strong [ref=e194]: Rp 2.702
+                - paragraph [ref=e195]: Stok siap dijual 46 cup
+              - button "RCP-018 Cookies Matcha Ready Stok siap dijual 76 pouch" [ref=e196] [cursor=pointer]:
+                - generic [ref=e197]:
+                  - generic [ref=e198]:
+                    - generic [ref=e199]: RCP-018
+                    - strong [ref=e200]: Cookies Matcha
+                  - generic [ref=e201]: Ready
+                - generic [ref=e202]:
+                  - article [ref=e203]:
+                    - text: Stok
+                    - strong [ref=e204]: 76 pouch
+                  - article [ref=e205]:
+                    - text: Harga jual
+                    - strong [ref=e206]: Rp 5.891
+                - paragraph [ref=e207]: Stok siap dijual 76 pouch
+              - button "RCP-020 Cookies Red Velvet Ready Stok siap dijual 81 tray" [ref=e208] [cursor=pointer]:
+                - generic [ref=e209]:
+                  - generic [ref=e210]:
+                    - generic [ref=e211]: RCP-020
+                    - strong [ref=e212]: Cookies Red Velvet
+                  - generic [ref=e213]: Ready
+                - generic [ref=e214]:
+                  - article [ref=e215]:
+                    - text: Stok
+                    - strong [ref=e216]: 81 tray
+                  - article [ref=e217]:
+                    - text: Harga jual
+                    - strong [ref=e218]: Rp 3.691
+                - paragraph [ref=e219]: Stok siap dijual 81 tray
+              - button "RCP-031 Croissant Cokelat Ready Stok siap dijual 22 pcs" [ref=e220] [cursor=pointer]:
+                - generic [ref=e221]:
+                  - generic [ref=e222]:
+                    - generic [ref=e223]: RCP-031
+                    - strong [ref=e224]: Croissant Cokelat
+                  - generic [ref=e225]: Ready
+                - generic [ref=e226]:
+                  - article [ref=e227]:
+                    - text: Stok
+                    - strong [ref=e228]: 22 pcs
+                  - article [ref=e229]:
+                    - text: Harga jual
+                    - strong [ref=e230]: Rp 3.472
+                - paragraph [ref=e231]: Stok siap dijual 22 pcs
+              - button "RCP-032 Croissant Keju Ready Stok siap dijual 44 box" [ref=e232] [cursor=pointer]:
+                - generic [ref=e233]:
+                  - generic [ref=e234]:
+                    - generic [ref=e235]: RCP-032
+                    - strong [ref=e236]: Croissant Keju
+                  - generic [ref=e237]: Ready
+                - generic [ref=e238]:
+                  - article [ref=e239]:
+                    - text: Stok
+                    - strong [ref=e240]: 44 box
+                  - article [ref=e241]:
+                    - text: Harga jual
+                    - strong [ref=e242]: Rp 4.790
+                - paragraph [ref=e243]: Stok siap dijual 44 box
+          - generic [ref=e244]:
+            - generic [ref=e246]:
+              - generic [ref=e247]: Pesanan aktif
+              - heading "Detail pesanan sebelum checkout" [level=2] [ref=e248]
+              - paragraph [ref=e249]: Atur jumlah pesanan, nama pembeli, dan metode pembayaran dari satu panel.
+            - article [ref=e250]:
+              - generic [ref=e251]:
+                - generic [ref=e252]:
+                  - text: RCP-006
+                  - heading "Brownies Cokelat" [level=3] [ref=e253]
+                  - paragraph [ref=e254]: Resep contoh Brownies Cokelat untuk simulasi operasi 6 hari.
+                - generic [ref=e255]: Siap jual
+              - generic [ref=e256]:
+                - article [ref=e257]:
+                  - text: Stok menu
+                  - strong [ref=e258]: 44 pcs
+                - article [ref=e259]:
+                  - text: HPP / satuan
+                  - strong [ref=e260]: Rp 4.351
+                - article [ref=e261]:
+                  - text: Harga jual
+                  - strong [ref=e262]: Rp 6.439
+                - article [ref=e263]:
+                  - text: Margin
+                  - strong [ref=e264]: 32.4%
+            - generic [ref=e265]:
+              - generic [ref=e266]:
+                - generic [ref=e267]:
+                  - generic [ref=e268]: Jumlah pesanan
+                  - spinbutton "Jumlah pesanan" [ref=e269]: "1"
+                - generic [ref=e270]:
+                  - generic [ref=e271]: Nama pembeli / pemesan
+                  - textbox "Nama pembeli / pemesan" [ref=e272]:
+                    - /placeholder: "Contoh: Bapak Andi"
+                - generic [ref=e273]:
+                  - generic [ref=e274]: Tanggal & jam pesanan
+                  - textbox "Tanggal & jam pesanan" [ref=e275]: 2026-04-04T09:53
+              - generic [ref=e276]:
+                - generic [ref=e277]: Pembayaran
+                - generic [ref=e278]:
+                  - button "Cash" [ref=e279] [cursor=pointer]
+                  - button "Transfer Bank" [ref=e280] [cursor=pointer]
+              - generic [ref=e281]:
+                - generic [ref=e282]:
+                  - generic [ref=e283]: Total porsi
+                  - strong [ref=e284]: 1 pcs
+                - generic [ref=e285]:
+                  - generic [ref=e286]: Total bayar
+                  - strong [ref=e287]: Rp 6.439
+                - generic [ref=e288]:
+                  - generic [ref=e289]: Estimasi profit
+                  - strong [ref=e290]: Rp 2.088
+                - generic [ref=e291]:
+                  - generic [ref=e292]: Status pembayaran
+                  - strong [ref=e293]: Lunas otomatis
+              - generic [ref=e294]:
+                - button "Reset" [ref=e295] [cursor=pointer]
+                - button "Check Out" [disabled] [ref=e296]
+        - generic [ref=e297]:
+          - generic [ref=e298]:
+            - generic [ref=e299]:
+              - generic [ref=e300]: History pesanan
+              - heading "Datagrid pesanan dan penjualan" [level=2] [ref=e301]
+              - paragraph [ref=e302]: Pesanan yang sudah checkout akan muncul di sini. Gunakan checklist untuk menandai pembayaran transfer sudah lunas.
+            - generic [ref=e303]:
+              - generic [ref=e304]: Baris tampil
+              - combobox "Baris tampil" [ref=e305]:
+                - option "8 baris"
+                - option "12 baris" [selected]
+                - option "20 baris"
+                - option "50 baris"
+          - table [ref=e307]:
+            - rowgroup [ref=e308]:
+              - row "Pesanan Pembeli Qty Total Lunas Waktu Aksi" [ref=e309]:
+                - columnheader "Pesanan" [ref=e310]:
+                  - generic [ref=e313]: Pesanan
+                - columnheader "Pembeli" [ref=e314]:
+                  - generic [ref=e317]: Pembeli
+                - columnheader "Qty" [ref=e318]:
+                  - generic [ref=e321]: Qty
+                - columnheader "Total" [ref=e322]:
+                  - generic [ref=e325]: Total
+                - columnheader "Lunas" [ref=e326]:
+                  - generic [ref=e329]: Lunas
+                - columnheader "Waktu" [ref=e330]:
+                  - generic [ref=e333]: Waktu
+                - columnheader "Aksi" [ref=e334]:
+                  - generic [ref=e337]: Aksi
+            - rowgroup [ref=e338]:
+              - row "Brownies Cokelat +1 menu TRX-000006 Farah Preorder Arief 5 Cash Rp 29.284 Profit Rp 9.430 Lunas 04 Apr 2026 02:53 Selesai" [ref=e339]:
+                - cell "Brownies Cokelat +1 menu TRX-000006" [ref=e340]:
+                  - generic [ref=e341]:
+                    - strong [ref=e342]: Brownies Cokelat +1 menu
+                    - generic [ref=e343]: TRX-000006
+                - cell "Farah Preorder Arief" [ref=e344]:
+                  - generic [ref=e345]:
+                    - strong [ref=e346]: Farah Preorder
+                    - generic [ref=e347]: Arief
+                - cell "5 Cash" [ref=e348]:
+                  - generic [ref=e349]:
+                    - strong [ref=e350]: "5"
+                    - generic [ref=e351]: Cash
+                - cell "Rp 29.284 Profit Rp 9.430" [ref=e352]:
+                  - generic [ref=e353]:
+                    - strong [ref=e354]: Rp 29.284
+                    - generic [ref=e355]: Profit Rp 9.430
+                - cell "Lunas" [ref=e356]:
+                  - generic [ref=e357]: Lunas
+                - cell "04 Apr 2026 02:53" [ref=e358]:
+                  - generic [ref=e359]:
+                    - strong [ref=e360]: 04 Apr 2026
+                    - generic [ref=e361]: 02:53
+                - cell "Selesai" [ref=e362]:
+                  - generic [ref=e364]: Selesai
+              - row "Donat Keju TRX-000012 Budi Kantor Arief 4 Cash Rp 15.344 Profit Rp 4.975 Lunas 04 Apr 2026 02:47 Selesai" [ref=e365]:
+                - cell "Donat Keju TRX-000012" [ref=e366]:
+                  - generic [ref=e367]:
+                    - strong [ref=e368]: Donat Keju
+                    - generic [ref=e369]: TRX-000012
+                - cell "Budi Kantor Arief" [ref=e370]:
+                  - generic [ref=e371]:
+                    - strong [ref=e372]: Budi Kantor
+                    - generic [ref=e373]: Arief
+                - cell "4 Cash" [ref=e374]:
+                  - generic [ref=e375]:
+                    - strong [ref=e376]: "4"
+                    - generic [ref=e377]: Cash
+                - cell "Rp 15.344 Profit Rp 4.975" [ref=e378]:
+                  - generic [ref=e379]:
+                    - strong [ref=e380]: Rp 15.344
+                    - generic [ref=e381]: Profit Rp 4.975
+                - cell "Lunas" [ref=e382]:
+                  - generic [ref=e383]: Lunas
+                - cell "04 Apr 2026 02:47" [ref=e384]:
+                  - generic [ref=e385]:
+                    - strong [ref=e386]: 04 Apr 2026
+                    - generic [ref=e387]: 02:47
+                - cell "Selesai" [ref=e388]:
+                  - generic [ref=e390]: Selesai
+              - row "Cookies Matcha TRX-000018 Hana Titip Jual Arief 4 Cash Rp 23.564 Profit Rp 7.642 Lunas 04 Apr 2026 02:41 Selesai" [ref=e391]:
+                - cell "Cookies Matcha TRX-000018" [ref=e392]:
+                  - generic [ref=e393]:
+                    - strong [ref=e394]: Cookies Matcha
+                    - generic [ref=e395]: TRX-000018
+                - cell "Hana Titip Jual Arief" [ref=e396]:
+                  - generic [ref=e397]:
+                    - strong [ref=e398]: Hana Titip Jual
+                    - generic [ref=e399]: Arief
+                - cell "4 Cash" [ref=e400]:
+                  - generic [ref=e401]:
+                    - strong [ref=e402]: "4"
+                    - generic [ref=e403]: Cash
+                - cell "Rp 23.564 Profit Rp 7.642" [ref=e404]:
+                  - generic [ref=e405]:
+                    - strong [ref=e406]: Rp 23.564
+                    - generic [ref=e407]: Profit Rp 7.642
+                - cell "Lunas" [ref=e408]:
+                  - generic [ref=e409]: Lunas
+                - cell "04 Apr 2026 02:41" [ref=e410]:
+                  - generic [ref=e411]:
+                    - strong [ref=e412]: 04 Apr 2026
+                    - generic [ref=e413]: 02:41
+                - cell "Selesai" [ref=e414]:
+                  - generic [ref=e416]: Selesai
+              - row "Pudding Kopi TRX-000024 Dina Retail Arief 4 Cash Rp 11.260 Profit Rp 3.653 Lunas 04 Apr 2026 02:35 Selesai" [ref=e417]:
+                - cell "Pudding Kopi TRX-000024" [ref=e418]:
+                  - generic [ref=e419]:
+                    - strong [ref=e420]: Pudding Kopi
+                    - generic [ref=e421]: TRX-000024
+                - cell "Dina Retail Arief" [ref=e422]:
+                  - generic [ref=e423]:
+                    - strong [ref=e424]: Dina Retail
+                    - generic [ref=e425]: Arief
+                - cell "4 Cash" [ref=e426]:
+                  - generic [ref=e427]:
+                    - strong [ref=e428]: "4"
+                    - generic [ref=e429]: Cash
+                - cell "Rp 11.260 Profit Rp 3.653" [ref=e430]:
+                  - generic [ref=e431]:
+                    - strong [ref=e432]: Rp 11.260
+                    - generic [ref=e433]: Profit Rp 3.653
+                - cell "Lunas" [ref=e434]:
+                  - generic [ref=e435]: Lunas
+                - cell "04 Apr 2026 02:35" [ref=e436]:
+                  - generic [ref=e437]:
+                    - strong [ref=e438]: 04 Apr 2026
+                    - generic [ref=e439]: 02:35
+                - cell "Selesai" [ref=e440]:
+                  - generic [ref=e442]: Selesai
+              - row "Muffin Red Velvet TRX-000030 Jasmine Reseller Arief 4 Cash Rp 6.664 Profit Rp 2.161 Lunas 04 Apr 2026 02:29 Selesai" [ref=e443]:
+                - cell "Muffin Red Velvet TRX-000030" [ref=e444]:
+                  - generic [ref=e445]:
+                    - strong [ref=e446]: Muffin Red Velvet
+                    - generic [ref=e447]: TRX-000030
+                - cell "Jasmine Reseller Arief" [ref=e448]:
+                  - generic [ref=e449]:
+                    - strong [ref=e450]: Jasmine Reseller
+                    - generic [ref=e451]: Arief
+                - cell "4 Cash" [ref=e452]:
+                  - generic [ref=e453]:
+                    - strong [ref=e454]: "4"
+                    - generic [ref=e455]: Cash
+                - cell "Rp 6.664 Profit Rp 2.161" [ref=e456]:
+                  - generic [ref=e457]:
+                    - strong [ref=e458]: Rp 6.664
+                    - generic [ref=e459]: Profit Rp 2.161
+                - cell "Lunas" [ref=e460]:
+                  - generic [ref=e461]: Lunas
+                - cell "04 Apr 2026 02:29" [ref=e462]:
+                  - generic [ref=e463]:
+                    - strong [ref=e464]: 04 Apr 2026
+                    - generic [ref=e465]: 02:29
+                - cell "Selesai" [ref=e466]:
+                  - generic [ref=e468]: Selesai
+              - row "Sandwich Cokelat +1 menu TRX-000036 Farah Preorder Arief 5 Cash Rp 25.277 Profit Rp 8.141 Lunas 04 Apr 2026 02:23 Selesai" [ref=e469]:
+                - cell "Sandwich Cokelat +1 menu TRX-000036" [ref=e470]:
+                  - generic [ref=e471]:
+                    - strong [ref=e472]: Sandwich Cokelat +1 menu
+                    - generic [ref=e473]: TRX-000036
+                - cell "Farah Preorder Arief" [ref=e474]:
+                  - generic [ref=e475]:
+                    - strong [ref=e476]: Farah Preorder
+                    - generic [ref=e477]: Arief
+                - cell "5 Cash" [ref=e478]:
+                  - generic [ref=e479]:
+                    - strong [ref=e480]: "5"
+                    - generic [ref=e481]: Cash
+                - cell "Rp 25.277 Profit Rp 8.141" [ref=e482]:
+                  - generic [ref=e483]:
+                    - strong [ref=e484]: Rp 25.277
+                    - generic [ref=e485]: Profit Rp 8.141
+                - cell "Lunas" [ref=e486]:
+                  - generic [ref=e487]: Lunas
+                - cell "04 Apr 2026 02:23" [ref=e488]:
+                  - generic [ref=e489]:
+                    - strong [ref=e490]: 04 Apr 2026
+                    - generic [ref=e491]: 02:23
+                - cell "Selesai" [ref=e492]:
+                  - generic [ref=e494]: Selesai
+              - row "Rice Bowl Keju TRX-000042 Budi Kantor Arief 4 Cash Rp 23.372 Profit Rp 7.580 Lunas 04 Apr 2026 02:17 Selesai" [ref=e495]:
+                - cell "Rice Bowl Keju TRX-000042" [ref=e496]:
+                  - generic [ref=e497]:
+                    - strong [ref=e498]: Rice Bowl Keju
+                    - generic [ref=e499]: TRX-000042
+                - cell "Budi Kantor Arief" [ref=e500]:
+                  - generic [ref=e501]:
+                    - strong [ref=e502]: Budi Kantor
+                    - generic [ref=e503]: Arief
+                - cell "4 Cash" [ref=e504]:
+                  - generic [ref=e505]:
+                    - strong [ref=e506]: "4"
+                    - generic [ref=e507]: Cash
+                - cell "Rp 23.372 Profit Rp 7.580" [ref=e508]:
+                  - generic [ref=e509]:
+                    - strong [ref=e510]: Rp 23.372
+                    - generic [ref=e511]: Profit Rp 7.580
+                - cell "Lunas" [ref=e512]:
+                  - generic [ref=e513]: Lunas
+                - cell "04 Apr 2026 02:17" [ref=e514]:
+                  - generic [ref=e515]:
+                    - strong [ref=e516]: 04 Apr 2026
+                    - generic [ref=e517]: 02:17
+                - cell "Selesai" [ref=e518]:
+                  - generic [ref=e520]: Selesai
+              - row "Mie Box Matcha TRX-000048 Hana Titip Jual Arief 4 Cash Rp 21.576 Profit Rp 6.997 Lunas 04 Apr 2026 02:11 Selesai" [ref=e521]:
+                - cell "Mie Box Matcha TRX-000048" [ref=e522]:
+                  - generic [ref=e523]:
+                    - strong [ref=e524]: Mie Box Matcha
+                    - generic [ref=e525]: TRX-000048
+                - cell "Hana Titip Jual Arief" [ref=e526]:
+                  - generic [ref=e527]:
+                    - strong [ref=e528]: Hana Titip Jual
+                    - generic [ref=e529]: Arief
+                - cell "4 Cash" [ref=e530]:
+                  - generic [ref=e531]:
+                    - strong [ref=e532]: "4"
+                    - generic [ref=e533]: Cash
+                - cell "Rp 21.576 Profit Rp 6.997" [ref=e534]:
+                  - generic [ref=e535]:
+                    - strong [ref=e536]: Rp 21.576
+                    - generic [ref=e537]: Profit Rp 6.997
+                - cell "Lunas" [ref=e538]:
+                  - generic [ref=e539]: Lunas
+                - cell "04 Apr 2026 02:11" [ref=e540]:
+                  - generic [ref=e541]:
+                    - strong [ref=e542]: 04 Apr 2026
+                    - generic [ref=e543]: 02:11
+                - cell "Selesai" [ref=e544]:
+                  - generic [ref=e546]: Selesai
+              - row "Cookies Keju TRX-000017 Gita Office Arief 3 Transfer Bank Rp 10.584 Profit Rp 3.235 Pending 03 Apr 2026 23:28 ✓" [ref=e547]:
+                - cell "Cookies Keju TRX-000017" [ref=e548]:
+                  - generic [ref=e549]:
+                    - strong [ref=e550]: Cookies Keju
+                    - generic [ref=e551]: TRX-000017
+                - cell "Gita Office Arief" [ref=e552]:
+                  - generic [ref=e553]:
+                    - strong [ref=e554]: Gita Office
+                    - generic [ref=e555]: Arief
+                - cell "3 Transfer Bank" [ref=e556]:
+                  - generic [ref=e557]:
+                    - strong [ref=e558]: "3"
+                    - generic [ref=e559]: Transfer Bank
+                - cell "Rp 10.584 Profit Rp 3.235" [ref=e560]:
+                  - generic [ref=e561]:
+                    - strong [ref=e562]: Rp 10.584
+                    - generic [ref=e563]: Profit Rp 3.235
+                - cell "Pending" [ref=e564]:
+                  - generic [ref=e565]: Pending
+                - cell "03 Apr 2026 23:28" [ref=e566]:
+                  - generic [ref=e567]:
+                    - strong [ref=e568]: 03 Apr 2026
+                    - generic [ref=e569]: 23:28
+                - cell "✓" [ref=e570]:
+                  - button "✓" [ref=e572] [cursor=pointer]
+              - row "Croissant Red Velvet TRX-000035 Eko Komunitas Arief 3 Cash Rp 5.694 Profit Rp 1.739 Lunas 03 Apr 2026 23:22 Selesai" [ref=e573]:
+                - cell "Croissant Red Velvet TRX-000035" [ref=e574]:
+                  - generic [ref=e575]:
+                    - strong [ref=e576]: Croissant Red Velvet
+                    - generic [ref=e577]: TRX-000035
+                - cell "Eko Komunitas Arief" [ref=e578]:
+                  - generic [ref=e579]:
+                    - strong [ref=e580]: Eko Komunitas
+                    - generic [ref=e581]: Arief
+                - cell "3 Cash" [ref=e582]:
+                  - generic [ref=e583]:
+                    - strong [ref=e584]: "3"
+                    - generic [ref=e585]: Cash
+                - cell "Rp 5.694 Profit Rp 1.739" [ref=e586]:
+                  - generic [ref=e587]:
+                    - strong [ref=e588]: Rp 5.694
+                    - generic [ref=e589]: Profit Rp 1.739
+                - cell "Lunas" [ref=e590]:
+                  - generic [ref=e591]: Lunas
+                - cell "03 Apr 2026 23:22" [ref=e592]:
+                  - generic [ref=e593]:
+                    - strong [ref=e594]: 03 Apr 2026
+                    - generic [ref=e595]: 23:22
+                - cell "Selesai" [ref=e596]:
+                  - generic [ref=e598]: Selesai
+              - row "Roti Sobek Red Velvet TRX-000005 Eko Komunitas Arief 3 Transfer Bank Rp 4.881 Profit Rp 1.491 Lunas 03 Apr 2026 20:52 Selesai" [ref=e599]:
+                - cell "Roti Sobek Red Velvet TRX-000005" [ref=e600]:
+                  - generic [ref=e601]:
+                    - strong [ref=e602]: Roti Sobek Red Velvet
+                    - generic [ref=e603]: TRX-000005
+                - cell "Eko Komunitas Arief" [ref=e604]:
+                  - generic [ref=e605]:
+                    - strong [ref=e606]: Eko Komunitas
+                    - generic [ref=e607]: Arief
+                - cell "3 Transfer Bank" [ref=e608]:
+                  - generic [ref=e609]:
+                    - strong [ref=e610]: "3"
+                    - generic [ref=e611]: Transfer Bank
+                - cell "Rp 4.881 Profit Rp 1.491" [ref=e612]:
+                  - generic [ref=e613]:
+                    - strong [ref=e614]: Rp 4.881
+                    - generic [ref=e615]: Profit Rp 1.491
+                - cell "Lunas" [ref=e616]:
+                  - generic [ref=e617]: Lunas
+                - cell "03 Apr 2026 20:52" [ref=e618]:
+                  - generic [ref=e619]:
+                    - strong [ref=e620]: 03 Apr 2026
+                    - generic [ref=e621]: 20:52
+                - cell "Selesai" [ref=e622]:
+                  - generic [ref=e624]: Selesai
+              - row "Pudding Matcha TRX-000023 Citra Event Arief 3 Cash Rp 8.097 Profit Rp 2.475 Lunas 03 Apr 2026 20:46 Selesai" [ref=e625]:
+                - cell "Pudding Matcha TRX-000023" [ref=e626]:
+                  - generic [ref=e627]:
+                    - strong [ref=e628]: Pudding Matcha
+                    - generic [ref=e629]: TRX-000023
+                - cell "Citra Event Arief" [ref=e630]:
+                  - generic [ref=e631]:
+                    - strong [ref=e632]: Citra Event
+                    - generic [ref=e633]: Arief
+                - cell "3 Cash" [ref=e634]:
+                  - generic [ref=e635]:
+                    - strong [ref=e636]: "3"
+                    - generic [ref=e637]: Cash
+                - cell "Rp 8.097 Profit Rp 2.475" [ref=e638]:
+                  - generic [ref=e639]:
+                    - strong [ref=e640]: Rp 8.097
+                    - generic [ref=e641]: Profit Rp 2.475
+                - cell "Lunas" [ref=e642]:
+                  - generic [ref=e643]: Lunas
+                - cell "03 Apr 2026 20:46" [ref=e644]:
+                  - generic [ref=e645]:
+                    - strong [ref=e646]: 03 Apr 2026
+                    - generic [ref=e647]: 20:46
+                - cell "Selesai" [ref=e648]:
+                  - generic [ref=e650]: Selesai

@@ -1,0 +1,387 @@
+### Page
+- Page URL: http://127.0.0.1:5081/gudang
+- Page Title: Gudang | HPP Ultimate
+### Snapshot
+```yaml
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Persiapan
+          - link "PG Pengaturan" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e21]: PG
+            - strong [ref=e22]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e23] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e24]: AK
+            - strong [ref=e25]: Pengaturan Akun
+        - generic [ref=e26]:
+          - generic [ref=e27]: Master & Formula
+          - link "KM Katalog Material" [ref=e28] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e29]: KM
+            - strong [ref=e30]: Katalog Material
+          - link "GD Gudang" [ref=e31] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e32]: GD
+            - strong [ref=e33]: Gudang
+          - link "RS Resep" [ref=e34] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e35]: RS
+            - strong [ref=e36]: Resep
+        - generic [ref=e37]:
+          - generic [ref=e38]: Operasional
+          - link "PR Produksi" [ref=e39] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e40]: PR
+            - strong [ref=e41]: Produksi
+          - link "BL Belanja" [ref=e42] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e43]: BL
+            - strong [ref=e44]: Belanja
+          - link "PO Point of Sales" [ref=e45] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e46]: PO
+            - strong [ref=e47]: Point of Sales
+        - generic [ref=e48]:
+          - generic [ref=e49]: Monitoring
+          - link "PB Pembukuan" [ref=e50] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e51]: PB
+            - strong [ref=e52]: Pembukuan
+        - generic [ref=e53]:
+          - generic [ref=e54]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e55] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e56]: BD
+            - strong [ref=e57]: Backup & Data Ops
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e60]: A
+            - generic [ref=e61]:
+              - strong [ref=e62]: Arief
+              - generic [ref=e63]: Admin
+          - link "Logout" [ref=e64] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e65]:
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]: Gudang
+        - strong [ref=e69]: Catat saldo bahan, minimum stock, dan mutasi gudang
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]: ?
+          - textbox "Current user" [ref=e73]: Arief
+        - generic [ref=e74]: A
+    - article [ref=e75]:
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: Gudang
+            - heading "Input stok material dari katalog lalu pantau posisinya di satu datagrid." [level=1] [ref=e80]
+            - paragraph [ref=e81]: "Flow gudang sekarang ringkas: pilih material dari katalog, catat stok masuk atau keluar, lalu cek hasilnya langsung di daftar gudang."
+          - generic [ref=e82]:
+            - generic [ref=e83]: 50 material ada di gudang
+            - button "Refresh" [ref=e84] [cursor=pointer]
+        - generic [ref=e85]:
+          - article [ref=e86]:
+            - generic [ref=e87]: Material di gudang
+            - strong [ref=e88]: "50"
+          - article [ref=e89]:
+            - generic [ref=e90]: Perlu restock
+            - strong [ref=e91]: "8"
+          - article [ref=e92]:
+            - generic [ref=e93]: Nilai stok
+            - strong [ref=e94]: Rp36.360.844
+        - generic [ref=e95]:
+          - generic [ref=e97]:
+            - generic [ref=e98]: Input stok
+            - heading "Pilih material katalog lalu simpan mutasinya" [level=2] [ref=e99]
+            - paragraph [ref=e100]: Material diambil dari katalog. Setelah disimpan, item akan muncul atau terbarui di datagrid gudang.
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]: Material katalog
+                - combobox "Material katalog" [ref=e105]
+              - generic [ref=e106]:
+                - generic [ref=e107]: Flow stok
+                - combobox "Flow stok" [ref=e108]:
+                  - option "Stok masuk" [selected]
+                  - option "Stok keluar"
+              - generic [ref=e109]:
+                - generic [ref=e110]: Jumlah
+                - spinbutton "Jumlah" [ref=e111]: "1"
+              - generic [ref=e112]:
+                - generic [ref=e113]: Waktu catat
+                - textbox "Waktu catat" [ref=e114]: 2026-04-04T09:41
+              - generic [ref=e115]:
+                - generic [ref=e116]: Catatan
+                - textbox "Catatan" [ref=e117]
+            - generic [ref=e118]: Pilih material dari daftar autocomplete katalog.
+            - generic [ref=e119]:
+              - button "Reset" [ref=e120] [cursor=pointer]
+              - button "Simpan Stok" [ref=e121] [cursor=pointer]
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - generic [ref=e124]:
+              - text: Datagrid gudang
+              - heading "Material yang sudah tercatat di gudang" [level=2] [ref=e125]
+              - paragraph [ref=e126]: Tabel ini mengikuti pola katalog material, tetapi informasinya disesuaikan untuk stok gudang.
+            - generic [ref=e127]:
+              - textbox "Cari material gudang" [ref=e128]
+              - generic [ref=e129]:
+                - generic [ref=e130]: Baris tampil
+                - combobox "Baris tampil" [ref=e131]:
+                  - option "8 baris"
+                  - option "12 baris" [selected]
+                  - option "20 baris"
+                  - option "50 baris"
+          - generic [ref=e132]:
+            - article [ref=e133]:
+              - generic [ref=e134]:
+                - generic [ref=e135]:
+                  - strong [ref=e136]: Susu Bubuk Full Cream
+                  - generic [ref=e137]: BHN-006
+                - generic [ref=e138]: Perlu restock
+              - paragraph [ref=e139]: Dancow
+              - generic [ref=e140]:
+                - article [ref=e141]:
+                  - generic [ref=e142]: On Hand
+                  - strong [ref=e143]: 42 gr
+                - article [ref=e144]:
+                  - generic [ref=e145]: Minimum
+                  - strong [ref=e146]: 120 gr
+                - article [ref=e147]:
+                  - generic [ref=e148]: Nilai Stok
+                  - strong [ref=e149]: Rp5.040
+                - article [ref=e150]:
+                  - generic [ref=e151]: Last Move
+                  - strong [ref=e152]: 04 Apr 2026 15:00
+            - article [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]:
+                  - strong [ref=e156]: Butter Margarine
+                  - generic [ref=e157]: BHN-002
+                - generic [ref=e158]: Perlu restock
+              - paragraph [ref=e159]: Palmia Royal
+              - generic [ref=e160]:
+                - article [ref=e161]:
+                  - generic [ref=e162]: On Hand
+                  - strong [ref=e163]: 42 gr
+                - article [ref=e164]:
+                  - generic [ref=e165]: Minimum
+                  - strong [ref=e166]: 120 gr
+                - article [ref=e167]:
+                  - generic [ref=e168]: Nilai Stok
+                  - strong [ref=e169]: Rp2.310
+                - article [ref=e170]:
+                  - generic [ref=e171]: Last Move
+                  - strong [ref=e172]: 04 Apr 2026 14:56
+            - article [ref=e173]:
+              - generic [ref=e174]:
+                - generic [ref=e175]:
+                  - strong [ref=e176]: Cokelat Bubuk
+                  - generic [ref=e177]: BHN-008
+                - generic [ref=e178]: Perlu restock
+              - paragraph [ref=e179]: Van Houten
+              - generic [ref=e180]:
+                - article [ref=e181]:
+                  - generic [ref=e182]: On Hand
+                  - strong [ref=e183]: 17,5 gr
+                - article [ref=e184]:
+                  - generic [ref=e185]: Minimum
+                  - strong [ref=e186]: 50 gr
+                - article [ref=e187]:
+                  - generic [ref=e188]: Nilai Stok
+                  - strong [ref=e189]: Rp3.606
+                - article [ref=e190]:
+                  - generic [ref=e191]: Last Move
+                  - strong [ref=e192]: 04 Apr 2026 14:30
+            - article [ref=e193]:
+              - generic [ref=e194]:
+                - generic [ref=e195]:
+                  - strong [ref=e196]: Telur Ayam
+                  - generic [ref=e197]: BHN-004
+                - generic [ref=e198]: Perlu restock
+              - paragraph [ref=e199]: Layer Fresh
+              - generic [ref=e200]:
+                - article [ref=e201]:
+                  - generic [ref=e202]: On Hand
+                  - strong [ref=e203]: "-876 pcs"
+                - article [ref=e204]:
+                  - generic [ref=e205]: Minimum
+                  - strong [ref=e206]: 12 pcs
+                - article [ref=e207]:
+                  - generic [ref=e208]: Nilai Stok
+                  - strong [ref=e209]: "-Rp2.540.400"
+                - article [ref=e210]:
+                  - generic [ref=e211]: Last Move
+                  - strong [ref=e212]: 04 Apr 2026 14:30
+            - article [ref=e213]:
+              - generic [ref=e214]:
+                - generic [ref=e215]:
+                  - strong [ref=e216]: Tepung Terigu Protein Sedang
+                  - generic [ref=e217]: BHN-001
+                - generic [ref=e218]: Perlu restock
+              - paragraph [ref=e219]: Segitiga Biru
+              - generic [ref=e220]:
+                - article [ref=e221]:
+                  - generic [ref=e222]: On Hand
+                  - strong [ref=e223]: 87,5 gr
+                - article [ref=e224]:
+                  - generic [ref=e225]: Minimum
+                  - strong [ref=e226]: 250 gr
+                - article [ref=e227]:
+                  - generic [ref=e228]: Nilai Stok
+                  - strong [ref=e229]: Rp1.400
+                - article [ref=e230]:
+                  - generic [ref=e231]: Last Move
+                  - strong [ref=e232]: 04 Apr 2026 14:30
+            - article [ref=e233]:
+              - generic [ref=e234]:
+                - generic [ref=e235]:
+                  - strong [ref=e236]: Ragi Instan
+                  - generic [ref=e237]: BHN-007
+                - generic [ref=e238]: Perlu restock
+              - paragraph [ref=e239]: Fermipan
+              - generic [ref=e240]:
+                - article [ref=e241]:
+                  - generic [ref=e242]: On Hand
+                  - strong [ref=e243]: 8,75 gr
+                - article [ref=e244]:
+                  - generic [ref=e245]: Minimum
+                  - strong [ref=e246]: 25 gr
+                - article [ref=e247]:
+                  - generic [ref=e248]: Nilai Stok
+                  - strong [ref=e249]: Rp1.094
+                - article [ref=e250]:
+                  - generic [ref=e251]: Last Move
+                  - strong [ref=e252]: 04 Apr 2026 14:29
+            - article [ref=e253]:
+              - generic [ref=e254]:
+                - generic [ref=e255]:
+                  - strong [ref=e256]: Susu Cair UHT
+                  - generic [ref=e257]: BHN-005
+                - generic [ref=e258]: Perlu restock
+              - paragraph [ref=e259]: Ultra Milk
+              - generic [ref=e260]:
+                - article [ref=e261]:
+                  - generic [ref=e262]: On Hand
+                  - strong [ref=e263]: 122,5 ml
+                - article [ref=e264]:
+                  - generic [ref=e265]: Minimum
+                  - strong [ref=e266]: 350 ml
+                - article [ref=e267]:
+                  - generic [ref=e268]: Nilai Stok
+                  - strong [ref=e269]: Rp2.695
+                - article [ref=e270]:
+                  - generic [ref=e271]: Last Move
+                  - strong [ref=e272]: 04 Apr 2026 02:15
+            - article [ref=e273]:
+              - generic [ref=e274]:
+                - generic [ref=e275]:
+                  - strong [ref=e276]: Gula Pasir
+                  - generic [ref=e277]: BHN-003
+                - generic [ref=e278]: Perlu restock
+              - paragraph [ref=e279]: Gulaku
+              - generic [ref=e280]:
+                - article [ref=e281]:
+                  - generic [ref=e282]: On Hand
+                  - strong [ref=e283]: 105 gr
+                - article [ref=e284]:
+                  - generic [ref=e285]: Minimum
+                  - strong [ref=e286]: 300 gr
+                - article [ref=e287]:
+                  - generic [ref=e288]: Nilai Stok
+                  - strong [ref=e289]: Rp1.943
+                - article [ref=e290]:
+                  - generic [ref=e291]: Last Move
+                  - strong [ref=e292]: 04 Apr 2026 00:47
+            - article [ref=e293]:
+              - generic [ref=e294]:
+                - generic [ref=e295]:
+                  - strong [ref=e296]: Blueberry Filling
+                  - generic [ref=e297]: BHN-017
+                - generic [ref=e298]: Aman
+              - paragraph [ref=e299]: Vizyon
+              - generic [ref=e300]:
+                - article [ref=e301]:
+                  - generic [ref=e302]: On Hand
+                  - strong [ref=e303]: 8027 gr
+                - article [ref=e304]:
+                  - generic [ref=e305]: Minimum
+                  - strong [ref=e306]: 55 gr
+                - article [ref=e307]:
+                  - generic [ref=e308]: Nilai Stok
+                  - strong [ref=e309]: Rp834.808
+                - article [ref=e310]:
+                  - generic [ref=e311]: Last Move
+                  - strong [ref=e312]: 04 Apr 2026 15:00
+            - article [ref=e313]:
+              - generic [ref=e314]:
+                - generic [ref=e315]:
+                  - strong [ref=e316]: Kacang Almond Slice
+                  - generic [ref=e317]: BHN-013
+                - generic [ref=e318]: Aman
+              - paragraph [ref=e319]: Blue Diamond
+              - generic [ref=e320]:
+                - article [ref=e321]:
+                  - generic [ref=e322]: On Hand
+                  - strong [ref=e323]: 10523,1 gr
+                - article [ref=e324]:
+                  - generic [ref=e325]: Minimum
+                  - strong [ref=e326]: 45 gr
+                - article [ref=e327]:
+                  - generic [ref=e328]: Nilai Stok
+                  - strong [ref=e329]: Rp2.188.805
+                - article [ref=e330]:
+                  - generic [ref=e331]: Last Move
+                  - strong [ref=e332]: 04 Apr 2026 15:00
+            - article [ref=e333]:
+              - generic [ref=e334]:
+                - generic [ref=e335]:
+                  - strong [ref=e336]: Keju Cheddar
+                  - generic [ref=e337]: BHN-009
+                - generic [ref=e338]: Aman
+              - paragraph [ref=e339]: Kraft
+              - generic [ref=e340]:
+                - article [ref=e341]:
+                  - generic [ref=e342]: On Hand
+                  - strong [ref=e343]: 11553,3 gr
+                - article [ref=e344]:
+                  - generic [ref=e345]: Minimum
+                  - strong [ref=e346]: 60 gr
+                - article [ref=e347]:
+                  - generic [ref=e348]: Nilai Stok
+                  - strong [ref=e349]: Rp1.820.520
+                - article [ref=e350]:
+                  - generic [ref=e351]: Last Move
+                  - strong [ref=e352]: 04 Apr 2026 15:00
+            - article [ref=e353]:
+              - generic [ref=e354]:
+                - generic [ref=e355]:
+                  - strong [ref=e356]: Cream Cheese
+                  - generic [ref=e357]: BHN-023
+                - generic [ref=e358]: Aman
+              - paragraph [ref=e359]: Anchor
+              - generic [ref=e360]:
+                - article [ref=e361]:
+                  - generic [ref=e362]: On Hand
+                  - strong [ref=e363]: 18364,7 gr
+                - article [ref=e364]:
+                  - generic [ref=e365]: Minimum
+                  - strong [ref=e366]: 150 gr
+                - article [ref=e367]:
+                  - generic [ref=e368]: Nilai Stok
+                  - strong [ref=e369]: Rp2.167.035
+                - article [ref=e370]:
+                  - generic [ref=e371]: Last Move
+                  - strong [ref=e372]: 04 Apr 2026 14:59
+```

@@ -1,0 +1,407 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Persiapan
+          - link "PG Pengaturan" [ref=e20] [cursor=pointer]:
+            - /url: /pengaturan
+            - generic [ref=e21]: PG
+            - strong [ref=e22]: Pengaturan
+          - link "AK Pengaturan Akun" [ref=e23] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - generic [ref=e24]: AK
+            - strong [ref=e25]: Pengaturan Akun
+        - generic [ref=e26]:
+          - generic [ref=e27]: Master & Formula
+          - link "KM Katalog Material" [ref=e28] [cursor=pointer]:
+            - /url: /produk
+            - generic [ref=e29]: KM
+            - strong [ref=e30]: Katalog Material
+          - link "GD Gudang" [ref=e31] [cursor=pointer]:
+            - /url: /gudang
+            - generic [ref=e32]: GD
+            - strong [ref=e33]: Gudang
+          - link "RS Resep" [ref=e34] [cursor=pointer]:
+            - /url: /resep
+            - generic [ref=e35]: RS
+            - strong [ref=e36]: Resep
+        - generic [ref=e37]:
+          - generic [ref=e38]: Operasional
+          - link "PR Produksi" [ref=e39] [cursor=pointer]:
+            - /url: /produksi
+            - generic [ref=e40]: PR
+            - strong [ref=e41]: Produksi
+          - link "BL Belanja" [ref=e42] [cursor=pointer]:
+            - /url: /belanja
+            - generic [ref=e43]: BL
+            - strong [ref=e44]: Belanja
+          - link "PO Point of Sales" [ref=e45] [cursor=pointer]:
+            - /url: /pos
+            - generic [ref=e46]: PO
+            - strong [ref=e47]: Point of Sales
+        - generic [ref=e48]:
+          - generic [ref=e49]: Monitoring
+          - link "PB Pembukuan" [ref=e50] [cursor=pointer]:
+            - /url: /pembukuan
+            - generic [ref=e51]: PB
+            - strong [ref=e52]: Pembukuan
+        - generic [ref=e53]:
+          - generic [ref=e54]: Kontrol Data
+          - link "BD Backup & Data Ops" [ref=e55] [cursor=pointer]:
+            - /url: /backup-data
+            - generic [ref=e56]: BD
+            - strong [ref=e57]: Backup & Data Ops
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e60]: A
+            - generic [ref=e61]:
+              - strong [ref=e62]: Arief
+              - generic [ref=e63]: Admin
+          - link "Logout" [ref=e64] [cursor=pointer]:
+            - /url: /logout
+  - main [ref=e65]:
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]: Katalog Material
+        - strong [ref=e69]: Kelola bahan baku, harga, dan konversi unit
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]: ⚲
+          - textbox "Current user" [ref=e73]: Arief
+        - generic [ref=e74]: A
+    - article [ref=e75]:
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: Master material
+            - heading "Katalog Material" [level=1] [ref=e80]
+            - paragraph [ref=e81]: Simpan bahan baku, netto pack, harga, dan unit konversi sebagai referensi untuk Resep dan HPP.
+          - generic [ref=e82]:
+            - link "Template" [ref=e83] [cursor=pointer]:
+              - /url: /api/bahan-baku-template
+            - link "Export CSV" [ref=e84] [cursor=pointer]:
+              - /url: /api/bahan-baku-export
+            - button "Import Excel" [ref=e85] [cursor=pointer]
+            - button "+ Tambah Material" [ref=e86] [cursor=pointer]
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]: Daftar material
+              - heading "Master bahan baku aktif dan nonaktif" [level=2] [ref=e91]
+              - paragraph [ref=e92]: Cari material, filter status, lalu buka detail atau edit langsung dari tabel.
+            - generic [ref=e93]:
+              - generic [ref=e94]: 50 material
+              - generic [ref=e95]: Update terbaru
+          - generic [ref=e96]:
+            - textbox "Cari nama material atau merk" [ref=e97]
+            - combobox [ref=e98]:
+              - option "Semua status" [selected]
+              - option "Aktif"
+              - option "Nonaktif"
+            - combobox [ref=e99]:
+              - 'option "Urutkan: Update" [selected]'
+              - 'option "Urutkan: Nama"'
+              - 'option "Urutkan: Merk"'
+              - 'option "Urutkan: Netto"'
+              - 'option "Urutkan: Harga"'
+              - 'option "Urutkan: Modal"'
+            - combobox [ref=e100]:
+              - option "5 baris"
+              - option "10 baris" [selected]
+              - option "15 baris"
+              - option "25 baris"
+            - button "Desc" [ref=e101] [cursor=pointer]
+            - generic [ref=e102]: 50 material ditemukan
+          - generic [ref=e103]:
+            - article [ref=e104]:
+              - generic [ref=e105]:
+                - button "BHN-050 Gas Kaleng Portable Hi-Cook" [ref=e106] [cursor=pointer]:
+                  - generic [ref=e107]: BHN-050
+                  - strong [ref=e108]: Gas Kaleng Portable
+                  - generic [ref=e109]: Hi-Cook
+                - generic [ref=e110]: Aktif
+              - generic [ref=e111]:
+                - article [ref=e112]:
+                  - generic [ref=e113]: Netto
+                  - strong [ref=e114]: 4 pcs
+                - article [ref=e115]:
+                  - generic [ref=e116]: Harga / Pack
+                  - strong [ref=e117]: Rp 98.000
+                - article [ref=e118]:
+                  - generic [ref=e119]: Modal / Unit
+                  - strong [ref=e120]: Rp 24.500 / pcs
+                - article [ref=e121]:
+                  - generic [ref=e122]: Konversi
+                  - strong [ref=e123]: 0 unit
+              - generic [ref=e124]:
+                - generic [ref=e125]: Update 30 Mar 2026 19:43
+                - generic [ref=e126]:
+                  - button "Detail" [ref=e127] [cursor=pointer]
+                  - button "Edit" [ref=e128] [cursor=pointer]:
+                    - generic [ref=e129]: ✎
+                  - button "Hapus" [ref=e130] [cursor=pointer]:
+                    - generic [ref=e131]: 🗑
+            - article [ref=e132]:
+              - generic [ref=e133]:
+                - button "BHN-049 Sarung Tangan Plastik Safe Hand" [ref=e134] [cursor=pointer]:
+                  - generic [ref=e135]: BHN-049
+                  - strong [ref=e136]: Sarung Tangan Plastik
+                  - generic [ref=e137]: Safe Hand
+                - generic [ref=e138]: Aktif
+              - generic [ref=e139]:
+                - article [ref=e140]:
+                  - generic [ref=e141]: Netto
+                  - strong [ref=e142]: 100 pcs
+                - article [ref=e143]:
+                  - generic [ref=e144]: Harga / Pack
+                  - strong [ref=e145]: Rp 9.000
+                - article [ref=e146]:
+                  - generic [ref=e147]: Modal / Unit
+                  - strong [ref=e148]: Rp 90 / pcs
+                - article [ref=e149]:
+                  - generic [ref=e150]: Konversi
+                  - strong [ref=e151]: 0 unit
+              - generic [ref=e152]:
+                - generic [ref=e153]: Update 30 Mar 2026 19:36
+                - generic [ref=e154]:
+                  - button "Detail" [ref=e155] [cursor=pointer]
+                  - button "Edit" [ref=e156] [cursor=pointer]:
+                    - generic [ref=e157]: ✎
+                  - button "Hapus" [ref=e158] [cursor=pointer]:
+                    - generic [ref=e159]: 🗑
+            - article [ref=e160]:
+              - generic [ref=e161]:
+                - button "BHN-048 Tisu Makan Nice" [ref=e162] [cursor=pointer]:
+                  - generic [ref=e163]: BHN-048
+                  - strong [ref=e164]: Tisu Makan
+                  - generic [ref=e165]: Nice
+                - generic [ref=e166]: Aktif
+              - generic [ref=e167]:
+                - article [ref=e168]:
+                  - generic [ref=e169]: Netto
+                  - strong [ref=e170]: 100 pcs
+                - article [ref=e171]:
+                  - generic [ref=e172]: Harga / Pack
+                  - strong [ref=e173]: Rp 14.000
+                - article [ref=e174]:
+                  - generic [ref=e175]: Modal / Unit
+                  - strong [ref=e176]: Rp 140 / pcs
+                - article [ref=e177]:
+                  - generic [ref=e178]: Konversi
+                  - strong [ref=e179]: 0 unit
+              - generic [ref=e180]:
+                - generic [ref=e181]: Update 30 Mar 2026 19:29
+                - generic [ref=e182]:
+                  - button "Detail" [ref=e183] [cursor=pointer]
+                  - button "Edit" [ref=e184] [cursor=pointer]:
+                    - generic [ref=e185]: ✎
+                  - button "Hapus" [ref=e186] [cursor=pointer]:
+                    - generic [ref=e187]: 🗑
+            - article [ref=e188]:
+              - generic [ref=e189]:
+                - button "BHN-047 Box Brownies PaperCo" [ref=e190] [cursor=pointer]:
+                  - generic [ref=e191]: BHN-047
+                  - strong [ref=e192]: Box Brownies
+                  - generic [ref=e193]: PaperCo
+                - generic [ref=e194]: Aktif
+              - generic [ref=e195]:
+                - article [ref=e196]:
+                  - generic [ref=e197]: Netto
+                  - strong [ref=e198]: 25 pcs
+                - article [ref=e199]:
+                  - generic [ref=e200]: Harga / Pack
+                  - strong [ref=e201]: Rp 22.000
+                - article [ref=e202]:
+                  - generic [ref=e203]: Modal / Unit
+                  - strong [ref=e204]: Rp 880 / pcs
+                - article [ref=e205]:
+                  - generic [ref=e206]: Konversi
+                  - strong [ref=e207]: 0 unit
+              - generic [ref=e208]:
+                - generic [ref=e209]: Update 30 Mar 2026 19:22
+                - generic [ref=e210]:
+                  - button "Detail" [ref=e211] [cursor=pointer]
+                  - button "Edit" [ref=e212] [cursor=pointer]:
+                    - generic [ref=e213]: ✎
+                  - button "Hapus" [ref=e214] [cursor=pointer]:
+                    - generic [ref=e215]: 🗑
+            - article [ref=e216]:
+              - generic [ref=e217]:
+                - button "BHN-046 Sticker Label Printink" [ref=e218] [cursor=pointer]:
+                  - generic [ref=e219]: BHN-046
+                  - strong [ref=e220]: Sticker Label
+                  - generic [ref=e221]: Printink
+                - generic [ref=e222]: Aktif
+              - generic [ref=e223]:
+                - article [ref=e224]:
+                  - generic [ref=e225]: Netto
+                  - strong [ref=e226]: 100 pcs
+                - article [ref=e227]:
+                  - generic [ref=e228]: Harga / Pack
+                  - strong [ref=e229]: Rp 25.000
+                - article [ref=e230]:
+                  - generic [ref=e231]: Modal / Unit
+                  - strong [ref=e232]: Rp 250 / pcs
+                - article [ref=e233]:
+                  - generic [ref=e234]: Konversi
+                  - strong [ref=e235]: 0 unit
+              - generic [ref=e236]:
+                - generic [ref=e237]: Update 30 Mar 2026 19:15
+                - generic [ref=e238]:
+                  - button "Detail" [ref=e239] [cursor=pointer]
+                  - button "Edit" [ref=e240] [cursor=pointer]:
+                    - generic [ref=e241]: ✎
+                  - button "Hapus" [ref=e242] [cursor=pointer]:
+                    - generic [ref=e243]: 🗑
+            - article [ref=e244]:
+              - generic [ref=e245]:
+                - button "BHN-045 Pouch Standing FlexyPack" [ref=e246] [cursor=pointer]:
+                  - generic [ref=e247]: BHN-045
+                  - strong [ref=e248]: Pouch Standing
+                  - generic [ref=e249]: FlexyPack
+                - generic [ref=e250]: Aktif
+              - generic [ref=e251]:
+                - article [ref=e252]:
+                  - generic [ref=e253]: Netto
+                  - strong [ref=e254]: 100 pcs
+                - article [ref=e255]:
+                  - generic [ref=e256]: Harga / Pack
+                  - strong [ref=e257]: Rp 55.000
+                - article [ref=e258]:
+                  - generic [ref=e259]: Modal / Unit
+                  - strong [ref=e260]: Rp 550 / pcs
+                - article [ref=e261]:
+                  - generic [ref=e262]: Konversi
+                  - strong [ref=e263]: 0 unit
+              - generic [ref=e264]:
+                - generic [ref=e265]: Update 30 Mar 2026 19:08
+                - generic [ref=e266]:
+                  - button "Detail" [ref=e267] [cursor=pointer]
+                  - button "Edit" [ref=e268] [cursor=pointer]:
+                    - generic [ref=e269]: ✎
+                  - button "Hapus" [ref=e270] [cursor=pointer]:
+                    - generic [ref=e271]: 🗑
+            - article [ref=e272]:
+              - generic [ref=e273]:
+                - button "BHN-044 Lid Cup 16 oz PackPro" [ref=e274] [cursor=pointer]:
+                  - generic [ref=e275]: BHN-044
+                  - strong [ref=e276]: Lid Cup 16 oz
+                  - generic [ref=e277]: PackPro
+                - generic [ref=e278]: Aktif
+              - generic [ref=e279]:
+                - article [ref=e280]:
+                  - generic [ref=e281]: Netto
+                  - strong [ref=e282]: 50 pcs
+                - article [ref=e283]:
+                  - generic [ref=e284]: Harga / Pack
+                  - strong [ref=e285]: Rp 18.000
+                - article [ref=e286]:
+                  - generic [ref=e287]: Modal / Unit
+                  - strong [ref=e288]: Rp 360 / pcs
+                - article [ref=e289]:
+                  - generic [ref=e290]: Konversi
+                  - strong [ref=e291]: 0 unit
+              - generic [ref=e292]:
+                - generic [ref=e293]: Update 30 Mar 2026 19:01
+                - generic [ref=e294]:
+                  - button "Detail" [ref=e295] [cursor=pointer]
+                  - button "Edit" [ref=e296] [cursor=pointer]:
+                    - generic [ref=e297]: ✎
+                  - button "Hapus" [ref=e298] [cursor=pointer]:
+                    - generic [ref=e299]: 🗑
+            - article [ref=e300]:
+              - generic [ref=e301]:
+                - button "BHN-043 Cup Plastik 16 oz PackPro" [ref=e302] [cursor=pointer]:
+                  - generic [ref=e303]: BHN-043
+                  - strong [ref=e304]: Cup Plastik 16 oz
+                  - generic [ref=e305]: PackPro
+                - generic [ref=e306]: Aktif
+              - generic [ref=e307]:
+                - article [ref=e308]:
+                  - generic [ref=e309]: Netto
+                  - strong [ref=e310]: 50 pcs
+                - article [ref=e311]:
+                  - generic [ref=e312]: Harga / Pack
+                  - strong [ref=e313]: Rp 32.000
+                - article [ref=e314]:
+                  - generic [ref=e315]: Modal / Unit
+                  - strong [ref=e316]: Rp 640 / pcs
+                - article [ref=e317]:
+                  - generic [ref=e318]: Konversi
+                  - strong [ref=e319]: 0 unit
+              - generic [ref=e320]:
+                - generic [ref=e321]: Update 30 Mar 2026 18:54
+                - generic [ref=e322]:
+                  - button "Detail" [ref=e323] [cursor=pointer]
+                  - button "Edit" [ref=e324] [cursor=pointer]:
+                    - generic [ref=e325]: ✎
+                  - button "Hapus" [ref=e326] [cursor=pointer]:
+                    - generic [ref=e327]: 🗑
+            - article [ref=e328]:
+              - generic [ref=e329]:
+                - button "BHN-042 Cokelat Chips Bake Time" [ref=e330] [cursor=pointer]:
+                  - generic [ref=e331]: BHN-042
+                  - strong [ref=e332]: Cokelat Chips
+                  - generic [ref=e333]: Bake Time
+                - generic [ref=e334]: Aktif
+              - generic [ref=e335]:
+                - article [ref=e336]:
+                  - generic [ref=e337]: Netto
+                  - strong [ref=e338]: 250 gr
+                - article [ref=e339]:
+                  - generic [ref=e340]: Harga / Pack
+                  - strong [ref=e341]: Rp 22.000
+                - article [ref=e342]:
+                  - generic [ref=e343]: Modal / Unit
+                  - strong [ref=e344]: Rp 88 / gr
+                - article [ref=e345]:
+                  - generic [ref=e346]: Konversi
+                  - strong [ref=e347]: 0 unit
+              - generic [ref=e348]:
+                - generic [ref=e349]: Update 30 Mar 2026 18:47
+                - generic [ref=e350]:
+                  - button "Detail" [ref=e351] [cursor=pointer]
+                  - button "Edit" [ref=e352] [cursor=pointer]:
+                    - generic [ref=e353]: ✎
+                  - button "Hapus" [ref=e354] [cursor=pointer]:
+                    - generic [ref=e355]: 🗑
+            - article [ref=e356]:
+              - generic [ref=e357]:
+                - button "BHN-041 Sirup Gula Aren Palmia" [ref=e358] [cursor=pointer]:
+                  - generic [ref=e359]: BHN-041
+                  - strong [ref=e360]: Sirup Gula Aren
+                  - generic [ref=e361]: Palmia
+                - generic [ref=e362]: Aktif
+              - generic [ref=e363]:
+                - article [ref=e364]:
+                  - generic [ref=e365]: Netto
+                  - strong [ref=e366]: 1000 ml
+                - article [ref=e367]:
+                  - generic [ref=e368]: Harga / Pack
+                  - strong [ref=e369]: Rp 47.000
+                - article [ref=e370]:
+                  - generic [ref=e371]: Modal / Unit
+                  - strong [ref=e372]: Rp 47 / ml
+                - article [ref=e373]:
+                  - generic [ref=e374]: Konversi
+                  - strong [ref=e375]: 0 unit
+              - generic [ref=e376]:
+                - generic [ref=e377]: Update 30 Mar 2026 18:40
+                - generic [ref=e378]:
+                  - button "Detail" [ref=e379] [cursor=pointer]
+                  - button "Edit" [ref=e380] [cursor=pointer]:
+                    - generic [ref=e381]: ✎
+                  - button "Hapus" [ref=e382] [cursor=pointer]:
+                    - generic [ref=e383]: 🗑
+          - generic [ref=e384]:
+            - generic [ref=e385]: 50 material
+            - generic [ref=e386]:
+              - button "Prev" [disabled] [ref=e387]
+              - generic [ref=e388]: Halaman 1 / 5
+              - button "Next" [ref=e389] [cursor=pointer]
