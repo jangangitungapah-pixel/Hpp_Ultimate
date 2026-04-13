@@ -8,47 +8,61 @@ namespace Hpp_Ultimate.Tests;
 public sealed class PhaseTwoWorkflowTests
 {
     [Fact]
-    public async Task ProductCatalogService_LinkRecipeAsync_SyncsBom()
+    public async Task RecipeCatalogService_SaveAsync_PersistsRecipeAndCalculatesTotals()
     {
         using var scope = new TestStoreScope();
         var store = scope.Store;
+        var cache = new MemoryCache(new MemoryCacheOptions());
         var now = DateTime.Now;
         SeedAuthenticatedStaff(store, now);
         var material = SeedMaterial(store, now);
-        var recipe = new RecipeBook(
-            Guid.NewGuid(),
-            "RCP-001",
-            "Saus Dasar",
-            null,
-            10m,
-            "pcs",
-            RecipeStatus.Active,
-            [
-                new RecipeMaterialGroup(
-                    Guid.NewGuid(),
-                    "Utama",
-                    null,
-                    [new RecipeMaterialLine(Guid.NewGuid(), material.Id, 500m, "gr", 0m, null)])
-            ],
-            [],
-            now,
-            now,
-            10m);
-        store.AddRecipeBook(recipe);
-        var product = new Product(Guid.NewGuid(), "PRD-001", "Saus Botol", "Saus", "pcs", 25000m, string.Empty, ProductStatus.Active, now, now);
-        store.AddProduct(product);
-
-        var service = new ProductCatalogService(new MemoryCache(new MemoryCacheOptions()), store, new WorkspaceAccessService(store), new AuditTrailService(store));
-        var result = await service.LinkRecipeAsync(new ProductRecipeLinkRequest
+        var service = new RecipeCatalogService(cache, store, new WorkspaceAccessService(store), new AuditTrailService(store));
+        var request = new RecipeUpsertRequest
         {
-            ProductId = product.Id,
-            RecipeId = recipe.Id,
-            YieldPercentage = 100m
-        });
+            Code = "RCP-001",
+            Name = "Saus Dasar",
+            OutputQuantity = 10m,
+            OutputUnit = "pcs",
+            PortionYield = 10m,
+            PortionUnit = "pcs",
+            Status = RecipeStatus.Active,
+            Groups =
+            [
+                new RecipeGroupInput
+                {
+                    Name = "Utama",
+                    Materials =
+                    [
+                        new RecipeMaterialInput
+                        {
+                            MaterialId = material.Id,
+                            Quantity = 500m,
+                            Unit = "gr",
+                            WastePercent = 0m
+                        }
+                    ]
+                }
+            ],
+            Costs =
+            [
+                new RecipeCostInput
+                {
+                    Type = RecipeCostType.Production,
+                    Name = "Gas",
+                    Amount = 2000m
+                }
+            ]
+        };
+
+        var result = await service.SaveAsync(request);
+        var totals = service.CalculateTotals(request);
 
         Assert.True(result.Success);
-        Assert.Single(store.BomItems, item => item.ProductId == product.Id);
-        Assert.Equal(50m, store.BomItems.Single(item => item.ProductId == product.Id).QuantityPerUnit);
+        Assert.Single(store.Recipes);
+        Assert.Equal(25000m, totals.MaterialCost);
+        Assert.Equal(2000m, totals.OperationalCost);
+        Assert.Equal(27000m, totals.TotalCost);
+        Assert.Equal("Saus Dasar", store.Recipes.Single().Name);
     }
 
     [Fact]
@@ -82,7 +96,7 @@ public sealed class PhaseTwoWorkflowTests
     }
 
     [Fact]
-    public async Task ProductionService_RecordBatchAsync_ConsumesMaterialAndStoresBatchCosts()
+    public async Task ProductionService_QueueStartAndCompleteProduction_ConsumesMaterialAndCreatesMenuStock()
     {
         using var scope = new TestStoreScope();
         var store = scope.Store;
@@ -112,27 +126,28 @@ public sealed class PhaseTwoWorkflowTests
             10m);
         store.AddRecipeBook(recipe);
 
-        var product = new Product(Guid.NewGuid(), "PRD-001", "Saus Botol", "Saus", "pcs", 25000m, string.Empty, ProductStatus.Active, now, now);
-        store.AddProduct(product);
-        store.UpsertRecipe(new ProductRecipe(product.Id, recipe.OutputQuantity, 100m, null, now, recipe.Id));
-        store.ReplaceBomItems(product.Id, [new BomItem(product.Id, material.Id, 50m)]);
-
         var service = new ProductionService(store, new WorkspaceAccessService(store), new AuditTrailService(store));
-        var result = await service.RecordBatchAsync(new ProductionBatchCreateRequest
+        var queued = await service.UpsertQueueAsync(new ProductionBatchCreateRequest
         {
-            ProductId = product.Id,
-            QuantityProduced = 8,
-            LaborCosts = [new ProductionCostInput { Name = "Operator", Amount = 10000m }],
-            OverheadCosts = [new ProductionCostInput { Name = "Listrik", Amount = 5000m }]
+            RecipeId = recipe.Id,
+            BatchCount = 2,
+            TargetDurationMinutes = 30,
+            Notes = "Batch test"
         });
+        var batchId = Assert.Single(store.ProductionBatches).Id;
+        var started = await service.StartQueuedProductionAsync(batchId);
+        var completed = await service.CompleteProductionAsync(batchId);
+        var batch = Assert.Single(store.ProductionBatches);
 
-        Assert.True(result.Success);
-        Assert.Single(store.ProductionBatches);
-        Assert.Equal(600m, store.StockMovements.Where(item => item.MaterialId == material.Id).Sum(item => item.Quantity));
-        var batch = store.ProductionBatches.Single();
-        Assert.Equal(20000m, batch.MaterialCost);
-        Assert.Equal(10000m, batch.LaborCost);
-        Assert.Equal(5000m, batch.OverheadCost);
+        Assert.True(queued.Success);
+        Assert.True(started.Success);
+        Assert.True(completed.Success);
+        Assert.Equal(0m, store.StockMovements.Where(item => item.MaterialId == material.Id).Sum(item => item.Quantity));
+        Assert.Equal(50000m, batch.MaterialCost);
+        Assert.Equal(0m, batch.LaborCost);
+        Assert.Equal(0m, batch.OverheadCost);
+        Assert.Equal(ProductionRunStatus.Completed, batch.Status);
+        Assert.Equal(20m, InventoryMath.GetRecipeMenuOnHand(store, recipe.Id));
     }
 
     private static void SeedAuthenticatedStaff(SeededBusinessDataStore store, DateTime now)

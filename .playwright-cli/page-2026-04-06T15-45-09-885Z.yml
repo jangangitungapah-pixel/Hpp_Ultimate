@@ -1,0 +1,174 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Ringkasan
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: /
+            - img [ref=e19]
+            - strong [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Master Data
+          - link "Katalog Material" [ref=e26] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e28]
+            - strong [ref=e32]: Katalog Material
+          - link "Resep" [ref=e33] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e35]
+            - strong [ref=e37]: Resep
+        - generic [ref=e38]:
+          - generic [ref=e39]: Operasional
+          - link "Stok Gudang" [ref=e40] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e42]
+            - strong [ref=e46]: Stok Gudang
+          - link "Pembelian Material" [ref=e47] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e49]
+            - strong [ref=e53]: Pembelian Material
+          - link "Produksi" [ref=e54] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e56]
+            - strong [ref=e60]: Produksi
+          - link "Kasir / POS" [ref=e61] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e63]
+            - strong [ref=e66]: Kasir / POS
+        - generic [ref=e67]:
+          - generic [ref=e68]: Keuangan
+          - link "Pembukuan" [ref=e69] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e71]
+            - strong [ref=e74]: Pembukuan
+        - generic [ref=e75]:
+          - generic [ref=e76]: Admin
+          - link "Pengaturan Bisnis" [ref=e77] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e79]
+            - strong [ref=e80]: Pengaturan Bisnis
+          - link "Tim & Akun" [ref=e81] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e83]
+            - strong [ref=e86]: Tim & Akun
+          - link "Backup & Impor Data" [ref=e87] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e89]
+            - strong [ref=e94]: Backup & Impor Data
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: A
+            - generic [ref=e98]:
+              - strong [ref=e99]: Arief
+              - generic [ref=e100]: Admin
+          - link "Logout" [ref=e101] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e102]
+            - generic [ref=e105]: Logout
+  - main [ref=e106]:
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - generic [ref=e109]: Workspace aktif
+        - strong [ref=e110]: Pembelian Material
+      - generic "Pengguna aktif" [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]: Signed in
+          - strong [ref=e115]: Arief
+        - generic [ref=e116]: A
+    - article [ref=e117]:
+      - generic [ref=e118]:
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e121]: Pembelian material
+            - heading "Susun draft pembelian, finalisasi checkout, lalu terima barang dari satu halaman." [active] [level=1] [ref=e122]
+            - paragraph [ref=e123]: "Funnel utamanya sekarang dipersempit: mulai dari draft pembelian, lanjut ke checkout supplier, lalu pindah ke penerimaan barang dan riwayat hanya saat memang dibutuhkan."
+          - generic [ref=e124]:
+            - generic [ref=e125]: 0 history belanja
+            - button "Perbarui" [ref=e126] [cursor=pointer]
+        - generic [ref=e127]:
+          - generic [ref=e128]:
+            - article [ref=e129]:
+              - generic [ref=e130]: Material aktif
+              - strong [ref=e131]: "9"
+            - article [ref=e132]:
+              - generic [ref=e133]: Pembelian tercatat
+              - strong [ref=e134]: "0"
+            - article [ref=e135]:
+              - generic [ref=e136]: Menunggu datang
+              - strong [ref=e137]: "0"
+            - article [ref=e138]:
+              - generic [ref=e139]: Total belanja
+              - strong [ref=e140]: Rp 0
+          - navigation "Peta kerja pembelian material" [ref=e141]:
+            - button "01 Draft pembelian Pilih material dan susun item yang ingin dibeli." [ref=e142] [cursor=pointer]:
+              - generic [ref=e143]: "01"
+              - strong [ref=e144]: Draft pembelian
+              - generic [ref=e145]: Pilih material dan susun item yang ingin dibeli.
+            - button "02 Finalisasi checkout Tambahkan minimal satu item dulu sebelum lanjut checkout." [ref=e146] [cursor=pointer]:
+              - generic [ref=e147]: "02"
+              - strong [ref=e148]: Finalisasi checkout
+              - generic [ref=e149]: Tambahkan minimal satu item dulu sebelum lanjut checkout.
+            - button "03 Penerimaan & riwayat Tidak ada barang yang menunggu diterima." [ref=e150] [cursor=pointer]:
+              - generic [ref=e151]: "03"
+              - strong [ref=e152]: Penerimaan & riwayat
+              - generic [ref=e153]: Tidak ada barang yang menunggu diterima.
+        - generic [ref=e154]:
+          - generic [ref=e155]:
+            - generic [ref=e156]:
+              - generic [ref=e157]: Draft pembelian
+              - heading "Susun item pembelian sebelum checkout" [level=2] [ref=e158]
+              - paragraph [ref=e159]: "Jalur default-nya lurus: pilih material, tambah ke draft, lalu lanjut ke checkout saat list sudah siap."
+            - button "Cara Lain Input" [ref=e161] [cursor=pointer]
+          - generic [ref=e162]:
+            - generic [ref=e163]:
+              - generic [ref=e164]: Material katalog
+              - textbox "Material katalog" [ref=e166]:
+                - /placeholder: Ketik nama atau kode material
+                - text: BHN-003 - Air Mineral - Sanqua
+            - generic [ref=e167]:
+              - generic [ref=e168]: Jumlah pack
+              - spinbutton "Jumlah pack" [ref=e169]: "1"
+            - article [ref=e170]:
+              - generic [ref=e171]: Estimasi subtotal item
+              - strong [ref=e172]: Rp 4.000
+              - generic [ref=e173]: 1 pack · 1500 ml
+          - article [ref=e174]:
+            - generic [ref=e175]:
+              - generic [ref=e176]: BHN-003
+              - strong [ref=e177]: Air Mineral
+            - generic [ref=e178]:
+              - article [ref=e179]:
+                - generic [ref=e180]: Pack
+                - strong [ref=e181]: 1500 ml
+              - article [ref=e182]:
+                - generic [ref=e183]: Harga / pack
+                - strong [ref=e184]: Rp 4.000
+              - article [ref=e185]:
+                - generic [ref=e186]: Stok gudang
+                - strong [ref=e187]: 16400 ml
+              - article [ref=e188]:
+                - generic [ref=e189]: Restock item ini
+                - strong [ref=e190]: 1500 ml
+          - button "Tambah ke Draft" [ref=e192] [cursor=pointer]
+          - generic [ref=e193]:
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - generic [ref=e196]: List belanja
+                - heading "Item yang akan di-checkout" [level=3] [ref=e197]
+                - paragraph [ref=e198]: Jumlah pack akan dijumlahkan otomatis bila material yang sama dimasukkan lagi.
+              - generic [ref=e200]:
+                - generic [ref=e201]: Baris tampil
+                - combobox "Baris tampil" [ref=e202]:
+                  - option "8 baris" [selected]
+                  - option "12 baris"
+                  - option "20 baris"
+                  - option "50 baris"
+            - generic [ref=e203]:
+              - heading "Belum ada item" [level=3] [ref=e204]
+              - paragraph [ref=e205]: Masukkan minimal satu material ke list belanja sebelum checkout.

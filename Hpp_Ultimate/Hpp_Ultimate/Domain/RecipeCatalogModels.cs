@@ -14,6 +14,12 @@ public enum RecipeCostType
     Production
 }
 
+public enum RecipePortioningMode
+{
+    Manual,
+    WeightBased
+}
+
 public static class RecipePortionUnitCatalog
 {
     private static readonly string[] _options =
@@ -57,7 +63,10 @@ public sealed record RecipeBook(
     decimal PortionYield = 1m,
     string PortionUnit = "pcs",
     decimal TargetMarginPercent = 0m,
-    decimal SuggestedSellingPrice = 0m);
+    decimal SuggestedSellingPrice = 0m,
+    RecipePortioningMode PortioningMode = RecipePortioningMode.Manual,
+    decimal PortionWeightGr = 0m,
+    Guid? PortionWeightGroupId = null);
 
 public sealed record RecipeMaterialGroup(
     Guid Id,
@@ -135,6 +144,13 @@ public sealed class RecipeUpsertRequest
 
     [Required(ErrorMessage = "Satuan porsi wajib dipilih.")]
     public string PortionUnit { get; set; } = "pcs";
+
+    public RecipePortioningMode PortioningMode { get; set; } = RecipePortioningMode.Manual;
+
+    [Range(0, double.MaxValue, ErrorMessage = "Berat per porsi tidak boleh negatif.")]
+    public decimal PortionWeightGr { get; set; }
+
+    public Guid? PortionWeightGroupId { get; set; }
 
     [Range(0, 500, ErrorMessage = "Margin harus di antara 0 sampai 500.")]
     public decimal TargetMarginPercent { get; set; }

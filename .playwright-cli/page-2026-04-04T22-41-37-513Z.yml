@@ -1,0 +1,371 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Workflow
+          - link "Katalog Material" [ref=e17] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e19]
+            - strong [ref=e23]: Katalog Material
+          - link "Gudang" [ref=e24] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e26]
+            - strong [ref=e30]: Gudang
+          - link "Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e33]
+            - strong [ref=e35]: Resep
+          - link "Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e38]
+            - strong [ref=e42]: Produksi
+          - link "Point of Sales" [ref=e43] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e45]
+            - strong [ref=e48]: Point of Sales
+          - link "Belanja" [ref=e49] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e51]
+            - strong [ref=e55]: Belanja
+          - link "Pembukuan" [ref=e56] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e58]
+            - strong [ref=e61]: Pembukuan
+        - generic [ref=e62]:
+          - generic [ref=e63]: Pengaturan
+          - link "Pengaturan" [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e66]
+            - strong [ref=e67]: Pengaturan
+          - link "Pengaturan Akun" [ref=e68] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e70]
+            - strong [ref=e73]: Pengaturan Akun
+        - generic [ref=e74]:
+          - generic [ref=e75]: Kontrol Data
+          - link "Backup & Data Ops" [ref=e76] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e78]
+            - strong [ref=e83]: Backup & Data Ops
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: A
+            - generic [ref=e87]:
+              - strong [ref=e88]: Arief
+              - generic [ref=e89]: Admin
+          - link "Logout" [ref=e90] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e91]
+            - generic [ref=e94]: Logout
+  - main [ref=e95]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Produksi
+        - strong [ref=e99]: Eksekusi batch produksi dan konsumsi bahan baku
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - generic [ref=e102]: ⚲
+          - textbox "Current user" [ref=e103]: Arief
+        - generic [ref=e104]: A
+    - article [ref=e105]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]: Produksi praktis
+            - heading "Siapkan antrian produksi, atur timer target, lalu mulai dari satu workspace." [level=1] [ref=e110]
+            - paragraph [ref=e111]: Resep aktif diambil langsung dari halaman resep. Saat produksi dimulai, stok gudang otomatis berkurang. Jika stok kurang, produksi tetap bisa diantrikan tetapi belum bisa dijalankan.
+          - generic [ref=e112]:
+            - generic [ref=e113]: 1 histori produksi
+            - button "Refresh" [ref=e114] [cursor=pointer]
+        - generic [ref=e115]:
+          - article [ref=e116]:
+            - generic [ref=e117]: Resep tersedia
+            - strong [ref=e118]: "1"
+          - article [ref=e119]:
+            - generic [ref=e120]: Dalam antrian
+            - strong [ref=e121]: "0"
+          - article [ref=e122]:
+            - generic [ref=e123]: Sedang berjalan
+            - strong [ref=e124]: "0"
+          - article [ref=e125]:
+            - generic [ref=e126]: Selesai
+            - strong [ref=e127]: "1"
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - generic [ref=e133]: Draft produksi
+                - heading "Kue Soes" [level=2] [ref=e134]
+                - paragraph [ref=e135]: RCP-001 - 14 pcs per batch
+              - generic [ref=e137]: Bisa diantrikan
+            - generic [ref=e138]:
+              - generic [ref=e140]:
+                - generic [ref=e141]: Pilih resep
+                - heading "Cari resep produksi dari katalog resep" [level=3] [ref=e142]
+                - paragraph [ref=e143]: Autocomplete akan memfilter kode dan nama resep tanpa membuat panel daftar yang panjang ke bawah.
+              - generic [ref=e144]:
+                - generic [ref=e145]:
+                  - generic [ref=e146]: Resep produksi
+                  - combobox "Resep produksi" [ref=e147]: RCP-001 - Kue Soes
+                - article [ref=e148]:
+                  - generic [ref=e149]: Resep tersedia
+                  - strong [ref=e150]: "1"
+                  - generic [ref=e151]: 0 siap mulai / 1 tertahan stok
+                - article [ref=e152]:
+                  - generic [ref=e153]: Status resep
+                  - strong [ref=e154]: Tertahan stok
+                  - generic [ref=e155]: Stok Butter Margarine kurang 150 gr.
+            - generic [ref=e157]:
+              - generic [ref=e158]:
+                - generic [ref=e159]: Rekomendasi AI
+                - heading "Saran batch produksi yang paling layak dijalankan" [level=3] [ref=e160]
+                - paragraph [ref=e161]: Gemini membaca kesiapan stok, antrian aktif, dan histori batch untuk memberi beberapa opsi yang bisa langsung masuk ke draft.
+              - generic [ref=e162]:
+                - generic [ref=e163]: Gemini aktif
+                - button "Minta Rekomendasi" [ref=e164] [cursor=pointer]
+            - generic [ref=e165]:
+              - article [ref=e166]:
+                - generic [ref=e167]: Batch
+                - strong [ref=e168]: "1"
+              - article [ref=e169]:
+                - generic [ref=e170]: Porsi / batch
+                - strong [ref=e171]: 14 pcs
+              - article [ref=e172]:
+                - generic [ref=e173]: Total porsi
+                - strong [ref=e174]: 14 pcs
+              - article [ref=e175]:
+                - generic [ref=e176]: Modal bahan
+                - strong [ref=e177]: Rp51.829
+            - generic [ref=e178]:
+              - strong [ref=e179]: Bisa diantrikan
+              - generic [ref=e180]: Stok Butter Margarine kurang 150 gr.
+            - generic [ref=e181]:
+              - article [ref=e182]: Stok Butter Margarine kurang 150 gr.
+              - article [ref=e183]: Stok Telur Ayam kosong.
+              - article [ref=e184]: Stok Vanili kosong.
+            - generic [ref=e185]:
+              - generic [ref=e187]:
+                - generic [ref=e188]: Tambah antrian
+                - heading "Atur batch, timer target, dan detail produksi" [level=3] [ref=e189]
+                - paragraph [ref=e190]: Item di antrian masih bisa diedit sebelum benar-benar dimulai.
+              - generic [ref=e191]:
+                - generic [ref=e192]:
+                  - generic [ref=e193]:
+                    - generic [ref=e194]: Jumlah batch
+                    - spinbutton "Jumlah batch" [ref=e195]: "1"
+                  - generic [ref=e196]:
+                    - generic [ref=e197]: Timer target (menit)
+                    - spinbutton "Timer target (menit)" [ref=e198]: "30"
+                  - generic [ref=e199]:
+                    - generic [ref=e200]: Catatan produksi
+                    - textbox "Catatan produksi" [ref=e201]
+                - generic [ref=e202]:
+                  - generic [ref=e203]: Target produksi
+                  - strong [ref=e204]: 30 menit
+                  - generic [ref=e205]:
+                    - text: Timer berjalan saat tombol
+                    - emphasis [ref=e206]: Mulai Produksi
+                    - text: ditekan dari antrian aktif.
+                - generic [ref=e207]:
+                  - button "Preview ulang" [ref=e208] [cursor=pointer]
+                  - button "Tambah Antrian" [ref=e209] [cursor=pointer]
+            - generic [ref=e210]:
+              - generic [ref=e211]:
+                - generic [ref=e212]:
+                  - generic [ref=e213]: Kebutuhan bahan
+                  - heading "Simulasi stok untuk draft ini" [level=3] [ref=e214]
+                  - paragraph [ref=e215]: Prioritaskan bahan yang masih kurang. Produksi hanya bisa dimulai jika semua kebutuhan sudah aman.
+                - generic [ref=e216]:
+                  - generic [ref=e217]: Baris tampil
+                  - combobox "Baris tampil" [ref=e218]:
+                    - option "8 baris"
+                    - option "12 baris"
+                    - option "20 baris"
+                    - option "50 baris"
+              - table [ref=e220]:
+                - rowgroup [ref=e221]:
+                  - row "Material Butuh / batch Total butuh Stok Status" [ref=e222]:
+                    - columnheader "Material" [ref=e223]
+                    - columnheader "Butuh / batch" [ref=e224]
+                    - columnheader "Total butuh" [ref=e225]
+                    - columnheader "Stok" [ref=e226]
+                    - columnheader "Status" [ref=e227]
+                - rowgroup [ref=e228]:
+                  - row "Air Mineral BHN-003 - Sanqua 400 ml 400 ml 16400 ml Cukup" [ref=e229]:
+                    - cell "Air Mineral BHN-003 - Sanqua" [ref=e230]:
+                      - generic [ref=e231]:
+                        - strong [ref=e232]: Air Mineral
+                        - generic [ref=e233]: BHN-003 - Sanqua
+                    - cell "400 ml" [ref=e234]
+                    - cell "400 ml" [ref=e235]
+                    - cell "16400 ml" [ref=e236]
+                    - cell "Cukup" [ref=e237]:
+                      - generic [ref=e238]: Cukup
+                  - row "Butter Margarine BHN-002 - Palmia Royal 230 gr 230 gr 80 gr Kurang 150" [ref=e239]:
+                    - cell "Butter Margarine BHN-002 - Palmia Royal" [ref=e240]:
+                      - generic [ref=e241]:
+                        - strong [ref=e242]: Butter Margarine
+                        - generic [ref=e243]: BHN-002 - Palmia Royal
+                    - cell "230 gr" [ref=e244]
+                    - cell "230 gr" [ref=e245]
+                    - cell "80 gr" [ref=e246]
+                    - cell "Kurang 150" [ref=e247]:
+                      - generic [ref=e248]: Kurang 150
+                  - row "Garam BHN-004 - Prisma 6 gr 6 gr 976 gr Cukup" [ref=e249]:
+                    - cell "Garam BHN-004 - Prisma" [ref=e250]:
+                      - generic [ref=e251]:
+                        - strong [ref=e252]: Garam
+                        - generic [ref=e253]: BHN-004 - Prisma
+                    - cell "6 gr" [ref=e254]
+                    - cell "6 gr" [ref=e255]
+                    - cell "976 gr" [ref=e256]
+                    - cell "Cukup" [ref=e257]:
+                      - generic [ref=e258]: Cukup
+                  - row "Gula Pasir BHN-007 - Gulaku 125 gr 125 gr 3500 gr Cukup" [ref=e259]:
+                    - cell "Gula Pasir BHN-007 - Gulaku" [ref=e260]:
+                      - generic [ref=e261]:
+                        - strong [ref=e262]: Gula Pasir
+                        - generic [ref=e263]: BHN-007 - Gulaku
+                    - cell "125 gr" [ref=e264]
+                    - cell "125 gr" [ref=e265]
+                    - cell "3500 gr" [ref=e266]
+                    - cell "Cukup" [ref=e267]:
+                      - generic [ref=e268]: Cukup
+                  - row "Susu UHT Full Cream BHN-006 - Frisian Flag 500 ml 500 ml 1600 ml Cukup" [ref=e269]:
+                    - cell "Susu UHT Full Cream BHN-006 - Frisian Flag" [ref=e270]:
+                      - generic [ref=e271]:
+                        - strong [ref=e272]: Susu UHT Full Cream
+                        - generic [ref=e273]: BHN-006 - Frisian Flag
+                    - cell "500 ml" [ref=e274]
+                    - cell "500 ml" [ref=e275]
+                    - cell "1600 ml" [ref=e276]
+                    - cell "Cukup" [ref=e277]:
+                      - generic [ref=e278]: Cukup
+                  - row "Telur Ayam BHN-005 - Lokal 7,5 pcs 7,5 pcs 0 pcs Kosong" [ref=e279]:
+                    - cell "Telur Ayam BHN-005 - Lokal" [ref=e280]:
+                      - generic [ref=e281]:
+                        - strong [ref=e282]: Telur Ayam
+                        - generic [ref=e283]: BHN-005 - Lokal
+                    - cell "7,5 pcs" [ref=e284]
+                    - cell "7,5 pcs" [ref=e285]
+                    - cell "0 pcs" [ref=e286]
+                    - cell "Kosong" [ref=e287]:
+                      - generic [ref=e288]: Kosong
+                  - row "Tepung Maizena BHN-008 - Maizenaku 50 gr 50 gr 300 gr Cukup" [ref=e289]:
+                    - cell "Tepung Maizena BHN-008 - Maizenaku" [ref=e290]:
+                      - generic [ref=e291]:
+                        - strong [ref=e292]: Tepung Maizena
+                        - generic [ref=e293]: BHN-008 - Maizenaku
+                    - cell "50 gr" [ref=e294]
+                    - cell "50 gr" [ref=e295]
+                    - cell "300 gr" [ref=e296]
+                    - cell "Cukup" [ref=e297]:
+                      - generic [ref=e298]: Cukup
+                  - row "Tepung Terigu BHN-001 - Segitga Biru 250 gr 250 gr 9000 gr Cukup" [ref=e299]:
+                    - cell "Tepung Terigu BHN-001 - Segitga Biru" [ref=e300]:
+                      - generic [ref=e301]:
+                        - strong [ref=e302]: Tepung Terigu
+                        - generic [ref=e303]: BHN-001 - Segitga Biru
+                    - cell "250 gr" [ref=e304]
+                    - cell "250 gr" [ref=e305]
+                    - cell "9000 gr" [ref=e306]
+                    - cell "Cukup" [ref=e307]:
+                      - generic [ref=e308]: Cukup
+                  - row "Vanili BHN-009 - Garuda 3 gr 3 gr 0 gr Kosong" [ref=e309]:
+                    - cell "Vanili BHN-009 - Garuda" [ref=e310]:
+                      - generic [ref=e311]:
+                        - strong [ref=e312]: Vanili
+                        - generic [ref=e313]: BHN-009 - Garuda
+                    - cell "3 gr" [ref=e314]
+                    - cell "3 gr" [ref=e315]
+                    - cell "0 gr" [ref=e316]
+                    - cell "Kosong" [ref=e317]:
+                      - generic [ref=e318]: Kosong
+              - generic [ref=e319]:
+                - generic [ref=e320]: 9 bahan
+                - generic [ref=e321]:
+                  - button "Prev" [disabled] [ref=e322]
+                  - generic "Pilih halaman kebutuhan bahan" [ref=e323]:
+                    - combobox "Pilih halaman kebutuhan bahan" [ref=e324]:
+                      - option "Halaman 1" [selected]
+                  - generic [ref=e325]: 1 / 1
+                  - button "Next" [disabled] [ref=e326]
+          - generic [ref=e327]:
+            - generic [ref=e328]:
+              - generic [ref=e329]:
+                - generic [ref=e330]: Antrian produksi
+                - heading "Draft yang siap dijalankan" [level=2] [ref=e331]
+                - paragraph [ref=e332]: Mulai produksi dijalankan dari sini agar detail batch tetap bisa diubah sampai detik terakhir.
+              - generic [ref=e333]:
+                - generic [ref=e334]: Baris tampil
+                - combobox "Baris tampil" [ref=e335]:
+                  - option "8 baris" [selected]
+                  - option "12 baris"
+                  - option "20 baris"
+                  - option "50 baris"
+            - generic [ref=e336]: Belum ada antrian produksi.
+        - generic [ref=e337]:
+          - generic [ref=e338]:
+            - generic [ref=e339]:
+              - generic [ref=e340]: History produksi
+              - heading "Produksi berjalan dan selesai" [level=2] [ref=e341]
+              - paragraph [ref=e342]: Timer target akan berjalan otomatis saat produksi dimulai, lalu alarm berbunyi saat target waktunya habis.
+            - generic [ref=e343]:
+              - generic [ref=e344]: Baris tampil
+              - combobox "Baris tampil" [ref=e345]:
+                - option "8 baris"
+                - option "12 baris" [selected]
+                - option "20 baris"
+                - option "50 baris"
+          - table [ref=e347]:
+            - rowgroup [ref=e348]:
+              - row "Produksi Batch Timer Mulai Status Aksi" [ref=e349]:
+                - columnheader "Produksi" [ref=e350]:
+                  - generic [ref=e353]: Produksi
+                - columnheader "Batch" [ref=e354]:
+                  - generic [ref=e357]: Batch
+                - columnheader "Timer" [ref=e358]:
+                  - generic [ref=e361]: Timer
+                - columnheader "Mulai" [ref=e362]:
+                  - generic [ref=e365]: Mulai
+                - columnheader "Status" [ref=e366]:
+                  - generic [ref=e369]: Status
+                - columnheader "Aksi" [ref=e370]:
+                  - generic [ref=e373]: Aksi
+            - rowgroup [ref=e374]:
+              - row "Kue Soes PRD-001 - RCP-001 4 batch 56 pcs 30 menit Target 30 menit 05 Apr 2026 03:04 Selesai 05 Apr 2026 03:04 Selesai Selesai" [ref=e375]:
+                - cell "Kue Soes PRD-001 - RCP-001" [ref=e376]:
+                  - generic [ref=e377]:
+                    - strong [ref=e378]: Kue Soes
+                    - generic [ref=e379]: PRD-001 - RCP-001
+                - cell "4 batch 56 pcs" [ref=e380]:
+                  - generic [ref=e381]:
+                    - strong [ref=e382]: 4 batch
+                    - generic [ref=e383]: 56 pcs
+                - cell "30 menit Target 30 menit" [ref=e384]:
+                  - generic [ref=e385]:
+                    - strong [ref=e386]: 30 menit
+                    - generic [ref=e387]: Target 30 menit
+                - cell "05 Apr 2026 03:04 Selesai 05 Apr 2026 03:04" [ref=e388]:
+                  - generic [ref=e389]:
+                    - strong [ref=e390]: 05 Apr 2026 03:04
+                    - generic [ref=e391]: Selesai 05 Apr 2026 03:04
+                - cell "Selesai" [ref=e392]:
+                  - generic [ref=e393]: Selesai
+                - cell "Selesai" [ref=e394]:
+                  - generic [ref=e396]: Selesai
+          - generic [ref=e397]:
+            - generic [ref=e398]: 1 histori
+            - generic [ref=e399]:
+              - button "Prev" [disabled] [ref=e400]
+              - generic "Pilih halaman history produksi" [ref=e401]:
+                - combobox "Pilih halaman history produksi" [ref=e402]:
+                  - option "Halaman 1" [selected]
+              - generic [ref=e403]: 1 / 1
+              - button "Next" [disabled] [ref=e404]

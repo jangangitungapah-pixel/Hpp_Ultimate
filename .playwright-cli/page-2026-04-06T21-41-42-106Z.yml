@@ -1,0 +1,129 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e11]:
+        - link [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e15]
+        - generic [ref=e19]:
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e22]
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e28]
+        - generic [ref=e30]:
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e33]
+          - link [ref=e37] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e39]
+          - link [ref=e43] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e45]
+          - link [ref=e49] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e51]
+        - link [ref=e55] [cursor=pointer]:
+          - /url: /pembukuan
+          - img [ref=e57]
+        - generic [ref=e60]:
+          - link [ref=e61] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e63]
+          - link [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e66]
+          - link [ref=e69] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e71]
+        - link [ref=e77] [cursor=pointer]:
+          - /url: /logout
+          - img [ref=e78]
+  - main [ref=e81]:
+    - generic [ref=e83]:
+      - generic [ref=e84]: Area kerja
+      - strong [ref=e85]: Pembelian Material
+    - article [ref=e86]:
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: Pembelian material
+            - heading "Pembelian material" [level=1] [ref=e91]
+            - paragraph [ref=e92]: Mulai dari draft, lanjut ke checkout saat siap, lalu buka penerimaan hanya ketika barang memang sudah datang.
+          - generic [ref=e94]: 0 history belanja
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: Mode kerja
+            - heading "Susun draft pembelian" [level=2] [ref=e98]
+            - paragraph [ref=e99]: Halaman ini tidak lagi diperlakukan seperti dashboard penuh. Jalur utamanya sekarang hanya tiga mode kerja yang dibuka sesuai kebutuhan.
+          - navigation "Peta kerja pembelian material" [ref=e100]:
+            - button "Draft Susun item Pilih material dan susun item yang ingin dibeli." [ref=e101] [cursor=pointer]:
+              - generic [ref=e102]: Draft
+              - strong [ref=e103]: Susun item
+              - generic [ref=e104]: Pilih material dan susun item yang ingin dibeli.
+            - button "Checkout Finalisasi supplier Tambahkan minimal satu item dulu sebelum lanjut checkout." [ref=e105] [cursor=pointer]:
+              - generic [ref=e106]: Checkout
+              - strong [ref=e107]: Finalisasi supplier
+              - generic [ref=e108]: Tambahkan minimal satu item dulu sebelum lanjut checkout.
+            - button "Riwayat Penerimaan barang Tidak ada barang yang menunggu diterima." [ref=e109] [cursor=pointer]:
+              - generic [ref=e110]: Riwayat
+              - strong [ref=e111]: Penerimaan barang
+              - generic [ref=e112]: Tidak ada barang yang menunggu diterima.
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - generic [ref=e115]:
+              - generic [ref=e116]: Draft pembelian
+              - heading "Susun item pembelian sebelum checkout" [level=2] [ref=e117]
+              - paragraph [ref=e118]: "Jalur default-nya lurus: pilih material, tambah ke draft, lalu lanjut ke checkout saat list sudah siap."
+            - button "Cara Lain Input" [ref=e120] [cursor=pointer]
+          - generic [ref=e121]:
+            - generic [ref=e122]:
+              - generic [ref=e123]: Material katalog
+              - textbox "Material katalog" [ref=e125]:
+                - /placeholder: Ketik nama atau kode material
+                - text: BHN-003 - Air Mineral - Sanqua
+            - generic [ref=e126]:
+              - generic [ref=e127]: Jumlah pack
+              - spinbutton "Jumlah pack" [ref=e128]: "1"
+            - article [ref=e129]:
+              - generic [ref=e130]: Estimasi subtotal item
+              - strong [ref=e131]: Rp 4.000
+              - generic [ref=e132]: 1 pack · 1500 ml
+          - article [ref=e133]:
+            - generic [ref=e134]:
+              - generic [ref=e135]: BHN-003
+              - strong [ref=e136]: Air Mineral
+            - generic [ref=e137]:
+              - article [ref=e138]:
+                - generic [ref=e139]: Pack
+                - strong [ref=e140]: 1500 ml
+              - article [ref=e141]:
+                - generic [ref=e142]: Harga / pack
+                - strong [ref=e143]: Rp 4.000
+              - article [ref=e144]:
+                - generic [ref=e145]: Stok gudang
+                - strong [ref=e146]: 16400 ml
+              - article [ref=e147]:
+                - generic [ref=e148]: Restock item ini
+                - strong [ref=e149]: 1500 ml
+          - button "Tambah ke Draft" [ref=e151] [cursor=pointer]
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]: List belanja
+                - heading "Item yang akan di-checkout" [level=3] [ref=e156]
+                - paragraph [ref=e157]: Jumlah pack akan dijumlahkan otomatis bila material yang sama dimasukkan lagi.
+              - generic [ref=e159]:
+                - generic [ref=e160]: Baris tampil
+                - combobox "Baris tampil" [ref=e161]:
+                  - option "8 baris" [selected]
+                  - option "12 baris"
+                  - option "20 baris"
+                  - option "50 baris"
+            - generic [ref=e162]:
+              - heading "Belum ada item" [level=3] [ref=e163]
+              - paragraph [ref=e164]: Masukkan minimal satu material ke list belanja sebelum checkout.

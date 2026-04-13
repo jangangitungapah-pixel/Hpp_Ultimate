@@ -1,0 +1,220 @@
+@page "/pembukuan"
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@using System.Globalization
+@inject BookkeepingService BookkeepingService
+@inject GeminiBookkeepingAssistantService GeminiBookkeepingAssistantService
+@inject SeededBusinessDataStore Store
+
+<PageTitle>Pembukuan | HPP Ultimate</PageTitle>
+
+<section class="bookkeeping-page ds-page ds-split-workspace theme-indigo">
+    <header class="bookkeeping-header ds-page-header">
+        <div class="header-copy">
+            <span class="section-tag">Pembukuan</span>
+            <h1>Gabungkan pemasukan kasir / POS, pembelian selesai, dan entry manual ke satu ledger.</h1>
+            <p>Seluruh riwayat kasir / POS dan pembelian yang sudah selesai masuk ke halaman ini. Kamu juga bisa menambah pemasukan atau pengeluaran lain secara manual.</p>
+        </div>
+
+        <div class="header-actions">
+            <div class="status-chip">@_statusMessage</div>
+            <button type="button" class="ghost-button" @onclick="ReloadAsync">Perbarui</button>
+        </div>
+    </header>
+
+    @if (_isLoading && _snapshot is null)
+    {
+        <div class="table-skeleton"></div>
+    }
+    else if (_snapshot is not null)
+    {
+        <section class="entry-form-card">
+            <div class="section-head ds-card-header">
+                <div>
+                    <span class="section-tag">Form pembukuan</span>
+                    <h2>Tambah pemasukan atau pengeluaran manual</h2>
+                    <p>Form dibuat singkat agar cepat dipakai untuk gas, token listrik, ongkos kecil, atau pemasukan lain di luar kasir / POS.</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_message))
+            {
+                <div class="form-message">@_message</div>
+            }
+
+            <EditForm Model="_formModel" OnValidSubmit="SubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <section class="bookkeeping-ai-card">
+                    <div class="section-head ds-card-header">
+                        <div>
+                            <span class="section-tag">Analisa AI</span>
+                            <h2>Rapikan draft entry manual</h2>
+                            <p>Pakai hanya saat draft manual butuh bantuan perapihan cepat sebelum disimpan.</p>
+                        </div>
+
+                        <div class="header-actions">
+                            <span class="status-chip">@(GeminiBookkeepingAssistantService.IsConfigured ? "Gemini aktif" : "Gemini belum aktif")</span>
+                            <button type="button" class="ghost-button" disabled="@_isBookkeepingAiDraftLoading" @onclick="AnalyzeBookkeepingDraftAsync">
+                                @(_isBookkeepingAiDraftLoading ? "Menganalisa..." : "Analisa Draft")
+                            </button>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(_bookkeepingAiDraftMessage))
+                    {
+                        <div class="form-message bookkeeping-ai-message">@_bookkeepingAiDraftMessage</div>
+                    }
+
+                    @if (_bookkeepingAiDraftSuggestion is not null)
+                    {
+                        <article class="bookkeeping-ai-suggestion">
+                            <div class="table-primary">
+                                <small>@_bookkeepingAiDraftSuggestion.SuggestedCategory</small>
+                                <strong>@_bookkeepingAiDraftSuggestion.SuggestedTitle</strong>
+                                <span>@_bookkeepingAiDraftSuggestion.Reason</span>
+                            </div>
+
+                            <div class="bookkeeping-ai-chip-list">
+                                <span>@(_bookkeepingAiDraftSuggestion.SuggestedDirection == LedgerEntryDirection.Income ? "Pemasukan" : "Pengeluaran")</span>
+                                <span>@(string.IsNullOrWhiteSpace(_bookkeepingAiDraftSuggestion.SuggestedCounterparty) ? "Tanpa pihak" : _bookkeepingAiDraftSuggestion.SuggestedCounterparty)</span>
+                            </div>
+
+                            <div class="form-actions bookkeeping-ai-actions">
+                                <button type="button" class="ghost-button" @onclick="ApplyBookkeepingAiDraftSuggestion">Pakai Saran AI</button>
+                            </div>
+                        </article>
+                    }
+                </section>
+
+                <div class="form-grid">
+                    <label>
+                        <span>Jenis / nama list</span>
+                        <InputText @bind-Value="_formModel.Title" />
+                    </label>
+
+                    <label>
+                        <span>Nominal uang</span>
+                        <InputNumber @bind-Value="_formModel.Amount" />
+                    </label>
+
+                    <label class="wide-field">
+                        <span>Tanggal & jam transaksi</span>
+                        <input type="datetime-local" value="@FormatDateTimeLocal(_formModel.OccurredAt)" @onchange="OnOccurredAtChanged" />
+                    </label>
+
+                    <label class="wide-field">
+                        <span>Supplier / toko</span>
+                        <InputText @bind-Value="_formModel.Counterparty" />
+                    </label>
+                </div>
+
+                <div class="direction-row">
+                    <span class="field-label">Tipe transaksi</span>
+                    <div class="method-row">
+                        <button type="button" class="method-chip @(_formModel.Direction == LedgerEntryDirection.Income ? "active" : null)" @onclick="() => SelectDirection(LedgerEntryDirection.Income)">Pemasukan</button>
+                        <button type="button" class="method-chip @(_formModel.Direction == LedgerEntryDirection.Expense ? "active" : null)" @onclick="() => SelectDirection(LedgerEntryDirection.Expense)">Pengeluaran</button>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="ghost-button" @onclick="ResetForm">Reset</button>
+                    <button type="submit" class="primary-button">Tambahkan</button>
+                </div>
+            </EditForm>
+        </section>
+
+        <section class="ledger-card catalog-datagrid">
+            <div class="section-head ds-card-header">
+                <div>
+                    <span class="section-tag">List pembukuan</span>
+                    <h2>Ledger pembukuan</h2>
+                    <p>Format tabel disusun seperti buku kas kerja: tanggal, referensi, sumber, pihak, mutasi, dan saldo berjalan.</p>
+                </div>
+
+                <label class="display-count-control">
+                    <span>Baris tampil</span>
+                    <select value="@_ledgerDisplayCount" @onchange="OnLedgerDisplayCountChanged">
+                        @foreach (var option in GridDisplayOptions)
+                        {
+                            <option value="@option">@option baris</option>
+                        }
+                    </select>
+                </label>
+            </div>
+
+            <div class="summary-strip ds-summary-strip">
+                <article>
+                    <small>Total pemasukan</small>
+                    <strong>@FormatCurrency(_snapshot.TotalIncome)</strong>
+                </article>
+                <article>
+                    <small>Total pengeluaran</small>
+                    <strong>@FormatCurrency(_snapshot.TotalExpense)</strong>
+                </article>
+                <article>
+                    <small>Saldo berjalan</small>
+                    <strong>@FormatCurrency(_snapshot.ClosingBalance)</strong>
+                </article>
+                <article>
+                    <small>Total entry</small>
+                    <strong>@_snapshot.TotalEntries</strong>
+                </article>
+            </div>
+
+            @if (_snapshot.Items.Count == 0)
+            {
+                <div class="empty-state">
+                    Belum ada data pembukuan.
+                </div>
+            }
+            else
+            {
+                <div class="ledger-grid-shell">
+                    <QuickGrid Items="VisibleLedgerItems.AsQueryable()" Class="ledger-quickgrid">
+                        <TemplateColumn Title="Tanggal" Context="item">
+                            <div class="table-primary">
+                                <strong>@item.OccurredAt.ToString("dd MMM yyyy")</strong>
+                                <small>@item.OccurredAt.ToString("HH:mm")</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Ref" Context="item">
+                            <div class="table-primary">
+                                <strong>@item.ReferenceNumber</strong>
+                                <small>@item.SourceType</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Keterangan" Context="item">
+                            <div class="table-primary">
+                                <strong>@item.Title</strong>
+                                <small>@item.Detail</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Pihak" Context="item">
+                            <div class="history-meta-cell">
+                                <strong>@(string.IsNullOrWhiteSpace(item.Counterparty) ? "-" : item.Counterparty)</strong>
+                                <small>@item.StatusLabel</small>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Masuk" Context="item">
+                            <div class="amount-cell income">
+                                <strong>@(item.AmountIn <= 0 ? "-" : FormatCurrency(item.AmountIn))</strong>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Keluar" Context="item">
+                            <div class="amount-cell expense">
+                                <strong>@(item.AmountOut <= 0 ? "-" : FormatCurrency(item.AmountOut))</strong>
+                            </div>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Saldo" Context="item">
+                            <div class="amount-cell balance">
+                                <strong>@FormatCurrency(item.RunningBalance)</strong>
+                            </div>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+
+                <div class="ledger-card-list">
+                    @foreach (var item in VisibleLedgerItems)
+                    {

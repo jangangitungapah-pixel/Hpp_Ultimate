@@ -1,0 +1,450 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Workflow
+          - link "Katalog Material" [ref=e17] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e19]
+            - strong [ref=e23]: Katalog Material
+          - link "Gudang" [ref=e24] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e26]
+            - strong [ref=e30]: Gudang
+          - link "Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e33]
+            - strong [ref=e35]: Resep
+          - link "Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e38]
+            - strong [ref=e42]: Produksi
+          - link "Point of Sales" [ref=e43] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e45]
+            - strong [ref=e48]: Point of Sales
+          - link "Belanja" [ref=e49] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e51]
+            - strong [ref=e55]: Belanja
+          - link "Pembukuan" [ref=e56] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e58]
+            - strong [ref=e61]: Pembukuan
+        - generic [ref=e62]:
+          - generic [ref=e63]: Pengaturan
+          - link "Pengaturan" [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e66]
+            - strong [ref=e67]: Pengaturan
+          - link "Pengaturan Akun" [ref=e68] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e70]
+            - strong [ref=e73]: Pengaturan Akun
+        - generic [ref=e74]:
+          - generic [ref=e75]: Kontrol Data
+          - link "Backup & Data Ops" [ref=e76] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e78]
+            - strong [ref=e83]: Backup & Data Ops
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: A
+            - generic [ref=e87]:
+              - strong [ref=e88]: Arief
+              - generic [ref=e89]: Admin
+          - link "Logout" [ref=e90] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e91]
+            - generic [ref=e94]: Logout
+  - main [ref=e95]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Pembukuan
+        - strong [ref=e99]: Gabungkan pemasukan, pengeluaran, dan saldo berjalan ke satu ledger
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - generic [ref=e102]: ⚲
+          - textbox "Current user" [ref=e103]: Arief
+        - generic [ref=e104]: A
+    - article [ref=e105]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]: Pembukuan
+            - heading "Gabungkan pemasukan POS, belanja selesai, dan entry manual ke satu ledger." [level=1] [ref=e110]
+            - paragraph [ref=e111]: Seluruh riwayat POS dan belanja yang sudah selesai masuk ke halaman ini. Kamu juga bisa menambah pemasukan atau pengeluaran lain secara manual.
+          - generic [ref=e112]:
+            - generic [ref=e113]: 115 entry tercatat
+            - button "Refresh" [ref=e114] [cursor=pointer]
+        - generic [ref=e115]:
+          - generic [ref=e117]:
+            - generic [ref=e118]: Form pembukuan
+            - heading "Tambah pemasukan atau pengeluaran manual" [level=2] [ref=e119]
+            - paragraph [ref=e120]: Form dibuat singkat agar cepat dipakai untuk gas, token listrik, ongkos kecil, atau pemasukan lain di luar POS.
+          - generic [ref=e121]:
+            - generic [ref=e122]:
+              - generic [ref=e123]:
+                - generic [ref=e124]: Jenis / nama list
+                - textbox "Jenis / nama list" [ref=e125]
+              - generic [ref=e126]:
+                - generic [ref=e127]: Nominal uang
+                - spinbutton "Nominal uang" [ref=e128]: "0"
+              - generic [ref=e129]:
+                - generic [ref=e130]: Tanggal & jam transaksi
+                - textbox "Tanggal & jam transaksi" [ref=e131]: 2026-04-04T16:33
+              - generic [ref=e132]:
+                - generic [ref=e133]: Supplier / toko
+                - textbox "Supplier / toko" [ref=e134]
+            - generic [ref=e135]:
+              - generic [ref=e136]: Tipe transaksi
+              - generic [ref=e137]:
+                - button "Pemasukan" [ref=e138] [cursor=pointer]
+                - button "Pengeluaran" [ref=e139] [cursor=pointer]
+            - generic [ref=e140]:
+              - button "Reset" [ref=e141] [cursor=pointer]
+              - button "Tambahkan" [ref=e142] [cursor=pointer]
+        - generic [ref=e143]:
+          - generic [ref=e144]:
+            - generic [ref=e145]:
+              - generic [ref=e146]: List pembukuan
+              - heading "Ledger pembukuan" [level=2] [ref=e147]
+              - paragraph [ref=e148]: "Format tabel disusun seperti buku kas kerja: tanggal, referensi, sumber, pihak, mutasi, dan saldo berjalan."
+            - generic [ref=e149]:
+              - generic [ref=e150]: Baris tampil
+              - combobox "Baris tampil" [ref=e151]:
+                - option "8 baris"
+                - option "12 baris" [selected]
+                - option "20 baris"
+                - option "50 baris"
+          - generic [ref=e152]:
+            - article [ref=e153]:
+              - generic [ref=e154]: Total pemasukan
+              - strong [ref=e155]: Rp 4.253.909
+            - article [ref=e156]:
+              - generic [ref=e157]: Total pengeluaran
+              - strong [ref=e158]: Rp 9.160.000
+            - article [ref=e159]:
+              - generic [ref=e160]: Saldo berjalan
+              - strong [ref=e161]: Rp -4.906.091
+            - article [ref=e162]:
+              - generic [ref=e163]: Total entry
+              - strong [ref=e164]: "115"
+          - table [ref=e166]:
+            - rowgroup [ref=e167]:
+              - row "Tanggal Ref Keterangan Pihak Masuk Keluar Saldo" [ref=e168]:
+                - columnheader "Tanggal" [ref=e169]:
+                  - generic [ref=e172]: Tanggal
+                - columnheader "Ref" [ref=e173]:
+                  - generic [ref=e176]: Ref
+                - columnheader "Keterangan" [ref=e177]:
+                  - generic [ref=e180]: Keterangan
+                - columnheader "Pihak" [ref=e181]:
+                  - generic [ref=e184]: Pihak
+                - columnheader "Masuk" [ref=e185]:
+                  - generic [ref=e188]: Masuk
+                - columnheader "Keluar" [ref=e189]:
+                  - generic [ref=e192]: Keluar
+                - columnheader "Saldo" [ref=e193]:
+                  - generic [ref=e196]: Saldo
+            - rowgroup [ref=e197]:
+              - row "04 Apr 2026 03:02 BLJ-000023 Belanja Belanja material Grosir Pantry Nusantara 2 item - 7 pack Grosir Pantry Nusantara Selesai - Rp 209.000 Rp -4.906.091" [ref=e198]:
+                - cell "04 Apr 2026 03:02" [ref=e199]:
+                  - generic [ref=e200]:
+                    - strong [ref=e201]: 04 Apr 2026
+                    - generic [ref=e202]: 03:02
+                - cell "BLJ-000023 Belanja" [ref=e203]:
+                  - generic [ref=e204]:
+                    - strong [ref=e205]: BLJ-000023
+                    - generic [ref=e206]: Belanja
+                - cell "Belanja material Grosir Pantry Nusantara 2 item - 7 pack" [ref=e207]:
+                  - generic [ref=e208]:
+                    - strong [ref=e209]: Belanja material Grosir Pantry Nusantara
+                    - generic [ref=e210]: 2 item - 7 pack
+                - cell "Grosir Pantry Nusantara Selesai" [ref=e211]:
+                  - generic [ref=e212]:
+                    - strong [ref=e213]: Grosir Pantry Nusantara
+                    - generic [ref=e214]: Selesai
+                - cell "-" [ref=e215]:
+                  - strong [ref=e217]: "-"
+                - cell "Rp 209.000" [ref=e218]:
+                  - strong [ref=e220]: Rp 209.000
+                - cell "Rp -4.906.091" [ref=e221]:
+                  - strong [ref=e223]: Rp -4.906.091
+              - row "04 Apr 2026 02:59 BLJ-000005 Belanja Belanja material Grosir Pantry Nusantara 2 item - 3 pack Grosir Pantry Nusantara Selesai - Rp 148.000 Rp -4.697.091" [ref=e224]:
+                - cell "04 Apr 2026 02:59" [ref=e225]:
+                  - generic [ref=e226]:
+                    - strong [ref=e227]: 04 Apr 2026
+                    - generic [ref=e228]: 02:59
+                - cell "BLJ-000005 Belanja" [ref=e229]:
+                  - generic [ref=e230]:
+                    - strong [ref=e231]: BLJ-000005
+                    - generic [ref=e232]: Belanja
+                - cell "Belanja material Grosir Pantry Nusantara 2 item - 3 pack" [ref=e233]:
+                  - generic [ref=e234]:
+                    - strong [ref=e235]: Belanja material Grosir Pantry Nusantara
+                    - generic [ref=e236]: 2 item - 3 pack
+                - cell "Grosir Pantry Nusantara Selesai" [ref=e237]:
+                  - generic [ref=e238]:
+                    - strong [ref=e239]: Grosir Pantry Nusantara
+                    - generic [ref=e240]: Selesai
+                - cell "-" [ref=e241]:
+                  - strong [ref=e243]: "-"
+                - cell "Rp 148.000" [ref=e244]:
+                  - strong [ref=e246]: Rp 148.000
+                - cell "Rp -4.697.091" [ref=e247]:
+                  - strong [ref=e249]: Rp -4.697.091
+              - row "04 Apr 2026 02:58 BLJ-000036 Belanja Belanja material Toko Pendingin Sentosa 3 item - 7 pack Toko Pendingin Sentosa Selesai - Rp 141.000 Rp -4.549.091" [ref=e250]:
+                - cell "04 Apr 2026 02:58" [ref=e251]:
+                  - generic [ref=e252]:
+                    - strong [ref=e253]: 04 Apr 2026
+                    - generic [ref=e254]: 02:58
+                - cell "BLJ-000036 Belanja" [ref=e255]:
+                  - generic [ref=e256]:
+                    - strong [ref=e257]: BLJ-000036
+                    - generic [ref=e258]: Belanja
+                - cell "Belanja material Toko Pendingin Sentosa 3 item - 7 pack" [ref=e259]:
+                  - generic [ref=e260]:
+                    - strong [ref=e261]: Belanja material Toko Pendingin Sentosa
+                    - generic [ref=e262]: 3 item - 7 pack
+                - cell "Toko Pendingin Sentosa Selesai" [ref=e263]:
+                  - generic [ref=e264]:
+                    - strong [ref=e265]: Toko Pendingin Sentosa
+                    - generic [ref=e266]: Selesai
+                - cell "-" [ref=e267]:
+                  - strong [ref=e269]: "-"
+                - cell "Rp 141.000" [ref=e270]:
+                  - strong [ref=e272]: Rp 141.000
+                - cell "Rp -4.549.091" [ref=e273]:
+                  - strong [ref=e275]: Rp -4.549.091
+              - row "04 Apr 2026 02:58 BLJ-000006 Belanja Belanja material Toko Pendingin Sentosa 3 item - 9 pack Toko Pendingin Sentosa Selesai - Rp 365.000 Rp -4.408.091" [ref=e276]:
+                - cell "04 Apr 2026 02:58" [ref=e277]:
+                  - generic [ref=e278]:
+                    - strong [ref=e279]: 04 Apr 2026
+                    - generic [ref=e280]: 02:58
+                - cell "BLJ-000006 Belanja" [ref=e281]:
+                  - generic [ref=e282]:
+                    - strong [ref=e283]: BLJ-000006
+                    - generic [ref=e284]: Belanja
+                - cell "Belanja material Toko Pendingin Sentosa 3 item - 9 pack" [ref=e285]:
+                  - generic [ref=e286]:
+                    - strong [ref=e287]: Belanja material Toko Pendingin Sentosa
+                    - generic [ref=e288]: 3 item - 9 pack
+                - cell "Toko Pendingin Sentosa Selesai" [ref=e289]:
+                  - generic [ref=e290]:
+                    - strong [ref=e291]: Toko Pendingin Sentosa
+                    - generic [ref=e292]: Selesai
+                - cell "-" [ref=e293]:
+                  - strong [ref=e295]: "-"
+                - cell "Rp 365.000" [ref=e296]:
+                  - strong [ref=e298]: Rp 365.000
+                - cell "Rp -4.408.091" [ref=e299]:
+                  - strong [ref=e301]: Rp -4.408.091
+              - row "04 Apr 2026 02:53 TRX-000006 POS Penjualan ke Farah Preorder 5 item - Cash Farah Preorder Lunas Rp 29.284 - Rp -4.043.091" [ref=e302]:
+                - cell "04 Apr 2026 02:53" [ref=e303]:
+                  - generic [ref=e304]:
+                    - strong [ref=e305]: 04 Apr 2026
+                    - generic [ref=e306]: 02:53
+                - cell "TRX-000006 POS" [ref=e307]:
+                  - generic [ref=e308]:
+                    - strong [ref=e309]: TRX-000006
+                    - generic [ref=e310]: POS
+                - cell "Penjualan ke Farah Preorder 5 item - Cash" [ref=e311]:
+                  - generic [ref=e312]:
+                    - strong [ref=e313]: Penjualan ke Farah Preorder
+                    - generic [ref=e314]: 5 item - Cash
+                - cell "Farah Preorder Lunas" [ref=e315]:
+                  - generic [ref=e316]:
+                    - strong [ref=e317]: Farah Preorder
+                    - generic [ref=e318]: Lunas
+                - cell "Rp 29.284" [ref=e319]:
+                  - strong [ref=e321]: Rp 29.284
+                - cell "-" [ref=e322]:
+                  - strong [ref=e324]: "-"
+                - cell "Rp -4.043.091" [ref=e325]:
+                  - strong [ref=e327]: Rp -4.043.091
+              - row "04 Apr 2026 02:52 BLJ-000042 Belanja Belanja material Toko Pendingin Sentosa 3 item - 9 pack Toko Pendingin Sentosa Selesai - Rp 233.000 Rp -4.072.375" [ref=e328]:
+                - cell "04 Apr 2026 02:52" [ref=e329]:
+                  - generic [ref=e330]:
+                    - strong [ref=e331]: 04 Apr 2026
+                    - generic [ref=e332]: 02:52
+                - cell "BLJ-000042 Belanja" [ref=e333]:
+                  - generic [ref=e334]:
+                    - strong [ref=e335]: BLJ-000042
+                    - generic [ref=e336]: Belanja
+                - cell "Belanja material Toko Pendingin Sentosa 3 item - 9 pack" [ref=e337]:
+                  - generic [ref=e338]:
+                    - strong [ref=e339]: Belanja material Toko Pendingin Sentosa
+                    - generic [ref=e340]: 3 item - 9 pack
+                - cell "Toko Pendingin Sentosa Selesai" [ref=e341]:
+                  - generic [ref=e342]:
+                    - strong [ref=e343]: Toko Pendingin Sentosa
+                    - generic [ref=e344]: Selesai
+                - cell "-" [ref=e345]:
+                  - strong [ref=e347]: "-"
+                - cell "Rp 233.000" [ref=e348]:
+                  - strong [ref=e350]: Rp 233.000
+                - cell "Rp -4.072.375" [ref=e351]:
+                  - strong [ref=e353]: Rp -4.072.375
+              - row "04 Apr 2026 02:52 BLJ-000012 Belanja Belanja material Toko Pendingin Sentosa 3 item - 7 pack Toko Pendingin Sentosa Selesai - Rp 550.000 Rp -3.839.375" [ref=e354]:
+                - cell "04 Apr 2026 02:52" [ref=e355]:
+                  - generic [ref=e356]:
+                    - strong [ref=e357]: 04 Apr 2026
+                    - generic [ref=e358]: 02:52
+                - cell "BLJ-000012 Belanja" [ref=e359]:
+                  - generic [ref=e360]:
+                    - strong [ref=e361]: BLJ-000012
+                    - generic [ref=e362]: Belanja
+                - cell "Belanja material Toko Pendingin Sentosa 3 item - 7 pack" [ref=e363]:
+                  - generic [ref=e364]:
+                    - strong [ref=e365]: Belanja material Toko Pendingin Sentosa
+                    - generic [ref=e366]: 3 item - 7 pack
+                - cell "Toko Pendingin Sentosa Selesai" [ref=e367]:
+                  - generic [ref=e368]:
+                    - strong [ref=e369]: Toko Pendingin Sentosa
+                    - generic [ref=e370]: Selesai
+                - cell "-" [ref=e371]:
+                  - strong [ref=e373]: "-"
+                - cell "Rp 550.000" [ref=e374]:
+                  - strong [ref=e376]: Rp 550.000
+                - cell "Rp -3.839.375" [ref=e377]:
+                  - strong [ref=e379]: Rp -3.839.375
+              - row "04 Apr 2026 02:48 MNL-9FDAB2B3 Manual Pendapatan kelas baking Pendapatan event luar produksi utama. Peserta Workshop Manual Rp 765.000 - Rp -3.289.375" [ref=e380]:
+                - cell "04 Apr 2026 02:48" [ref=e381]:
+                  - generic [ref=e382]:
+                    - strong [ref=e383]: 04 Apr 2026
+                    - generic [ref=e384]: 02:48
+                - cell "MNL-9FDAB2B3 Manual" [ref=e385]:
+                  - generic [ref=e386]:
+                    - strong [ref=e387]: MNL-9FDAB2B3
+                    - generic [ref=e388]: Manual
+                - cell "Pendapatan kelas baking Pendapatan event luar produksi utama." [ref=e389]:
+                  - generic [ref=e390]:
+                    - strong [ref=e391]: Pendapatan kelas baking
+                    - generic [ref=e392]: Pendapatan event luar produksi utama.
+                - cell "Peserta Workshop Manual" [ref=e393]:
+                  - generic [ref=e394]:
+                    - strong [ref=e395]: Peserta Workshop
+                    - generic [ref=e396]: Manual
+                - cell "Rp 765.000" [ref=e397]:
+                  - strong [ref=e399]: Rp 765.000
+                - cell "-" [ref=e400]:
+                  - strong [ref=e402]: "-"
+                - cell "Rp -3.289.375" [ref=e403]:
+                  - strong [ref=e405]: Rp -3.289.375
+              - row "04 Apr 2026 02:47 TRX-000012 POS Penjualan ke Budi Kantor 4 item - Cash Budi Kantor Lunas Rp 15.344 - Rp -4.054.375" [ref=e406]:
+                - cell "04 Apr 2026 02:47" [ref=e407]:
+                  - generic [ref=e408]:
+                    - strong [ref=e409]: 04 Apr 2026
+                    - generic [ref=e410]: 02:47
+                - cell "TRX-000012 POS" [ref=e411]:
+                  - generic [ref=e412]:
+                    - strong [ref=e413]: TRX-000012
+                    - generic [ref=e414]: POS
+                - cell "Penjualan ke Budi Kantor 4 item - Cash" [ref=e415]:
+                  - generic [ref=e416]:
+                    - strong [ref=e417]: Penjualan ke Budi Kantor
+                    - generic [ref=e418]: 4 item - Cash
+                - cell "Budi Kantor Lunas" [ref=e419]:
+                  - generic [ref=e420]:
+                    - strong [ref=e421]: Budi Kantor
+                    - generic [ref=e422]: Lunas
+                - cell "Rp 15.344" [ref=e423]:
+                  - strong [ref=e425]: Rp 15.344
+                - cell "-" [ref=e426]:
+                  - strong [ref=e428]: "-"
+                - cell "Rp -4.054.375" [ref=e429]:
+                  - strong [ref=e431]: Rp -4.054.375
+              - row "04 Apr 2026 02:47 BLJ-000047 Belanja Belanja material Grosir Pantry Nusantara 2 item - 7 pack Grosir Pantry Nusantara Selesai - Rp 488.000 Rp -4.069.719" [ref=e432]:
+                - cell "04 Apr 2026 02:47" [ref=e433]:
+                  - generic [ref=e434]:
+                    - strong [ref=e435]: 04 Apr 2026
+                    - generic [ref=e436]: 02:47
+                - cell "BLJ-000047 Belanja" [ref=e437]:
+                  - generic [ref=e438]:
+                    - strong [ref=e439]: BLJ-000047
+                    - generic [ref=e440]: Belanja
+                - cell "Belanja material Grosir Pantry Nusantara 2 item - 7 pack" [ref=e441]:
+                  - generic [ref=e442]:
+                    - strong [ref=e443]: Belanja material Grosir Pantry Nusantara
+                    - generic [ref=e444]: 2 item - 7 pack
+                - cell "Grosir Pantry Nusantara Selesai" [ref=e445]:
+                  - generic [ref=e446]:
+                    - strong [ref=e447]: Grosir Pantry Nusantara
+                    - generic [ref=e448]: Selesai
+                - cell "-" [ref=e449]:
+                  - strong [ref=e451]: "-"
+                - cell "Rp 488.000" [ref=e452]:
+                  - strong [ref=e454]: Rp 488.000
+                - cell "Rp -4.069.719" [ref=e455]:
+                  - strong [ref=e457]: Rp -4.069.719
+              - row "04 Apr 2026 02:47 BLJ-000017 Belanja Belanja material Grosir Pantry Nusantara 2 item - 3 pack Grosir Pantry Nusantara Selesai - Rp 107.000 Rp -3.581.719" [ref=e458]:
+                - cell "04 Apr 2026 02:47" [ref=e459]:
+                  - generic [ref=e460]:
+                    - strong [ref=e461]: 04 Apr 2026
+                    - generic [ref=e462]: 02:47
+                - cell "BLJ-000017 Belanja" [ref=e463]:
+                  - generic [ref=e464]:
+                    - strong [ref=e465]: BLJ-000017
+                    - generic [ref=e466]: Belanja
+                - cell "Belanja material Grosir Pantry Nusantara 2 item - 3 pack" [ref=e467]:
+                  - generic [ref=e468]:
+                    - strong [ref=e469]: Belanja material Grosir Pantry Nusantara
+                    - generic [ref=e470]: 2 item - 3 pack
+                - cell "Grosir Pantry Nusantara Selesai" [ref=e471]:
+                  - generic [ref=e472]:
+                    - strong [ref=e473]: Grosir Pantry Nusantara
+                    - generic [ref=e474]: Selesai
+                - cell "-" [ref=e475]:
+                  - strong [ref=e477]: "-"
+                - cell "Rp 107.000" [ref=e478]:
+                  - strong [ref=e480]: Rp 107.000
+                - cell "Rp -3.581.719" [ref=e481]:
+                  - strong [ref=e483]: Rp -3.581.719
+              - row "04 Apr 2026 02:46 BLJ-000048 Belanja Belanja material Toko Pendingin Sentosa 3 item - 7 pack Toko Pendingin Sentosa Selesai - Rp 283.000 Rp -3.474.719" [ref=e484]:
+                - cell "04 Apr 2026 02:46" [ref=e485]:
+                  - generic [ref=e486]:
+                    - strong [ref=e487]: 04 Apr 2026
+                    - generic [ref=e488]: 02:46
+                - cell "BLJ-000048 Belanja" [ref=e489]:
+                  - generic [ref=e490]:
+                    - strong [ref=e491]: BLJ-000048
+                    - generic [ref=e492]: Belanja
+                - cell "Belanja material Toko Pendingin Sentosa 3 item - 7 pack" [ref=e493]:
+                  - generic [ref=e494]:
+                    - strong [ref=e495]: Belanja material Toko Pendingin Sentosa
+                    - generic [ref=e496]: 3 item - 7 pack
+                - cell "Toko Pendingin Sentosa Selesai" [ref=e497]:
+                  - generic [ref=e498]:
+                    - strong [ref=e499]: Toko Pendingin Sentosa
+                    - generic [ref=e500]: Selesai
+                - cell "-" [ref=e501]:
+                  - strong [ref=e503]: "-"
+                - cell "Rp 283.000" [ref=e504]:
+                  - strong [ref=e506]: Rp 283.000
+                - cell "Rp -3.474.719" [ref=e507]:
+                  - strong [ref=e509]: Rp -3.474.719
+          - generic [ref=e510]:
+            - generic [ref=e511]: 115 entry
+            - generic [ref=e512]:
+              - button "Prev" [disabled] [ref=e513]
+              - generic "Pilih halaman pembukuan" [ref=e514]:
+                - combobox "Pilih halaman pembukuan" [ref=e515]:
+                  - option "Halaman 1" [selected]
+                  - option "Halaman 2"
+                  - option "Halaman 3"
+                  - option "Halaman 4"
+                  - option "Halaman 5"
+                  - option "Halaman 6"
+                  - option "Halaman 7"
+                  - option "Halaman 8"
+                  - option "Halaman 9"
+                  - option "Halaman 10"
+              - generic [ref=e516]: 1 / 10
+              - button "Next" [ref=e517] [cursor=pointer]

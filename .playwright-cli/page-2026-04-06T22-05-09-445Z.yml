@@ -1,0 +1,171 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e11]:
+        - link [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e15]
+        - generic [ref=e19]:
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e22]
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e28]
+        - generic [ref=e30]:
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e33]
+          - link [ref=e37] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e39]
+          - link [ref=e43] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e45]
+          - link [ref=e49] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e51]
+        - link [ref=e55] [cursor=pointer]:
+          - /url: /pembukuan
+          - img [ref=e57]
+        - generic [ref=e60]:
+          - link [ref=e61] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e63]
+          - link [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e66]
+          - link [ref=e69] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e71]
+        - link [ref=e77] [cursor=pointer]:
+          - /url: /logout
+          - img [ref=e78]
+  - main [ref=e81]:
+    - generic [ref=e83]:
+      - generic [ref=e84]: Area kerja
+      - strong [ref=e85]: Pembukuan
+    - article [ref=e86]:
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: Pembukuan
+            - heading "Ledger kas kerja" [active] [level=1] [ref=e91]
+            - paragraph [ref=e92]: Semua transaksi kasir, pembelian selesai, dan entry manual dibaca dari satu ledger yang lebih cepat discan.
+          - generic [ref=e94]: 1 entry tercatat
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - generic [ref=e99]: Ledger
+                - heading "Arus kas terkini" [level=2] [ref=e100]
+                - paragraph [ref=e101]: Tabel utama untuk membaca mutasi, sumber transaksi, dan saldo berjalan tanpa pindah panel.
+              - generic [ref=e103]:
+                - generic [ref=e104]: Baris tampil
+                - combobox "Baris tampil" [ref=e105]:
+                  - option "8 baris"
+                  - option "12 baris" [selected]
+                  - option "20 baris"
+                  - option "50 baris"
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - article [ref=e108]:
+                  - generic [ref=e109]: Total masuk
+                  - strong [ref=e110]: Rp 328.436
+                - article [ref=e111]:
+                  - generic [ref=e112]: Total keluar
+                  - strong [ref=e113]: Rp 0
+                - article [ref=e114]:
+                  - generic [ref=e115]: Saldo
+                  - strong [ref=e116]: Rp 328.436
+                - article [ref=e117]:
+                  - generic [ref=e118]: Entry
+                  - strong [ref=e119]: "1"
+              - paragraph [ref=e120]: Tambah entry manual hanya untuk transaksi kecil di luar kasir, pembelian, atau sistem stok utama.
+            - table [ref=e122]:
+              - rowgroup [ref=e123]:
+                - row "Tanggal Ref Keterangan Pihak Masuk Keluar Saldo" [ref=e124]:
+                  - columnheader "Tanggal" [ref=e125]:
+                    - generic [ref=e128]: Tanggal
+                  - columnheader "Ref" [ref=e129]:
+                    - generic [ref=e132]: Ref
+                  - columnheader "Keterangan" [ref=e133]:
+                    - generic [ref=e136]: Keterangan
+                  - columnheader "Pihak" [ref=e137]:
+                    - generic [ref=e140]: Pihak
+                  - columnheader "Masuk" [ref=e141]:
+                    - generic [ref=e144]: Masuk
+                  - columnheader "Keluar" [ref=e145]:
+                    - generic [ref=e148]: Keluar
+                  - columnheader "Saldo" [ref=e149]:
+                    - generic [ref=e152]: Saldo
+              - rowgroup [ref=e153]:
+                - row "05 Apr 2026 03:04 TRX-000001 POS Penjualan ke All PO 47 item - Cash All PO Lunas Rp 328.436 - Rp 328.436" [ref=e154]:
+                  - cell "05 Apr 2026 03:04" [ref=e155]:
+                    - generic [ref=e156]:
+                      - strong [ref=e157]: 05 Apr 2026
+                      - generic [ref=e158]: 03:04
+                  - cell "TRX-000001 POS" [ref=e159]:
+                    - generic [ref=e160]:
+                      - strong [ref=e161]: TRX-000001
+                      - generic [ref=e162]: POS
+                  - cell "Penjualan ke All PO 47 item - Cash" [ref=e163]:
+                    - generic [ref=e164]:
+                      - strong [ref=e165]: Penjualan ke All PO
+                      - generic [ref=e166]: 47 item - Cash
+                  - cell "All PO Lunas" [ref=e167]:
+                    - generic [ref=e168]:
+                      - strong [ref=e169]: All PO
+                      - generic [ref=e170]: Lunas
+                  - cell "Rp 328.436" [ref=e171]:
+                    - strong [ref=e173]: Rp 328.436
+                  - cell "-" [ref=e174]:
+                    - strong [ref=e176]: "-"
+                  - cell "Rp 328.436" [ref=e177]:
+                    - strong [ref=e179]: Rp 328.436
+            - generic [ref=e180]:
+              - generic [ref=e181]: 1 entry
+              - generic [ref=e182]:
+                - button "Prev" [disabled] [ref=e183]
+                - generic "Pilih halaman pembukuan" [ref=e184]:
+                  - combobox "Pilih halaman pembukuan" [ref=e185]:
+                    - option "Halaman 1" [selected]
+                - generic [ref=e186]: 1 / 1
+                - button "Next" [disabled] [ref=e187]
+          - complementary [ref=e188]:
+            - generic [ref=e190]:
+              - generic [ref=e191]: Entry manual
+              - heading "Tambah mutasi cepat" [level=2] [ref=e192]
+              - paragraph [ref=e193]: Composer singkat untuk biaya kecil, pemasukan tambahan, atau koreksi manual yang tidak masuk dari modul lain.
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - generic [ref=e196]: Tipe transaksi
+                - generic [ref=e197]:
+                  - button "Pemasukan" [ref=e198] [cursor=pointer]
+                  - button "Pengeluaran" [ref=e199] [cursor=pointer]
+              - generic [ref=e200]:
+                - generic [ref=e201]:
+                  - generic [ref=e202]: Judul transaksi
+                  - textbox "Judul transaksi" [ref=e203]
+                - generic [ref=e204]:
+                  - generic [ref=e205]: Nominal
+                  - spinbutton "Nominal" [ref=e206]: "0"
+                - generic [ref=e207]:
+                  - generic [ref=e208]: Tanggal & jam
+                  - textbox "Tanggal & jam" [ref=e209]: 2026-04-07T05:05
+                - generic [ref=e210]:
+                  - generic [ref=e211]: Pihak terkait
+                  - textbox "Pihak terkait" [ref=e212]
+              - group [ref=e213]:
+                - generic "Bantuan AI Rapikan draft entry Gunakan hanya saat draft perlu dirapikan cepat. Buka" [ref=e214] [cursor=pointer]:
+                  - generic [ref=e215]:
+                    - generic [ref=e216]: Bantuan AI
+                    - strong [ref=e217]: Rapikan draft entry
+                    - generic [ref=e218]: Gunakan hanya saat draft perlu dirapikan cepat.
+                  - generic [ref=e219]: Buka
+              - generic [ref=e220]: Entry manual akan langsung masuk ke ledger dan mempengaruhi saldo berjalan saat disimpan.
+              - generic [ref=e221]:
+                - button "Reset" [ref=e222] [cursor=pointer]
+                - button "Simpan Entry" [ref=e223] [cursor=pointer]

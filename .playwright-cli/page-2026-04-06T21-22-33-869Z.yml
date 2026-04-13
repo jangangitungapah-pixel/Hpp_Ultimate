@@ -1,0 +1,369 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Workspace operasional" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Workspace operasional
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Ringkasan
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: /
+            - img [ref=e19]
+            - strong [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Master Data
+          - link "Katalog Material" [ref=e26] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e28]
+            - strong [ref=e32]: Katalog Material
+          - link "Resep" [ref=e33] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e35]
+            - strong [ref=e37]: Resep
+        - generic [ref=e38]:
+          - generic [ref=e39]: Operasional
+          - link "Stok Gudang" [ref=e40] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e42]
+            - strong [ref=e46]: Stok Gudang
+          - link "Pembelian Material" [ref=e47] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e49]
+            - strong [ref=e53]: Pembelian Material
+          - link "Produksi" [ref=e54] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e56]
+            - strong [ref=e60]: Produksi
+          - link "Kasir / POS" [ref=e61] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e63]
+            - strong [ref=e66]: Kasir / POS
+        - generic [ref=e67]:
+          - generic [ref=e68]: Keuangan
+          - link "Pembukuan" [ref=e69] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e71]
+            - strong [ref=e74]: Pembukuan
+        - generic [ref=e75]:
+          - generic [ref=e76]: Admin
+          - link "Pengaturan Bisnis" [ref=e77] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e79]
+            - strong [ref=e80]: Pengaturan Bisnis
+          - link "Tim & Akun" [ref=e81] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e83]
+            - strong [ref=e86]: Tim & Akun
+          - link "Backup & Impor Data" [ref=e87] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e89]
+            - strong [ref=e94]: Backup & Impor Data
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: A
+            - generic [ref=e98]:
+              - strong [ref=e99]: Arief
+              - generic [ref=e100]: Admin
+          - link "Logout" [ref=e101] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e102]
+            - generic [ref=e105]: Logout
+  - main [ref=e106]:
+    - generic [ref=e108]:
+      - generic [ref=e109]: Area kerja
+      - strong [ref=e110]: Katalog Material
+    - article [ref=e111]:
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - generic [ref=e115]: Master material
+            - heading "Katalog Material" [active] [level=1] [ref=e116]
+            - paragraph [ref=e117]: Master bahan baku untuk resep, gudang, dan kalkulasi biaya.
+          - generic [ref=e118]:
+            - link "Template" [ref=e119] [cursor=pointer]:
+              - /url: /api/bahan-baku-template
+            - link "Export CSV" [ref=e120] [cursor=pointer]:
+              - /url: /api/bahan-baku-export
+            - button "Import Excel" [ref=e121] [cursor=pointer]
+            - button "+ Tambah Material" [ref=e122] [cursor=pointer]
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]:
+              - generic [ref=e126]: Daftar material
+              - heading "Master bahan baku aktif dan nonaktif" [level=2] [ref=e127]
+              - paragraph [ref=e128]: Cari, filter, lalu buka detail atau edit langsung dari tabel.
+            - generic [ref=e130]: 9 material
+          - generic [ref=e131]:
+            - generic [ref=e132]:
+              - textbox "Cari nama material atau merk" [ref=e133]
+              - generic [ref=e134]:
+                - combobox [ref=e135]:
+                  - option "Semua status" [selected]
+                  - option "Aktif"
+                  - option "Nonaktif"
+                - combobox [ref=e136]:
+                  - 'option "Urutkan: Update" [selected]'
+                  - 'option "Urutkan: Nama"'
+                  - 'option "Urutkan: Merk"'
+                  - 'option "Urutkan: Netto"'
+                  - 'option "Urutkan: Harga"'
+                  - 'option "Urutkan: Modal"'
+                - combobox [ref=e137]:
+                  - option "5 baris"
+                  - option "10 baris" [selected]
+                  - option "15 baris"
+                  - option "25 baris"
+                - button "Desc" [ref=e138] [cursor=pointer]
+            - generic [ref=e139]:
+              - paragraph [ref=e140]: 9 material ditemukan
+              - generic [ref=e141]:
+                - generic [ref=e142]: Update terbaru
+                - generic [ref=e143]: 1 halaman
+          - table [ref=e145]:
+            - rowgroup [ref=e146]:
+              - row "Nama Material Merk Netto Harga / Pack Modal / Unit Status Aksi" [ref=e147]:
+                - columnheader "Nama Material" [ref=e148]
+                - columnheader "Merk" [ref=e149]
+                - columnheader "Netto" [ref=e150]
+                - columnheader "Harga / Pack" [ref=e151]
+                - columnheader "Modal / Unit" [ref=e152]
+                - columnheader "Status" [ref=e153]
+                - columnheader "Aksi" [ref=e154]
+            - rowgroup [ref=e155]:
+              - row "Vanili BHN-009 Garuda 2 gr Rp 1.500 Rp 750 per gr Aktif Edit Hapus" [ref=e156]:
+                - cell "Vanili BHN-009" [ref=e157]:
+                  - button "Vanili BHN-009" [ref=e158] [cursor=pointer]:
+                    - strong [ref=e159]: Vanili
+                    - generic [ref=e160]: BHN-009
+                - cell "Garuda" [ref=e161]:
+                  - generic [ref=e162]: Garuda
+                - cell "2 gr" [ref=e163]:
+                  - generic [ref=e164]:
+                    - strong [ref=e165]: "2"
+                    - generic [ref=e166]: gr
+                - cell "Rp 1.500" [ref=e167]:
+                  - strong [ref=e169]: Rp 1.500
+                - cell "Rp 750 per gr" [ref=e170]:
+                  - generic [ref=e171]:
+                    - strong [ref=e172]: Rp 750
+                    - generic [ref=e173]: per gr
+                - cell "Aktif" [ref=e174]:
+                  - generic [ref=e176]: Aktif
+                - cell "Edit Hapus" [ref=e177]:
+                  - generic [ref=e178]:
+                    - button "Edit" [ref=e179] [cursor=pointer]:
+                      - img [ref=e180]
+                    - button "Hapus" [ref=e182] [cursor=pointer]:
+                      - img [ref=e183]
+              - row "Tepung Maizena BHN-008 Maizenaku 100 gr Rp 8.000 Rp 80 per gr Aktif Edit Hapus" [ref=e186]:
+                - cell "Tepung Maizena BHN-008" [ref=e187]:
+                  - button "Tepung Maizena BHN-008" [ref=e188] [cursor=pointer]:
+                    - strong [ref=e189]: Tepung Maizena
+                    - generic [ref=e190]: BHN-008
+                - cell "Maizenaku" [ref=e191]:
+                  - generic [ref=e192]: Maizenaku
+                - cell "100 gr" [ref=e193]:
+                  - generic [ref=e194]:
+                    - strong [ref=e195]: "100"
+                    - generic [ref=e196]: gr
+                - cell "Rp 8.000" [ref=e197]:
+                  - strong [ref=e199]: Rp 8.000
+                - cell "Rp 80 per gr" [ref=e200]:
+                  - generic [ref=e201]:
+                    - strong [ref=e202]: Rp 80
+                    - generic [ref=e203]: per gr
+                - cell "Aktif" [ref=e204]:
+                  - generic [ref=e206]: Aktif
+                - cell "Edit Hapus" [ref=e207]:
+                  - generic [ref=e208]:
+                    - button "Edit" [ref=e209] [cursor=pointer]:
+                      - img [ref=e210]
+                    - button "Hapus" [ref=e212] [cursor=pointer]:
+                      - img [ref=e213]
+              - row "Gula Pasir BHN-007 Gulaku 1000 gr Rp 17.500 Rp 18 per gr Aktif Edit Hapus" [ref=e216]:
+                - cell "Gula Pasir BHN-007" [ref=e217]:
+                  - button "Gula Pasir BHN-007" [ref=e218] [cursor=pointer]:
+                    - strong [ref=e219]: Gula Pasir
+                    - generic [ref=e220]: BHN-007
+                - cell "Gulaku" [ref=e221]:
+                  - generic [ref=e222]: Gulaku
+                - cell "1000 gr" [ref=e223]:
+                  - generic [ref=e224]:
+                    - strong [ref=e225]: "1000"
+                    - generic [ref=e226]: gr
+                - cell "Rp 17.500" [ref=e227]:
+                  - strong [ref=e229]: Rp 17.500
+                - cell "Rp 18 per gr" [ref=e230]:
+                  - generic [ref=e231]:
+                    - strong [ref=e232]: Rp 18
+                    - generic [ref=e233]: per gr
+                - cell "Aktif" [ref=e234]:
+                  - generic [ref=e236]: Aktif
+                - cell "Edit Hapus" [ref=e237]:
+                  - generic [ref=e238]:
+                    - button "Edit" [ref=e239] [cursor=pointer]:
+                      - img [ref=e240]
+                    - button "Hapus" [ref=e242] [cursor=pointer]:
+                      - img [ref=e243]
+              - row "Susu UHT Full Cream BHN-006 Frisian Flag 900 ml Rp 18.000 Rp 20 per ml Aktif Edit Hapus" [ref=e246]:
+                - cell "Susu UHT Full Cream BHN-006" [ref=e247]:
+                  - button "Susu UHT Full Cream BHN-006" [ref=e248] [cursor=pointer]:
+                    - strong [ref=e249]: Susu UHT Full Cream
+                    - generic [ref=e250]: BHN-006
+                - cell "Frisian Flag" [ref=e251]:
+                  - generic [ref=e252]: Frisian Flag
+                - cell "900 ml" [ref=e253]:
+                  - generic [ref=e254]:
+                    - strong [ref=e255]: "900"
+                    - generic [ref=e256]: ml
+                - cell "Rp 18.000" [ref=e257]:
+                  - strong [ref=e259]: Rp 18.000
+                - cell "Rp 20 per ml" [ref=e260]:
+                  - generic [ref=e261]:
+                    - strong [ref=e262]: Rp 20
+                    - generic [ref=e263]: per ml
+                - cell "Aktif" [ref=e264]:
+                  - generic [ref=e266]: Aktif
+                - cell "Edit Hapus" [ref=e267]:
+                  - generic [ref=e268]:
+                    - button "Edit" [ref=e269] [cursor=pointer]:
+                      - img [ref=e270]
+                    - button "Hapus" [ref=e272] [cursor=pointer]:
+                      - img [ref=e273]
+              - row "Telur Ayam BHN-005 Lokal 1 pcs Rp 2.500 Rp 2.500 per pcs Aktif Edit Hapus" [ref=e276]:
+                - cell "Telur Ayam BHN-005" [ref=e277]:
+                  - button "Telur Ayam BHN-005" [ref=e278] [cursor=pointer]:
+                    - strong [ref=e279]: Telur Ayam
+                    - generic [ref=e280]: BHN-005
+                - cell "Lokal" [ref=e281]:
+                  - generic [ref=e282]: Lokal
+                - cell "1 pcs" [ref=e283]:
+                  - generic [ref=e284]:
+                    - strong [ref=e285]: "1"
+                    - generic [ref=e286]: pcs
+                - cell "Rp 2.500" [ref=e287]:
+                  - strong [ref=e289]: Rp 2.500
+                - cell "Rp 2.500 per pcs" [ref=e290]:
+                  - generic [ref=e291]:
+                    - strong [ref=e292]: Rp 2.500
+                    - generic [ref=e293]: per pcs
+                - cell "Aktif" [ref=e294]:
+                  - generic [ref=e296]: Aktif
+                - cell "Edit Hapus" [ref=e297]:
+                  - generic [ref=e298]:
+                    - button "Edit" [ref=e299] [cursor=pointer]:
+                      - img [ref=e300]
+                    - button "Hapus" [ref=e302] [cursor=pointer]:
+                      - img [ref=e303]
+              - row "Garam BHN-004 Prisma 200 gr Rp 3.000 Rp 15 per gr Aktif Edit Hapus" [ref=e306]:
+                - cell "Garam BHN-004" [ref=e307]:
+                  - button "Garam BHN-004" [ref=e308] [cursor=pointer]:
+                    - strong [ref=e309]: Garam
+                    - generic [ref=e310]: BHN-004
+                - cell "Prisma" [ref=e311]:
+                  - generic [ref=e312]: Prisma
+                - cell "200 gr" [ref=e313]:
+                  - generic [ref=e314]:
+                    - strong [ref=e315]: "200"
+                    - generic [ref=e316]: gr
+                - cell "Rp 3.000" [ref=e317]:
+                  - strong [ref=e319]: Rp 3.000
+                - cell "Rp 15 per gr" [ref=e320]:
+                  - generic [ref=e321]:
+                    - strong [ref=e322]: Rp 15
+                    - generic [ref=e323]: per gr
+                - cell "Aktif" [ref=e324]:
+                  - generic [ref=e326]: Aktif
+                - cell "Edit Hapus" [ref=e327]:
+                  - generic [ref=e328]:
+                    - button "Edit" [ref=e329] [cursor=pointer]:
+                      - img [ref=e330]
+                    - button "Hapus" [ref=e332] [cursor=pointer]:
+                      - img [ref=e333]
+              - row "Air Mineral BHN-003 Sanqua 1500 ml Rp 4.000 Rp 3 per ml Aktif Edit Hapus" [ref=e336]:
+                - cell "Air Mineral BHN-003" [ref=e337]:
+                  - button "Air Mineral BHN-003" [ref=e338] [cursor=pointer]:
+                    - strong [ref=e339]: Air Mineral
+                    - generic [ref=e340]: BHN-003
+                - cell "Sanqua" [ref=e341]:
+                  - generic [ref=e342]: Sanqua
+                - cell "1500 ml" [ref=e343]:
+                  - generic [ref=e344]:
+                    - strong [ref=e345]: "1500"
+                    - generic [ref=e346]: ml
+                - cell "Rp 4.000" [ref=e347]:
+                  - strong [ref=e349]: Rp 4.000
+                - cell "Rp 3 per ml" [ref=e350]:
+                  - generic [ref=e351]:
+                    - strong [ref=e352]: Rp 3
+                    - generic [ref=e353]: per ml
+                - cell "Aktif" [ref=e354]:
+                  - generic [ref=e356]: Aktif
+                - cell "Edit Hapus" [ref=e357]:
+                  - generic [ref=e358]:
+                    - button "Edit" [ref=e359] [cursor=pointer]:
+                      - img [ref=e360]
+                    - button "Hapus" [ref=e362] [cursor=pointer]:
+                      - img [ref=e363]
+              - row "Butter Margarine BHN-002 Palmia Royal 200 gr Rp 8.900 Rp 45 per gr Aktif Edit Hapus" [ref=e366]:
+                - cell "Butter Margarine BHN-002" [ref=e367]:
+                  - button "Butter Margarine BHN-002" [ref=e368] [cursor=pointer]:
+                    - strong [ref=e369]: Butter Margarine
+                    - generic [ref=e370]: BHN-002
+                - cell "Palmia Royal" [ref=e371]:
+                  - generic [ref=e372]: Palmia Royal
+                - cell "200 gr" [ref=e373]:
+                  - generic [ref=e374]:
+                    - strong [ref=e375]: "200"
+                    - generic [ref=e376]: gr
+                - cell "Rp 8.900" [ref=e377]:
+                  - strong [ref=e379]: Rp 8.900
+                - cell "Rp 45 per gr" [ref=e380]:
+                  - generic [ref=e381]:
+                    - strong [ref=e382]: Rp 45
+                    - generic [ref=e383]: per gr
+                - cell "Aktif" [ref=e384]:
+                  - generic [ref=e386]: Aktif
+                - cell "Edit Hapus" [ref=e387]:
+                  - generic [ref=e388]:
+                    - button "Edit" [ref=e389] [cursor=pointer]:
+                      - img [ref=e390]
+                    - button "Hapus" [ref=e392] [cursor=pointer]:
+                      - img [ref=e393]
+              - row "Tepung Terigu BHN-001 Segitga Biru 1000 gr Rp 13.000 Rp 13 per gr Aktif Edit Hapus" [ref=e396]:
+                - cell "Tepung Terigu BHN-001" [ref=e397]:
+                  - button "Tepung Terigu BHN-001" [ref=e398] [cursor=pointer]:
+                    - strong [ref=e399]: Tepung Terigu
+                    - generic [ref=e400]: BHN-001
+                - cell "Segitga Biru" [ref=e401]:
+                  - generic [ref=e402]: Segitga Biru
+                - cell "1000 gr" [ref=e403]:
+                  - generic [ref=e404]:
+                    - strong [ref=e405]: "1000"
+                    - generic [ref=e406]: gr
+                - cell "Rp 13.000" [ref=e407]:
+                  - strong [ref=e409]: Rp 13.000
+                - cell "Rp 13 per gr" [ref=e410]:
+                  - generic [ref=e411]:
+                    - strong [ref=e412]: Rp 13
+                    - generic [ref=e413]: per gr
+                - cell "Aktif" [ref=e414]:
+                  - generic [ref=e416]: Aktif
+                - cell "Edit Hapus" [ref=e417]:
+                  - generic [ref=e418]:
+                    - button "Edit" [ref=e419] [cursor=pointer]:
+                      - img [ref=e420]
+                    - button "Hapus" [ref=e422] [cursor=pointer]:
+                      - img [ref=e423]
+          - generic [ref=e426]:
+            - generic [ref=e427]: 9 material
+            - generic [ref=e428]:
+              - button "Prev" [disabled] [ref=e429]
+              - generic "Pilih halaman" [ref=e430]:
+                - combobox "Pilih halaman" [ref=e431]:
+                  - option "Halaman 1" [selected]
+              - generic [ref=e432]: 1 / 1
+              - button "Next" [disabled] [ref=e433]

@@ -28,11 +28,22 @@ public sealed record BackupFileItem(
     DateTime UpdatedAt,
     string Kind);
 
+public sealed record OperationalDataSummary(
+    int Products,
+    int Materials,
+    int StockMovements,
+    int Recipes,
+    int ProductionBatches,
+    int PurchaseOrders,
+    int LedgerEntries,
+    int Sales);
+
 public sealed record DataOpsSnapshot(
     IReadOnlyList<BackupFileItem> Backups,
     IReadOnlyList<BackupFileItem> Exports,
     int BackupCount,
-    int ExportCount);
+    int ExportCount,
+    OperationalDataSummary OperationalData);
 
 public sealed record DataOperationResult(
     bool Success,

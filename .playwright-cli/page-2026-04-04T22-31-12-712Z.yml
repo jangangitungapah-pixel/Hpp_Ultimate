@@ -1,0 +1,476 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Workflow
+          - link "Katalog Material" [ref=e17] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e19]
+            - strong [ref=e23]: Katalog Material
+          - link "Gudang" [ref=e24] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e26]
+            - strong [ref=e30]: Gudang
+          - link "Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e33]
+            - strong [ref=e35]: Resep
+          - link "Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e38]
+            - strong [ref=e42]: Produksi
+          - link "Point of Sales" [ref=e43] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e45]
+            - strong [ref=e48]: Point of Sales
+          - link "Belanja" [ref=e49] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e51]
+            - strong [ref=e55]: Belanja
+          - link "Pembukuan" [ref=e56] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e58]
+            - strong [ref=e61]: Pembukuan
+        - generic [ref=e62]:
+          - generic [ref=e63]: Pengaturan
+          - link "Pengaturan" [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e66]
+            - strong [ref=e67]: Pengaturan
+          - link "Pengaturan Akun" [ref=e68] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e70]
+            - strong [ref=e73]: Pengaturan Akun
+        - generic [ref=e74]:
+          - generic [ref=e75]: Kontrol Data
+          - link "Backup & Data Ops" [ref=e76] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e78]
+            - strong [ref=e83]: Backup & Data Ops
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: A
+            - generic [ref=e87]:
+              - strong [ref=e88]: Arief
+              - generic [ref=e89]: Admin
+          - link "Logout" [ref=e90] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e91]
+            - generic [ref=e94]: Logout
+  - main [ref=e95]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Resep
+        - strong [ref=e99]: Rancang formula bahan, kelompok material, dan biaya produksi
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - generic [ref=e102]: ⚲
+          - textbox "Current user" [ref=e103]: Arief
+        - generic [ref=e104]: A
+    - article [ref=e105]:
+      - generic [ref=e318]:
+        - generic [ref=e319]:
+          - generic [ref=e320]:
+            - generic [ref=e321]: Resep
+            - heading "Resep produksi" [level=1] [ref=e322]
+            - paragraph [ref=e323]: Buat resep lewat popup panel, susun kelompok bahan, cek biaya, lalu pantau resep aktif dari datagrid.
+          - generic [ref=e324]:
+            - button "Refresh" [ref=e325] [cursor=pointer]
+            - button "+ Resep Baru" [ref=e326] [cursor=pointer]
+        - generic [ref=e327]:
+          - generic [ref=e329]:
+            - generic [ref=e330]: Daftar resep
+            - heading "Resep yang sudah dibuat" [level=2] [ref=e331]
+            - paragraph [ref=e332]: Pilih satu resep untuk melihat komposisi bahan dan biaya batch tanpa pindah halaman.
+          - generic [ref=e334]:
+            - textbox "Cari nama resep atau kode" [ref=e335]
+            - combobox [ref=e337]:
+              - option "8 baris"
+              - option "12 baris" [selected]
+              - option "20 baris"
+              - option "50 baris"
+          - table [ref=e339]:
+            - rowgroup [ref=e340]:
+              - row "Resep HPP / Satuan Margin Harga Jual / Satuan Kelompok Material Status Update" [ref=e341]:
+                - columnheader "Resep" [ref=e342]
+                - columnheader "HPP / Satuan" [ref=e343]
+                - columnheader "Margin" [ref=e344]
+                - columnheader "Harga Jual / Satuan" [ref=e345]
+                - columnheader "Kelompok" [ref=e346]
+                - columnheader "Material" [ref=e347]
+                - columnheader "Status" [ref=e348]
+                - columnheader "Update" [ref=e349]
+            - rowgroup [ref=e350]:
+              - row "Kue Soes RCP-001 Rp 4.184 67% Rp 6.988 2 kelompok 12 material Aktif 05 Apr 26 03:01" [ref=e351] [cursor=pointer]:
+                - cell "Kue Soes RCP-001" [ref=e352]:
+                  - generic [ref=e353]:
+                    - strong [ref=e354]: Kue Soes
+                    - generic [ref=e355]: RCP-001
+                - cell "Rp 4.184" [ref=e356]
+                - cell "67%" [ref=e357]
+                - cell "Rp 6.988" [ref=e358]
+                - cell "2 kelompok" [ref=e359]
+                - cell "12 material" [ref=e360]
+                - cell "Aktif" [ref=e361]:
+                  - generic [ref=e362]: Aktif
+                - cell "05 Apr 26 03:01" [ref=e363]
+          - generic [ref=e364]:
+            - generic [ref=e365]: 1 resep
+            - generic [ref=e366]:
+              - button "Prev" [disabled] [ref=e367]
+              - generic "Pilih halaman resep" [ref=e368]:
+                - combobox "Pilih halaman resep" [ref=e369]:
+                  - option "Halaman 1" [selected]
+              - generic [ref=e370]: 1 / 1
+              - button "Next" [disabled] [ref=e371]
+        - generic [ref=e372]:
+          - generic [ref=e373]:
+            - generic [ref=e374]:
+              - generic [ref=e375]: RCP-001
+              - heading "Kue Soes" [level=2] [ref=e376]
+            - generic [ref=e377]:
+              - generic [ref=e378]: Aktif
+              - button "Edit resep" [ref=e379] [cursor=pointer]:
+                - img [ref=e380]
+              - button "Hapus resep" [ref=e382] [cursor=pointer]:
+                - img [ref=e383]
+          - generic [ref=e386]:
+            - article [ref=e387]:
+              - generic [ref=e388]: Total Batch
+              - strong [ref=e389]: Rp 58.579
+            - article [ref=e390]:
+              - generic [ref=e391]: HPP / Satuan
+              - strong [ref=e392]: Rp 4.184
+            - article [ref=e393]:
+              - generic [ref=e394]: Harga Jual / Satuan
+              - strong [ref=e395]: Rp 6.988
+            - article [ref=e396]:
+              - generic [ref=e397]: Porsi / Batch
+              - strong [ref=e398]: 14 pcs
+          - generic [ref=e399]:
+            - generic [ref=e400]:
+              - generic [ref=e402]:
+                - generic [ref=e403]: Kelompok bahan
+                - heading "Struktur formula resep" [level=3] [ref=e404]
+                - paragraph [ref=e405]: Buka kelompok yang diperlukan untuk audit komposisi dan subtotal materialnya.
+              - generic [ref=e406]:
+                - group [ref=e407]:
+                  - generic "5 material Adonan Utama Rp 27.012" [ref=e408] [cursor=pointer]:
+                    - generic [ref=e409]:
+                      - generic [ref=e410]: 5 material
+                      - strong [ref=e411]: Adonan Utama
+                    - strong [ref=e412]: Rp 27.012
+                  - generic [ref=e413]:
+                    - generic [ref=e414]: Material
+                    - generic [ref=e415]: Pemakaian
+                    - generic [ref=e416]: Konversi
+                    - generic [ref=e417]: Modal
+                  - generic [ref=e418]:
+                    - generic [ref=e419]:
+                      - generic [ref=e420]:
+                        - strong [ref=e421]: Butter Margarine (BHN-002)
+                        - generic [ref=e422]: Palmia Royal
+                      - generic [ref=e423]:
+                        - strong [ref=e424]: 200 gr
+                        - generic [ref=e425]: Waste 0%
+                      - generic [ref=e426]:
+                        - strong [ref=e427]: 200 gr
+                        - generic [ref=e428]: 200 gr
+                      - generic [ref=e429]:
+                        - strong [ref=e430]: Rp 8.900
+                        - generic [ref=e431]: Rp 8.900 / pack
+                    - generic [ref=e432]:
+                      - generic [ref=e433]:
+                        - strong [ref=e434]: Air Mineral (BHN-003)
+                        - generic [ref=e435]: Sanqua
+                      - generic [ref=e436]:
+                        - strong [ref=e437]: 400 ml
+                        - generic [ref=e438]: Waste 0%
+                      - generic [ref=e439]:
+                        - strong [ref=e440]: 400 ml
+                        - generic [ref=e441]: 1500 ml
+                      - generic [ref=e442]:
+                        - strong [ref=e443]: Rp 1.067
+                        - generic [ref=e444]: Rp 4.000 / pack
+                    - generic [ref=e445]:
+                      - generic [ref=e446]:
+                        - strong [ref=e447]: Tepung Terigu (BHN-001)
+                        - generic [ref=e448]: Segitga Biru
+                      - generic [ref=e449]:
+                        - strong [ref=e450]: 250 gr
+                        - generic [ref=e451]: Waste 0%
+                      - generic [ref=e452]:
+                        - strong [ref=e453]: 250 gr
+                        - generic [ref=e454]: 1000 gr
+                      - generic [ref=e455]:
+                        - strong [ref=e456]: Rp 3.250
+                        - generic [ref=e457]: Rp 13.000 / pack
+                    - generic [ref=e458]:
+                      - generic [ref=e459]:
+                        - strong [ref=e460]: Garam (BHN-004)
+                        - generic [ref=e461]: Prisma
+                      - generic [ref=e462]:
+                        - strong [ref=e463]: 3 gr
+                        - generic [ref=e464]: Waste 0%
+                      - generic [ref=e465]:
+                        - strong [ref=e466]: 3 gr
+                        - generic [ref=e467]: 200 gr
+                      - generic [ref=e468]:
+                        - strong [ref=e469]: Rp 45
+                        - generic [ref=e470]: Rp 3.000 / pack
+                    - generic [ref=e471]:
+                      - generic [ref=e472]:
+                        - strong [ref=e473]: Telur Ayam (BHN-005)
+                        - generic [ref=e474]: Lokal
+                      - generic [ref=e475]:
+                        - strong [ref=e476]: 5,5 pcs
+                        - generic [ref=e477]: Waste 0%
+                      - generic [ref=e478]:
+                        - strong [ref=e479]: 5,5 pcs
+                        - generic [ref=e480]: 1 pcs
+                      - generic [ref=e481]:
+                        - strong [ref=e482]: Rp 13.750
+                        - generic [ref=e483]: Rp 2.500 / pack
+                - group [ref=e484]:
+                  - generic "7 material Vla Rp 24.818" [ref=e485] [cursor=pointer]:
+                    - generic [ref=e486]:
+                      - generic [ref=e487]: 7 material
+                      - strong [ref=e488]: Vla
+                    - strong [ref=e489]: Rp 24.818
+            - generic [ref=e490]:
+              - generic [ref=e492]:
+                - generic [ref=e493]: Overhead
+                - heading "Biaya non-material" [level=3] [ref=e494]
+                - paragraph [ref=e495]: Biaya tambahan di luar material utama resep.
+              - generic [ref=e496]:
+                - article [ref=e497]:
+                  - generic [ref=e498]:
+                    - generic [ref=e499]: Overhead
+                    - strong [ref=e500]: Listrik
+                  - strong [ref=e501]: Rp 750
+                - article [ref=e502]:
+                  - generic [ref=e503]:
+                    - generic [ref=e504]: Overhead
+                    - strong [ref=e505]: gas
+                  - strong [ref=e506]: Rp 1.000
+                - article [ref=e507]:
+                  - generic [ref=e508]:
+                    - generic [ref=e509]: Biaya Produksi
+                    - strong [ref=e510]: Tenaga Kerja Produksi
+                  - strong [ref=e511]: Rp 5.000
+            - generic [ref=e512]:
+              - generic [ref=e514]:
+                - generic [ref=e515]: Ringkasan biaya
+                - heading "Angka inti resep" [level=3] [ref=e516]
+              - generic [ref=e517]:
+                - article [ref=e518]:
+                  - generic [ref=e519]: Margin Target
+                  - strong [ref=e520]: 67%
+                - article [ref=e521]:
+                  - generic [ref=e522]: Total Material
+                  - strong [ref=e523]: Rp 51.829
+                - article [ref=e524]:
+                  - generic [ref=e525]: Operasional
+                  - strong [ref=e526]: Rp 6.750
+                - article [ref=e527]:
+                  - generic [ref=e528]: Update
+                  - strong [ref=e529]: 05 Apr 2026 03:01
+      - generic [ref=e716]:
+        - generic [ref=e717]:
+          - generic [ref=e718]:
+            - generic [ref=e719]:
+              - generic [ref=e720]: Resep Baru
+              - generic [ref=e721]:
+                - generic [ref=e722]: RCP-002
+                - generic [ref=e723]: Aktif
+            - generic [ref=e724]:
+              - generic [ref=e725]:
+                - heading "Rakit resep" [level=2] [ref=e726]
+                - paragraph [ref=e727]: Lengkapi identitas, susun kelompok bahan, lalu finalkan biaya dan margin dalam satu panel.
+              - generic [ref=e728]:
+                - article [ref=e729]:
+                  - generic [ref=e730]: Kelompok
+                  - strong [ref=e731]: "1"
+                - article [ref=e732]:
+                  - generic [ref=e733]: Material
+                  - strong [ref=e734]: "0"
+          - button "Tutup form" [active] [ref=e735] [cursor=pointer]:
+            - img [ref=e736]
+        - generic [ref=e739]:
+          - article [ref=e740]:
+            - generic [ref=e741]: Total Batch
+            - strong [ref=e742]: Rp 0
+          - article [ref=e743]:
+            - generic [ref=e744]: HPP / Satuan
+            - strong [ref=e745]: Rp 0
+          - article [ref=e746]:
+            - generic [ref=e747]: Harga Jual / Satuan
+            - strong [ref=e748]: Rp 0
+        - generic [ref=e750]:
+          - generic [ref=e751]:
+            - generic [ref=e753]:
+              - generic [ref=e754]: Detail resep
+              - heading "Identitas utama resep" [level=3] [ref=e755]
+              - paragraph [ref=e756]: Isi data inti resep sebelum masuk ke komposisi bahan.
+            - generic [ref=e757]:
+              - generic [ref=e758]:
+                - generic [ref=e759]: Nama resep
+                - textbox "Nama resep" [ref=e760]: Resep Test Dirty
+              - generic [ref=e761]:
+                - generic [ref=e762]: Kode / nomor resep
+                - textbox "Kode / nomor resep" [ref=e763]: RCP-002
+              - generic [ref=e764]:
+                - generic [ref=e765]: Porsi / batch
+                - spinbutton "Porsi / batch" [ref=e766]: "1"
+              - generic [ref=e767]:
+                - generic [ref=e768]: Satuan porsi
+                - combobox "Satuan porsi" [ref=e769]:
+                  - option "pcs" [selected]
+                  - option "pouch"
+                  - option "box"
+                  - option "pack"
+                  - option "cup"
+                  - option "bottle"
+                  - option "tray"
+              - generic [ref=e770]:
+                - generic [ref=e771]: Status
+                - combobox "Status" [ref=e772]:
+                  - option "Aktif" [selected]
+                  - option "Draft"
+              - generic [ref=e773]:
+                - generic [ref=e774]: Deskripsi
+                - textbox "Deskripsi" [ref=e775]
+          - generic [ref=e776]:
+            - generic [ref=e777]:
+              - generic [ref=e778]:
+                - generic [ref=e779]: Kelompok bahan
+                - heading "Struktur formula" [level=3] [ref=e780]
+                - paragraph [ref=e781]: Pilih kelompok aktif untuk target input material.
+              - button "Tambah Kelompok" [ref=e782] [cursor=pointer]
+            - generic [ref=e783]:
+              - generic [ref=e784]:
+                - generic [ref=e785]: "01"
+                - generic [ref=e786]:
+                  - generic [ref=e787]:
+                    - generic [ref=e788]: Nama kelompok bahan
+                    - textbox "Nama kelompok bahan" [ref=e789]: Bahan utama
+                  - generic [ref=e790]:
+                    - generic [ref=e791]: Catatan kelompok
+                    - textbox "Catatan kelompok" [ref=e792]
+              - generic [ref=e793]:
+                - generic [ref=e794]:
+                  - strong [ref=e795]: 0 material
+                  - generic [ref=e796]: Belum ada material. Buka list material untuk mulai mengisi bahan.
+                - generic [ref=e797]:
+                  - button "Sedang Aktif" [disabled] [ref=e798] [cursor=pointer]
+                  - button "Hapus kelompok" [disabled] [ref=e799] [cursor=pointer]:
+                    - img [ref=e800]
+          - generic [ref=e803]:
+            - generic [ref=e804]:
+              - generic [ref=e805]:
+                - generic [ref=e806]: Material
+                - heading "Input dan list material" [level=3] [ref=e807]
+                - paragraph [ref=e808]: Input singkat di atas, review material terpilih di datagrid bawah.
+              - generic [ref=e809]:
+                - generic [ref=e810]: Baris tampil
+                - combobox "Baris tampil" [ref=e811]:
+                  - option "8 baris"
+                  - option "12 baris"
+                  - option "20 baris"
+                  - option "50 baris"
+            - generic [ref=e812]:
+              - generic [ref=e813]:
+                - generic [ref=e814]: Kelompok aktif
+                - heading "Bahan utama" [level=4] [ref=e815]
+                - paragraph [ref=e816]: Belum ada material. Buka list material untuk mulai mengisi bahan.
+              - generic [ref=e817]:
+                - generic [ref=e818]:
+                  - generic [ref=e819]: 0 material
+                  - generic [ref=e820]: Rp 0
+                - button "Buka Katalog Material" [ref=e821] [cursor=pointer]
+            - generic [ref=e822]:
+              - generic [ref=e823]:
+                - generic [ref=e824]:
+                  - generic [ref=e825]: Input material
+                  - strong [ref=e826]: Tambah bahan ke kelompok aktif
+                - generic [ref=e827]: Mode tambah
+              - generic [ref=e828]:
+                - generic [ref=e829]:
+                  - generic [ref=e830]: Pilih material
+                  - combobox "Pilih material" [ref=e831]
+                - generic [ref=e832]:
+                  - generic [ref=e833]: Kuantitas
+                  - spinbutton "Kuantitas" [ref=e834]: "1"
+                - generic [ref=e835]:
+                  - generic [ref=e836]: Pilih satuan
+                  - combobox "Pilih satuan" [ref=e837]:
+                    - option "Pilih unit" [selected]
+                - generic [ref=e838]:
+                  - generic [ref=e839]: Waste %
+                  - spinbutton "Waste %" [ref=e840]: "0"
+                - generic [ref=e841]:
+                  - generic [ref=e842]: Catatan
+                  - textbox "Catatan" [ref=e843]
+                - button "✓ Masukkan" [ref=e845] [cursor=pointer]
+            - generic [ref=e846]:
+              - heading "Belum ada material" [level=2] [ref=e847]
+              - paragraph [ref=e848]: Material yang dimasukkan dari form di atas akan muncul di datagrid ini.
+          - generic [ref=e849]:
+            - generic [ref=e850]:
+              - generic [ref=e851]:
+                - generic [ref=e852]: Overhead
+                - heading "Biaya non-material" [level=3] [ref=e853]
+                - paragraph [ref=e854]: Tambahkan overhead atau biaya produksi yang ikut membentuk total batch.
+              - generic [ref=e855]:
+                - button "+ Overhead" [ref=e856] [cursor=pointer]
+                - button "+ Produksi" [ref=e857] [cursor=pointer]
+            - generic [ref=e858]: Belum ada biaya tambahan.
+          - generic [ref=e859]:
+            - generic [ref=e861]:
+              - generic [ref=e862]: Harga jual
+              - heading "Atur harga jual berdasarkan margin" [level=3] [ref=e863]
+              - paragraph [ref=e864]: Margin dihitung dari HPP per satuan porsi agar harga jual resep langsung terbentuk saat resep disimpan.
+            - generic [ref=e865]:
+              - generic [ref=e866]:
+                - generic [ref=e867]: Margin target (%)
+                - spinbutton "Margin target (%)" [ref=e868]: "35"
+              - article [ref=e869]:
+                - generic [ref=e870]: HPP / Satuan
+                - strong [ref=e871]: Rp 0
+              - article [ref=e872]:
+                - generic [ref=e873]: Harga Jual / Satuan
+                - strong [ref=e874]: Rp 0
+          - generic [ref=e875]:
+            - generic [ref=e876]:
+              - generic [ref=e877]:
+                - generic [ref=e878]: Draft AI
+                - heading "Bantuan susun resep" [level=3] [ref=e879]
+                - paragraph [ref=e880]: Pakai AI hanya saat perlu untuk menyiapkan draft awal dari katalog material yang ada.
+              - generic [ref=e882]: Gemini aktif
+            - generic [ref=e883]:
+              - generic [ref=e884]:
+                - generic [ref=e885]: Prompt resep AI
+                - textbox "Prompt resep AI" [ref=e886]
+              - generic [ref=e887]:
+                - button "Contoh prompt" [ref=e888] [cursor=pointer]
+                - button "Buat Draft AI" [ref=e889] [cursor=pointer]
+        - generic [ref=e890]:
+          - generic [ref=e892]:
+            - generic [ref=e893]: Ringkas
+            - paragraph [ref=e894]: Pastikan kelompok bahan dan material sudah lengkap sebelum simpan resep.
+          - generic [ref=e895]:
+            - button "Batal" [ref=e896] [cursor=pointer]
+            - button "Simpan Resep" [ref=e897] [cursor=pointer]
+      - generic [ref=e899]:
+        - generic [ref=e900]: Perubahan belum disimpan
+        - heading "Tutup editor resep?" [level=2] [ref=e901]
+        - paragraph [ref=e902]: Perubahan pada resep ini akan hilang jika editor ditutup sekarang.
+        - generic [ref=e903]:
+          - button "Lanjut Edit" [ref=e904] [cursor=pointer]
+          - button "Buang Perubahan" [ref=e905] [cursor=pointer]

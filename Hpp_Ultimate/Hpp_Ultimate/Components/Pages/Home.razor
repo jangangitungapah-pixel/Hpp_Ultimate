@@ -1,9 +1,201 @@
 @page "/"
+@rendermode InteractiveServer
+@implements IDisposable
+@inject AuthService AuthService
+@inject SeededBusinessDataStore Store
 @inject NavigationManager Navigation
 
+<PageTitle>Dashboard | HPP Ultimate</PageTitle>
+
+@if (_isLoading)
+{
+    <div class="table-skeleton"></div>
+}
+else if (!_isAuthenticated)
+{
+    <div class="table-skeleton"></div>
+}
+else
+{
+    <section class="home-page ds-page ds-page-stack theme-indigo">
+        <header class="home-hero ds-page-header">
+            <div class="hero-copy">
+                <span class="section-tag">Dashboard</span>
+                <h1>@(HasActivePriorities ? "Prioritas kerja hari ini" : "Dashboard tetap tenang")</h1>
+                <p>@(HasActivePriorities
+                    ? "Halaman ini hanya menampilkan pekerjaan yang memang butuh tindakan cepat, tanpa shortcut atau informasi sekunder yang mengganggu fokus."
+                    : "Semua indikator utama sedang aman. Masuk ke area kerja inti dari shortcut ringkas di bawah saat kamu siap lanjut.")</p>
+            </div>
+
+            <div class="hero-actions">
+                <a class="primary-button compact hero-primary-action" href="@PrimaryAction.Href">@PrimaryAction.ActionLabel</a>
+            </div>
+        </header>
+
+        <section class="home-card priority-card">
+            <div class="section-head ds-card-header">
+                <div>
+                    <span class="section-tag">Prioritas hari ini</span>
+                    <h2>@(HasActivePriorities ? "Pekerjaan yang masih menunggu tindakan" : "Tidak ada prioritas mendesak")</h2>
+                    <p>@(HasActivePriorities
+                        ? "Semua kartu di bawah ini langsung membuka area kerja yang relevan. Tidak ada shortcut tambahan yang bersaing dengan prioritas utama."
+                        : "Semua indikator utama sedang aman. Dashboard tidak lagi menampilkan angka vanity atau modul yang tidak sedang perlu perhatian.")</p>
+                </div>
+            </div>
+
+            @if (HasActivePriorities)
+            {
+                <div class="priority-grid" aria-label="Prioritas kerja harian HPP Ultimate">
+                    @foreach (var item in ActivePriorityItems)
+                    {
+                        <a class="priority-item" href="@item.Href">
+                            <div class="priority-main">
+                                <small>@item.CountLabel</small>
+                                <strong>@item.Title</strong>
+                                <span>@item.Detail</span>
+                            </div>
+                            <div class="priority-side">
+                                <span class="focus-count">@item.CountValue</span>
+                                <span class="focus-action-copy">@item.ActionLabel</span>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="dashboard-clear-state">
+                    <strong>Semua prioritas operasional sedang aman.</strong>
+                    <span>Tidak ada restock kritis, penerimaan pending, batch menunggu jalan, atau pembayaran kasir yang tertahan.</span>
+                </div>
+            }
+        </section>
+
+        @if (!HasActivePriorities)
+        {
+            <section class="home-card quick-actions-card">
+                <div class="section-head ds-card-header">
+                    <div>
+                        <span class="section-tag">Aksi cepat</span>
+                        <h2>Masuk ke area kerja inti</h2>
+                        <p>Shortcut ini sengaja dipersempit ke modul yang paling sering dibuka harian. Modul lain tetap tersedia di sidebar.</p>
+                    </div>
+                </div>
+
+                <div class="quick-actions-grid">
+                    @foreach (var item in QuickActionItems)
+                    {
+                        <a class="quick-action-card" href="@item.Href">
+                            <span class="shortcut-icon">
+                                <AppIcon Name="@item.Icon" Class="shortcut-icon-svg" />
+                            </span>
+                            <div class="quick-action-copy">
+                                <strong>@item.Title</strong>
+                                <small>@item.Description</small>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </section>
+        }
+    </section>
+}
+
 @code {
-    protected override void OnInitialized()
+    private bool _isLoading = true;
+    private bool _isAuthenticated;
+
+    private int PendingReceiptCount => Store.PurchaseOrders.Count(item => item.Status == PurchaseOrderStatus.Ordered);
+    private int QueuedProductionCount => Store.ProductionBatches.Count(item => item.Status == ProductionRunStatus.Queued);
+    private int PendingSalesCount => Store.Sales.Count(item => item.Status != SaleStatus.Voided && !item.IsPaid);
+
+    private int LowStockCount
     {
-        Navigation.NavigateTo("/login", replace: true);
+        get
+        {
+            var stockMap = Store.StockMovements
+                .GroupBy(item => item.MaterialId)
+                .ToDictionary(group => group.Key, group => group.Sum(item => item.Quantity));
+
+            return Store.RawMaterials.Count(item =>
+                item.Status == MaterialStatus.Active &&
+                item.MinimumStock > 0 &&
+                stockMap.GetValueOrDefault(item.Id) < item.MinimumStock);
+        }
     }
+
+    private IReadOnlyList<DashboardPriorityItem> PriorityItems =>
+    [
+        new("Catat restock gudang", LowStockCount, LowStockCount == 0 ? "Semua stok minimum masih aman." : "Material berada di bawah minimum stock dan perlu restock.", "Buka stok gudang", "/gudang", "Perlu restock"),
+        new("Tandai barang datang", PendingReceiptCount, PendingReceiptCount == 0 ? "Tidak ada barang yang menunggu datang." : "Pembelian online belum ditandai barang sampai.", "Buka penerimaan barang", "/belanja#shopping-history", "Penerimaan pending"),
+        new("Mulai batch produksi", QueuedProductionCount, QueuedProductionCount == 0 ? "Belum ada batch dalam antrian." : "Batch masih menunggu untuk dijalankan.", "Buka antrian produksi", "/produksi#production-queue", "Antrian produksi"),
+        new("Tandai pembayaran masuk", PendingSalesCount, PendingSalesCount == 0 ? "Semua transaksi sudah lunas." : "Masih ada transaksi yang belum lunas dan perlu ditandai masuk.", "Buka history kasir", "/pos#pos-history", "Piutang kasir")
+    ];
+
+    private IReadOnlyList<DashboardPriorityItem> ActivePriorityItems =>
+        PriorityItems
+            .Where(item => item.CountValue > 0)
+            .OrderByDescending(item => item.CountValue)
+            .ToArray();
+
+    private IReadOnlyList<DashboardQuickActionItem> QuickActionItems =>
+    [
+        new("/gudang", "warehouse", "Stok Gudang", "Pantau stok aktif dan catat restock yang memang perlu dilakukan."),
+        new("/belanja", "shopping", "Pembelian Material", "Masuk ke draft belanja dan penerimaan barang tanpa lewat informasi tambahan."),
+        new("/produksi", "production", "Produksi", "Susun batch baru atau jalankan antrian yang sudah siap."),
+        new("/pos", "pos", "Kasir / POS", "Jual menu siap stok dan pantau pembayaran.")
+    ];
+
+    private bool HasActivePriorities => ActivePriorityItems.Count > 0;
+
+    private DashboardPriorityItem PrimaryAction
+    {
+        get
+        {
+            var prioritized = ActivePriorityItems.FirstOrDefault();
+
+            return prioritized ?? new DashboardPriorityItem(
+                "Buka stok gudang",
+                0,
+                "Tidak ada prioritas mendesak yang aktif.",
+                "Masuk ke stok gudang",
+                "/gudang",
+                "Aksi berikutnya");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Store.Changed += HandleStoreChanged;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        var snapshot = await AuthService.GetSnapshotAsync();
+        _isAuthenticated = snapshot.Session is not null;
+
+        if (!_isAuthenticated)
+        {
+            Navigation.NavigateTo("/login", replace: true);
+            return;
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void HandleStoreChanged()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Store.Changed -= HandleStoreChanged;
+    }
+
+    private sealed record DashboardQuickActionItem(string Href, string Icon, string Title, string Description);
+    private sealed record DashboardPriorityItem(string Title, int CountValue, string Detail, string ActionLabel, string Href, string CountLabel);
 }

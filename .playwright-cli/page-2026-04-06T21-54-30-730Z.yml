@@ -1,0 +1,134 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - link "HPP Ultimate Workspace operasional" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]:
+            - strong [ref=e8]: HPP Ultimate
+            - text: Workspace operasional
+        - checkbox [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]:
+            - text: Ringkasan
+            - link "Dashboard" [ref=e12] [cursor=pointer]:
+              - /url: /
+              - img [ref=e14]
+              - strong [ref=e18]: Dashboard
+          - generic [ref=e19]:
+            - text: Master Data
+            - link "Katalog Material" [ref=e20] [cursor=pointer]:
+              - /url: /produk
+              - img [ref=e22]
+              - strong [ref=e26]: Katalog Material
+            - link "Resep" [ref=e27] [cursor=pointer]:
+              - /url: /resep
+              - img [ref=e29]
+              - strong [ref=e31]: Resep
+          - generic [ref=e32]:
+            - text: Operasional
+            - link "Stok Gudang" [ref=e33] [cursor=pointer]:
+              - /url: /gudang
+              - img [ref=e35]
+              - strong [ref=e39]: Stok Gudang
+            - link "Pembelian Material" [ref=e40] [cursor=pointer]:
+              - /url: /belanja
+              - img [ref=e42]
+              - strong [ref=e46]: Pembelian Material
+            - link "Produksi" [ref=e47] [cursor=pointer]:
+              - /url: /produksi
+              - img [ref=e49]
+              - strong [ref=e53]: Produksi
+            - link "Kasir / POS" [ref=e54] [cursor=pointer]:
+              - /url: /pos
+              - img [ref=e56]
+              - strong [ref=e59]: Kasir / POS
+          - generic [ref=e60]:
+            - text: Keuangan
+            - link "Pembukuan" [ref=e61] [cursor=pointer]:
+              - /url: /pembukuan
+              - img [ref=e63]
+              - strong [ref=e66]: Pembukuan
+          - generic [ref=e67]:
+            - text: Admin
+            - link "Pengaturan Bisnis" [ref=e68] [cursor=pointer]:
+              - /url: /pengaturan
+              - img [ref=e70]
+              - strong [ref=e71]: Pengaturan Bisnis
+            - link "Tim & Akun" [ref=e72] [cursor=pointer]:
+              - /url: /pengaturan/akun
+              - img [ref=e74]
+              - strong [ref=e77]: Tim & Akun
+            - link "Backup & Impor Data" [ref=e78] [cursor=pointer]:
+              - /url: /backup-data
+              - img [ref=e80]
+              - strong [ref=e85]: Backup & Impor Data
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - generic [ref=e88]: A
+              - generic [ref=e89]:
+                - strong [ref=e90]: Arief
+                - text: Admin
+            - link "Logout" [ref=e91] [cursor=pointer]:
+              - /url: /logout
+              - img [ref=e92]
+              - text: Logout
+    - main [ref=e95]:
+      - generic [ref=e97]:
+        - text: Area kerja
+        - strong [ref=e98]: Dashboard
+      - article [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - text: Dashboard
+              - heading "Dashboard tetap tenang" [active] [level=1] [ref=e103]
+              - paragraph [ref=e104]: Semua indikator utama sedang aman. Masuk ke area kerja inti dari shortcut ringkas di bawah saat kamu siap lanjut.
+            - link "Masuk ke stok gudang" [ref=e106] [cursor=pointer]:
+              - /url: /gudang
+          - generic [ref=e107]:
+            - generic [ref=e109]:
+              - text: Prioritas hari ini
+              - heading "Tidak ada prioritas mendesak" [level=2] [ref=e110]
+              - paragraph [ref=e111]: Semua indikator utama sedang aman. Dashboard tidak lagi menampilkan angka vanity atau modul yang tidak sedang perlu perhatian.
+            - generic [ref=e112]:
+              - strong [ref=e113]: Semua prioritas operasional sedang aman.
+              - text: Tidak ada restock kritis, penerimaan pending, batch menunggu jalan, atau pembayaran kasir yang tertahan.
+          - generic [ref=e114]:
+            - generic [ref=e116]:
+              - text: Aksi cepat
+              - heading "Masuk ke area kerja inti" [level=2] [ref=e117]
+              - paragraph [ref=e118]: Shortcut ini sengaja dipersempit ke modul yang paling sering dibuka harian. Modul lain tetap tersedia di sidebar.
+            - generic [ref=e119]:
+              - link "Stok Gudang Pantau stok aktif dan catat restock yang memang perlu dilakukan." [ref=e120] [cursor=pointer]:
+                - /url: /gudang
+                - img [ref=e122]
+                - generic [ref=e126]:
+                  - strong [ref=e127]: Stok Gudang
+                  - text: Pantau stok aktif dan catat restock yang memang perlu dilakukan.
+              - link "Pembelian Material Masuk ke draft belanja dan penerimaan barang tanpa lewat informasi tambahan." [ref=e128] [cursor=pointer]:
+                - /url: /belanja
+                - img [ref=e130]
+                - generic [ref=e134]:
+                  - strong [ref=e135]: Pembelian Material
+                  - text: Masuk ke draft belanja dan penerimaan barang tanpa lewat informasi tambahan.
+              - link "Produksi Susun batch baru atau jalankan antrian yang sudah siap." [ref=e136] [cursor=pointer]:
+                - /url: /produksi
+                - img [ref=e138]
+                - generic [ref=e142]:
+                  - strong [ref=e143]: Produksi
+                  - text: Susun batch baru atau jalankan antrian yang sudah siap.
+              - link "Kasir / POS Jual menu siap stok dan pantau pembayaran." [ref=e144] [cursor=pointer]:
+                - /url: /pos
+                - img [ref=e146]
+                - generic [ref=e149]:
+                  - strong [ref=e150]: Kasir / POS
+                  - text: Jual menu siap stok dan pantau pembayaran.
+  - generic [ref=e151]:
+    - generic [ref=e152]:
+      - strong [ref=e153]: Sesi aplikasi terganggu
+      - text: Terjadi error yang belum tertangani. Muat ulang halaman untuk melanjutkan pekerjaan.
+    - generic [ref=e154]:
+      - link "Muat ulang" [ref=e155] [cursor=pointer]:
+        - /url: .
+      - button "Tutup pesan error" [ref=e156]: Tutup

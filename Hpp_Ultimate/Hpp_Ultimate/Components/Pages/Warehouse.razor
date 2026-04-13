@@ -2,22 +2,24 @@
 @rendermode InteractiveServer
 @implements IDisposable
 @using System.Globalization
+@using Microsoft.AspNetCore.Components.Web
+@inject IJSRuntime JS
 @inject WarehouseService WarehouseService
 @inject SeededBusinessDataStore Store
 
-<PageTitle>Gudang | HPP Ultimate</PageTitle>
+<PageTitle>Stok Gudang | HPP Ultimate</PageTitle>
 
-<section class="warehouse-page">
-    <header class="warehouse-header">
+<section class="warehouse-page ds-page ds-page-stack theme-amber">
+    <header class="warehouse-header ds-page-header">
         <div class="header-copy">
-            <span class="section-tag">Gudang</span>
-            <h1>Input stok material dari katalog lalu pantau posisinya di satu datagrid.</h1>
-            <p>Flow gudang sekarang ringkas: pilih material dari katalog, catat stok masuk atau keluar, lalu cek hasilnya langsung di daftar gudang.</p>
+            <span class="section-tag">Stok gudang</span>
+            <h1>Stok gudang</h1>
+            <p>Pantau saldo bahan, minimum stok, dan mutasi harian dari satu workspace yang sama.</p>
         </div>
 
         <div class="header-actions">
-            <div class="status-chip">@_statusMessage</div>
-            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            <div class="status-chip" aria-live="polite">@_statusMessage</div>
+            <button type="button" class="ghost-button compact tertiary-button refresh-button" disabled="@_isLoading" @onclick="ReloadAsync">@(_isLoading ? "Memuat..." : "Perbarui")</button>
         </div>
     </header>
 
@@ -27,7 +29,33 @@
     }
     else
     {
-        <div class="summary-strip">
+        @if (MissingRecipeWarehouseMaterials.Count > 0)
+        {
+            <section class="recipe-gap-notice" aria-live="polite">
+                <div class="recipe-gap-copy">
+                    <span class="section-tag">Perlu dilengkapi</span>
+                    <h2>@MissingRecipeWarehouseMaterials.Count bahan resep belum masuk gudang</h2>
+                    <p>Bahan ini sudah dipakai di resep aktif, tetapi belum punya catatan stok di gudang. Pilih salah satu untuk langsung isi stok awal dari form mutasi.</p>
+                </div>
+
+                <div class="recipe-gap-actions">
+                    @foreach (var material in VisibleMissingRecipeWarehouseMaterials)
+                    {
+                        <button type="button" class="recipe-gap-chip" @onclick="() => SelectMissingRecipeMaterialAsync(material.Id)">
+                            <span>@material.Name</span>
+                            <small>@material.Code</small>
+                        </button>
+                    }
+
+                    @if (HiddenMissingRecipeWarehouseCount > 0)
+                    {
+                        <span class="recipe-gap-more">+@HiddenMissingRecipeWarehouseCount bahan lain</span>
+                    }
+                </div>
+            </section>
+        }
+
+        <div class="summary-strip ds-summary-strip">
             <article>
                 <small>Material di gudang</small>
                 <strong>@WarehouseRows.Count</strong>
@@ -42,223 +70,327 @@
             </article>
         </div>
 
-        <section class="warehouse-entry-card">
-            <div class="section-head">
-                <div>
-                    <span class="section-tag">Input stok</span>
-                    <h2>Pilih material katalog lalu simpan mutasinya</h2>
-                    <p>Material diambil dari katalog. Setelah disimpan, item akan muncul atau terbarui di datagrid gudang.</p>
-                </div>
-            </div>
-
-            @if (!string.IsNullOrWhiteSpace(_message))
-            {
-                <div class="form-message">@_message</div>
-            }
-
-            <EditForm Model="_movementForm" OnValidSubmit="SaveMovementAsync">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-
-                <div class="entry-grid">
-                    <label class="wide-field">
-                        <span>Material katalog</span>
-                        <input class="lookup-input"
-                               list="warehouse-material-options"
-                               value="@_materialLookupText"
-                               @onchange="OnMaterialLookupChanged"
-                               placeholder="Ketik nama atau kode material" />
-                        <datalist id="warehouse-material-options">
-                            @foreach (var material in CatalogMaterials)
-                            {
-                                <option value="@GetMaterialLookupLabel(material)"></option>
-                            }
-                        </datalist>
-                    </label>
-
-                    <label>
-                        <span>Flow stok</span>
-                        <InputSelect @bind-Value="_movementForm.Type">
-                            <option value="@StockMovementType.StockIn">Stok masuk</option>
-                            <option value="@StockMovementType.StockOut">Stok keluar</option>
-                        </InputSelect>
-                    </label>
-
-                    <label>
-                        <span>Jumlah</span>
-                        <InputNumber @bind-Value="_movementForm.Quantity" />
-                    </label>
-
-                    <label>
-                        <span>Waktu catat</span>
-                        <input type="datetime-local" value="@GetOccurredAtInputValue()" @onchange="OnOccurredAtChanged" />
-                    </label>
-
-                    <label class="wide-field">
-                        <span>Catatan</span>
-                        <InputTextArea @bind-Value="_movementForm.Note" />
-                    </label>
-                </div>
-
-                @if (SelectedCatalogMaterial is not null)
-                {
-                    <div class="selected-material-card">
-                        <div>
-                            <small>Material terpilih</small>
-                            <strong>@SelectedCatalogMaterial.Name</strong>
-                            <span>@SelectedCatalogMaterial.Code - @(string.IsNullOrWhiteSpace(SelectedCatalogMaterial.Brand) ? "Tanpa merk" : SelectedCatalogMaterial.Brand)</span>
-                        </div>
-
-                        <div class="selected-pills">
-                            <span>On hand @FormatQuantity(SelectedCatalogMaterial.OnHandQuantity, SelectedCatalogMaterial.BaseUnit)</span>
-                            <span>Minimum @FormatQuantity(SelectedCatalogMaterial.MinimumStock, SelectedCatalogMaterial.BaseUnit)</span>
-                            <span>Last move @FormatLastMovement(SelectedCatalogMaterial.LastMovementAt)</span>
-                        </div>
+        <div class="warehouse-workspace">
+            <section class="warehouse-table-card catalog-datagrid">
+                <div class="table-head ds-card-header">
+                    <div>
+                        <span class="section-tag">Stok aktif</span>
+                        <h2>Material yang sudah tercatat di gudang</h2>
+                        <p>Daftar stok aktif dengan pola tabel yang sama seperti katalog material.</p>
                     </div>
-                }
 
-                @if (!string.IsNullOrWhiteSpace(MaterialLookupWarning))
-                {
-                    <div class="inline-note">@MaterialLookupWarning</div>
-                }
-
-                <div class="form-actions">
-                    <button type="button" class="ghost-button" @onclick="ResetMovementForm">Reset</button>
-                    <button type="submit" class="primary-button">Simpan Stok</button>
-                </div>
-            </EditForm>
-        </section>
-
-        <section class="warehouse-table-card catalog-datagrid">
-            <div class="table-head">
-                <div>
-                    <span class="section-tag">Datagrid gudang</span>
-                    <h2>Material yang sudah tercatat di gudang</h2>
-                    <p>Tabel ini mengikuti pola katalog material, tetapi informasinya disesuaikan untuk stok gudang.</p>
+                    <div class="table-summary-pills">
+                        <span>@WarehouseRows.Count material</span>
+                    </div>
                 </div>
 
                 <div class="table-toolbar">
-                    <input value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari material gudang" />
-                    <label class="display-count-control">
-                        <span>Baris tampil</span>
-                        <select value="@_warehouseDisplayCount" @onchange="OnWarehouseDisplayCountChanged">
-                            @foreach (var option in GridDisplayOptions)
-                            {
-                                <option value="@option">@option baris</option>
-                            }
-                        </select>
-                    </label>
-                </div>
-            </div>
+                    <div class="table-toolbar-primary warehouse-toolbar-primary">
+                        <input value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari material gudang" />
 
-            <div class="table-wrap">
-                @if (WarehouseRows.Count == 0)
+                        <div class="table-toolbar-filters warehouse-toolbar-filters">
+                            <label class="display-count-control">
+                                <span>Baris tampil</span>
+                                <select value="@_warehouseDisplayCount" @onchange="OnWarehouseDisplayCountChanged">
+                                    @foreach (var option in GridDisplayOptions)
+                                    {
+                                        <option value="@option">@option baris</option>
+                                    }
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="table-toolbar-meta">
+                        <p class="table-toolbar-summary">@WarehouseTableSummary</p>
+                        <div class="table-toolbar-note">
+                            <span>@WarehouseTotalPages halaman</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    @if (WarehouseRows.Count == 0)
+                    {
+                        <div class="empty-row">@WarehouseEmptyMessage</div>
+                    }
+                    else
+                    {
+                        <table class="warehouse-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <button type="button" class="column-sort-button @GetSortButtonClass(WarehouseSortColumn.Name)" @onclick="() => ToggleWarehouseSort(WarehouseSortColumn.Name)">
+                                            <span>Nama Material</span>
+                                            <span class="sort-indicator" aria-hidden="true">@GetSortIndicator(WarehouseSortColumn.Name)</span>
+                                        </button>
+                                    </th>
+                                    <th>
+                                        <button type="button" class="column-sort-button @GetSortButtonClass(WarehouseSortColumn.Brand)" @onclick="() => ToggleWarehouseSort(WarehouseSortColumn.Brand)">
+                                            <span>Merk</span>
+                                            <span class="sort-indicator" aria-hidden="true">@GetSortIndicator(WarehouseSortColumn.Brand)</span>
+                                        </button>
+                                    </th>
+                                    <th>
+                                        <button type="button" class="column-sort-button align-end @GetSortButtonClass(WarehouseSortColumn.OnHand)" @onclick="() => ToggleWarehouseSort(WarehouseSortColumn.OnHand)">
+                                            <span>On Hand</span>
+                                            <span class="sort-indicator" aria-hidden="true">@GetSortIndicator(WarehouseSortColumn.OnHand)</span>
+                                        </button>
+                                    </th>
+                                    <th>
+                                        <button type="button" class="column-sort-button align-end @GetSortButtonClass(WarehouseSortColumn.Minimum)" @onclick="() => ToggleWarehouseSort(WarehouseSortColumn.Minimum)">
+                                            <span>Minimum</span>
+                                            <span class="sort-indicator" aria-hidden="true">@GetSortIndicator(WarehouseSortColumn.Minimum)</span>
+                                        </button>
+                                    </th>
+                                    <th>
+                                        <button type="button" class="column-sort-button align-end @GetSortButtonClass(WarehouseSortColumn.StockValue)" @onclick="() => ToggleWarehouseSort(WarehouseSortColumn.StockValue)">
+                                            <span>Nilai Stok</span>
+                                            <span class="sort-indicator" aria-hidden="true">@GetSortIndicator(WarehouseSortColumn.StockValue)</span>
+                                        </button>
+                                    </th>
+                                    <th>
+                                        <button type="button" class="column-sort-button align-center @GetSortButtonClass(WarehouseSortColumn.LastMove)" @onclick="() => ToggleWarehouseSort(WarehouseSortColumn.LastMove)">
+                                            <span>Last Move</span>
+                                            <span class="sort-indicator" aria-hidden="true">@GetSortIndicator(WarehouseSortColumn.LastMove)</span>
+                                        </button>
+                                    </th>
+                                    <th>
+                                        <button type="button" class="column-sort-button align-center @GetSortButtonClass(WarehouseSortColumn.Status)" @onclick="() => ToggleWarehouseSort(WarehouseSortColumn.Status)">
+                                            <span>Status</span>
+                                            <span class="sort-indicator" aria-hidden="true">@GetSortIndicator(WarehouseSortColumn.Status)</span>
+                                        </button>
+                                    </th>
+                                    <th class="align-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in VisibleWarehouseRows)
+                                {
+                                    var isSelected = item.MaterialId == _movementForm.MaterialId;
+
+                                    <tr class="interactive-row @(isSelected ? "selected-row" : null)"
+                                        tabindex="0"
+                                        @onclick="() => SelectWarehouseMaterial(item.MaterialId)"
+                                        @onkeydown="args => OnWarehouseRowKeyDown(args, item.MaterialId)">
+                                        <td>
+                                            <div class="table-primary">
+                                                <strong>@item.Name</strong>
+                                                <small>@item.Code</small>
+                                                @if (isSelected)
+                                                {
+                                                    <span class="row-state">Dipilih di form</span>
+                                                }
+                                            </div>
+                                        </td>
+                                        <td>@GetBrandLabel(item.Brand)</td>
+                                        <td>
+                                            <strong>@FormatQuantity(item.OnHandQuantity, item.BaseUnit)</strong>
+                                        </td>
+                                        <td>@FormatQuantity(item.MinimumStock, item.BaseUnit)</td>
+                                        <td>@FormatCurrency(item.OnHandQuantity * item.CostPerUnit)</td>
+                                        <td>@FormatLastMovement(item.LastMovementAt)</td>
+                                        <td>
+                                            <span class="badge @(item.IsBelowMinimumStock ? "warn" : "ok")">
+                                                @(item.IsBelowMinimumStock ? "Perlu restock" : "Aman")
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="warehouse-row-actions">
+                                                <button type="button" class="ghost-button compact" @onclick:stopPropagation="true" @onclick="() => SelectWarehouseMaterial(item.MaterialId, StockMovementType.StockIn)">Masuk</button>
+                                                <button type="button" class="ghost-button compact danger-outline" @onclick:stopPropagation="true" @onclick="() => SelectWarehouseMaterial(item.MaterialId, StockMovementType.StockOut)">Keluar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+                @if (WarehouseRows.Count > 0)
                 {
-                    <div class="empty-row">Belum ada material yang tersimpan di gudang. Tambahkan stok dari form di atas.</div>
-                }
-                else
-                {
-                    <table class="warehouse-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Material</th>
-                                <th>Merk</th>
-                                <th>On Hand</th>
-                                <th>Minimum</th>
-                                <th>Nilai Stok</th>
-                                <th>Last Move</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in VisibleWarehouseRows)
-                            {
-                                <tr class="@(item.MaterialId == _movementForm.MaterialId ? "selected-row" : null)">
-                                    <td>
+                    <div class="warehouse-card-list">
+                        @foreach (var item in VisibleWarehouseRows)
+                        {
+                            var isExpanded = _activeMobileMaterialId == item.MaterialId;
+                            var isSelected = item.MaterialId == _movementForm.MaterialId;
+
+                            <article class="warehouse-mobile-card @(isSelected ? "selected-row" : null) @(isExpanded ? "active" : string.Empty)">
+                                <button type="button"
+                                        class="warehouse-mobile-toggle"
+                                        aria-expanded="@isExpanded"
+                                        @onclick="() => ToggleMobileMaterial(item.MaterialId)">
+                                    <div class="warehouse-mobile-head">
                                         <div class="table-primary">
                                             <strong>@item.Name</strong>
                                             <small>@item.Code</small>
                                         </div>
-                                    </td>
-                                    <td>@GetBrandLabel(item.Brand)</td>
-                                    <td>
-                                        <strong>@FormatQuantity(item.OnHandQuantity, item.BaseUnit)</strong>
-                                    </td>
-                                    <td>@FormatQuantity(item.MinimumStock, item.BaseUnit)</td>
-                                    <td>@FormatCurrency(item.OnHandQuantity * item.CostPerUnit)</td>
-                                    <td>@FormatLastMovement(item.LastMovementAt)</td>
-                                    <td>
+
                                         <span class="badge @(item.IsBelowMinimumStock ? "warn" : "ok")">
                                             @(item.IsBelowMinimumStock ? "Perlu restock" : "Aman")
                                         </span>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            </div>
+                                    </div>
 
-            @if (WarehouseRows.Count > 0)
-            {
-                <div class="warehouse-card-list">
-                    @foreach (var item in VisibleWarehouseRows)
-                    {
-                        <article class="warehouse-mobile-card @(item.MaterialId == _movementForm.MaterialId ? "selected-row" : null)">
-                            <div class="warehouse-mobile-head">
-                                <div class="table-primary">
-                                    <strong>@item.Name</strong>
-                                    <small>@item.Code</small>
+                                    <div class="warehouse-mobile-toggle-meta">
+                                        <div class="warehouse-mobile-toggle-copy">
+                                            <p class="warehouse-mobile-copy">@GetBrandLabel(item.Brand)</p>
+                                            @if (isSelected)
+                                            {
+                                                <span class="row-state">Dipilih di form</span>
+                                            }
+                                        </div>
+                                        <strong class="warehouse-mobile-key-metric">@FormatQuantity(item.OnHandQuantity, item.BaseUnit)</strong>
+                                    </div>
+                                </button>
+
+                                <div class="warehouse-mobile-panel @(isExpanded ? "expanded" : string.Empty)">
+                                    <div class="warehouse-mobile-panel-inner">
+                                        <div class="warehouse-mobile-grid">
+                                            <article>
+                                                <small>Minimum</small>
+                                                <strong>@FormatQuantity(item.MinimumStock, item.BaseUnit)</strong>
+                                            </article>
+                                            <article>
+                                                <small>Nilai Stok</small>
+                                                <strong>@FormatCurrency(item.OnHandQuantity * item.CostPerUnit)</strong>
+                                            </article>
+                                            <article>
+                                                <small>Last Move</small>
+                                                <strong>@FormatLastMovement(item.LastMovementAt)</strong>
+                                            </article>
+                                        </div>
+
+                                        <div class="warehouse-mobile-actions">
+                                            <button type="button" class="ghost-button compact" @onclick="() => SelectWarehouseMaterial(item.MaterialId, StockMovementType.StockIn)">Stok Masuk</button>
+                                            <button type="button" class="ghost-button compact danger-outline" @onclick="() => SelectWarehouseMaterial(item.MaterialId, StockMovementType.StockOut)">Stok Keluar</button>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <span class="badge @(item.IsBelowMinimumStock ? "warn" : "ok")">
-                                    @(item.IsBelowMinimumStock ? "Perlu restock" : "Aman")
-                                </span>
-                            </div>
-
-                            <p class="warehouse-mobile-copy">@GetBrandLabel(item.Brand)</p>
-
-                            <div class="warehouse-mobile-grid">
-                                <article>
-                                    <small>On Hand</small>
-                                    <strong>@FormatQuantity(item.OnHandQuantity, item.BaseUnit)</strong>
-                                </article>
-                                <article>
-                                    <small>Minimum</small>
-                                    <strong>@FormatQuantity(item.MinimumStock, item.BaseUnit)</strong>
-                                </article>
-                                <article>
-                                    <small>Nilai Stok</small>
-                                    <strong>@FormatCurrency(item.OnHandQuantity * item.CostPerUnit)</strong>
-                                </article>
-                                <article>
-                                    <small>Last Move</small>
-                                    <strong>@FormatLastMovement(item.LastMovementAt)</strong>
-                                </article>
-                            </div>
-                        </article>
-                    }
-                </div>
-
-                <div class="table-footer">
-                    <small>@WarehouseRows.Count material</small>
-                    <div class="pager">
-                        <button type="button" @onclick="PrevWarehousePage" disabled="@(CurrentWarehousePage <= 1)">Prev</button>
-                        <label class="pager-select" aria-label="Pilih halaman gudang">
-                            <select value="@CurrentWarehousePage" @onchange="OnWarehousePageChanged">
-                                @for (var pageNumber = 1; pageNumber <= WarehouseTotalPages; pageNumber++)
-                                {
-                                    <option value="@pageNumber">Halaman @pageNumber</option>
-                                }
-                            </select>
-                        </label>
-                        <span>@CurrentWarehousePage / @WarehouseTotalPages</span>
-                        <button type="button" @onclick="NextWarehousePage" disabled="@(CurrentWarehousePage >= WarehouseTotalPages)">Next</button>
+                            </article>
+                        }
                     </div>
-                    <div class="table-footer-spacer" aria-hidden="true"></div>
+
+                    <div class="table-footer">
+                        <small>@WarehouseRows.Count material</small>
+                        <div class="pager">
+                            <button type="button" @onclick="PrevWarehousePage" disabled="@(CurrentWarehousePage <= 1)">Prev</button>
+                            <label class="pager-select">
+                                <select value="@CurrentWarehousePage" aria-label="Pilih halaman gudang" @onchange="OnWarehousePageChanged">
+                                    @for (var pageNumber = 1; pageNumber <= WarehouseTotalPages; pageNumber++)
+                                    {
+                                        <option value="@pageNumber">Halaman @pageNumber</option>
+                                    }
+                                </select>
+                            </label>
+                            <span>@CurrentWarehousePage / @WarehouseTotalPages</span>
+                            <button type="button" @onclick="NextWarehousePage" disabled="@(CurrentWarehousePage >= WarehouseTotalPages)">Next</button>
+                        </div>
+                        <div class="table-footer-spacer" aria-hidden="true"></div>
+                    </div>
+                }
+            </section>
+
+            <section class="warehouse-entry-card" id="warehouse-entry-form">
+                <div class="section-head ds-card-header">
+                    <div>
+                        <span class="section-tag">Mutasi stok</span>
+                        <h2>Pilih material katalog lalu simpan mutasinya</h2>
+                        <p>Mutasi masuk atau keluar akan memperbarui item gudang secara langsung.</p>
+                    </div>
                 </div>
-            }
-        </section>
+
+                @if (!string.IsNullOrWhiteSpace(_message))
+                {
+                    <div class="@GetFormMessageClass()" aria-live="polite">@_message</div>
+                }
+
+                <EditForm Model="_movementForm" OnValidSubmit="SaveMovementAsync">
+                    <DataAnnotationsValidator />
+
+                    <div class="entry-grid">
+                        <label class="wide-field">
+                            <span>Material katalog</span>
+                            <div class="picker-field">
+                                <input class="lookup-input"
+                                       value="@_materialLookupText"
+                                       @oninput="OnMaterialLookupChanged"
+                                       placeholder="Ketik nama atau kode material"
+                                       autocomplete="off" />
+
+                                @if (ShowMaterialSuggestions)
+                                {
+                                    <div class="picker-suggestion-list" role="listbox" aria-label="Saran material katalog gudang">
+                                        @foreach (var material in MaterialLookupSuggestions)
+                                        {
+                                            <button type="button" class="picker-suggestion" @onclick="() => SelectWarehouseMaterial(material.Id)">
+                                                <div class="table-primary">
+                                                    <strong>@material.Name</strong>
+                                                    <small>@material.Code - @GetBrandLabel(material.Brand)</small>
+                                                </div>
+                                                <span>@FormatQuantity(GetWarehouseOnHand(material.Id), material.BaseUnit)</span>
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <ValidationMessage For="@(() => _movementForm.MaterialId)" />
+                        </label>
+
+                        <label class="half-field">
+                            <span>Flow stok</span>
+                            <InputSelect @bind-Value="_movementForm.Type">
+                                <option value="@StockMovementType.StockIn">Stok masuk</option>
+                                <option value="@StockMovementType.StockOut">Stok keluar</option>
+                            </InputSelect>
+                        </label>
+
+                        <label class="half-field">
+                            <span>Jumlah</span>
+                            <InputNumber @bind-Value="_movementForm.Quantity" id="warehouse-quantity-input" />
+                            <ValidationMessage For="@(() => _movementForm.Quantity)" />
+                        </label>
+
+                        <label class="wide-field occurred-at-field">
+                            <span>Waktu catat</span>
+                            <input type="datetime-local" value="@GetOccurredAtInputValue()" @onchange="OnOccurredAtChanged" />
+                        </label>
+
+                        <label class="wide-field">
+                            <span>Catatan</span>
+                            <InputTextArea @bind-Value="_movementForm.Note" />
+                        </label>
+                    </div>
+
+                    @if (SelectedMaterialSummary is not null)
+                    {
+                        <div class="selected-material-card">
+                            <div>
+                                <small>Material terpilih</small>
+                                <strong>@SelectedMaterialSummary.Name</strong>
+                                <span>@SelectedMaterialSummary.Code - @GetBrandLabel(SelectedMaterialSummary.Brand)</span>
+                            </div>
+
+                            <div class="selected-pills">
+                                <span>On hand @FormatQuantity(SelectedMaterialSummary.OnHandQuantity, SelectedMaterialSummary.BaseUnit)</span>
+                                <span>Minimum @FormatQuantity(SelectedMaterialSummary.MinimumStock, SelectedMaterialSummary.BaseUnit)</span>
+                                <span>Last move @FormatLastMovement(SelectedMaterialSummary.LastMovementAt)</span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(MaterialLookupWarning))
+                    {
+                        <div class="inline-note info-note">@MaterialLookupWarning</div>
+                    }
+
+                    <div class="form-actions">
+                        <button type="button" class="ghost-button" @onclick="ResetMovementForm">Reset</button>
+                        <button type="submit" class="primary-button" disabled="@(!CanSubmitMovement || _isLoading)">Simpan Mutasi</button>
+                    </div>
+                </EditForm>
+            </section>
+        </div>
     }
 </section>
 
@@ -270,8 +402,12 @@
     private string _searchText = string.Empty;
     private string _materialLookupText = string.Empty;
     private string _message = string.Empty;
+    private string _messageTone = "info";
     private int _warehouseDisplayCount = 12;
     private int _warehousePage = 1;
+    private Guid? _activeMobileMaterialId;
+    private WarehouseSortColumn _warehouseSortColumn = WarehouseSortColumn.Name;
+    private bool _warehouseSortDescending;
     private StockMovementRequest _movementForm = CreateMovementRequest();
 
     private IReadOnlyList<RawMaterial> CatalogMaterials
@@ -280,10 +416,22 @@
             .OrderBy(item => item.Name)
             .ThenBy(item => item.Brand)
             .ToArray();
+    private IReadOnlyList<RawMaterial> MaterialLookupSuggestions
+        => string.IsNullOrWhiteSpace(_materialLookupText)
+            ? Array.Empty<RawMaterial>()
+            : CatalogMaterials
+                .Where(item =>
+                    item.Name.Contains(_materialLookupText, StringComparison.OrdinalIgnoreCase) ||
+                    item.Code.Contains(_materialLookupText, StringComparison.OrdinalIgnoreCase) ||
+                    (item.Brand?.Contains(_materialLookupText, StringComparison.OrdinalIgnoreCase) ?? false))
+                .Take(6)
+                .ToArray();
+    private bool ShowMaterialSuggestions
+        => _movementForm.MaterialId is null && MaterialLookupSuggestions.Count > 0;
 
     private IReadOnlyList<WarehouseMaterialItem> WarehouseRows
-        => (_snapshot?.Materials ?? Array.Empty<WarehouseMaterialItem>())
-            .Where(IsTrackedInWarehouse)
+        => ApplyWarehouseSort((_snapshot?.Materials ?? Array.Empty<WarehouseMaterialItem>())
+            .Where(IsTrackedInWarehouse))
             .ToArray();
 
     private int WarehouseTotalPages => CalculateTotalPages(WarehouseRows.Count, _warehouseDisplayCount);
@@ -296,19 +444,58 @@
             .Take(_warehouseDisplayCount)
             .ToArray();
 
-    private WarehouseMaterialItem? SelectedCatalogMaterial
-        => _movementForm.MaterialId is Guid id
-            ? (_snapshot?.Materials ?? Array.Empty<WarehouseMaterialItem>()).FirstOrDefault(item => item.MaterialId == id)
-            : null;
+    private WarehouseMaterialItem? SelectedMaterialSummary
+        => BuildMaterialSummary(_movementForm.MaterialId);
+
+    private IReadOnlyList<RawMaterial> MissingRecipeWarehouseMaterials
+    {
+        get
+        {
+            var trackedMaterialIds = Store.StockMovements
+                .Select(item => item.MaterialId)
+                .ToHashSet();
+
+            return Store.Recipes
+                .Where(recipe => recipe.Status == RecipeStatus.Active)
+                .SelectMany(recipe => recipe.Groups)
+                .SelectMany(group => group.Materials)
+                .Select(item => item.MaterialId)
+                .Distinct()
+                .Where(materialId => !trackedMaterialIds.Contains(materialId))
+                .Select(materialId => Store.FindRawMaterial(materialId))
+                .Where(material => material is not null && material.Status == MaterialStatus.Active)
+                .Cast<RawMaterial>()
+                .OrderBy(material => material.Name)
+                .ThenBy(material => material.Brand)
+                .ToArray();
+        }
+    }
+
+    private IReadOnlyList<RawMaterial> VisibleMissingRecipeWarehouseMaterials
+        => MissingRecipeWarehouseMaterials.Take(4).ToArray();
+
+    private int HiddenMissingRecipeWarehouseCount
+        => Math.Max(0, MissingRecipeWarehouseMaterials.Count - VisibleMissingRecipeWarehouseMaterials.Count);
+
+    private bool CanSubmitMovement
+        => _movementForm.MaterialId is not null && _movementForm.Quantity != 0;
+
+    private string WarehouseEmptyMessage
+        => string.IsNullOrWhiteSpace(_searchText)
+            ? "Belum ada material yang tersimpan di gudang. Tambahkan mutasi dari form di samping."
+            : "Tidak ada material gudang yang cocok dengan pencarian ini.";
+
+    private string WarehouseTableSummary
+        => $"{WarehouseRows.Count} material tercatat di gudang • {CurrentWarehouseSortLabel}";
 
     private string? MaterialLookupWarning
         => _movementForm.MaterialId is null
-            ? "Pilih material dari daftar autocomplete katalog."
-            : SelectedCatalogMaterial is null
+            ? "Pilih material dari saran katalog atau klik langsung dari tabel stok."
+            : SelectedMaterialSummary is null
                 ? "Material belum ditemukan di katalog aktif."
-                : !IsTrackedInWarehouse(SelectedCatalogMaterial)
+                : !IsTrackedInWarehouse(SelectedMaterialSummary)
                     ? "Material ini belum ada di list gudang. Setelah stok disimpan, item akan masuk ke datagrid."
-                    : SelectedCatalogMaterial.OnHandQuantity <= 0
+                    : SelectedMaterialSummary.OnHandQuantity <= 0
                         ? "Material ini sudah ada di gudang, tetapi stoknya kosong."
                         : null;
 
@@ -321,6 +508,7 @@
     private async Task LoadAsync()
     {
         _isLoading = true;
+        _statusMessage = "Memuat data gudang...";
         _snapshot = await WarehouseService.GetSnapshotAsync(_searchText);
         _warehousePage = CurrentWarehousePage;
         _statusMessage = WarehouseRows.Count == 0
@@ -357,22 +545,35 @@
     private void OnMaterialLookupChanged(ChangeEventArgs args)
     {
         _materialLookupText = args.Value?.ToString() ?? string.Empty;
-        _movementForm.MaterialId = ResolveMaterialId(_materialLookupText);
+        var material = ResolveMaterial(_materialLookupText);
+        _movementForm.MaterialId = material is not null && IsExactLookupMatch(material, _materialLookupText)
+            ? material.Id
+            : null;
+        _message = string.Empty;
     }
 
     private async Task SaveMovementAsync()
     {
         _message = string.Empty;
-        _movementForm.MaterialId = ResolveMaterialId(_materialLookupText);
+        var savedMaterialId = _movementForm.MaterialId;
+        var wasMissingRecipeMaterial = savedMaterialId is Guid materialId && IsMissingRecipeWarehouseMaterial(materialId);
 
         var result = await WarehouseService.RecordMovementAsync(_movementForm);
         _message = result.Message;
+        _messageTone = result.Success ? "success" : "error";
         if (!result.Success)
         {
             return;
         }
 
         _movementForm = CreateMovementRequest(_movementForm.MaterialId, _movementForm.Type);
+        _activeMobileMaterialId = _movementForm.MaterialId;
+        if (wasMissingRecipeMaterial)
+        {
+            _message = BuildRecipeGapResolvedMessage();
+            await InvokeAsync(StateHasChanged);
+        }
+
         await LoadAsync();
     }
 
@@ -380,7 +581,62 @@
     {
         _materialLookupText = string.Empty;
         _message = string.Empty;
+        _messageTone = "info";
         _movementForm = CreateMovementRequest();
+    }
+
+    private void SelectWarehouseMaterial(Guid materialId, StockMovementType? type = null)
+    {
+        var material = Store.FindRawMaterial(materialId);
+        if (material is null)
+        {
+            return;
+        }
+
+        _movementForm.MaterialId = materialId;
+        if (type is StockMovementType movementType)
+        {
+            _movementForm.Type = movementType;
+        }
+
+        _materialLookupText = GetMaterialLookupLabel(material);
+        _activeMobileMaterialId = materialId;
+        _message = string.Empty;
+    }
+
+    private async Task SelectMissingRecipeMaterialAsync(Guid materialId)
+    {
+        SelectWarehouseMaterial(materialId, StockMovementType.StockIn);
+        await FocusMovementQuantityAsync();
+    }
+
+    private async Task FocusMovementQuantityAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+        await JS.InvokeVoidAsync("viewportHelper.scrollToId", "warehouse-entry-form", "start");
+        await JS.InvokeVoidAsync("viewportHelper.focusById", "warehouse-quantity-input", true);
+    }
+
+    private bool IsMissingRecipeWarehouseMaterial(Guid materialId)
+        => MissingRecipeWarehouseMaterials.Any(item => item.Id == materialId);
+
+    private string BuildRecipeGapResolvedMessage()
+    {
+        var remainingCount = MissingRecipeWarehouseMaterials.Count;
+        if (remainingCount <= 0)
+        {
+            return "Mutasi stok berhasil dicatat. Semua bahan resep sekarang sudah punya catatan gudang.";
+        }
+
+        return $"Mutasi stok berhasil dicatat. Bahan resep ini sekarang sudah masuk gudang. Tersisa {remainingCount} bahan resep lain yang belum masuk.";
+    }
+
+    private void OnWarehouseRowKeyDown(KeyboardEventArgs args, Guid materialId)
+    {
+        if (args.Key is "Enter" or " ")
+        {
+            SelectWarehouseMaterial(materialId);
+        }
     }
 
     private void OnOccurredAtChanged(ChangeEventArgs args)
@@ -403,7 +659,7 @@
     private static bool IsTrackedInWarehouse(WarehouseMaterialItem item)
         => item.LastMovementAt is not null;
 
-    private Guid? ResolveMaterialId(string? value)
+    private RawMaterial? ResolveMaterial(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -411,12 +667,48 @@
         }
 
         var normalized = value.Trim();
-        var material = CatalogMaterials.FirstOrDefault(item =>
+        return CatalogMaterials.FirstOrDefault(item =>
             GetMaterialLookupLabel(item).Equals(normalized, StringComparison.OrdinalIgnoreCase) ||
             item.Code.Equals(normalized, StringComparison.OrdinalIgnoreCase) ||
             item.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase));
+    }
 
-        return material?.Id;
+    private static bool IsExactLookupMatch(RawMaterial material, string value)
+        => GetMaterialLookupLabel(material).Equals(value.Trim(), StringComparison.OrdinalIgnoreCase)
+            || material.Code.Equals(value.Trim(), StringComparison.OrdinalIgnoreCase)
+            || material.Name.Equals(value.Trim(), StringComparison.OrdinalIgnoreCase);
+
+    private WarehouseMaterialItem? BuildMaterialSummary(Guid? materialId)
+    {
+        if (materialId is not Guid id)
+        {
+            return null;
+        }
+
+        var material = Store.FindRawMaterial(id);
+        if (material is null)
+        {
+            return null;
+        }
+
+        var movements = Store.StockMovements.Where(item => item.MaterialId == id).ToArray();
+        var onHand = movements.Sum(item => item.Quantity);
+        var minimum = Math.Max(0m, material.MinimumStock);
+        var lastMovement = movements.OrderByDescending(item => item.OccurredAt).FirstOrDefault()?.OccurredAt;
+
+        return new WarehouseMaterialItem(
+            material.Id,
+            material.Code,
+            material.Name,
+            material.Brand,
+            material.BaseUnit,
+            material.CostPerBaseUnit,
+            onHand,
+            minimum,
+            minimum - onHand,
+            onHand < minimum,
+            material.Status,
+            lastMovement);
     }
 
     private static string GetMaterialLookupLabel(RawMaterial material)
@@ -428,6 +720,10 @@
     private static string GetBrandLabel(string? brand)
         => string.IsNullOrWhiteSpace(brand) ? "Tanpa merk" : brand.Trim();
 
+    private decimal GetWarehouseOnHand(Guid materialId)
+        => WarehouseRows.FirstOrDefault(item => item.MaterialId == materialId)?.OnHandQuantity
+            ?? Store.StockMovements.Where(item => item.MaterialId == materialId).Sum(item => item.Quantity);
+
     private string GetOccurredAtInputValue()
         => _movementForm.OccurredAt.ToString("yyyy-MM-ddTHH:mm");
 
@@ -438,7 +734,67 @@
         => $"{value:0.####} {unit}";
 
     private static string FormatLastMovement(DateTime? value)
-        => value?.ToString("dd MMM yyyy HH:mm") ?? "-";
+        => value?.ToString("dd MMM yy HH:mm") ?? "-";
+
+    private string GetFormMessageClass() => $"form-message {_messageTone}";
+
+    private string GetSortButtonClass(WarehouseSortColumn column)
+        => _warehouseSortColumn == column ? "active" : string.Empty;
+
+    private string GetSortIndicator(WarehouseSortColumn column)
+        => _warehouseSortColumn != column ? "↕" : _warehouseSortDescending ? "↓" : "↑";
+
+    private string CurrentWarehouseSortLabel
+        => _warehouseSortColumn switch
+        {
+            WarehouseSortColumn.Name => $"urut nama {(_warehouseSortDescending ? "Z-A" : "A-Z")}",
+            WarehouseSortColumn.Brand => $"urut merk {(_warehouseSortDescending ? "Z-A" : "A-Z")}",
+            WarehouseSortColumn.OnHand => $"urut stok {(_warehouseSortDescending ? "terbesar" : "terkecil")}",
+            WarehouseSortColumn.Minimum => $"urut minimum {(_warehouseSortDescending ? "terbesar" : "terkecil")}",
+            WarehouseSortColumn.StockValue => $"urut nilai {(_warehouseSortDescending ? "terbesar" : "terkecil")}",
+            WarehouseSortColumn.LastMove => $"urut last move {(_warehouseSortDescending ? "terbaru" : "terlama")}",
+            WarehouseSortColumn.Status => _warehouseSortDescending ? "status perlu restock dulu" : "status aman dulu",
+            _ => "urut nama A-Z"
+        };
+
+    private IEnumerable<WarehouseMaterialItem> ApplyWarehouseSort(IEnumerable<WarehouseMaterialItem> source)
+    {
+        Func<WarehouseMaterialItem, object?> selector = _warehouseSortColumn switch
+        {
+            WarehouseSortColumn.Name => item => item.Name,
+            WarehouseSortColumn.Brand => item => item.Brand,
+            WarehouseSortColumn.OnHand => item => item.OnHandQuantity,
+            WarehouseSortColumn.Minimum => item => item.MinimumStock,
+            WarehouseSortColumn.StockValue => item => item.OnHandQuantity * item.CostPerUnit,
+            WarehouseSortColumn.LastMove => item => item.LastMovementAt,
+            WarehouseSortColumn.Status => item => item.IsBelowMinimumStock,
+            _ => item => item.Name
+        };
+
+        var ordered = _warehouseSortDescending
+            ? source.OrderByDescending(selector)
+            : source.OrderBy(selector);
+
+        return ordered.ThenBy(item => item.Name).ThenBy(item => item.Code);
+    }
+
+    private void ToggleWarehouseSort(WarehouseSortColumn column)
+    {
+        if (_warehouseSortColumn == column)
+        {
+            _warehouseSortDescending = !_warehouseSortDescending;
+        }
+        else
+        {
+            _warehouseSortColumn = column;
+            _warehouseSortDescending = column is WarehouseSortColumn.OnHand or WarehouseSortColumn.Minimum or WarehouseSortColumn.StockValue or WarehouseSortColumn.LastMove;
+        }
+
+        _warehousePage = 1;
+    }
+
+    private void ToggleMobileMaterial(Guid materialId)
+        => _activeMobileMaterialId = _activeMobileMaterialId == materialId ? null : materialId;
 
     private static int ParseDisplayCount(string? value, int fallback)
         => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
@@ -454,13 +810,22 @@
     private static int ClampPage(int page, int totalPages)
         => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
-    private async void HandleStoreChanged()
-    {
-        await InvokeAsync(LoadAsync);
-    }
+    private void HandleStoreChanged()
+        => _ = InvokeAsync(LoadAsync);
 
     public void Dispose()
     {
         Store.Changed -= HandleStoreChanged;
+    }
+
+    private enum WarehouseSortColumn
+    {
+        Name,
+        Brand,
+        OnHand,
+        Minimum,
+        StockValue,
+        LastMove,
+        Status
     }
 }

@@ -1,9 +1,9 @@
 .account-page {
     display: grid;
-    gap: 1rem;
-    padding-bottom: 1.4rem;
+    gap: var(--space-4);
+    padding-bottom: var(--space-7);
     --surface-border: rgba(255, 255, 255, 0.78);
-    --surface-shadow: 0 26px 48px rgba(15, 23, 42, 0.1);
+    --surface-shadow: 0 18px 36px rgba(15, 23, 42, 0.07);
     --soft-border: rgba(226, 232, 240, 0.9);
     --text-main: #0f172a;
     --text-muted: #64748b;
@@ -18,7 +18,6 @@
 .modal-card,
 .hero-panel-card,
 .hero-ribbon article,
-.team-metrics article,
 .profile-stat,
 .insight-grid article,
 .permission-panel article,
@@ -32,7 +31,6 @@
     box-shadow:
         var(--surface-shadow),
         inset 0 1px 0 rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(18px);
 }
 
 .account-hero::before,
@@ -50,30 +48,15 @@
 
 .account-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(20rem, 0.85fr);
-    gap: 1rem;
-    padding: 1.4rem;
-    border-radius: 1.9rem;
-    background:
-        radial-gradient(circle at top right, rgba(251, 113, 133, 0.18), transparent 32%),
-        radial-gradient(circle at left bottom, rgba(249, 115, 22, 0.16), transparent 38%),
-        linear-gradient(135deg, rgba(255, 252, 248, 0.98), rgba(255, 255, 255, 0.8));
-}
-
-.hero-copy > span,
-.section-head span,
-.team-header span,
-.modal-head span {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent);
+    grid-template-columns: 1fr;
+    gap: 0.72rem;
+    padding: 0.98rem;
+    border-radius: 1.4rem;
+    background: linear-gradient(160deg, rgba(255, 252, 248, 0.98), rgba(255, 255, 255, 0.92));
 }
 
 .hero-nav {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.46rem;
 }
 
 .back-link {
@@ -97,20 +80,6 @@
     font-size: 0.92rem;
 }
 
-.hero-copy h1,
-.section-head h2,
-.team-header h2,
-.modal-head h2 {
-    margin: 0.55rem 0 0.55rem;
-    color: var(--text-main);
-}
-
-.hero-copy h1 {
-    max-width: 11ch;
-    font-size: clamp(2.4rem, 4.8vw, 4.2rem);
-    line-height: 0.94;
-}
-
 .hero-copy p,
 .hero-panel-card small,
 .profile-stat p,
@@ -128,22 +97,38 @@
 .team-workspace,
 .profile-grid,
 .insight-grid,
-.team-metrics,
 .modal-grid {
     display: grid;
     gap: 0.9rem;
 }
 
-.hero-ribbon {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 1.2rem;
+.account-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 0.58rem;
+}
+
+.account-hero-meta span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0.34rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow:
+        inset 0 0 0 1px rgba(203, 213, 225, 0.88),
+        0 10px 18px rgba(15, 23, 42, 0.04);
+    color: #475569;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
 }
 
 .hero-ribbon article,
 .hero-panel-card,
 .profile-stat,
 .insight-grid article,
-.team-metrics article,
 .permission-panel article {
     padding: 1rem;
     border-radius: 1.25rem;
@@ -154,13 +139,12 @@
 .profile-stat small,
 .insight-grid small,
 .timeline-list small,
-.team-metrics small,
 .permission-panel small,
 .team-user-meta span {
     display: block;
     font-size: 0.74rem;
     font-weight: 800;
-    letter-spacing: 0.14em;
+    letter-spacing: var(--tracking-overline);
     text-transform: uppercase;
     color: var(--accent);
 }
@@ -169,7 +153,6 @@
 .hero-panel-card strong,
 .profile-stat strong,
 .insight-grid strong,
-.team-metrics strong,
 .permission-panel strong {
     display: block;
     margin-top: 0.34rem;
@@ -199,12 +182,16 @@
     align-items: start;
 }
 
+.account-layout.compact-layout {
+    grid-template-columns: minmax(0, 1fr);
+}
+
 .profile-card,
 .insight-card,
 .timeline-card,
 .team-card {
     padding: 1.15rem;
-    border-radius: 1.6rem;
+    border-radius: var(--radius-xl);
 }
 
 .account-side,
@@ -238,71 +225,10 @@
 }
 
 .profile-grid label > span,
-.modal-grid label > span,
-.toggle-card div > span {
+.modal-grid label > span {
     font-size: 0.9rem;
     font-weight: 700;
     color: #334155;
-}
-
-.profile-grid ::deep input,
-.modal-grid ::deep input,
-.modal-grid ::deep select {
-    width: 100%;
-    min-height: 3rem;
-    padding: 0.84rem 0.95rem;
-    border-radius: 1rem;
-    border: 1px solid rgba(203, 213, 225, 0.82);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
-    box-shadow:
-        0 14px 24px rgba(15, 23, 42, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.84);
-    color: var(--text-main);
-    outline: none;
-    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-}
-
-.profile-grid ::deep input:focus,
-.modal-grid ::deep input:focus,
-.modal-grid ::deep select:focus {
-    border-color: rgba(249, 115, 22, 0.38);
-    box-shadow:
-        var(--app-focus-ring),
-        0 16px 28px rgba(15, 23, 42, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.86);
-    transform: translateY(-1px);
-}
-
-.modal-grid ::deep select {
-    appearance: none;
-    padding-right: 2.3rem;
-    background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394a3b8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 6 5-6'/%3E%3C/svg%3E") right 0.9rem center / 1rem no-repeat,
-        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.84));
-}
-
-.toggle-card {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.95rem 1rem;
-    border-radius: 1.2rem;
-    background: rgba(255, 255, 255, 0.74);
-    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.9);
-}
-
-.toggle-card small {
-    display: block;
-    margin-top: 0.25rem;
-    color: var(--text-muted);
-    line-height: 1.55;
-}
-
-.toggle-card ::deep input[type="checkbox"] {
-    width: 1.1rem;
-    height: 1.1rem;
-    accent-color: #f97316;
 }
 
 .profile-actions,
@@ -317,51 +243,8 @@
     gap: 0.8rem;
 }
 
-.ghost-button,
-.primary-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.95rem;
-    padding: 0.82rem 1rem;
-    border-radius: 999px;
-    border: 0;
-    font: inherit;
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.ghost-button {
-    background: rgba(255, 255, 255, 0.86);
-    color: #334155;
-    box-shadow: inset 0 0 0 1px rgba(203, 213, 225, 0.9);
-}
-
-.primary-button {
-    background: var(--app-highlight);
-    color: white;
-    box-shadow: var(--app-button-shadow);
-}
-
-.ghost-button:hover,
-.primary-button:hover {
-    transform: translateY(-1px);
-}
-
-.danger-outline {
-    color: #b91c1c;
-    background: rgba(254, 242, 242, 0.92);
-    box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.45);
-}
-
 .form-message {
     margin-top: 0.9rem;
-    padding: 0.92rem 1rem;
-    border-radius: 1rem;
-    background: rgba(255, 247, 237, 0.92);
-    color: #c2410c;
-    font-weight: 700;
 }
 
 .insight-grid {
@@ -421,17 +304,12 @@
     gap: 1rem;
 }
 
-.team-metrics {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .team-workspace {
-    grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.85fr);
-    align-items: start;
+    grid-template-columns: 1fr;
 }
 
 .team-directory {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 }
 
 .team-user-head small,
@@ -471,17 +349,20 @@
     position: fixed;
     inset: 0;
     z-index: 50;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: flex-end;
     padding: 1rem;
-    background: rgba(15, 23, 42, 0.26);
-    backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(6px);
 }
 
 .modal-card {
-    width: min(100%, 46rem);
-    padding: 1.2rem;
-    border-radius: 1.6rem;
+    width: min(100%, 34rem);
+    height: calc(100vh - 2rem);
+    max-height: calc(100vh - 2rem);
+    padding: 1.12rem;
+    border-radius: var(--radius-xl);
+    overflow: auto;
 }
 
 .modal-form {
@@ -496,7 +377,7 @@
 
 .account-skeleton {
     min-height: 34rem;
-    border-radius: 1.6rem;
+    border-radius: var(--radius-xl);
     background: linear-gradient(90deg, rgba(241, 245, 249, 0.92), rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.92));
     background-size: 200% 100%;
     animation: account-shimmer 1.3s infinite linear;
@@ -532,18 +413,16 @@
 }
 
 @media (max-width: 900px) {
-    .hero-ribbon,
     .profile-grid,
     .insight-grid,
-    .team-metrics,
     .team-directory,
     .modal-grid {
         grid-template-columns: 1fr;
     }
 
     .hero-copy h1 {
-        font-size: 1.7rem;
-        line-height: 1.02;
+        font-size: 1.26rem;
+        line-height: 1.08;
     }
 }
 
@@ -558,15 +437,9 @@
         border-radius: 1.18rem;
     }
 
-    .hero-ribbon {
-        gap: 0.65rem;
-    }
-
-    .hero-ribbon article,
     .hero-panel-card,
     .profile-stat,
     .insight-grid article,
-    .team-metrics article,
     .permission-panel article {
         padding: 0.82rem 0.86rem;
         border-radius: 0.96rem;
@@ -584,6 +457,18 @@
 
     .timeline-list article {
         grid-template-columns: 1fr;
+    }
+
+    .overlay {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .modal-card {
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
     }
 
     .ghost-button,

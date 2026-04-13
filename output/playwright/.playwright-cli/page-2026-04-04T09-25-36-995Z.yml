@@ -1,0 +1,446 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Workflow
+          - link "Katalog Material" [ref=e17] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e19]
+            - strong [ref=e23]: Katalog Material
+          - link "Gudang" [ref=e24] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e26]
+            - strong [ref=e30]: Gudang
+          - link "Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e33]
+            - strong [ref=e35]: Resep
+          - link "Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e38]
+            - strong [ref=e42]: Produksi
+          - link "Point of Sales" [ref=e43] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e45]
+            - strong [ref=e48]: Point of Sales
+          - link "Belanja" [ref=e49] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e51]
+            - strong [ref=e55]: Belanja
+          - link "Pembukuan" [ref=e56] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e58]
+            - strong [ref=e61]: Pembukuan
+        - generic [ref=e62]:
+          - generic [ref=e63]: Pengaturan
+          - link "Pengaturan" [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e66]
+            - strong [ref=e67]: Pengaturan
+          - link "Pengaturan Akun" [ref=e68] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e70]
+            - strong [ref=e73]: Pengaturan Akun
+        - generic [ref=e74]:
+          - generic [ref=e75]: Kontrol Data
+          - link "Backup & Data Ops" [ref=e76] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e78]
+            - strong [ref=e83]: Backup & Data Ops
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: A
+            - generic [ref=e87]:
+              - strong [ref=e88]: Arief
+              - generic [ref=e89]: Admin
+          - link "Logout" [ref=e90] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e91]
+            - generic [ref=e94]: Logout
+  - main [ref=e95]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Katalog Material
+        - strong [ref=e99]: Kelola bahan baku, harga, dan konversi unit
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - generic [ref=e102]: ⚲
+          - textbox "Current user" [ref=e103]: Arief
+        - generic [ref=e104]: A
+    - article [ref=e105]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]: Master material
+            - heading "Katalog Material" [active] [level=1] [ref=e110]
+            - paragraph [ref=e111]: Simpan bahan baku, netto pack, harga, dan unit konversi sebagai referensi untuk Resep dan HPP.
+          - generic [ref=e112]:
+            - link "Template" [ref=e113] [cursor=pointer]:
+              - /url: /api/bahan-baku-template
+            - link "Export CSV" [ref=e114] [cursor=pointer]:
+              - /url: /api/bahan-baku-export
+            - button "Import Excel" [ref=e115] [cursor=pointer]
+            - button "+ Tambah Material" [ref=e116] [cursor=pointer]
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - generic [ref=e120]: Daftar material
+              - heading "Master bahan baku aktif dan nonaktif" [level=2] [ref=e121]
+              - paragraph [ref=e122]: Cari material, filter status, lalu buka detail atau edit langsung dari tabel.
+            - generic [ref=e124]: 50 material
+          - generic [ref=e125]:
+            - generic [ref=e126]:
+              - textbox "Cari nama material atau merk" [ref=e127]
+              - generic [ref=e128]:
+                - combobox [ref=e129]:
+                  - option "Semua status" [selected]
+                  - option "Aktif"
+                  - option "Nonaktif"
+                - combobox [ref=e130]:
+                  - 'option "Urutkan: Update" [selected]'
+                  - 'option "Urutkan: Nama"'
+                  - 'option "Urutkan: Merk"'
+                  - 'option "Urutkan: Netto"'
+                  - 'option "Urutkan: Harga"'
+                  - 'option "Urutkan: Modal"'
+                - combobox [ref=e131]:
+                  - option "5 baris"
+                  - option "10 baris" [selected]
+                  - option "15 baris"
+                  - option "25 baris"
+                - button "Desc" [ref=e132] [cursor=pointer]
+            - generic [ref=e133]:
+              - generic [ref=e134]: 50 material ditemukan
+              - generic [ref=e135]:
+                - generic [ref=e136]: Update terbaru
+                - generic [ref=e137]: 5 halaman
+          - table [ref=e139]:
+            - rowgroup [ref=e140]:
+              - row "Nama Material Merk Netto Harga / Pack Modal / Unit Status Aksi" [ref=e141]:
+                - columnheader "Nama Material" [ref=e142]
+                - columnheader "Merk" [ref=e143]
+                - columnheader "Netto" [ref=e144]
+                - columnheader "Harga / Pack" [ref=e145]
+                - columnheader "Modal / Unit" [ref=e146]
+                - columnheader "Status" [ref=e147]
+                - columnheader "Aksi" [ref=e148]
+            - rowgroup [ref=e149]:
+              - row "Gas Kaleng Portable BHN-050 Hi-Cook 4 pcs Rp 98.000 Rp 24.500 per pcs Aktif Edit Hapus" [ref=e150]:
+                - cell "Gas Kaleng Portable BHN-050" [ref=e151]:
+                  - button "Gas Kaleng Portable BHN-050" [ref=e152] [cursor=pointer]:
+                    - strong [ref=e153]: Gas Kaleng Portable
+                    - generic [ref=e154]: BHN-050
+                - cell "Hi-Cook" [ref=e155]:
+                  - button "Hi-Cook" [ref=e156] [cursor=pointer]:
+                    - generic [ref=e157]: Hi-Cook
+                - cell "4 pcs" [ref=e158]:
+                  - button "4 pcs" [ref=e159] [cursor=pointer]:
+                    - generic [ref=e160]:
+                      - strong [ref=e161]: "4"
+                      - generic [ref=e162]: pcs
+                - cell "Rp 98.000" [ref=e163]:
+                  - button "Rp 98.000" [ref=e164] [cursor=pointer]:
+                    - strong [ref=e165]: Rp 98.000
+                - cell "Rp 24.500 per pcs" [ref=e166]:
+                  - button "Rp 24.500 per pcs" [ref=e167] [cursor=pointer]:
+                    - generic [ref=e168]:
+                      - strong [ref=e169]: Rp 24.500
+                      - generic [ref=e170]: per pcs
+                - cell "Aktif" [ref=e171]:
+                  - button "Aktif" [ref=e172] [cursor=pointer]:
+                    - generic [ref=e173]: Aktif
+                - cell "Edit Hapus" [ref=e174]:
+                  - generic [ref=e175]:
+                    - button "Edit" [ref=e176] [cursor=pointer]:
+                      - img [ref=e177]
+                    - button "Hapus" [ref=e179] [cursor=pointer]:
+                      - img [ref=e180]
+              - row "Sarung Tangan Plastik BHN-049 Safe Hand 100 pcs Rp 9.000 Rp 90 per pcs Aktif Edit Hapus" [ref=e183]:
+                - cell "Sarung Tangan Plastik BHN-049" [ref=e184]:
+                  - button "Sarung Tangan Plastik BHN-049" [ref=e185] [cursor=pointer]:
+                    - strong [ref=e186]: Sarung Tangan Plastik
+                    - generic [ref=e187]: BHN-049
+                - cell "Safe Hand" [ref=e188]:
+                  - button "Safe Hand" [ref=e189] [cursor=pointer]:
+                    - generic [ref=e190]: Safe Hand
+                - cell "100 pcs" [ref=e191]:
+                  - button "100 pcs" [ref=e192] [cursor=pointer]:
+                    - generic [ref=e193]:
+                      - strong [ref=e194]: "100"
+                      - generic [ref=e195]: pcs
+                - cell "Rp 9.000" [ref=e196]:
+                  - button "Rp 9.000" [ref=e197] [cursor=pointer]:
+                    - strong [ref=e198]: Rp 9.000
+                - cell "Rp 90 per pcs" [ref=e199]:
+                  - button "Rp 90 per pcs" [ref=e200] [cursor=pointer]:
+                    - generic [ref=e201]:
+                      - strong [ref=e202]: Rp 90
+                      - generic [ref=e203]: per pcs
+                - cell "Aktif" [ref=e204]:
+                  - button "Aktif" [ref=e205] [cursor=pointer]:
+                    - generic [ref=e206]: Aktif
+                - cell "Edit Hapus" [ref=e207]:
+                  - generic [ref=e208]:
+                    - button "Edit" [ref=e209] [cursor=pointer]:
+                      - img [ref=e210]
+                    - button "Hapus" [ref=e212] [cursor=pointer]:
+                      - img [ref=e213]
+              - row "Tisu Makan BHN-048 Nice 100 pcs Rp 14.000 Rp 140 per pcs Aktif Edit Hapus" [ref=e216]:
+                - cell "Tisu Makan BHN-048" [ref=e217]:
+                  - button "Tisu Makan BHN-048" [ref=e218] [cursor=pointer]:
+                    - strong [ref=e219]: Tisu Makan
+                    - generic [ref=e220]: BHN-048
+                - cell "Nice" [ref=e221]:
+                  - button "Nice" [ref=e222] [cursor=pointer]:
+                    - generic [ref=e223]: Nice
+                - cell "100 pcs" [ref=e224]:
+                  - button "100 pcs" [ref=e225] [cursor=pointer]:
+                    - generic [ref=e226]:
+                      - strong [ref=e227]: "100"
+                      - generic [ref=e228]: pcs
+                - cell "Rp 14.000" [ref=e229]:
+                  - button "Rp 14.000" [ref=e230] [cursor=pointer]:
+                    - strong [ref=e231]: Rp 14.000
+                - cell "Rp 140 per pcs" [ref=e232]:
+                  - button "Rp 140 per pcs" [ref=e233] [cursor=pointer]:
+                    - generic [ref=e234]:
+                      - strong [ref=e235]: Rp 140
+                      - generic [ref=e236]: per pcs
+                - cell "Aktif" [ref=e237]:
+                  - button "Aktif" [ref=e238] [cursor=pointer]:
+                    - generic [ref=e239]: Aktif
+                - cell "Edit Hapus" [ref=e240]:
+                  - generic [ref=e241]:
+                    - button "Edit" [ref=e242] [cursor=pointer]:
+                      - img [ref=e243]
+                    - button "Hapus" [ref=e245] [cursor=pointer]:
+                      - img [ref=e246]
+              - row "Box Brownies BHN-047 PaperCo 25 pcs Rp 22.000 Rp 880 per pcs Aktif Edit Hapus" [ref=e249]:
+                - cell "Box Brownies BHN-047" [ref=e250]:
+                  - button "Box Brownies BHN-047" [ref=e251] [cursor=pointer]:
+                    - strong [ref=e252]: Box Brownies
+                    - generic [ref=e253]: BHN-047
+                - cell "PaperCo" [ref=e254]:
+                  - button "PaperCo" [ref=e255] [cursor=pointer]:
+                    - generic [ref=e256]: PaperCo
+                - cell "25 pcs" [ref=e257]:
+                  - button "25 pcs" [ref=e258] [cursor=pointer]:
+                    - generic [ref=e259]:
+                      - strong [ref=e260]: "25"
+                      - generic [ref=e261]: pcs
+                - cell "Rp 22.000" [ref=e262]:
+                  - button "Rp 22.000" [ref=e263] [cursor=pointer]:
+                    - strong [ref=e264]: Rp 22.000
+                - cell "Rp 880 per pcs" [ref=e265]:
+                  - button "Rp 880 per pcs" [ref=e266] [cursor=pointer]:
+                    - generic [ref=e267]:
+                      - strong [ref=e268]: Rp 880
+                      - generic [ref=e269]: per pcs
+                - cell "Aktif" [ref=e270]:
+                  - button "Aktif" [ref=e271] [cursor=pointer]:
+                    - generic [ref=e272]: Aktif
+                - cell "Edit Hapus" [ref=e273]:
+                  - generic [ref=e274]:
+                    - button "Edit" [ref=e275] [cursor=pointer]:
+                      - img [ref=e276]
+                    - button "Hapus" [ref=e278] [cursor=pointer]:
+                      - img [ref=e279]
+              - row "Sticker Label BHN-046 Printink 100 pcs Rp 25.000 Rp 250 per pcs Aktif Edit Hapus" [ref=e282]:
+                - cell "Sticker Label BHN-046" [ref=e283]:
+                  - button "Sticker Label BHN-046" [ref=e284] [cursor=pointer]:
+                    - strong [ref=e285]: Sticker Label
+                    - generic [ref=e286]: BHN-046
+                - cell "Printink" [ref=e287]:
+                  - button "Printink" [ref=e288] [cursor=pointer]:
+                    - generic [ref=e289]: Printink
+                - cell "100 pcs" [ref=e290]:
+                  - button "100 pcs" [ref=e291] [cursor=pointer]:
+                    - generic [ref=e292]:
+                      - strong [ref=e293]: "100"
+                      - generic [ref=e294]: pcs
+                - cell "Rp 25.000" [ref=e295]:
+                  - button "Rp 25.000" [ref=e296] [cursor=pointer]:
+                    - strong [ref=e297]: Rp 25.000
+                - cell "Rp 250 per pcs" [ref=e298]:
+                  - button "Rp 250 per pcs" [ref=e299] [cursor=pointer]:
+                    - generic [ref=e300]:
+                      - strong [ref=e301]: Rp 250
+                      - generic [ref=e302]: per pcs
+                - cell "Aktif" [ref=e303]:
+                  - button "Aktif" [ref=e304] [cursor=pointer]:
+                    - generic [ref=e305]: Aktif
+                - cell "Edit Hapus" [ref=e306]:
+                  - generic [ref=e307]:
+                    - button "Edit" [ref=e308] [cursor=pointer]:
+                      - img [ref=e309]
+                    - button "Hapus" [ref=e311] [cursor=pointer]:
+                      - img [ref=e312]
+              - row "Pouch Standing BHN-045 FlexyPack 100 pcs Rp 55.000 Rp 550 per pcs Aktif Edit Hapus" [ref=e315]:
+                - cell "Pouch Standing BHN-045" [ref=e316]:
+                  - button "Pouch Standing BHN-045" [ref=e317] [cursor=pointer]:
+                    - strong [ref=e318]: Pouch Standing
+                    - generic [ref=e319]: BHN-045
+                - cell "FlexyPack" [ref=e320]:
+                  - button "FlexyPack" [ref=e321] [cursor=pointer]:
+                    - generic [ref=e322]: FlexyPack
+                - cell "100 pcs" [ref=e323]:
+                  - button "100 pcs" [ref=e324] [cursor=pointer]:
+                    - generic [ref=e325]:
+                      - strong [ref=e326]: "100"
+                      - generic [ref=e327]: pcs
+                - cell "Rp 55.000" [ref=e328]:
+                  - button "Rp 55.000" [ref=e329] [cursor=pointer]:
+                    - strong [ref=e330]: Rp 55.000
+                - cell "Rp 550 per pcs" [ref=e331]:
+                  - button "Rp 550 per pcs" [ref=e332] [cursor=pointer]:
+                    - generic [ref=e333]:
+                      - strong [ref=e334]: Rp 550
+                      - generic [ref=e335]: per pcs
+                - cell "Aktif" [ref=e336]:
+                  - button "Aktif" [ref=e337] [cursor=pointer]:
+                    - generic [ref=e338]: Aktif
+                - cell "Edit Hapus" [ref=e339]:
+                  - generic [ref=e340]:
+                    - button "Edit" [ref=e341] [cursor=pointer]:
+                      - img [ref=e342]
+                    - button "Hapus" [ref=e344] [cursor=pointer]:
+                      - img [ref=e345]
+              - row "Lid Cup 16 oz BHN-044 PackPro 50 pcs Rp 18.000 Rp 360 per pcs Aktif Edit Hapus" [ref=e348]:
+                - cell "Lid Cup 16 oz BHN-044" [ref=e349]:
+                  - button "Lid Cup 16 oz BHN-044" [ref=e350] [cursor=pointer]:
+                    - strong [ref=e351]: Lid Cup 16 oz
+                    - generic [ref=e352]: BHN-044
+                - cell "PackPro" [ref=e353]:
+                  - button "PackPro" [ref=e354] [cursor=pointer]:
+                    - generic [ref=e355]: PackPro
+                - cell "50 pcs" [ref=e356]:
+                  - button "50 pcs" [ref=e357] [cursor=pointer]:
+                    - generic [ref=e358]:
+                      - strong [ref=e359]: "50"
+                      - generic [ref=e360]: pcs
+                - cell "Rp 18.000" [ref=e361]:
+                  - button "Rp 18.000" [ref=e362] [cursor=pointer]:
+                    - strong [ref=e363]: Rp 18.000
+                - cell "Rp 360 per pcs" [ref=e364]:
+                  - button "Rp 360 per pcs" [ref=e365] [cursor=pointer]:
+                    - generic [ref=e366]:
+                      - strong [ref=e367]: Rp 360
+                      - generic [ref=e368]: per pcs
+                - cell "Aktif" [ref=e369]:
+                  - button "Aktif" [ref=e370] [cursor=pointer]:
+                    - generic [ref=e371]: Aktif
+                - cell "Edit Hapus" [ref=e372]:
+                  - generic [ref=e373]:
+                    - button "Edit" [ref=e374] [cursor=pointer]:
+                      - img [ref=e375]
+                    - button "Hapus" [ref=e377] [cursor=pointer]:
+                      - img [ref=e378]
+              - row "Cup Plastik 16 oz BHN-043 PackPro 50 pcs Rp 32.000 Rp 640 per pcs Aktif Edit Hapus" [ref=e381]:
+                - cell "Cup Plastik 16 oz BHN-043" [ref=e382]:
+                  - button "Cup Plastik 16 oz BHN-043" [ref=e383] [cursor=pointer]:
+                    - strong [ref=e384]: Cup Plastik 16 oz
+                    - generic [ref=e385]: BHN-043
+                - cell "PackPro" [ref=e386]:
+                  - button "PackPro" [ref=e387] [cursor=pointer]:
+                    - generic [ref=e388]: PackPro
+                - cell "50 pcs" [ref=e389]:
+                  - button "50 pcs" [ref=e390] [cursor=pointer]:
+                    - generic [ref=e391]:
+                      - strong [ref=e392]: "50"
+                      - generic [ref=e393]: pcs
+                - cell "Rp 32.000" [ref=e394]:
+                  - button "Rp 32.000" [ref=e395] [cursor=pointer]:
+                    - strong [ref=e396]: Rp 32.000
+                - cell "Rp 640 per pcs" [ref=e397]:
+                  - button "Rp 640 per pcs" [ref=e398] [cursor=pointer]:
+                    - generic [ref=e399]:
+                      - strong [ref=e400]: Rp 640
+                      - generic [ref=e401]: per pcs
+                - cell "Aktif" [ref=e402]:
+                  - button "Aktif" [ref=e403] [cursor=pointer]:
+                    - generic [ref=e404]: Aktif
+                - cell "Edit Hapus" [ref=e405]:
+                  - generic [ref=e406]:
+                    - button "Edit" [ref=e407] [cursor=pointer]:
+                      - img [ref=e408]
+                    - button "Hapus" [ref=e410] [cursor=pointer]:
+                      - img [ref=e411]
+              - row "Cokelat Chips BHN-042 Bake Time 250 gr Rp 22.000 Rp 88 per gr Aktif Edit Hapus" [ref=e414]:
+                - cell "Cokelat Chips BHN-042" [ref=e415]:
+                  - button "Cokelat Chips BHN-042" [ref=e416] [cursor=pointer]:
+                    - strong [ref=e417]: Cokelat Chips
+                    - generic [ref=e418]: BHN-042
+                - cell "Bake Time" [ref=e419]:
+                  - button "Bake Time" [ref=e420] [cursor=pointer]:
+                    - generic [ref=e421]: Bake Time
+                - cell "250 gr" [ref=e422]:
+                  - button "250 gr" [ref=e423] [cursor=pointer]:
+                    - generic [ref=e424]:
+                      - strong [ref=e425]: "250"
+                      - generic [ref=e426]: gr
+                - cell "Rp 22.000" [ref=e427]:
+                  - button "Rp 22.000" [ref=e428] [cursor=pointer]:
+                    - strong [ref=e429]: Rp 22.000
+                - cell "Rp 88 per gr" [ref=e430]:
+                  - button "Rp 88 per gr" [ref=e431] [cursor=pointer]:
+                    - generic [ref=e432]:
+                      - strong [ref=e433]: Rp 88
+                      - generic [ref=e434]: per gr
+                - cell "Aktif" [ref=e435]:
+                  - button "Aktif" [ref=e436] [cursor=pointer]:
+                    - generic [ref=e437]: Aktif
+                - cell "Edit Hapus" [ref=e438]:
+                  - generic [ref=e439]:
+                    - button "Edit" [ref=e440] [cursor=pointer]:
+                      - img [ref=e441]
+                    - button "Hapus" [ref=e443] [cursor=pointer]:
+                      - img [ref=e444]
+              - row "Sirup Gula Aren BHN-041 Palmia 1000 ml Rp 47.000 Rp 47 per ml Aktif Edit Hapus" [ref=e447]:
+                - cell "Sirup Gula Aren BHN-041" [ref=e448]:
+                  - button "Sirup Gula Aren BHN-041" [ref=e449] [cursor=pointer]:
+                    - strong [ref=e450]: Sirup Gula Aren
+                    - generic [ref=e451]: BHN-041
+                - cell "Palmia" [ref=e452]:
+                  - button "Palmia" [ref=e453] [cursor=pointer]:
+                    - generic [ref=e454]: Palmia
+                - cell "1000 ml" [ref=e455]:
+                  - button "1000 ml" [ref=e456] [cursor=pointer]:
+                    - generic [ref=e457]:
+                      - strong [ref=e458]: "1000"
+                      - generic [ref=e459]: ml
+                - cell "Rp 47.000" [ref=e460]:
+                  - button "Rp 47.000" [ref=e461] [cursor=pointer]:
+                    - strong [ref=e462]: Rp 47.000
+                - cell "Rp 47 per ml" [ref=e463]:
+                  - button "Rp 47 per ml" [ref=e464] [cursor=pointer]:
+                    - generic [ref=e465]:
+                      - strong [ref=e466]: Rp 47
+                      - generic [ref=e467]: per ml
+                - cell "Aktif" [ref=e468]:
+                  - button "Aktif" [ref=e469] [cursor=pointer]:
+                    - generic [ref=e470]: Aktif
+                - cell "Edit Hapus" [ref=e471]:
+                  - generic [ref=e472]:
+                    - button "Edit" [ref=e473] [cursor=pointer]:
+                      - img [ref=e474]
+                    - button "Hapus" [ref=e476] [cursor=pointer]:
+                      - img [ref=e477]
+          - generic [ref=e480]:
+            - generic [ref=e481]: 50 material
+            - generic [ref=e482]:
+              - button "Prev" [disabled] [ref=e483]
+              - generic "Pilih halaman" [ref=e484]:
+                - combobox "Pilih halaman" [ref=e485]:
+                  - option "Halaman 1" [selected]
+                  - option "Halaman 2"
+                  - option "Halaman 3"
+                  - option "Halaman 4"
+                  - option "Halaman 5"
+              - generic [ref=e486]: 1 / 5
+              - button "Next" [ref=e487] [cursor=pointer]

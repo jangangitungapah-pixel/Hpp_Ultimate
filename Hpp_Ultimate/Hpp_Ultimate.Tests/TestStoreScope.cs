@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using Hpp_Ultimate.Services;
 
 namespace Hpp_Ultimate.Tests;
@@ -8,7 +9,10 @@ internal sealed class TestStoreScope : IDisposable
 
     public TestStoreScope()
     {
-        Store = new SeededBusinessDataStore(_dbPath);
+        var options = SeededBusinessDataStoreOptions.Create(_dbPath, postgresConnectionString: null);
+        Store = new SeededBusinessDataStore(options, NullLogger<SeededBusinessDataStore>.Instance);
+        Store.ClearOperationalData();
+        Store.SetSession(null);
     }
 
     public SeededBusinessDataStore Store { get; }

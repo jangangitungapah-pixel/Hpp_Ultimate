@@ -5,46 +5,23 @@
 @inject SeededBusinessDataStore Store
 @inject NavigationManager Navigation
 
-<PageTitle>Pengaturan Akun | HPP Ultimate</PageTitle>
+<PageTitle>Tim & Akun | HPP Ultimate</PageTitle>
 
-<section class="account-page">
-    <div class="account-hero">
+<section class="account-page ds-page ds-admin-layout theme-amber">
+    <div class="account-hero compact-hero ds-page-header">
         <div class="hero-copy">
             <div class="hero-nav">
-                <a class="back-link" href="/pengaturan">Kembali ke Pengaturan</a>
+                <a class="back-link" href="/pengaturan">Kembali ke Pengaturan Bisnis</a>
             </div>
-            <span>Account control center</span>
-            <h1>Kelola identitas akun, keamanan sesi, dan orkestrasi akses tim dalam satu workspace.</h1>
-            <p>Halaman ini menggantikan menu login sebagai pusat pengelolaan akun. Profil akun aktif, password, sesi, dan daftar user tim sekarang dipusatkan di sini.</p>
+            <span class="section-tag">Tim & akun</span>
+            <h1>Profil aktif dan akses tim</h1>
+            <p>Perbarui profil akun yang sedang dipakai, lalu atur user tim bila kamu masuk sebagai admin.</p>
 
-            <div class="hero-ribbon">
-                <article>
-                    <small>Akun aktif</small>
-                    <strong>@(_snapshot?.Session?.FullName ?? "Belum login")</strong>
-                </article>
-                <article>
-                    <small>Mode sesi</small>
-                    <strong>@(_snapshot?.Session?.RememberMe == true ? "Remembered" : "Session-only")</strong>
-                </article>
-                <article>
-                    <small>Hak akses</small>
-                    <strong>@(_currentUser?.Role.ToString() ?? "-")</strong>
-                </article>
+            <div class="account-hero-meta">
+                <span>@(_snapshot?.Session?.FullName ?? "Belum login")</span>
+                <span>@(_currentUser is null ? "-" : FormatRole(_currentUser.Role))</span>
+                <span>Workspace akun</span>
             </div>
-        </div>
-
-        <div class="hero-panel">
-            <article class="hero-panel-card primary">
-                <span>Session Runtime</span>
-                <strong>@SessionAgeLabel</strong>
-                <small>@(_snapshot?.Session is null ? "Belum ada sesi login aktif." : $"Sesi dimulai {_snapshot.Session.SignedInAt:dd MMM yyyy HH:mm}")</small>
-            </article>
-
-            <article class="hero-panel-card">
-                <span>Team Pulse</span>
-                <strong>@(_snapshot?.ActiveUsers ?? 0) user aktif</strong>
-                <small>@(_snapshot?.AdminCount ?? 0) admin dan @(_snapshot?.StaffCount ?? 0) staff tersimpan.</small>
-            </article>
         </div>
     </div>
 
@@ -54,12 +31,12 @@
     }
     else if (_snapshot is not null && _currentUser is not null)
     {
-        <div class="account-layout">
+        <div class="account-layout compact-layout">
             <section class="profile-card">
-                <div class="section-head">
+                <div class="section-head ds-card-header">
                     <div>
-                        <span>Profile studio</span>
-                        <h2>Profil akun aktif dan kontrol sesi</h2>
+                        <span>Profil aktif</span>
+                        <h2>Profil akun aktif</h2>
                     </div>
                 </div>
 
@@ -75,48 +52,42 @@
                     <div class="profile-grid">
                         <label class="profile-identity">
                             <span>Nama Lengkap</span>
-                            <InputText @bind-Value="_profileForm.FullName" />
+                            <InputText @bind-Value="_profileForm.FullName" autocomplete="name" />
                         </label>
 
                         <label>
                             <span>Email</span>
-                            <InputText @bind-Value="_profileForm.Email" />
+                            <InputText @bind-Value="_profileForm.Email" autocomplete="email" />
                         </label>
 
                         <label>
                             <span>Username</span>
-                            <InputText @bind-Value="_profileForm.Username" />
+                            <InputText @bind-Value="_profileForm.Username" autocomplete="username" />
                         </label>
 
                         <label>
                             <span>Password Baru</span>
-                            <InputText @bind-Value="_profileForm.NewPassword" type="password" placeholder="Kosongkan jika tidak diubah" />
+                            <InputText @bind-Value="_profileForm.NewPassword" type="password" autocomplete="new-password" placeholder="Kosongkan jika tidak diubah" />
                         </label>
 
                         <label class="toggle-card">
                             <div>
-                                <span>Remember Session</span>
+                                <span>Simpan sesi</span>
                                 <small>Simpan preferensi sesi saat browser ditutup.</small>
                             </div>
                             <InputCheckbox @bind-Value="_profileForm.RememberMe" />
                         </label>
 
                         <article class="profile-stat">
-                            <small>Role</small>
-                            <strong>@_currentUser.Role</strong>
-                            <p>Role aktif hanya bisa berubah dari panel admin di bawah.</p>
+                            <small>Peran</small>
+                            <strong>@FormatRole(_currentUser.Role)</strong>
+                            <p>Peran aktif hanya bisa berubah dari panel admin di bawah.</p>
                         </article>
 
                         <article class="profile-stat">
                             <small>Terakhir login</small>
                             <strong>@(_currentUser.LastLoginAt?.ToString("dd MMM yyyy HH:mm") ?? "Belum pernah")</strong>
                             <p>Timestamp ini otomatis diperbarui saat autentikasi berhasil.</p>
-                        </article>
-
-                        <article class="profile-stat">
-                            <small>Updated</small>
-                            <strong>@_currentUser.UpdatedAt.ToString("dd MMM yyyy HH:mm")</strong>
-                            <p>Perubahan identitas dan password akan tersimpan ke store akun.</p>
                         </article>
                     </div>
 
@@ -127,80 +98,18 @@
                     </div>
                 </EditForm>
             </section>
-
-            <aside class="account-side">
-                <section class="insight-card">
-                    <div class="section-head">
-                        <div>
-                            <span>Security telemetry</span>
-                            <h2>Status akses dan sinyal akun</h2>
-                        </div>
-                    </div>
-
-                    <div class="insight-grid">
-                        <article>
-                            <small>Status akun</small>
-                            <strong>@_currentUser.Status</strong>
-                        </article>
-                        <article>
-                            <small>Remember me</small>
-                            <strong>@(_snapshot.Session?.RememberMe == true ? "Aktif" : "Tidak aktif")</strong>
-                        </article>
-                        <article>
-                            <small>Admin aktif</small>
-                            <strong>@_snapshot.Users.Count(item => item.Role == UserRole.Admin && item.Status == UserStatus.Active)</strong>
-                        </article>
-                        <article>
-                            <small>User nonaktif</small>
-                            <strong>@_snapshot.Users.Count(item => item.Status == UserStatus.Inactive)</strong>
-                        </article>
-                    </div>
-
-                    <div class="insight-list">
-                        @foreach (var insight in _snapshot.Insights)
-                        {
-                            <article>@insight</article>
-                        }
-                    </div>
-                </section>
-
-                <section class="timeline-card">
-                    <div class="section-head">
-                        <div>
-                            <span>Activity lane</span>
-                            <h2>Jejak akun dan tim terbaru</h2>
-                        </div>
-                    </div>
-
-                    <div class="timeline-list">
-                        @foreach (var item in RecentActivity)
-                        {
-                            <article>
-                                <div class="timeline-dot"></div>
-                                <div>
-                                    <strong>@item.FullName</strong>
-                                    <small>@item.Email</small>
-                                    <p>@(item.LastLoginAt is null ? $"Profil diperbarui {item.UpdatedAt:dd MMM HH:mm}" : $"Login terakhir {item.LastLoginAt:dd MMM yyyy HH:mm}")</p>
-                                </div>
-                                <span class="mini-role">@item.Role</span>
-                            </article>
-                        }
-                    </div>
-                </section>
-            </aside>
         </div>
 
         @if (IsAdmin)
         {
             <section class="team-card">
-                <div class="team-header">
+                <div class="team-header ds-card-header">
                     <div>
-                        <span>Admin cockpit</span>
-                        <h2>Manajemen user, peran, dan keberlanjutan akses tim</h2>
+                        <span class="section-tag">Admin tools</span>
+                        <h2>Manajemen user tim</h2>
                     </div>
 
                     <div class="team-actions">
-                        <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
                         <button type="button" class="primary-button" @onclick="OpenCreateModal">+ Tambah User</button>
                     </div>
                 </div>
@@ -209,25 +118,6 @@
                 {
                     <div class="form-message">@_teamMessage</div>
                 }
-
-                <div class="team-metrics">
-                    <article>
-                        <small>Total akun</small>
-                        <strong>@_snapshot.TotalUsers</strong>
-                    </article>
-                    <article>
-                        <small>Admin aktif</small>
-                        <strong>@_snapshot.Users.Count(item => item.Role == UserRole.Admin && item.Status == UserStatus.Active)</strong>
-                    </article>
-                    <article>
-                        <small>Staff aktif</small>
-                        <strong>@_snapshot.Users.Count(item => item.Role == UserRole.Staff && item.Status == UserStatus.Active)</strong>
-                    </article>
-                    <article>
-                        <small>Nonaktif</small>
-                        <strong>@_snapshot.Users.Count(item => item.Status == UserStatus.Inactive)</strong>
-                    </article>
-                </div>
 
                 <div class="team-workspace">
                     <div class="team-directory">
@@ -240,7 +130,7 @@
                                         <small>@user.Email</small>
                                     </div>
 
-                                    <span class="role-badge @(user.Role == UserRole.Admin ? "admin" : "staff")">@user.Role</span>
+                                    <span class="role-badge @(user.Role == UserRole.Admin ? "admin" : "staff")">@FormatRole(user.Role)</span>
                                 </div>
 
                                 <div class="team-user-meta">
@@ -250,31 +140,15 @@
                                 </div>
 
                                 <div class="team-user-actions">
-                                    <button type="button" class="ghost-button" @onclick="() => OpenEditModal(user.Id)">Edit</button>
+                                    <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModal(user.Id)">
+                                        <AppIcon Name="edit" Class="icon-glyph" />
+                                    </button>
                                     <button type="button" class="ghost-button danger-outline" disabled="@(user.Id == _currentUser.Id)" @onclick="() => DeactivateAsync(user.Id)">
                                         Nonaktifkan
                                     </button>
                                 </div>
                             </article>
                         }
-                    </div>
-
-                    <div class="permission-panel">
-                        <article>
-                            <small>Akun aktif saat ini</small>
-                            <strong>@_currentUser.FullName</strong>
-                            <p>@_currentUser.Email</p>
-                        </article>
-                        <article>
-                            <small>Hak admin</small>
-                            <strong>@(_currentUser.Role == UserRole.Admin ? "Penuh" : "Terbatas")</strong>
-                            <p>Admin dapat menambah, mengubah, dan menonaktifkan akun tim.</p>
-                        </article>
-                        <article>
-                            <small>Kebijakan password</small>
-                            <strong>Min 6 karakter</strong>
-                            <p>Password akun aktif bisa diubah dari panel profil di kiri.</p>
-                        </article>
                     </div>
                 </div>
             </section>
@@ -286,10 +160,10 @@
 {
     <div class="overlay" @onclick="CloseUserModal">
         <div class="modal-card" @onclick:stopPropagation="true">
-            <div class="modal-head">
+            <div class="modal-head ds-card-header">
                 <div>
                     <span>@(_editingUserId is null ? "Tambah user" : "Edit user")</span>
-                    <h2>@(_editingUserId is null ? "Rakit akun tim baru" : "Perbarui konfigurasi akses user")</h2>
+                    <h2>@(_editingUserId is null ? "Buat akun tim baru" : "Atur akses user")</h2>
                 </div>
 
                 <button type="button" class="ghost-button" @onclick="CloseUserModal">Tutup</button>
@@ -307,25 +181,25 @@
                 <div class="modal-grid">
                     <label>
                         <span>Nama Lengkap</span>
-                        <InputText @bind-Value="_userForm.FullName" />
+                        <InputText @bind-Value="_userForm.FullName" autocomplete="name" />
                     </label>
                     <label>
                         <span>Email</span>
-                        <InputText @bind-Value="_userForm.Email" />
+                        <InputText @bind-Value="_userForm.Email" autocomplete="email" />
                     </label>
                     <label>
                         <span>Username</span>
-                        <InputText @bind-Value="_userForm.Username" />
+                        <InputText @bind-Value="_userForm.Username" autocomplete="username" />
                     </label>
                     <label>
                         <span>Password @(_editingUserId is null ? string.Empty : "(opsional)")</span>
-                        <InputText @bind-Value="_userForm.Password" type="password" placeholder="@(_editingUserId is null ? "Minimal 6 karakter" : "Kosongkan jika tidak diubah")" />
+                        <InputText @bind-Value="_userForm.Password" type="password" autocomplete="new-password" placeholder="@(_editingUserId is null ? "Minimal 6 karakter" : "Kosongkan jika tidak diubah")" />
                     </label>
                     <label>
-                        <span>Role</span>
+                        <span>Peran</span>
                         <select @bind="_userForm.Role">
                             <option value="@UserRole.Admin">Admin</option>
-                            <option value="@UserRole.Staff">Staff</option>
+                            <option value="@UserRole.Staff">Staf</option>
                         </select>
                     </label>
                     <label>
@@ -359,6 +233,13 @@
     private string _modalMessage = string.Empty;
 
     private bool IsAdmin => _currentUser?.Role == UserRole.Admin;
+
+    private static string FormatRole(UserRole role) => role switch
+    {
+        UserRole.Admin => "Admin",
+        UserRole.Staff => "Staf",
+        _ => role.ToString()
+    };
 
     private string SessionAgeLabel
     {
@@ -450,8 +331,6 @@
         _profileForm.NewPassword = string.Empty;
         await LoadAsync();
     }
-
-    private Task ReloadAsync() => LoadAsync();
 
     private void ResetProfileForm()
     {

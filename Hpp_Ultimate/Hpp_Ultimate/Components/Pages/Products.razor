@@ -1,18 +1,22 @@
 ﻿@page "/produk"
 @rendermode InteractiveServer
 @implements IDisposable
+@implements IAsyncDisposable
 @using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
 @using System.Linq
 @inject RawMaterialCatalogService RawMaterialCatalogService
+@inject GeminiMaterialAuditService GeminiMaterialAuditService
+@inject IJSRuntime JS
 
 <PageTitle>Katalog Material | HPP Ultimate</PageTitle>
 
-<section class="materials-page">
-    <header class="materials-toolbar">
+<section class="materials-page ds-page ds-page-stack theme-amber">
+    <header class="materials-toolbar ds-page-header">
         <div class="toolbar-copy">
             <span class="section-tag">Master material</span>
             <h1>Katalog Material</h1>
-            <p>Simpan bahan baku, netto pack, harga, dan unit konversi sebagai referensi untuk Resep dan HPP.</p>
+            <p>Master bahan baku untuk resep, gudang, dan kalkulasi biaya.</p>
         </div>
 
         <div class="toolbar-actions">
@@ -23,12 +27,12 @@
         </div>
     </header>
 
-    <section class="materials-table-card">
-        <div class="table-head">
+    <section class="materials-table-card catalog-datagrid">
+        <div class="table-head ds-card-header">
             <div>
                 <span class="section-tag">Daftar material</span>
                 <h2>Master bahan baku aktif dan nonaktif</h2>
-                <p>Cari material, filter status, lalu buka detail atau edit langsung dari tabel.</p>
+                <p>Cari, filter, lalu buka detail atau edit langsung dari tabel.</p>
             </div>
 
             <div class="table-summary-pills">
@@ -70,7 +74,7 @@
             </div>
 
             <div class="table-toolbar-meta">
-                <div class="status-chip">@_statusMessage</div>
+                <p class="table-toolbar-summary">@_statusMessage</p>
                 <div class="table-toolbar-note">
                     <span>@CurrentSortLabel</span>
                     <span>@TotalPages halaman</span>
@@ -84,84 +88,81 @@
         }
         else
         {
-            <div class="table-wrap">
-                @if ((_result?.Items.Count ?? 0) == 0)
-                {
-                    <div class="empty-row">Belum ada material yang sesuai filter.</div>
-                }
-                else
-                {
-                    <table class="materials-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Material</th>
-                                <th>Merk</th>
-                                <th>Netto</th>
-                                <th>Harga / Pack</th>
-                                <th>Modal / Unit</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var material in _result!.Items)
-                            {
-                                <tr class="@GetSelectedRowClass(material.Id)">
-                                    <td>
-                                        <button type="button" class="row-link primary" @onclick="() => OpenDetailAsync(material.Id)">
-                                            <strong>@material.Name</strong>
-                                            <small>@material.Code</small>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="row-link" @onclick="() => OpenDetailAsync(material.Id)">
+            @if (!_isMobileCatalog)
+            {
+                <div class="table-wrap">
+                    @if ((_result?.Items.Count ?? 0) == 0)
+                    {
+                        <div class="empty-row">Belum ada material yang sesuai filter.</div>
+                    }
+                    else
+                    {
+                        <table class="materials-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Material</th>
+                                    <th>Merk</th>
+                                    <th>Netto</th>
+                                    <th>Harga / Pack</th>
+                                    <th>Modal / Unit</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var material in _result!.Items)
+                                {
+                                    <tr class="@GetSelectedRowClass(material.Id)">
+                                        <td>
+                                            <button type="button" class="row-link primary" @onclick="() => OpenDetailAsync(material.Id)">
+                                                <strong>@material.Name</strong>
+                                                <small>@material.Code</small>
+                                            </button>
+                                        </td>
+                                        <td>
                                             <span class="data-text">@GetBrandLabel(material.Brand)</span>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="row-link" @onclick="() => OpenDetailAsync(material.Id)">
+                                        </td>
+                                        <td>
                                             <div class="net-cell">
                                                 <strong>@material.NetQuantity.ToString("0.####")</strong>
                                                 <small>@material.NetUnit</small>
                                             </div>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="row-link" @onclick="() => OpenDetailAsync(material.Id)">
-                                            <strong>@FormatCurrency(material.PricePerPack)</strong>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="row-link" @onclick="() => OpenDetailAsync(material.Id)">
+                                        </td>
+                                        <td>
+                                            <div class="cell-stack">
+                                                <strong>@FormatCurrency(material.PricePerPack)</strong>
+                                            </div>
+                                        </td>
+                                        <td>
                                             <div class="cost-cell">
                                                 <strong>@FormatCurrency(material.CostPerUnit)</strong>
                                                 <small>per @material.BaseUnit</small>
                                             </div>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="row-link" @onclick="() => OpenDetailAsync(material.Id)">
-                                            <span class="badge @GetStatusClass(material.Status)">@GetStatusLabel(material.Status)</span>
-                                        </button>
-                                    </td>
-                                    <td class="actions-column">
-                                        <div class="row-actions">
-                                            <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModalAsync(material.Id)">
-                                                <AppIcon Name="edit" Class="icon-glyph" />
-                                            </button>
-                                            <button type="button" class="icon-button danger" title="Hapus" aria-label="Hapus" @onclick="() => AskDelete(material)">
-                                                <AppIcon Name="delete" Class="icon-glyph" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            </div>
+                                        </td>
+                                        <td>
+                                            <div class="cell-center">
+                                                <span class="badge @GetStatusClass(material.Status)">@GetStatusLabel(material.Status)</span>
+                                            </div>
+                                        </td>
+                                        <td class="actions-column">
+                                            <div class="row-actions" @onclick:stopPropagation="true">
+                                                <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModalAsync(material.Id)">
+                                                    <AppIcon Name="edit" Class="icon-glyph" />
+                                                </button>
+                                                <button type="button" class="icon-button danger" title="Hapus" aria-label="Hapus" @onclick="() => AskDelete(material)">
+                                                    <AppIcon Name="delete" Class="icon-glyph" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            }
 
-            @if ((_result?.Items.Count ?? 0) > 0)
+            @if (_isMobileCatalog && (_result?.Items.Count ?? 0) > 0)
             {
                 <div class="material-card-list">
                     @foreach (var material in _result!.Items)
@@ -255,14 +256,19 @@
     <div class="overlay" @onclick="CloseDetailModal">
         <div class="modal-card detail-modal-card" @onclick:stopPropagation="true">
             <div class="modal-head detail-modal-head">
-                <div class="detail-hero-copy">
-                    <span class="section-tag">@_detail.Material.Code</span>
+                <div class="detail-head-copy">
+                    <div class="detail-head-kicker">
+                        <span class="section-tag">Detail material</span>
+                        <div class="detail-head-badges">
+                            <span class="badge inactive">@_detail.Material.Code</span>
+                            <span class="badge @GetStatusClass(_detail.Material.Status)">@GetStatusLabel(_detail.Material.Status)</span>
+                        </div>
+                    </div>
                     <h2>@_detail.Material.Name</h2>
-                    <p>@GetBrandLabel(_detail.Material.Brand)</p>
+                    <p>@GetBrandLabel(_detail.Material.Brand) • Referensi material untuk resep, costing, dan operasional gudang.</p>
                 </div>
 
                 <div class="detail-modal-actions">
-                    <span class="badge @GetStatusClass(_detail.Material.Status)">@GetStatusLabel(_detail.Material.Status)</span>
                     <button type="button" class="close-button" @onclick="CloseDetailModal" aria-label="Tutup detail">
                         <AppIcon Name="close" Class="icon-glyph" />
                     </button>
@@ -295,6 +301,7 @@
                 <section class="detail-section">
                     <div class="detail-section-head">
                         <span>Resep Terkait</span>
+                        <h3>Dipakai di formula aktif</h3>
                         <small>Resep yang saat ini memakai material ini.</small>
                     </div>
                     <div class="tag-list">
@@ -315,7 +322,8 @@
                 <section class="detail-section">
                     <div class="detail-section-head">
                         <span>Unit Konversi</span>
-                        <small>Opsional untuk pemakaian satuan selain base unit.</small>
+                        <h3>Satuan turunan material</h3>
+                        <small>Tambahan satuan di luar base unit.</small>
                     </div>
                     <div class="tag-list">
                         @if (_detail.Material.UnitConversions.Count == 0)
@@ -336,7 +344,8 @@
             <section class="detail-section detail-section-wide detail-history-section">
                 <div class="detail-section-head">
                     <span>Histori Harga</span>
-                    <small>Perubahan harga pack dan modal unit terakhir.</small>
+                    <h3>Perubahan pack dan modal</h3>
+                    <small>Riwayat harga pack dan biaya unit terakhir.</small>
                 </div>
 
                 <div class="history-list">
@@ -358,20 +367,25 @@
                 </div>
             </section>
 
-            <details class="detail-disclosure">
-                <summary>Relasi Modul</summary>
-                <div class="detail-disclosure-body">
-                    <ul>
-                        <li class="@(_detail.UsedInBom ? "ok" : "warn")">@(_detail.UsedInBom ? "Sudah dipakai di Resep aktif." : "Belum dipakai di Resep aktif.")</li>
-                        <li class="@(_detail.UsedInProduction ? "ok" : "warn")">@(_detail.UsedInProduction ? "Sudah memengaruhi histori produksi/HPP." : "Belum dipakai di produksi/HPP.")</li>
-                        <li>Master ini tidak menyimpan stok. Pengelolaan stok dipindah ke halaman Gudang.</li>
-                    </ul>
+            <section class="detail-section detail-relations-card">
+                <div class="detail-section-head">
+                    <span>Relasi Modul</span>
+                    <h3>Keterkaitan dengan resep dan produksi</h3>
+                    <small>Ringkasan dampak sebelum material diubah atau dihapus.</small>
                 </div>
-            </details>
+
+                <ul class="detail-relations-list">
+                    <li class="@(_detail.UsedInBom ? "ok" : "warn")">@(_detail.UsedInBom ? "Sudah dipakai di Resep aktif." : "Belum dipakai di Resep aktif.")</li>
+                    <li class="@(_detail.UsedInProduction ? "ok" : "warn")">@(_detail.UsedInProduction ? "Sudah memengaruhi histori produksi/HPP." : "Belum dipakai di produksi/HPP.")</li>
+                    <li>Master ini tidak menyimpan stok. Pengelolaan stok dipindah ke halaman Gudang.</li>
+                </ul>
+            </section>
 
             <div class="modal-actions">
                 <button type="button" class="ghost-button" @onclick="CloseDetailModal">Tutup</button>
-                <button type="button" class="primary-button" @onclick="() => OpenEditModalAsync(_detail.Material.Id)">Edit Material</button>
+                <button type="button" class="icon-button" title="Edit material" aria-label="Edit material" @onclick="() => OpenEditModalAsync(_detail.Material.Id)">
+                    <AppIcon Name="edit" Class="icon-glyph" />
+                </button>
             </div>
         </div>
     </div>
@@ -379,12 +393,19 @@
 
 @if (_showFormModal)
 {
-    <div class="overlay" @onclick="CloseFormModal">
+    <div class="overlay">
         <div class="modal-card form-modal-card" @onclick:stopPropagation="true">
             <div class="modal-head form-modal-head">
-                <div>
-                    <span class="section-tag">@(_editingId is null ? "Tambah material" : "Edit material")</span>
+                <div class="form-head-copy">
+                    <div class="form-head-kicker">
+                        <span class="section-tag">@(_editingId is null ? "Tambah material" : "Edit material")</span>
+                        <div class="form-head-badges">
+                            <span class="badge inactive">@(!string.IsNullOrWhiteSpace(_formModel.Code) ? _formModel.Code : "Kode otomatis")</span>
+                            <span class="badge @(_isActiveToggle ? "active" : "inactive")">@(_isActiveToggle ? "Aktif" : "Nonaktif")</span>
+                        </div>
+                    </div>
                     <h2>@(_editingId is null ? "Buat master material baru" : "Perbarui master material")</h2>
+                    <p>Isi identitas, satuan dasar, dan harga pack agar material siap dipakai di resep dan gudang.</p>
                 </div>
 
                 <button type="button" class="close-button" @onclick="CloseFormModal" aria-label="Tutup form">
@@ -401,12 +422,20 @@
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
+                <div class="form-summary-strip">
+                    <article><small>Base Unit</small><strong>@(string.IsNullOrWhiteSpace(_formModel.BaseUnit) ? "-" : _formModel.BaseUnit)</strong></article>
+                    <article><small>Netto</small><strong>@(_formModel.NetQuantity <= 0 ? "-" : $"{_formModel.NetQuantity:0.####} {_formModel.NetUnit}")</strong></article>
+                    <article><small>Harga / Pack</small><strong>@FormatCurrency(_formModel.PricePerPack)</strong></article>
+                    <article><small>Modal / Unit</small><strong>@FormatCurrency(CurrentCostPerUnit)</strong></article>
+                </div>
+
                 <div class="form-stack">
                     <section class="form-section">
                         <div class="section-inline-head">
                             <div>
                                 <span class="section-tag">Identitas</span>
-                                <p>Nama, merk, kode, dan catatan utama untuk material ini.</p>
+                                <h3>Profil material</h3>
+                                <p>Nama, merk, kode, dan catatan utama material.</p>
                             </div>
                         </div>
 
@@ -438,7 +467,8 @@
                         <div class="section-inline-head">
                             <div>
                                 <span class="section-tag">Dimensi & harga</span>
-                                <p>Isi data pack di kiri. Modal per unit dihitung otomatis di panel ringkasan.</p>
+                                <h3>Pack dan kalkulasi biaya</h3>
+                                <p>Isi data pack di kiri. Modal unit dihitung otomatis di panel ringkasan.</p>
                             </div>
                         </div>
 
@@ -493,7 +523,8 @@
                         <div class="section-inline-head">
                             <div>
                                 <span class="section-tag">Unit Konversi Tambahan</span>
-                                <p>Opsional. Tambahkan hanya jika material dipakai dengan satuan lain.</p>
+                                <h3>Satuan turunan opsional</h3>
+                                <p>Tambahkan hanya jika material dipakai dengan satuan lain.</p>
                             </div>
                             <button type="button" class="ghost-button" @onclick="AddConversionRow">+ Tambah Unit</button>
                         </div>
@@ -511,7 +542,9 @@
                                     <div class="conversion-row">
                                         <InputText @bind-Value="item.UnitName" placeholder="Nama unit, mis. pack" />
                                         <InputNumber @bind-Value="item.ConversionQuantity" placeholder="Nilai konversi ke base unit" />
-                                        <button type="button" class="ghost-button danger-button-inline" @onclick="() => RemoveConversionRow(index)">Hapus</button>
+                                        <button type="button" class="icon-button danger" title="Hapus konversi" aria-label="Hapus konversi" @onclick="() => RemoveConversionRow(index)">
+                                            <AppIcon Name="delete" Class="icon-glyph" />
+                                        </button>
                                     </div>
                                 }
                             </div>
@@ -681,6 +714,13 @@
     private bool _isImporting;
     private bool _skipInvalidRows = true;
     private Guid? _activeMobileMaterialId;
+    private bool _showAiAuditPanel;
+    private bool _isMobileCatalog;
+    private string _materialAiMessage = string.Empty;
+    private string _materialAiStatus = "Gemini siap review";
+    private readonly List<MaterialAiNormalizationSuggestion> _materialAiSuggestions = [];
+    private DotNetObjectReference<Products>? _viewportReference;
+    private int? _viewportRegistrationId;
 
     private RawMaterialListItem? _pendingDelete;
     private static readonly int[] PageSizeOptions = [5, 10, 15, 25];
@@ -704,6 +744,17 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _viewportReference = DotNetObjectReference.Create(this);
+        _viewportRegistrationId = await JS.InvokeAsync<int>("viewportHelper.register", _viewportReference, nameof(HandleCatalogViewportChanged), 640);
     }
 
     private async Task LoadAsync()
@@ -822,6 +873,19 @@
             ? Math.Min(parsed, TotalPages)
             : _page;
         await LoadAsync();
+    }
+
+    [JSInvokable]
+    public Task HandleCatalogViewportChanged(bool isMobile)
+    {
+        if (_isMobileCatalog == isMobile)
+        {
+            return Task.CompletedTask;
+        }
+
+        _isMobileCatalog = isMobile;
+        StateHasChanged();
+        return Task.CompletedTask;
     }
 
     private async Task OpenCreateModalAsync()
@@ -1002,10 +1066,93 @@
         await LoadAsync();
     }
 
+    private async Task RunMaterialAiAuditAsync()
+    {
+        _showAiAuditPanel = true;
+        _materialAiMessage = string.Empty;
+        _materialAiStatus = "Gemini sedang menganalisis katalog...";
+
+        try
+        {
+            var auditSource = await RawMaterialCatalogService.QueryAsync(new RawMaterialQuery(
+                _searchText,
+                ParseStatus(_selectedStatus),
+                _sortBy,
+                _sortDescending,
+                1,
+                200));
+
+            var result = await GeminiMaterialAuditService.AuditMaterialsAsync(new MaterialAiAuditRequest(auditSource.Items));
+            _materialAiSuggestions.Clear();
+            if (result.Success)
+            {
+                _materialAiSuggestions.AddRange(result.Suggestions);
+            }
+
+            _materialAiMessage = result.Message;
+            _materialAiStatus = result.Success
+                ? (result.Suggestions.Count == 0 ? "Tidak ada duplikasi kuat" : $"{result.Suggestions.Count} saran review")
+                : "Audit AI belum aktif";
+        }
+        finally
+        {
+        }
+    }
+
+    private void ToggleMaterialAiPanel()
+    {
+        _showAiAuditPanel = !_showAiAuditPanel;
+    }
+
+    private async Task ApplyMaterialAiSuggestionAsync(MaterialAiNormalizationSuggestion suggestion)
+    {
+        var detail = await RawMaterialCatalogService.GetDetailAsync(suggestion.TargetMaterialId);
+        if (detail is null)
+        {
+            _materialAiMessage = "Material target tidak ditemukan lagi.";
+            return;
+        }
+
+        BeginEditing(new RawMaterialUpsertRequest
+        {
+            Id = detail.Material.Id,
+            Code = detail.Material.Code,
+            Name = suggestion.CanonicalName,
+            Brand = suggestion.CanonicalBrand,
+            BaseUnit = detail.Material.BaseUnit,
+            NetQuantity = detail.Material.NetQuantity,
+            NetUnit = detail.Material.NetUnit,
+            PricePerPack = detail.Material.PricePerPack,
+            Description = detail.Material.Description,
+            Status = detail.Material.Status,
+            UnitConversions = detail.Material.UnitConversions
+                .Select(item => new RawMaterialUnitConversionInput
+                {
+                    UnitName = item.UnitName,
+                    ConversionQuantity = item.ConversionQuantity
+                })
+                .ToList()
+        }, detail.Material.Id, detail.Material.Status == MaterialStatus.Active);
+
+        _formMessage = $"Draft edit diisi dari saran AI. Review dulu sebelum simpan. Material mirip: {string.Join(", ", suggestion.SimilarMaterials.Select(item => item.Code))}.";
+    }
+
     private string GetSelectedRowClass(Guid id) => _showDetailModal && _detail?.Material.Id == id ? "selected-row" : string.Empty;
     private static string GetBrandLabel(string? brand) => string.IsNullOrWhiteSpace(brand) ? "Tanpa merk" : brand.Trim();
     private static string GetStatusLabel(MaterialStatus status) => status == MaterialStatus.Active ? "Aktif" : "Nonaktif";
     private static string GetStatusClass(MaterialStatus status) => status == MaterialStatus.Active ? "active" : "inactive";
+    private static string GetAiConfidenceLabel(string confidence) => confidence switch
+    {
+        "high" => "Tinggi",
+        "low" => "Rendah",
+        _ => "Sedang"
+    };
+    private static string GetAiConfidenceClass(string confidence) => confidence switch
+    {
+        "high" => "active",
+        "low" => "inactive",
+        _ => "pending"
+    };
 
     private static MaterialStatus? ParseStatus(string value) => value switch
     {
@@ -1032,6 +1179,24 @@
     {
         _searchDebounce?.Cancel();
         _searchDebounce?.Dispose();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Dispose();
+
+        if (_viewportRegistrationId is int registrationId)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("viewportHelper.unregister", registrationId);
+            }
+            catch
+            {
+            }
+        }
+
+        _viewportReference?.Dispose();
     }
 }
 

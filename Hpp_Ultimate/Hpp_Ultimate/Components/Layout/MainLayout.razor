@@ -16,12 +16,12 @@
                 <span class="auth-shell-mark">+</span>
                 <span>
                     <strong>HPP Ultimate</strong>
-                    <small>Operational workspace.</small>
+                    <small>Workspace operasional.</small>
                 </span>
             </a>
         </div>
 
-        <main class="auth-main">
+        <main class="auth-main modern-ui-scope">
             @Body
         </main>
     </div>
@@ -29,24 +29,15 @@
 else
 {
     <div class="app-shell">
-        <aside class="app-sidebar">
+        <aside class="app-sidebar modern-nav-scope">
             <NavMenu />
         </aside>
 
-        <main class="app-main">
+        <main class="app-main modern-ui-scope">
             <header class="app-topbar">
-                <div class="topbar-copy">
-                    <span class="topbar-label">@CurrentSection</span>
-                    <strong>@CurrentHeadline</strong>
-                </div>
-
-                <div class="topbar-tools">
-                    <label class="topbar-search">
-                        <span class="search-glyph">&#9906;</span>
-                        <input value="@TopbarUserLabel" readonly aria-label="Current user" />
-                    </label>
-
-                    <div class="topbar-avatar" aria-hidden="true">@CurrentUserInitials</div>
+                <div class="topbar-context">
+                    <span class="topbar-label">Area kerja</span>
+                    <strong>@CurrentSection</strong>
                 </div>
             </header>
 
@@ -58,9 +49,14 @@ else
 }
 
 <div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">x</span>
+    <div class="blazor-error-copy">
+        <strong>Sesi aplikasi terganggu</strong>
+        <span>Terjadi error yang belum tertangani. Muat ulang halaman untuk melanjutkan pekerjaan.</span>
+    </div>
+    <div class="blazor-error-actions">
+        <a href="." class="reload">Muat ulang</a>
+        <button type="button" class="dismiss" aria-label="Tutup pesan error">Tutup</button>
+    </div>
 </div>
 
 @code {
@@ -78,57 +74,20 @@ else
 
     private string CurrentSection => CurrentPath switch
     {
-        "/" => "Login",
+        "/" => "Dashboard",
         "produk" => "Katalog Material",
-        "gudang" => "Gudang",
+        "gudang" => "Stok Gudang",
         "produksi" => "Produksi",
-        "belanja" => "Belanja",
+        "belanja" => "Pembelian Material",
         "pembukuan" => "Pembukuan",
         "resep" => "Resep",
-        "pos" => "Point of Sales",
-        "backup-data" => "Backup & Data Ops",
-        "pengaturan" => "Pengaturan",
-        "pengaturan/akun" => "Pengaturan Akun",
+        "pos" => "Kasir / POS",
+        "backup-data" => "Backup & Impor Data",
+        "pengaturan" => "Pengaturan Bisnis",
+        "pengaturan/akun" => "Tim & Akun",
         "login" => "Login",
         _ => "HPP Ultimate"
     };
-
-    private string CurrentHeadline => CurrentPath switch
-    {
-        "/" or "login" => "Masuk ke workspace operasional",
-        "produk" => "Kelola bahan baku, harga, dan konversi unit",
-        "gudang" => "Catat saldo bahan, minimum stock, dan mutasi gudang",
-        "produksi" => "Eksekusi batch produksi dan konsumsi bahan baku",
-        "belanja" => "Catat belanja material, penerimaan barang, dan masuk stok gudang",
-        "pembukuan" => "Gabungkan pemasukan, pengeluaran, dan saldo berjalan ke satu ledger",
-        "resep" => "Rancang formula bahan, kelompok material, dan biaya produksi",
-        "pos" => "Layani checkout persisten dan kurangi stok produk jadi secara otomatis",
-        "backup-data" => "Backup penuh, restore, export, dan import data operasional",
-        "pengaturan" => "Atur preferensi dasar bisnis dan jalur akun",
-        "pengaturan/akun" => "Kelola identitas, keamanan, akses, dan data tim",
-        _ => "Halaman ini tidak tersedia di workspace aktif"
-    };
-
-    private string TopbarUserLabel => Store.AuthSession?.FullName ?? "Search workspace";
-
-    private string CurrentUserInitials
-    {
-        get
-        {
-            var name = Store.AuthSession?.FullName;
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return "HU";
-            }
-
-            var parts = name
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Take(2)
-                .Select(part => char.ToUpperInvariant(part[0]));
-
-            return string.Concat(parts);
-        }
-    }
 
     protected override void OnParametersSet()
     {

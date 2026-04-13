@@ -29,12 +29,17 @@ public sealed class SalesService(
         await Task.Delay(40, cancellationToken);
 
         var menus = await BuildSellableProductsAsync(normalizedSearch, cancellationToken);
-        var resolvedSelectedId = selectedProductId is Guid requested && menus.Any(item => item.ProductId == requested)
-            ? requested
-            : menus.FirstOrDefault(item => item.CanSell)?.ProductId ?? menus.FirstOrDefault()?.ProductId;
-        var selected = resolvedSelectedId is Guid recipeId
-            ? await BuildProductDetailAsync(recipeId, cancellationToken)
+        var selected = selectedProductId is Guid requestedId
+            ? await BuildProductDetailAsync(requestedId, cancellationToken)
             : null;
+        var resolvedSelectedId = selected?.Recipe.Id
+            ?? menus.FirstOrDefault(item => item.CanSell)?.ProductId
+            ?? menus.FirstOrDefault()?.ProductId;
+
+        if (selected is null && resolvedSelectedId is Guid recipeId)
+        {
+            selected = await BuildProductDetailAsync(recipeId, cancellationToken);
+        }
 
         var recentSales = store.Sales
             .OrderByDescending(item => item.SoldAt)
@@ -128,8 +133,10 @@ public sealed class SalesService(
         }
 
         var now = request.SoldAt == default ? DateTime.Now : request.SoldAt;
-        var isPaid = paymentMethod.Equals("Cash", StringComparison.OrdinalIgnoreCase);
-        var amountReceived = isPaid ? Math.Max(totalRevenue, request.AmountReceived) : 0m;
+        var isPaid = paymentMethod.Equals("Cash", StringComparison.OrdinalIgnoreCase) || request.MarkAsPaid;
+        var amountReceived = isPaid
+            ? Math.Max(totalRevenue, request.AmountReceived)
+            : 0m;
         var saleId = Guid.NewGuid();
         var sale = new SaleTransaction(
             saleId,

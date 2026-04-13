@@ -42,6 +42,7 @@ public sealed class ShoppingService(
                 item.BaseUnit,
                 item.NetQuantity,
                 item.NetUnit,
+                item.NetQuantityInBaseUnit,
                 item.PricePerPack,
                 item.CostPerBaseUnit,
                 onHandMap.GetValueOrDefault(item.Id),

@@ -1,31 +1,101 @@
-﻿<script type="module" src="@Assets["Components/Layout/ReconnectModal.razor.js"]"></script>
+<script>
+    (() => {
+        const reconnectModal = document.getElementById("components-reconnect-modal");
+        if (!reconnectModal || reconnectModal.dataset.initialized === "true") {
+            return;
+        }
+
+        reconnectModal.dataset.initialized = "true";
+        reconnectModal.addEventListener("components-reconnect-state-changed", handleReconnectStateChanged);
+
+        const retryButton = document.getElementById("components-reconnect-button");
+        retryButton?.addEventListener("click", retry);
+
+        const resumeButton = document.getElementById("components-resume-button");
+        resumeButton?.addEventListener("click", resume);
+
+        function handleReconnectStateChanged(event) {
+            if (event.detail.state === "show") {
+                reconnectModal.show();
+            } else if (event.detail.state === "hide") {
+                reconnectModal.close();
+            } else if (event.detail.state === "failed") {
+                document.addEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
+            } else if (event.detail.state === "rejected") {
+                location.reload();
+            }
+        }
+
+        async function retry() {
+            document.removeEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
+
+            try {
+                const successful = await Blazor.reconnect();
+                if (!successful) {
+                    const resumeSuccessful = await Blazor.resumeCircuit();
+                    if (!resumeSuccessful) {
+                        location.reload();
+                    } else {
+                        reconnectModal.close();
+                    }
+                }
+            } catch {
+                document.addEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
+            }
+        }
+
+        async function resume() {
+            try {
+                const successful = await Blazor.resumeCircuit();
+                if (!successful) {
+                    location.reload();
+                }
+            } catch {
+                reconnectModal.classList.replace("components-reconnect-paused", "components-reconnect-resume-failed");
+            }
+        }
+
+        async function retryWhenDocumentBecomesVisible() {
+            if (document.visibilityState === "visible") {
+                await retry();
+            }
+        }
+    })();
+</script>
 
 <dialog id="components-reconnect-modal" data-nosnippet>
-    <div class="components-reconnect-container">
-        <div class="components-rejoining-animation" aria-hidden="true">
-            <div></div>
-            <div></div>
+    <div class="components-reconnect-shell">
+        <div class="components-reconnect-pulse" aria-hidden="true">
+            <span></span>
         </div>
-        <p class="components-reconnect-first-attempt-visible">
-            Rejoining the server...
-        </p>
-        <p class="components-reconnect-repeated-attempt-visible">
-            Rejoin failed... trying again in <span id="components-seconds-to-next-attempt"></span> seconds.
-        </p>
-        <p class="components-reconnect-failed-visible">
-            Failed to rejoin.<br />Please retry or reload the page.
-        </p>
-        <button id="components-reconnect-button" class="components-reconnect-failed-visible">
-            Retry
-        </button>
-        <p class="components-pause-visible">
-            The session has been paused by the server.
-        </p>
-        <p class="components-resume-failed-visible">
-            Failed to resume the session.<br />Please retry or reload the page.
-        </p>
-        <button id="components-resume-button" class="components-pause-visible components-resume-failed-visible">
-            Resume
-        </button>
+        <div class="components-reconnect-copy">
+            <strong>Sambungan workspace terganggu</strong>
+            <p class="components-reconnect-first-attempt-visible">
+                Mencoba menyambungkan ulang ke server.
+            </p>
+            <p class="components-reconnect-repeated-attempt-visible">
+                Sambungan belum kembali. Sistem akan mencoba lagi dalam <span id="components-seconds-to-next-attempt"></span> detik.
+            </p>
+            <p class="components-reconnect-failed-visible">
+                Sambungan gagal dipulihkan. Coba lagi atau muat ulang halaman.
+            </p>
+            <p class="components-pause-visible">
+                Sesi dihentikan sementara oleh server.
+            </p>
+            <p class="components-resume-failed-visible">
+                Sesi tidak berhasil dilanjutkan. Coba lagi atau muat ulang halaman.
+            </p>
+        </div>
+        <div class="components-reconnect-actions">
+            <button id="components-reconnect-button" class="components-reconnect-failed-visible">
+                Coba lagi
+            </button>
+            <button id="components-resume-button" class="components-pause-visible components-resume-failed-visible">
+                Lanjutkan sesi
+            </button>
+            <button type="button" class="components-reload-button components-reconnect-failed-visible components-resume-failed-visible" onclick="location.reload()">
+                Muat ulang
+            </button>
+        </div>
     </div>
 </dialog>

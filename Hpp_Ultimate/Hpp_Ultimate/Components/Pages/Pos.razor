@@ -1,23 +1,22 @@
 @page "/pos"
 @rendermode InteractiveServer
 @implements IAsyncDisposable
+@using System.ComponentModel.DataAnnotations
 @using System.Globalization
+@using Microsoft.JSInterop
 @inject SalesService SalesService
+@inject GeminiPosOrderParserService GeminiPosOrderParserService
 @inject SeededBusinessDataStore Store
+@inject IJSRuntime JS
 
-<PageTitle>POS | HPP Ultimate</PageTitle>
+<PageTitle>Kasir / POS | HPP Ultimate</PageTitle>
 
-<section class="pos-page">
-    <header class="pos-header">
+<section class="pos-page ds-page ds-page-stack theme-amber">
+    <header class="pos-header ds-page-header">
         <div class="header-copy">
-            <span class="section-tag">POS</span>
-            <h1>Kasir menu dari stok produksi yang sudah selesai.</h1>
-            <p>Menu diambil dari resep yang sudah selesai diproduksi. Stok yang tampil adalah total porsi siap jual di kasir.</p>
-        </div>
-
-        <div class="header-actions">
-            <div class="status-chip">@_statusMessage</div>
-            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            <span class="section-tag">Kasir / POS</span>
+            <h1>Checkout kasir</h1>
+            <p>Pilih menu siap jual, masukkan ke pesanan, lalu selesaikan pembayaran dari workspace yang sama.</p>
         </div>
     </header>
 
@@ -25,27 +24,34 @@
     {
         <div class="table-skeleton"></div>
     }
-    else if ((_snapshot?.Products.Count ?? 0) == 0)
+    else if (_snapshot is not null && _snapshot.Products.Count == 0 && string.IsNullOrWhiteSpace(_searchText))
     {
         <section class="empty-state">
             <span class="section-tag">Belum ada menu siap jual</span>
-            <h2>POS belum punya stok menu</h2>
-            <p>Selesaikan produksi resep lebih dulu agar jumlah porsinya masuk ke halaman POS sebagai stok menu.</p>
+            <h2>Kasir / POS belum punya stok menu</h2>
+            <p>Selesaikan produksi resep lebih dulu agar jumlah porsinya masuk ke halaman kasir / POS sebagai stok menu.</p>
             <a class="primary-button action-link" href="/produksi">Buka Halaman Produksi</a>
         </section>
     }
     else if (_snapshot is not null)
     {
-        <div class="workspace-grid">
+        <div class="workspace-grid @(_draftLines.Count == 0 ? "menu-first-layout" : null)">
             <section class="menu-panel catalog-datagrid">
-                <div class="panel-head">
+                <div class="panel-head ds-card-header">
                     <div>
                         <span class="section-tag">List menu</span>
-                        <h2>Menu dan jumlah stok</h2>
-                        <p>Pilih menu dari daftar kanan untuk menyiapkan pesanan.</p>
+                        <h2>Pilih menu siap jual</h2>
+                        <p>Daftar kiri dipadatkan untuk scan cepat. Pilih satu menu untuk mengisi panel checkout.</p>
                     </div>
+                </div>
 
-                    <label class="display-count-control">
+                <div class="menu-toolbar-row">
+                    <label class="search-row search-field">
+                        <span>Cari menu</span>
+                        <input value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari kode atau nama menu" aria-label="Cari kode atau nama menu kasir / POS" />
+                    </label>
+
+                    <label class="display-count-control compact">
                         <span>Menu tampil</span>
                         <select value="@_menuDisplayCount" @onchange="OnMenuDisplayCountChanged">
                             @foreach (var option in GridDisplayOptions)
@@ -56,24 +62,31 @@
                     </label>
                 </div>
 
-                <div class="search-row">
-                    <input value="@_searchText" @oninput="OnSearchChangedAsync" placeholder="Cari kode atau nama menu" />
-                </div>
+                <div class="menu-toolbar-meta">
+                    <p class="panel-summary">@MenuInventorySummary</p>
 
-                <div class="menu-toolbar">
-                    <span>@_snapshot.Products.Count menu termuat</span>
-                    <span>@_snapshot.Products.Count(item => item.CanSell) siap jual</span>
-                    @if (_snapshot.SelectedProduct is not null)
+                    @if (!string.IsNullOrWhiteSpace(_searchText))
                     {
-                        <span>Aktif: @_snapshot.SelectedProduct.Recipe.Name</span>
+                        <span class="toolbar-note">Filter aktif: "@_searchText"</span>
                     }
                 </div>
 
-                <div class="menu-list-shell">
+                @if (_snapshot.Products.Count == 0)
+                {
+                    <div class="empty-state compact">
+                        <h2>Tidak ada menu yang cocok</h2>
+                        <p>Ubah kata kunci pencarian atau reset filter untuk melihat menu yang siap dijual.</p>
+                    </div>
+                }
+                else
+                {
                     <div class="menu-list">
                         @foreach (var item in VisibleProducts)
                         {
-                            <button type="button" class="menu-card @(item.ProductId == _selectedProductId ? "active" : null)" @onclick="() => SelectProductAsync(item.ProductId)">
+                            <button type="button"
+                                    class="menu-card @(item.ProductId == _selectedProductId ? "active" : null)"
+                                    @onclick="() => SelectProductAsync(item.ProductId)"
+                                    aria-pressed="@(item.ProductId == _selectedProductId)">
                                 <div class="menu-card-head">
                                     <div class="table-primary">
                                         <small>@item.ProductCode</small>
@@ -92,162 +105,272 @@
                                         <strong>@FormatCurrency(item.SuggestedPrice)</strong>
                                     </article>
                                 </div>
-
-                                <p class="menu-card-copy">@item.AvailabilityMessage</p>
                             </button>
                         }
                     </div>
-                </div>
 
-                <div class="table-footer">
-                    <small>@_snapshot.Products.Count menu</small>
-                    <div class="pager">
-                        <button type="button" @onclick="PrevMenuPage" disabled="@(CurrentMenuPage <= 1)">Prev</button>
-                        <label class="pager-select" aria-label="Pilih halaman menu POS">
-                            <select value="@CurrentMenuPage" @onchange="OnMenuPageChanged">
-                                @for (var pageNumber = 1; pageNumber <= MenuTotalPages; pageNumber++)
-                                {
-                                    <option value="@pageNumber">Halaman @pageNumber</option>
-                                }
-                            </select>
-                        </label>
-                        <span>@CurrentMenuPage / @MenuTotalPages</span>
-                        <button type="button" @onclick="NextMenuPage" disabled="@(CurrentMenuPage >= MenuTotalPages)">Next</button>
+                    <div class="table-footer">
+                        <small>@_snapshot.Products.Count menu</small>
+                        <div class="pager">
+                            <button type="button" @onclick="PrevMenuPage" disabled="@(CurrentMenuPage <= 1)">Prev</button>
+                            <label class="pager-select">
+                                <select value="@CurrentMenuPage" aria-label="Pilih halaman menu kasir / POS" @onchange="OnMenuPageChanged">
+                                    @for (var pageNumber = 1; pageNumber <= MenuTotalPages; pageNumber++)
+                                    {
+                                        <option value="@pageNumber">Halaman @pageNumber</option>
+                                    }
+                                </select>
+                            </label>
+                            <span>@CurrentMenuPage / @MenuTotalPages</span>
+                            <button type="button" @onclick="NextMenuPage" disabled="@(CurrentMenuPage >= MenuTotalPages)">Next</button>
+                        </div>
+                        <div class="table-footer-spacer" aria-hidden="true"></div>
                     </div>
-                    <div class="table-footer-spacer" aria-hidden="true"></div>
-                </div>
+                }
             </section>
 
-            <section class="order-panel">
-                @if (_snapshot.SelectedProduct is null)
+            <section class="order-panel @(_draftLines.Count == 0 ? "compact-order-panel" : null)">
+                <div class="panel-head order-panel-head ds-card-header">
+                    <div>
+                        <span class="section-tag">Pesanan aktif</span>
+                        <h2>Bangun pesanan lalu checkout</h2>
+                        <p>Pilih menu dari panel kiri, masukkan item ke pesanan aktif, lalu selesaikan pembayaran dalam satu checkout.</p>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(_message))
+                {
+                    <div class="@GetMessageClass()" aria-live="polite">@_message</div>
+                }
+
+                @if (_snapshot.SelectedProduct is null && _draftLines.Count == 0)
                 {
                     <div class="empty-state compact">
-                        <h2>Pilih menu</h2>
-                        <p>Pilih salah satu menu di panel kiri untuk mulai membuat pesanan.</p>
+                        <h2>Pilih menu dulu</h2>
+                        <p>Pilih salah satu menu dari panel kiri untuk mulai membangun pesanan aktif.</p>
                     </div>
                 }
                 else
                 {
-                    <div class="panel-head">
-                        <div>
-                            <span class="section-tag">Pesanan aktif</span>
-                            <h2>Detail pesanan sebelum checkout</h2>
-                            <p>Atur jumlah pesanan, nama pembeli, dan metode pembayaran dari satu panel.</p>
-                        </div>
-                    </div>
-
-                    <article class="selected-menu-card">
-                        <div class="selected-head">
-                            <div>
-                                <span class="section-tag">@_snapshot.SelectedProduct.Recipe.Code</span>
-                                <h3>@_snapshot.SelectedProduct.Recipe.Name</h3>
-                                <p>@(string.IsNullOrWhiteSpace(_snapshot.SelectedProduct.Recipe.Description) ? "Menu aktif siap dijual dari hasil produksi terakhir." : _snapshot.SelectedProduct.Recipe.Description)</p>
+                    @if (_snapshot.SelectedProduct is not null)
+                    {
+                        <article class="selected-menu-card">
+                            <div class="selected-head">
+                                <div>
+                                    <span class="section-tag">@_snapshot.SelectedProduct.Recipe.Code</span>
+                                    <h3>@_snapshot.SelectedProduct.Recipe.Name</h3>
+                                    <p>@(string.IsNullOrWhiteSpace(_snapshot.SelectedProduct.Recipe.Description) ? "Menu aktif siap ditambahkan ke pesanan." : _snapshot.SelectedProduct.Recipe.Description)</p>
+                                </div>
                             </div>
 
-                            <span class="badge @(_snapshot.SelectedProduct.OnHandQuantity > 0 ? "ok" : "warn")">
-                                @(_snapshot.SelectedProduct.OnHandQuantity > 0 ? "Siap jual" : "Stok kosong")
-                            </span>
-                        </div>
+                            <div class="selected-metrics compact">
+                                <article>
+                                    <small>Stok menu</small>
+                                    <strong>@FormatDecimal(_snapshot.SelectedProduct.OnHandQuantity) @_snapshot.SelectedProduct.Recipe.PortionUnit</strong>
+                                </article>
+                                <article>
+                                    <small>HPP / satuan</small>
+                                    <strong>@FormatCurrency(_snapshot.SelectedProduct.HppPerUnit)</strong>
+                                </article>
+                                <article>
+                                    <small>Harga jual</small>
+                                    <strong>@FormatCurrency(_snapshot.SelectedProduct.SuggestedPrice)</strong>
+                                </article>
+                            </div>
 
-                        <div class="selected-metrics">
-                            <article>
-                                <small>Stok menu</small>
-                                <strong>@FormatDecimal(_snapshot.SelectedProduct.OnHandQuantity) @_snapshot.SelectedProduct.Recipe.PortionUnit</strong>
-                            </article>
-                            <article>
-                                <small>HPP / satuan</small>
-                                <strong>@FormatCurrency(_snapshot.SelectedProduct.HppPerUnit)</strong>
-                            </article>
-                            <article>
-                                <small>Harga jual</small>
-                                <strong>@FormatCurrency(_snapshot.SelectedProduct.SuggestedPrice)</strong>
-                            </article>
-                            <article>
-                                <small>Margin</small>
-                                <strong>@FormatPercent(_snapshot.SelectedProduct.SuggestedPrice <= 0 ? 0m : Math.Max(0m, (_snapshot.SelectedProduct.SuggestedPrice - _snapshot.SelectedProduct.HppPerUnit) / _snapshot.SelectedProduct.SuggestedPrice) * 100m)</strong>
-                            </article>
-                        </div>
-                    </article>
+                            <div class="selected-entry-row">
+                                <label class="line-qty-field">
+                                    <span>Qty masuk ke pesanan</span>
+                                    <InputNumber TValue="int" @bind-Value="_selectedLineQuantity" />
+                                </label>
 
-                    @if (!string.IsNullOrWhiteSpace(_message))
-                    {
-                        <div class="form-message">@_message</div>
+                                <button type="button"
+                                        class="primary-button"
+                                        disabled="@(!CanAddSelectedProduct)"
+                                        @onclick="AddSelectedProductToDraft">
+                                    Masukkan ke Pesanan
+                                </button>
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(SelectedProductStockWarning))
+                            {
+                                <div class="inline-note warn-note">@SelectedProductStockWarning</div>
+                            }
+                        </article>
                     }
 
-                    @if (_snapshot.SelectedProduct.OnHandQuantity <= 0)
-                    {
-                        <div class="inline-note">Stok menu ini kosong. Selesaikan produksi dulu sebelum melakukan checkout.</div>
-                    }
-                    else if (_draftQuantity > _snapshot.SelectedProduct.OnHandQuantity)
-                    {
-                        <div class="inline-note">Jumlah pesanan melebihi stok yang tersedia.</div>
-                    }
-
-                    <section class="checkout-card">
-                        <div class="form-grid">
-                            <label>
-                                <span>Jumlah pesanan</span>
-                                <input type="number" min="1" step="1" value="@_draftQuantity" @oninput="OnDraftQuantityChanged" />
-                            </label>
-
-                            <label>
-                                <span>Nama pembeli / pemesan</span>
-                                <input type="text" value="@_customerName" @oninput="OnCustomerNameChanged" placeholder="Contoh: Bapak Andi" />
-                            </label>
-
-                            <label class="wide-field">
-                                <span>Tanggal & jam pesanan</span>
-                                <input type="datetime-local" value="@FormatDateTimeLocal(_soldAt)" @onchange="OnSoldAtChanged" />
-                            </label>
+                    <section class="checkout-draft-card">
+                        <div class="section-head ds-card-header">
+                            <div>
+                                <span class="section-tag">Item pesanan</span>
+                                <h3>Ringkas menu yang akan di-checkout</h3>
+                                <p>Jumlah item bisa diubah langsung di sini tanpa mengulang flow checkout per menu.</p>
+                            </div>
                         </div>
 
-                        <div class="payment-section">
-                            <span class="field-label">Pembayaran</span>
-                            <div class="method-row">
-                                @foreach (var method in PaymentMethods)
+                        @if (_draftLines.Count == 0)
+                        {
+                            <div class="empty-state compact">
+                                <h2>Pesanan masih kosong</h2>
+                                <p>Pilih menu dari panel kiri lalu masukkan ke pesanan aktif.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="checkout-draft-list">
+                                @foreach (var line in _draftLines)
                                 {
-                                    <button type="button" class="method-chip @(_paymentMethod == method ? "active" : null)" @onclick="() => SelectPaymentMethod(method)">@method</button>
+                                    <article class="checkout-draft-item">
+                                        <div class="checkout-draft-main">
+                                            <div class="table-primary">
+                                                <strong>@line.ProductName</strong>
+                                                <small>@line.ProductCode</small>
+                                            </div>
+
+                                            <div class="checkout-draft-price">
+                                                <small>@FormatCurrency(line.UnitPrice) / item</small>
+                                                <strong>@FormatCurrency(line.UnitPrice * line.Quantity)</strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkout-draft-controls">
+                                            <div class="qty-stepper">
+                                                <button type="button" class="icon-button" aria-label="Kurangi jumlah item" @onclick="() => DecreaseDraftLineQuantity(line.ProductId)">-</button>
+                                                <strong>@line.Quantity @line.UnitLabel</strong>
+                                                <button type="button" class="icon-button" aria-label="Tambah jumlah item" @onclick="() => IncreaseDraftLineQuantity(line.ProductId)">+</button>
+                                            </div>
+
+                                            <button type="button" class="icon-button" aria-label="Hapus item pesanan" @onclick="() => RemoveDraftLine(line.ProductId)">
+                                                <AppIcon Name="delete" Class="icon-glyph" />
+                                            </button>
+                                        </div>
+
+                                        @if (GetDraftLineWarning(line) is string draftWarning)
+                                        {
+                                            <div class="inline-note warn-note compact-note">@draftWarning</div>
+                                        }
+                                    </article>
                                 }
                             </div>
-                        </div>
-
-                        <div class="summary-card">
-                            <div class="summary-row">
-                                <span>Total porsi</span>
-                                <strong>@_draftQuantity @_snapshot.SelectedProduct.Recipe.PortionUnit</strong>
-                            </div>
-                            <div class="summary-row">
-                                <span>Total bayar</span>
-                                <strong>@FormatCurrency(OrderTotal)</strong>
-                            </div>
-                            <div class="summary-row">
-                                <span>Estimasi profit</span>
-                                <strong>@FormatCurrency(OrderProfit)</strong>
-                            </div>
-                            <div class="summary-row">
-                                <span>Status pembayaran</span>
-                                <strong>@(_paymentMethod == "Cash" ? "Lunas otomatis" : "Menunggu pelunasan")</strong>
-                            </div>
-                        </div>
-
-                        <div class="checkout-actions">
-                            <button type="button" class="ghost-button" @onclick="ResetDraft">Reset</button>
-                            <button type="button" class="primary-button" disabled="@(!CanCheckout)" @onclick="CompleteTransactionAsync">Check Out</button>
-                        </div>
+                        }
                     </section>
+
+                    @if (_draftLines.Count == 0)
+                    {
+                        <article class="order-empty-glance">
+                            <small>Checkout aktif</small>
+                            <strong>Pesanan masih kosong.</strong>
+                            <span>@(_snapshot.SelectedProduct is null
+                                ? "Pilih satu menu dari panel kiri untuk mulai membangun checkout."
+                                : "Gunakan panel menu aktif di atas untuk menambahkan item pertama ke pesanan. Form checkout penuh baru muncul setelah ada item di cart.")</span>
+                        </article>
+                    }
+                    else
+                    {
+                        <EditForm EditContext="_checkoutEditContext" OnValidSubmit="CompleteTransactionAsync" class="checkout-card">
+                            <DataAnnotationsValidator />
+
+                            <div class="form-grid compact-checkout-grid">
+                                <label>
+                                    <span>Nama pembeli / pemesan</span>
+                                    <InputText @bind-Value="_checkoutForm.CustomerName" placeholder="Contoh: Bapak Andi" />
+                                    <ValidationMessage For="@(() => _checkoutForm.CustomerName)" />
+                                </label>
+
+                                <label>
+                                    <span>Tanggal & jam pesanan</span>
+                                    <InputText @bind-Value="_checkoutForm.SoldAtInput" type="datetime-local" />
+                                    <ValidationMessage For="@(() => _checkoutForm.SoldAtInput)" />
+                                </label>
+                            </div>
+
+                            <div class="payment-section">
+                                <div class="field-head">
+                                    <span class="field-label">Metode pembayaran</span>
+                                    <small>Pilih metode bayar, lalu tentukan apakah uangnya sudah benar-benar masuk saat checkout.</small>
+                                </div>
+                                <div class="method-row">
+                                    @foreach (var method in PaymentMethods)
+                                    {
+                                        <button type="button"
+                                                class="method-chip @(_checkoutForm.PaymentMethod == method ? "active" : null)"
+                                                aria-pressed="@(_checkoutForm.PaymentMethod == method)"
+                                                @onclick="() => SelectPaymentMethod(method)">
+                                            @method
+                                        </button>
+                                    }
+                                </div>
+                                <ValidationMessage For="@(() => _checkoutForm.PaymentMethod)" />
+                            </div>
+
+                            @if (_checkoutForm.PaymentMethod == "Transfer Bank")
+                            {
+                                <div class="payment-section settlement-section">
+                                    <div class="field-head">
+                                        <span class="field-label">Status pelunasan</span>
+                                        <small>Pilih <em>Sudah masuk</em> jika transfer sudah diterima saat checkout.</small>
+                                    </div>
+                                    <div class="method-row">
+                                        <button type="button"
+                                                class="method-chip @(_checkoutForm.MarkAsPaid ? "active" : null)"
+                                                aria-pressed="@_checkoutForm.MarkAsPaid"
+                                                @onclick="() => SetTransferSettlement(true)">
+                                            Sudah masuk
+                                        </button>
+                                        <button type="button"
+                                                class="method-chip @(!_checkoutForm.MarkAsPaid ? "active" : null)"
+                                                aria-pressed="@(!_checkoutForm.MarkAsPaid)"
+                                                @onclick="() => SetTransferSettlement(false)">
+                                            Belum lunas
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="summary-card">
+                                <div class="summary-row">
+                                    <span>Item menu</span>
+                                    <strong>@_draftLines.Count line</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Total porsi</span>
+                                    <strong>@TotalDraftQuantity item</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Total bayar</span>
+                                    <strong>@FormatCurrency(OrderTotal)</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Status pembayaran</span>
+                                    <strong>@PaymentStatusLabel</strong>
+                                </div>
+                            </div>
+
+                            <div class="submit-confidence-note">
+                                Checkout ini akan membuat transaksi penjualan untuk semua item di pesanan aktif. Jika metode bayar adalah transfer dan uang sudah diterima sekarang, pilih <em>Sudah masuk</em> supaya tidak perlu follow-up lagi di history.
+                            </div>
+
+                            <div class="checkout-actions">
+                                <button type="button" class="ghost-button" @onclick="ResetDraft">Kosongkan Pesanan</button>
+                                <button type="submit" class="primary-button" disabled="@(!CanCheckout)">
+                                    @(_isSubmitting ? "Menyimpan..." : "Check Out")
+                                </button>
+                            </div>
+                        </EditForm>
+                    }
                 }
             </section>
         </div>
 
-        <section class="history-card catalog-datagrid">
-            <div class="panel-head">
+        <section class="history-card catalog-datagrid" id="pos-history">
+            <div class="panel-head ds-card-header">
                 <div>
                     <span class="section-tag">History pesanan</span>
                     <h2>Datagrid pesanan dan penjualan</h2>
-                    <p>Pesanan yang sudah checkout akan muncul di sini. Gunakan checklist untuk menandai pembayaran transfer sudah lunas.</p>
+                    <p>Checkout yang selesai langsung masuk ke history. Transfer bank bisa ditandai lunas dari sini.</p>
                 </div>
 
-                <label class="display-count-control">
+                <label class="display-count-control compact">
                     <span>Baris tampil</span>
                     <select value="@_historyDisplayCount" @onchange="OnHistoryDisplayCountChanged">
                         @foreach (var option in GridDisplayOptions)
@@ -258,7 +381,11 @@
                 </label>
             </div>
 
-            @if (_snapshot.RecentSales.Count == 0)
+            <div class="menu-toolbar-meta history-toolbar-meta">
+                <p class="panel-summary">@HistorySummary</p>
+            </div>
+
+            @if (_historyTotalCount == 0)
             {
                 <div class="empty-state compact">
                     <h2>Belum ada pesanan</h2>
@@ -267,6 +394,8 @@
             }
             else
             {
+                @if (!_isCompactHistory)
+                {
                 <div class="history-grid-shell">
                     <QuickGrid Items="VisibleRecentSales.AsQueryable()" Class="history-quickgrid">
                         <TemplateColumn Title="Pesanan" Context="item">
@@ -293,14 +422,14 @@
                                 <small>Profit @FormatCurrency(item.GrossProfit)</small>
                             </div>
                         </TemplateColumn>
-                        <TemplateColumn Title="Lunas" Context="item">
+                        <TemplateColumn Title="Status" Context="item">
                             <span class="badge @(item.IsPaid ? "ok" : "warn")">
                                 @(item.IsPaid ? "Lunas" : "Pending")
                             </span>
                         </TemplateColumn>
                         <TemplateColumn Title="Waktu" Context="item">
                             <div class="history-meta-cell">
-                                <strong>@item.SoldAt.ToString("dd MMM yyyy")</strong>
+                                <strong>@item.SoldAt.ToString("dd MMM yy")</strong>
                                 <small>@item.SoldAt.ToString("HH:mm")</small>
                             </div>
                         </TemplateColumn>
@@ -308,19 +437,22 @@
                             <div class="history-actions">
                                 @if (!item.IsPaid && item.Status == SaleStatus.Completed)
                                 {
-                                    <button type="button" class="icon-button success" @onclick="() => MarkSalePaidAsync(item.Id)" title="Tandai lunas">
+                                    <button type="button"
+                                            class="icon-button success"
+                                            disabled="@(_markingSalePaidId == item.Id)"
+                                            aria-label="Tandai lunas"
+                                            title="Tandai lunas"
+                                            @onclick="() => MarkSalePaidAsync(item.Id)">
                                         <AppIcon Name="check" Class="icon-glyph" />
                                     </button>
-                                }
-                                else
-                                {
-                                    <span class="history-done-text">Selesai</span>
                                 }
                             </div>
                         </TemplateColumn>
                     </QuickGrid>
                 </div>
-
+                }
+                else
+                {
                 <div class="history-card-list">
                     @foreach (var item in VisibleRecentSales)
                     {
@@ -354,33 +486,35 @@
                                 </article>
                                 <article>
                                     <small>Waktu</small>
-                                    <strong>@item.SoldAt.ToString("dd MMM yyyy")</strong>
+                                    <strong>@item.SoldAt.ToString("dd MMM yy")</strong>
                                     <span>@item.SoldAt.ToString("HH:mm")</span>
                                 </article>
                             </div>
 
-                            <div class="history-mobile-actions">
-                                @if (!item.IsPaid && item.Status == SaleStatus.Completed)
-                                {
-                                    <button type="button" class="icon-button success" @onclick="() => MarkSalePaidAsync(item.Id)" title="Tandai lunas">
+                            @if (!item.IsPaid && item.Status == SaleStatus.Completed)
+                            {
+                                <div class="history-mobile-actions">
+                                    <button type="button"
+                                            class="icon-button success"
+                                            disabled="@(_markingSalePaidId == item.Id)"
+                                            aria-label="Tandai lunas"
+                                            title="Tandai lunas"
+                                            @onclick="() => MarkSalePaidAsync(item.Id)">
                                         <AppIcon Name="check" Class="icon-glyph" />
                                     </button>
-                                }
-                                else
-                                {
-                                    <span class="history-done-text">Selesai</span>
-                                }
-                            </div>
+                                </div>
+                            }
                         </article>
                     }
                 </div>
+                }
 
                 <div class="table-footer">
-                    <small>@_snapshot.RecentSales.Count pesanan</small>
+                    <small>@_historyTotalCount pesanan</small>
                     <div class="pager">
                         <button type="button" @onclick="PrevPosHistoryPage" disabled="@(CurrentHistoryPage <= 1)">Prev</button>
-                        <label class="pager-select" aria-label="Pilih halaman history POS">
-                            <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
+                        <label class="pager-select">
+                            <select value="@CurrentHistoryPage" aria-label="Pilih halaman history kasir / POS" @onchange="OnHistoryPageChanged">
                                 @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
                                 {
                                     <option value="@pageNumber">Halaman @pageNumber</option>
@@ -402,58 +536,112 @@
     private static readonly int[] GridDisplayOptions = [8, 12, 20, 50];
 
     private PosSnapshot? _snapshot;
+    private IReadOnlyList<PosSalesHistoryItem> _historyItems = Array.Empty<PosSalesHistoryItem>();
+    private IReadOnlyList<PosProductOption> _visibleProducts = Array.Empty<PosProductOption>();
+    private IReadOnlyList<PosSalesHistoryItem> _visibleRecentSales = Array.Empty<PosSalesHistoryItem>();
     private bool _isLoading = true;
-    private string _statusMessage = "Memuat POS...";
+    private bool _isSubmitting;
+    private bool _showPosAiPanel;
+    private bool _isCompactHistory;
+    private Guid? _markingSalePaidId;
     private string _searchText = string.Empty;
     private Guid? _selectedProductId;
-    private int _draftQuantity = 1;
-    private string _customerName = string.Empty;
-    private string _paymentMethod = PaymentMethods[0];
-    private DateTime _soldAt = DateTime.Now;
     private string _message = string.Empty;
+    private string _messageTone = "info";
+    private string _posAiPrompt = string.Empty;
+    private string _posAiMessage = string.Empty;
+    private PosAiOrderSuggestion? _posAiSuggestion;
+    private readonly List<PosDraftLine> _draftLines = [];
     private int _menuDisplayCount = 12;
     private int _menuPage = 1;
     private int _historyDisplayCount = 12;
     private int _historyPage = 1;
+    private int _selectedLineQuantity = 1;
+    private int _historyTotalCount;
+    private CancellationTokenSource? _searchDebounce;
+    private DotNetObjectReference<Pos>? _viewportReference;
+    private int? _viewportRegistrationId;
+    private PosCheckoutFormModel _checkoutForm = default!;
+    private EditContext _checkoutEditContext = default!;
 
-    private decimal OrderTotal => _snapshot?.SelectedProduct is null ? 0m : _snapshot.SelectedProduct.SuggestedPrice * _draftQuantity;
-    private decimal OrderProfit => _snapshot?.SelectedProduct is null ? 0m : (_snapshot.SelectedProduct.SuggestedPrice - _snapshot.SelectedProduct.HppPerUnit) * _draftQuantity;
+    private decimal OrderTotal => _draftLines.Sum(item => item.UnitPrice * item.Quantity);
+    private decimal OrderProfit => _draftLines.Sum(item => (item.UnitPrice - item.HppPerUnit) * item.Quantity);
+    private int TotalDraftQuantity => _draftLines.Sum(item => item.Quantity);
     private int MenuTotalPages => CalculateTotalPages(_snapshot?.Products.Count ?? 0, _menuDisplayCount);
     private int CurrentMenuPage => ClampPage(_menuPage, MenuTotalPages);
-    private IReadOnlyList<PosProductOption> VisibleProducts
-        => (_snapshot?.Products ?? Array.Empty<PosProductOption>())
-            .Skip((CurrentMenuPage - 1) * _menuDisplayCount)
-            .Take(_menuDisplayCount)
-            .ToArray();
-    private int HistoryTotalPages => CalculateTotalPages(_snapshot?.RecentSales.Count ?? 0, _historyDisplayCount);
+    private IReadOnlyList<PosProductOption> VisibleProducts => _visibleProducts;
+    private int HistoryTotalPages => CalculateTotalPages(_historyTotalCount, _historyDisplayCount);
     private int CurrentHistoryPage => ClampPage(_historyPage, HistoryTotalPages);
-    private IReadOnlyList<PosSalesHistoryItem> VisibleRecentSales
-        => (_snapshot?.RecentSales ?? Array.Empty<PosSalesHistoryItem>())
-            .Skip((CurrentHistoryPage - 1) * _historyDisplayCount)
-            .Take(_historyDisplayCount)
-            .ToArray();
-    private bool CanCheckout
+    private IReadOnlyList<PosSalesHistoryItem> VisibleRecentSales => _visibleRecentSales;
+    private string MenuInventorySummary
+        => _snapshot is null
+            ? "Memuat menu..."
+            : _snapshot.Products.Count == 0
+                ? "Belum ada menu yang cocok dengan filter aktif."
+                : $"{_snapshot.Products.Count(item => item.CanSell)} siap jual dari {_snapshot.Products.Count} menu";
+    private string HistorySummary
+        => _snapshot is null
+            ? "Memuat history..."
+            : $"{_historyTotalCount} pesanan tercatat, {VisibleRecentSales.Count} tampil di halaman ini";
+    private bool CanAddSelectedProduct
         => _snapshot?.SelectedProduct is not null
-            && _draftQuantity > 0
-            && !string.IsNullOrWhiteSpace(_customerName)
-            && _snapshot.SelectedProduct.OnHandQuantity >= _draftQuantity;
+            && _selectedLineQuantity > 0
+            && GetRemainingStock(_snapshot.SelectedProduct.Recipe.Id) >= _selectedLineQuantity;
+    private bool CanCheckout
+        => !_isSubmitting
+            && _draftLines.Count > 0
+            && !string.IsNullOrWhiteSpace(_checkoutForm.CustomerName)
+            && !string.IsNullOrWhiteSpace(_checkoutForm.PaymentMethod)
+            && !string.IsNullOrWhiteSpace(_checkoutForm.SoldAtInput)
+            && DateTime.TryParse(_checkoutForm.SoldAtInput, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out _)
+            && !_draftLines.Any(line => line.Quantity > GetAvailableStock(line.ProductId));
+    private string PaymentStatusLabel
+        => _checkoutForm.PaymentMethod == "Cash" || _checkoutForm.MarkAsPaid
+            ? "Lunas"
+            : "Belum lunas";
+    private string? SelectedProductStockWarning
+        => _snapshot?.SelectedProduct is null
+            ? null
+            : _snapshot.SelectedProduct.OnHandQuantity <= 0
+                ? "Stok menu ini kosong. Selesaikan produksi dulu sebelum menambahkan ke pesanan."
+                : GetRemainingStock(_snapshot.SelectedProduct.Recipe.Id) <= 0
+                    ? "Stok menu ini sudah habis dipakai di pesanan aktif."
+                    : _selectedLineQuantity > GetRemainingStock(_snapshot.SelectedProduct.Recipe.Id)
+                        ? $"Jumlah yang dimasukkan melebihi sisa stok {FormatDecimal(GetRemainingStock(_snapshot.SelectedProduct.Recipe.Id))} {_snapshot.SelectedProduct.Recipe.PortionUnit}."
+                        : null;
 
     protected override async Task OnInitializedAsync()
     {
+        InitializeCheckoutForm();
         Store.Changed += HandleStoreChanged;
         await LoadAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _viewportReference = DotNetObjectReference.Create(this);
+        _viewportRegistrationId = await JS.InvokeAsync<int>("viewportHelper.register", _viewportReference, nameof(HandleHistoryViewportChanged), 960);
     }
 
     private async Task LoadAsync()
     {
         _isLoading = true;
-        _snapshot = await SalesService.GetPosSnapshotAsync(_searchText, _selectedProductId);
-        _menuPage = CurrentMenuPage;
-        _historyPage = CurrentHistoryPage;
+        var posTask = SalesService.GetPosSnapshotAsync(_searchText, _selectedProductId);
+        var historyTask = SalesService.GetHistorySnapshotAsync();
+
+        await Task.WhenAll(posTask, historyTask);
+
+        _snapshot = posTask.Result;
+        var historySnapshot = historyTask.Result;
+        _historyItems = historySnapshot.Items;
+        _historyTotalCount = historySnapshot.TotalCount;
         _selectedProductId = _snapshot.SelectedProductId;
-        _statusMessage = _snapshot.Products.Count == 0
-            ? "Belum ada menu aktif."
-            : $"{_snapshot.Products.Count} menu termuat";
+        RefreshVisibleCollections();
         _isLoading = false;
         await InvokeAsync(StateHasChanged);
     }
@@ -464,113 +652,421 @@
     {
         _searchText = args.Value?.ToString() ?? string.Empty;
         _menuPage = 1;
-        await LoadAsync();
+        _message = string.Empty;
+
+        _searchDebounce?.Cancel();
+        _searchDebounce?.Dispose();
+        _searchDebounce = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(220, _searchDebounce.Token);
+            await LoadAsync();
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     private void OnMenuDisplayCountChanged(ChangeEventArgs args)
     {
         _menuDisplayCount = ParseDisplayCount(args.Value?.ToString(), _menuDisplayCount);
         _menuPage = 1;
+        RefreshVisibleProducts();
     }
 
     private void OnMenuPageChanged(ChangeEventArgs args)
-        => _menuPage = ParsePage(args.Value?.ToString(), CurrentMenuPage, MenuTotalPages);
+    {
+        _menuPage = ParsePage(args.Value?.ToString(), CurrentMenuPage, MenuTotalPages);
+        RefreshVisibleProducts();
+    }
 
     private void PrevMenuPage()
-        => _menuPage = Math.Max(1, CurrentMenuPage - 1);
+    {
+        _menuPage = Math.Max(1, CurrentMenuPage - 1);
+        RefreshVisibleProducts();
+    }
 
     private void NextMenuPage()
-        => _menuPage = Math.Min(MenuTotalPages, CurrentMenuPage + 1);
+    {
+        _menuPage = Math.Min(MenuTotalPages, CurrentMenuPage + 1);
+        RefreshVisibleProducts();
+    }
 
     private void OnHistoryDisplayCountChanged(ChangeEventArgs args)
     {
         _historyDisplayCount = ParseDisplayCount(args.Value?.ToString(), _historyDisplayCount);
         _historyPage = 1;
+        RefreshVisibleRecentSales();
     }
 
     private void OnHistoryPageChanged(ChangeEventArgs args)
-        => _historyPage = ParsePage(args.Value?.ToString(), CurrentHistoryPage, HistoryTotalPages);
+    {
+        _historyPage = ParsePage(args.Value?.ToString(), CurrentHistoryPage, HistoryTotalPages);
+        RefreshVisibleRecentSales();
+    }
 
     private void PrevPosHistoryPage()
-        => _historyPage = Math.Max(1, CurrentHistoryPage - 1);
+    {
+        _historyPage = Math.Max(1, CurrentHistoryPage - 1);
+        RefreshVisibleRecentSales();
+    }
 
     private void NextPosHistoryPage()
-        => _historyPage = Math.Min(HistoryTotalPages, CurrentHistoryPage + 1);
+    {
+        _historyPage = Math.Min(HistoryTotalPages, CurrentHistoryPage + 1);
+        RefreshVisibleRecentSales();
+    }
 
     private async Task SelectProductAsync(Guid productId)
     {
         _selectedProductId = productId;
-        _draftQuantity = 1;
+        _showPosAiPanel = false;
         _message = string.Empty;
         await LoadAsync();
     }
 
-    private void OnDraftQuantityChanged(ChangeEventArgs args)
-        => _draftQuantity = int.TryParse(args.Value?.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) && value > 0 ? value : 1;
-
-    private void OnCustomerNameChanged(ChangeEventArgs args)
-        => _customerName = args.Value?.ToString() ?? string.Empty;
-
-    private void OnSoldAtChanged(ChangeEventArgs args)
-        => _soldAt = ParseDateTimeLocal(args.Value?.ToString(), _soldAt);
-
-    private void SelectPaymentMethod(string method)
-        => _paymentMethod = method;
+    private void OnPosAiPromptChanged(ChangeEventArgs args)
+        => _posAiPrompt = args.Value?.ToString() ?? string.Empty;
 
     private void ResetDraft()
+        => ResetCheckoutFlow();
+
+    private void FillPosAiExamplePrompt()
     {
-        _draftQuantity = 1;
-        _customerName = string.Empty;
-        _paymentMethod = PaymentMethods[0];
-        _soldAt = DateTime.Now;
-        _message = string.Empty;
+        var productName = _snapshot?.Products.FirstOrDefault(item => item.CanSell)?.ProductName
+            ?? _snapshot?.Products.FirstOrDefault()?.ProductName
+            ?? "menu aktif";
+        _posAiPrompt = $"2 {productName} atas nama Dita bayar transfer bank untuk jam 18:30";
+    }
+
+    private void TogglePosAiPanel()
+        => _showPosAiPanel = !_showPosAiPanel;
+
+    private void DismissPosAiSuggestion()
+    {
+        _posAiSuggestion = null;
+        _posAiMessage = string.Empty;
+    }
+
+    private async Task ParsePosOrderWithAiAsync()
+    {
+        if (_snapshot is null)
+        {
+            return;
+        }
+
+        _showPosAiPanel = true;
+        _posAiSuggestion = null;
+        _posAiMessage = "Gemini sedang membaca draft pesanan dan memilih menu yang paling cocok...";
+
+        try
+        {
+            var result = await GeminiPosOrderParserService.ParseOrderAsync(new PosAiOrderRequest(
+                _posAiPrompt,
+                ResolveCheckoutSoldAt(),
+                _snapshot.Products));
+
+            _posAiMessage = result.Message;
+            _posAiSuggestion = result.Suggestion;
+        }
+        finally
+        {
+        }
+    }
+
+    private async Task ApplyPosAiSuggestionAsync()
+    {
+        if (_snapshot is null || _posAiSuggestion is null || string.IsNullOrWhiteSpace(_posAiSuggestion.ProductCode))
+        {
+            return;
+        }
+
+        var product = _snapshot.Products.FirstOrDefault(item => string.Equals(item.ProductCode, _posAiSuggestion.ProductCode, StringComparison.OrdinalIgnoreCase));
+        if (product is null)
+        {
+            _posAiMessage = "Menu hasil AI sudah tidak ada di daftar POS aktif.";
+            return;
+        }
+
+        await SelectProductAsync(product.ProductId);
+        _selectedLineQuantity = Math.Max(1, _posAiSuggestion.Quantity);
+        _checkoutForm.CustomerName = _posAiSuggestion.CustomerName ?? string.Empty;
+        _checkoutForm.PaymentMethod = PaymentMethods.Contains(_posAiSuggestion.PaymentMethod, StringComparer.OrdinalIgnoreCase)
+            ? _posAiSuggestion.PaymentMethod
+            : PaymentMethods[0];
+        _checkoutForm.MarkAsPaid = _checkoutForm.PaymentMethod == "Cash";
+        _checkoutForm.SoldAtInput = FormatDateTimeLocal(_posAiSuggestion.SoldAt ?? DateTime.Now);
+        AddSelectedProductToDraft();
+        SetMessage($"Draft checkout diisi dari AI untuk {product.ProductName}.", "success");
     }
 
     private async Task CompleteTransactionAsync()
     {
-        if (_snapshot?.SelectedProduct is null)
+        if (_draftLines.Count == 0)
         {
             return;
         }
 
-        var result = await SalesService.CheckoutAsync(new PosCheckoutRequest
+        if (!_checkoutEditContext.Validate())
         {
-            CustomerName = _customerName,
-            PaymentMethod = _paymentMethod,
-            AmountReceived = _paymentMethod == "Cash" ? OrderTotal : 0m,
-            SoldAt = _soldAt,
-            Lines =
-            [
-                new PosCheckoutLineRequest
-                {
-                    ProductId = _snapshot.SelectedProduct.Recipe.Id,
-                    RecipeId = _snapshot.SelectedProduct.Recipe.Id,
-                    ProductCode = _snapshot.SelectedProduct.Recipe.Code,
-                    ProductName = _snapshot.SelectedProduct.Recipe.Name,
-                    UnitLabel = _snapshot.SelectedProduct.Recipe.PortionUnit,
-                    Quantity = _draftQuantity,
-                    UnitPrice = _snapshot.SelectedProduct.SuggestedPrice,
-                    HppPerUnit = _snapshot.SelectedProduct.HppPerUnit
-                }
-            ]
-        });
-
-        _message = result.Message;
-        if (!result.Success)
-        {
+            SetMessage("Periksa lagi field checkout yang masih belum valid.", "error");
             return;
         }
 
-        ResetDraft();
-        await LoadAsync();
+        if (!DateTime.TryParse(_checkoutForm.SoldAtInput, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var soldAt))
+        {
+            SetMessage("Format tanggal dan jam pesanan belum valid.", "error");
+            return;
+        }
+
+        _isSubmitting = true;
+
+        try
+        {
+            var result = await SalesService.CheckoutAsync(new PosCheckoutRequest
+            {
+                CustomerName = _checkoutForm.CustomerName,
+                PaymentMethod = _checkoutForm.PaymentMethod,
+                MarkAsPaid = _checkoutForm.MarkAsPaid,
+                AmountReceived = _checkoutForm.PaymentMethod == "Cash" || _checkoutForm.MarkAsPaid ? OrderTotal : 0m,
+                SoldAt = soldAt,
+                Lines = _draftLines
+                    .Select(line => new PosCheckoutLineRequest
+                    {
+                        ProductId = line.ProductId,
+                        RecipeId = line.ProductId,
+                        ProductCode = line.ProductCode,
+                        ProductName = line.ProductName,
+                        UnitLabel = line.UnitLabel,
+                        Quantity = line.Quantity,
+                        UnitPrice = line.UnitPrice,
+                        HppPerUnit = line.HppPerUnit
+                    })
+                    .ToList()
+            });
+
+            SetMessage(result.Message, result.Success ? "success" : "error");
+            if (!result.Success)
+            {
+                return;
+            }
+
+            ResetCheckoutFlow(clearMessage: false);
+            _showPosAiPanel = false;
+            await LoadAsync();
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
     }
 
     private async Task MarkSalePaidAsync(Guid saleId)
     {
-        var result = await SalesService.MarkSalePaidAsync(saleId);
-        _message = result.Message;
-        await LoadAsync();
+        _markingSalePaidId = saleId;
+
+        try
+        {
+            var result = await SalesService.MarkSalePaidAsync(saleId);
+            SetMessage(result.Message, result.Success ? "success" : "error");
+            await LoadAsync();
+        }
+        finally
+        {
+            _markingSalePaidId = null;
+        }
     }
+
+    private void SelectPaymentMethod(string method)
+    {
+        _checkoutForm.PaymentMethod = method;
+        if (string.Equals(method, "Cash", StringComparison.OrdinalIgnoreCase))
+        {
+            _checkoutForm.MarkAsPaid = true;
+        }
+        else if (string.Equals(method, "Transfer Bank", StringComparison.OrdinalIgnoreCase))
+        {
+            _checkoutForm.MarkAsPaid = false;
+        }
+    }
+
+    private void SetTransferSettlement(bool isPaid)
+        => _checkoutForm.MarkAsPaid = isPaid;
+
+    private void RefreshVisibleCollections()
+    {
+        RefreshVisibleProducts();
+        RefreshVisibleRecentSales();
+    }
+
+    private void RefreshVisibleProducts()
+    {
+        var items = _snapshot?.Products ?? Array.Empty<PosProductOption>();
+        _menuPage = ClampPage(_menuPage, CalculateTotalPages(items.Count, _menuDisplayCount));
+        _visibleProducts = items
+            .Skip((CurrentMenuPage - 1) * _menuDisplayCount)
+            .Take(_menuDisplayCount)
+            .ToArray();
+    }
+
+    private void RefreshVisibleRecentSales()
+    {
+        var items = _historyItems;
+        _historyPage = ClampPage(_historyPage, CalculateTotalPages(items.Count, _historyDisplayCount));
+        _visibleRecentSales = items
+            .Skip((CurrentHistoryPage - 1) * _historyDisplayCount)
+            .Take(_historyDisplayCount)
+            .ToArray();
+    }
+
+    private void InitializeCheckoutForm()
+    {
+        _checkoutForm = CreateCheckoutForm();
+        _checkoutEditContext = new EditContext(_checkoutForm);
+    }
+
+    private void ResetCheckoutForm(bool clearMessage = true)
+    {
+        InitializeCheckoutForm();
+        _selectedLineQuantity = 1;
+        if (clearMessage)
+        {
+            _message = string.Empty;
+        }
+    }
+
+    private void ResetCheckoutFlow(bool clearMessage = true)
+    {
+        _draftLines.Clear();
+        ResetCheckoutForm(clearMessage);
+    }
+
+    private void AddSelectedProductToDraft()
+    {
+        if (_snapshot?.SelectedProduct is null)
+        {
+            SetMessage("Pilih menu dulu sebelum menambah item ke pesanan.", "error");
+            return;
+        }
+
+        if (_selectedLineQuantity <= 0)
+        {
+            SetMessage("Jumlah item yang dimasukkan harus minimal 1.", "error");
+            return;
+        }
+
+        var product = _snapshot.SelectedProduct;
+        var draftQuantity = GetDraftQuantity(product.Recipe.Id);
+        var available = GetAvailableStock(product.Recipe.Id);
+        if (draftQuantity + _selectedLineQuantity > available)
+        {
+            SetMessage($"Stok {product.Recipe.Name} tidak cukup. Sisa stok yang belum dipakai di pesanan aktif adalah {FormatDecimal(Math.Max(0m, available - draftQuantity))} {product.Recipe.PortionUnit}.", "error");
+            return;
+        }
+
+        var existingIndex = _draftLines.FindIndex(item => item.ProductId == product.Recipe.Id);
+        if (existingIndex >= 0)
+        {
+            var existing = _draftLines[existingIndex];
+            _draftLines[existingIndex] = existing with { Quantity = existing.Quantity + _selectedLineQuantity };
+        }
+        else
+        {
+            _draftLines.Add(new PosDraftLine(
+                product.Recipe.Id,
+                product.Recipe.Code,
+                product.Recipe.Name,
+                product.Recipe.PortionUnit,
+                _selectedLineQuantity,
+                product.SuggestedPrice,
+                product.HppPerUnit));
+        }
+
+        _selectedLineQuantity = 1;
+        SetMessage($"{product.Recipe.Name} ditambahkan ke pesanan aktif.", "success");
+    }
+
+    private void IncreaseDraftLineQuantity(Guid productId)
+    {
+        var index = _draftLines.FindIndex(item => item.ProductId == productId);
+        if (index < 0)
+        {
+            return;
+        }
+
+        var existing = _draftLines[index];
+        var available = GetAvailableStock(productId);
+        if (existing.Quantity >= available)
+        {
+            SetMessage($"Stok {existing.ProductName} tidak cukup untuk menambah item lagi.", "error");
+            return;
+        }
+
+        _draftLines[index] = existing with { Quantity = existing.Quantity + 1 };
+        _message = string.Empty;
+    }
+
+    private void DecreaseDraftLineQuantity(Guid productId)
+    {
+        var index = _draftLines.FindIndex(item => item.ProductId == productId);
+        if (index < 0)
+        {
+            return;
+        }
+
+        var existing = _draftLines[index];
+        if (existing.Quantity <= 1)
+        {
+            _draftLines.RemoveAt(index);
+            return;
+        }
+
+        _draftLines[index] = existing with { Quantity = existing.Quantity - 1 };
+        _message = string.Empty;
+    }
+
+    private void RemoveDraftLine(Guid productId)
+    {
+        _draftLines.RemoveAll(item => item.ProductId == productId);
+        _message = string.Empty;
+    }
+
+    private int GetDraftQuantity(Guid productId)
+        => _draftLines.FirstOrDefault(item => item.ProductId == productId)?.Quantity ?? 0;
+
+    private decimal GetAvailableStock(Guid productId)
+        => InventoryMath.GetRecipeMenuOnHand(Store, productId);
+
+    private decimal GetRemainingStock(Guid productId)
+        => GetAvailableStock(productId) - GetDraftQuantity(productId);
+
+    private string? GetDraftLineWarning(PosDraftLine line)
+        => line.Quantity > GetAvailableStock(line.ProductId)
+            ? $"Qty {line.ProductName} melebihi stok aktif {FormatDecimal(GetAvailableStock(line.ProductId))} {line.UnitLabel}."
+            : null;
+
+    private void SetMessage(string message, string tone)
+    {
+        _message = message;
+        _messageTone = tone;
+    }
+
+    private string GetMessageClass() => $"form-message {_messageTone}-message";
+
+    private DateTime ResolveCheckoutSoldAt()
+        => DateTime.TryParse(_checkoutForm.SoldAtInput, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var soldAt)
+            ? soldAt
+            : DateTime.Now;
+
+    private static PosCheckoutFormModel CreateCheckoutForm()
+        => new()
+        {
+            CustomerName = string.Empty,
+            PaymentMethod = PaymentMethods[0],
+            MarkAsPaid = true,
+            SoldAtInput = FormatDateTimeLocal(DateTime.Now)
+        };
 
     private static string FormatCurrency(decimal value)
         => string.Create(new CultureInfo("id-ID"), $"Rp {value:N0}");
@@ -578,16 +1074,13 @@
     private static string FormatDecimal(decimal value)
         => value.ToString("0.##", CultureInfo.InvariantCulture);
 
-    private static string FormatPercent(decimal value)
-        => $"{decimal.Round(value, 1, MidpointRounding.AwayFromZero).ToString("0.#", CultureInfo.InvariantCulture)}%";
+    private string? ResolvePosAiProductName(string? productCode)
+        => string.IsNullOrWhiteSpace(productCode)
+            ? null
+            : _snapshot?.Products.FirstOrDefault(item => string.Equals(item.ProductCode, productCode, StringComparison.OrdinalIgnoreCase))?.ProductName;
 
     private static string FormatDateTimeLocal(DateTime value)
         => value.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture);
-
-    private static DateTime ParseDateTimeLocal(string? value, DateTime fallback)
-        => DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsed)
-            ? parsed
-            : fallback;
 
     private static int ParseDisplayCount(string? value, int fallback)
         => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
@@ -603,12 +1096,84 @@
     private static int ClampPage(int page, int totalPages)
         => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
-    private async void HandleStoreChanged()
-        => await InvokeAsync(LoadAsync);
+    private void HandleStoreChanged()
+        => _ = InvokeAsync(LoadAsync);
+
+    [JSInvokable]
+    public Task HandleHistoryViewportChanged(bool isCompact)
+    {
+        if (_isCompactHistory == isCompact)
+        {
+            return Task.CompletedTask;
+        }
+
+        _isCompactHistory = isCompact;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
     public ValueTask DisposeAsync()
     {
+        _searchDebounce?.Cancel();
+        _searchDebounce?.Dispose();
         Store.Changed -= HandleStoreChanged;
-        return ValueTask.CompletedTask;
+
+        return DisposeViewportAsync();
+    }
+
+    private async ValueTask DisposeViewportAsync()
+    {
+        if (_viewportRegistrationId is int registrationId)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("viewportHelper.unregister", registrationId);
+            }
+            catch
+            {
+            }
+        }
+
+        _viewportReference?.Dispose();
+    }
+
+    private sealed class PosCheckoutFormModel
+    {
+        [Required(ErrorMessage = "Nama pembeli wajib diisi.")]
+        public string CustomerName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Waktu pesanan wajib diisi.")]
+        [ValidDateTimeLocal(ErrorMessage = "Format tanggal dan jam pesanan belum valid.")]
+        public string SoldAtInput { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Pilih metode pembayaran.")]
+        public string PaymentMethod { get; set; } = string.Empty;
+
+        public bool MarkAsPaid { get; set; } = true;
+    }
+
+    private sealed record PosDraftLine(
+        Guid ProductId,
+        string ProductCode,
+        string ProductName,
+        string UnitLabel,
+        int Quantity,
+        decimal UnitPrice,
+        decimal HppPerUnit);
+
+    private sealed class ValidDateTimeLocalAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            var text = value?.ToString();
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return ValidationResult.Success;
+            }
+
+            return DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out _)
+                ? ValidationResult.Success
+                : new ValidationResult(ErrorMessage ?? "Format tanggal dan jam pesanan belum valid.");
+        }
     }
 }

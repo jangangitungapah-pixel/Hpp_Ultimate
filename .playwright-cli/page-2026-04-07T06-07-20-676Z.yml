@@ -1,0 +1,262 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Workspace operasional" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Workspace operasional
+      - generic:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Ringkasan
+          - link "Dashboard" [ref=e20] [cursor=pointer]:
+            - /url: /
+            - img [ref=e22]
+            - strong [ref=e26]: Dashboard
+        - generic [ref=e27]:
+          - generic [ref=e28]: Master Data
+          - link "Katalog Material" [ref=e29] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e31]
+            - strong [ref=e35]: Katalog Material
+          - link "Resep" [ref=e36] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e38]
+            - strong [ref=e40]: Resep
+        - generic [ref=e41]:
+          - generic [ref=e42]: Operasional
+          - link "Stok Gudang" [ref=e43] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e45]
+            - strong [ref=e49]: Stok Gudang
+          - link "Pembelian Material" [ref=e50] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e52]
+            - strong [ref=e56]: Pembelian Material
+          - link "Produksi" [ref=e57] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e59]
+            - strong [ref=e63]: Produksi
+          - link "Kasir / POS" [ref=e64] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e66]
+            - strong [ref=e69]: Kasir / POS
+        - generic [ref=e70]:
+          - generic [ref=e71]: Keuangan
+          - link "Pembukuan" [ref=e72] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e74]
+            - strong [ref=e77]: Pembukuan
+        - generic [ref=e78]:
+          - generic [ref=e79]: Admin
+          - link "Pengaturan Bisnis" [ref=e80] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e82]
+            - strong [ref=e83]: Pengaturan Bisnis
+          - link "Tim & Akun" [ref=e84] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e86]
+            - strong [ref=e89]: Tim & Akun
+          - link "Backup & Impor Data" [ref=e90] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e92]
+            - strong [ref=e97]: Backup & Impor Data
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e100]: A
+            - generic [ref=e101]:
+              - strong [ref=e102]: Arief
+              - generic [ref=e103]: Admin
+          - link "Logout" [ref=e104] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e105]
+            - generic [ref=e108]: Logout
+  - main [ref=e109]:
+    - generic [ref=e111]:
+      - generic [ref=e112]: Area kerja
+      - strong [ref=e113]: Pengaturan Bisnis
+    - article [ref=e114]:
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - generic [ref=e118]: Pengaturan bisnis
+            - heading "Pengaturan workspace bisnis" [level=1] [ref=e119]
+            - generic [ref=e121]: Update 04 Apr 2026 23:00
+          - article [ref=e122]:
+            - generic [ref=e123]: ZK
+            - generic [ref=e124]:
+              - generic [ref=e125]: Workspace aktif
+              - strong [ref=e126]: "Zel`s Kitchen"
+              - generic [ref=e127]: "-"
+            - link "Akun & akses" [ref=e129] [cursor=pointer]:
+              - /url: /pengaturan/akun
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - generic [ref=e133]:
+              - generic [ref=e134]: Form pengaturan
+              - heading "Konfigurasi inti bisnis" [level=2] [ref=e135]
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - generic [ref=e138]:
+                  - generic [ref=e139]:
+                    - img [ref=e141]
+                    - generic [ref=e142]:
+                      - generic [ref=e143]: Profil usaha
+                      - heading "Identitas dan kontak bisnis" [level=3] [ref=e144]
+                      - paragraph [ref=e145]: Area ini mengontrol nama usaha, legal entity, kontak, dan alamat yang dipakai di seluruh workspace.
+                  - generic [ref=e146]:
+                    - generic [ref=e147]:
+                      - generic [ref=e148]: Nama Usaha
+                      - textbox "Nama Usaha" [ref=e149]: "Zel`s Kitchen"
+                    - generic [ref=e150]:
+                      - generic [ref=e151]: Legal Entity
+                      - textbox "Legal Entity" [ref=e152]: "-"
+                    - generic [ref=e153]:
+                      - generic [ref=e154]: Telepon
+                      - textbox "Telepon" [ref=e155]: "-"
+                    - generic [ref=e156]:
+                      - generic [ref=e157]: Email
+                      - textbox "Email" [ref=e158]: arief@gmial.com
+                    - generic [ref=e159]:
+                      - generic [ref=e160]: Timezone
+                      - textbox "Timezone" [ref=e161]: Asia/Jakarta
+                    - generic [ref=e162]:
+                      - generic [ref=e163]: Alamat
+                      - textbox "Alamat" [ref=e164]: "-"
+                - generic [ref=e165]:
+                  - generic [ref=e166]:
+                    - img [ref=e168]
+                    - generic [ref=e172]:
+                      - generic [ref=e173]: Default operasional
+                      - heading "Mata uang, satuan, dan pembulatan" [level=3] [ref=e174]
+                      - paragraph [ref=e175]: Default ini dipakai saat membuat master, menyusun resep, dan menghitung harga jual di halaman operasional lain.
+                  - generic [ref=e176]:
+                    - generic [ref=e177]:
+                      - generic [ref=e178]: Mata Uang
+                      - combobox "Mata Uang" [ref=e179]:
+                        - option "IDR" [selected]
+                        - option "USD"
+                        - option "SGD"
+                        - option "MYR"
+                    - generic [ref=e180]:
+                      - generic [ref=e181]: Default Satuan Produk
+                      - combobox "Default Satuan Produk" [ref=e182]:
+                        - option "pcs" [selected]
+                        - option "pack"
+                        - option "botol"
+                        - option "pouch"
+                        - option "kg"
+                        - option "gram"
+                        - option "liter"
+                        - option "ml"
+                    - generic [ref=e183]:
+                      - generic [ref=e184]: Default Satuan Bahan
+                      - combobox "Default Satuan Bahan" [ref=e185]:
+                        - option "kg" [selected]
+                        - option "gram"
+                        - option "liter"
+                        - option "ml"
+                        - option "pcs"
+                        - option "pak"
+                        - option "box"
+                        - option "botol"
+                        - option "pouch"
+                    - generic [ref=e186]:
+                      - generic [ref=e187]: Pembulatan Harga
+                      - spinbutton "Pembulatan Harga" [ref=e188]: "100"
+                - generic [ref=e189]:
+                  - generic [ref=e190]:
+                    - img [ref=e192]
+                    - generic [ref=e195]:
+                      - generic [ref=e196]: Pajak & harga
+                      - heading "Aturan dasar transaksi" [level=3] [ref=e197]
+                      - paragraph [ref=e198]: Gunakan area ini untuk menentukan persentase pajak dan apakah harga jual yang muncul di POS sudah termasuk pajak.
+                  - generic [ref=e199]:
+                    - generic [ref=e200]:
+                      - generic [ref=e201]:
+                        - generic [ref=e202]: Pajak %
+                        - spinbutton "Pajak %" [ref=e203]: "11"
+                      - generic [ref=e204]:
+                        - generic [ref=e205]: Harga Sudah Include Pajak
+                        - checkbox "Harga Sudah Include Pajak" [ref=e206]
+                    - article [ref=e207]:
+                      - generic [ref=e208]: Preview aturan aktif
+                      - strong [ref=e209]: 11% pajak
+                      - generic [ref=e210]: Harga jual publik masih berada di luar pajak.
+                - generic [ref=e211]:
+                  - generic [ref=e212]:
+                    - img [ref=e214]
+                    - generic [ref=e215]:
+                      - generic [ref=e216]: Fitur bantu
+                      - heading "Gemini API key" [level=3] [ref=e217]
+                      - paragraph [ref=e218]: API key disimpan di level workspace agar fitur bantu yang benar-benar dipakai tim, seperti baca struk belanja dan rapikan draft pembukuan, tetap membaca konfigurasi yang sama.
+                  - generic [ref=e219]:
+                    - generic [ref=e221]:
+                      - generic [ref=e222]: Gemini API Key
+                      - textbox "Gemini API Key" [ref=e223]:
+                        - /placeholder: Tempel API key Gemini di sini
+                        - text: AIzaSyDCDIxlnaZar4cPzJyYRhFsR7ueTQlHEs8
+                    - article [ref=e224]:
+                      - generic [ref=e225]: Status AI workspace
+                      - strong [ref=e226]: Gemini aktif
+                      - generic [ref=e227]: API key sudah tersimpan di workspace ini dan siap dipakai oleh fitur bantu yang masih aktif.
+              - generic [ref=e228]:
+                - button "Reset" [ref=e229] [cursor=pointer]
+                - button "Simpan Pengaturan" [ref=e230] [cursor=pointer]
+          - complementary [ref=e231]:
+            - generic [ref=e232]:
+              - generic [ref=e234]:
+                - generic [ref=e235]: Account hub
+                - heading "Akses tim dan sesi aktif" [level=2] [ref=e236]
+              - generic [ref=e237]:
+                - article [ref=e238]:
+                  - generic [ref=e239]: Sesi aktif
+                  - strong [ref=e240]: Arief
+                  - paragraph [ref=e241]: Admin aktif sejak 04 Apr 16:17
+                - article [ref=e242]:
+                  - generic [ref=e243]: Total akun
+                  - strong [ref=e244]: "1"
+                  - paragraph [ref=e245]: Semua data akun, akses admin/staff, dan password dipusatkan di halaman akun terpisah.
+              - link "Buka Tim & Akun" [ref=e247] [cursor=pointer]:
+                - /url: /pengaturan/akun
+            - generic [ref=e248]:
+              - generic [ref=e250]:
+                - generic [ref=e251]: Audit workspace
+                - heading "Perubahan terbaru" [level=2] [ref=e252]
+              - generic [ref=e253]:
+                - article [ref=e254]:
+                  - generic [ref=e255]:
+                    - generic [ref=e256]: Sales
+                    - strong [ref=e257]: Checkout POS
+                    - generic [ref=e258]: 05 Apr 2026 03:05
+                  - paragraph [ref=e259]: Pesanan TRX-000001 untuk All PO selesai dengan total 328.436 via Cash.
+                  - generic [ref=e260]:
+                    - generic [ref=e261]: Arief
+                    - generic [ref=e262]: TRX-000001
+                - article [ref=e263]:
+                  - generic [ref=e264]:
+                    - generic [ref=e265]: Production
+                    - strong [ref=e266]: Selesaikan produksi
+                    - generic [ref=e267]: 05 Apr 2026 03:04
+                  - paragraph [ref=e268]: Produksi PRD-001 diselesaikan.
+                  - generic [ref=e269]:
+                    - generic [ref=e270]: Arief
+                    - generic [ref=e271]: Kue Soes
+                - article [ref=e272]:
+                  - generic [ref=e273]:
+                    - generic [ref=e274]: Production
+                    - strong [ref=e275]: Mulai produksi
+                    - generic [ref=e276]: 05 Apr 2026 03:04
+                  - paragraph [ref=e277]: Produksi PRD-001 dimulai untuk 4 batch resep Kue Soes.
+                  - generic [ref=e278]:
+                    - generic [ref=e279]: Arief
+                    - generic [ref=e280]: Kue Soes
+                - article [ref=e281]:
+                  - generic [ref=e282]:
+                    - generic [ref=e283]: Warehouse
+                    - strong [ref=e284]: Mutasi stok
+                    - generic [ref=e285]: 05 Apr 2026 03:04
+                  - paragraph [ref=e286]: Mutasi StockIn sebesar 2 gr untuk Vanili.
+                  - generic [ref=e287]:
+                    - generic [ref=e288]: Arief
+                    - generic [ref=e289]: Vanili

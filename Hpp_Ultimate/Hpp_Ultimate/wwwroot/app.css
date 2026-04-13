@@ -1,45 +1,153 @@
 :root {
     color-scheme: light;
-    --app-bg: #eef4ff;
-    --app-ink: #334155;
-    --app-muted: #71829d;
-    --app-border: rgba(196, 208, 229, 0.5);
-    --app-shadow: 0 32px 62px rgba(69, 94, 148, 0.14);
-    --app-shadow-soft: 0 18px 34px rgba(100, 116, 139, 0.1);
-    --app-shadow-deep: 0 40px 72px rgba(88, 96, 155, 0.16);
-    --app-radius-lg: 1.35rem;
-    --app-radius-xl: 1.75rem;
+    --font-sans: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    --font-display: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+    --app-bg: #f3f6fb;
+    --app-ink: #243247;
+    --app-muted: #6a7a90;
+    --app-border: rgba(203, 213, 225, 0.68);
+    --app-shadow: 0 26px 52px rgba(15, 23, 42, 0.08);
+    --app-shadow-soft: 0 16px 28px rgba(15, 23, 42, 0.05);
+    --app-shadow-deep: 0 34px 68px rgba(15, 23, 42, 0.1);
+    --app-radius-lg: 1.2rem;
+    --app-radius-xl: 1.5rem;
     --app-surface:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(245, 249, 255, 0.84)),
-        radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 36%);
+        linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(248, 250, 252, 0.92)),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.08), transparent 34%);
     --app-surface-soft:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 245, 255, 0.78)),
-        radial-gradient(circle at bottom left, rgba(129, 140, 248, 0.12), transparent 34%);
-    --app-focus-ring: 0 0 0 0.24rem rgba(99, 117, 255, 0.16);
-    --app-button-shadow: 0 20px 34px rgba(79, 143, 255, 0.24);
-    --app-highlight: linear-gradient(135deg, #4f8fff, #6f64ff);
-    --app-danger-highlight: linear-gradient(135deg, rgba(220, 38, 38, 0.96), rgba(168, 85, 247, 0.88));
-    --app-accent: #6f64ff;
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(242, 246, 251, 0.88)),
+        radial-gradient(circle at bottom left, rgba(129, 140, 248, 0.08), transparent 32%);
+    --app-focus-ring: 0 0 0 0.24rem rgba(99, 117, 255, 0.14);
+    --app-button-shadow: 0 16px 30px rgba(79, 143, 255, 0.18);
+    --app-highlight: linear-gradient(135deg, #4f8fff, #6358f0);
+    --app-danger-highlight: linear-gradient(135deg, rgba(220, 38, 38, 0.98), rgba(248, 113, 113, 0.92));
+    --app-accent: #6358f0;
     --app-accent-strong: #4f5bd4;
-    --app-accent-soft: rgba(236, 240, 255, 0.94);
-    --app-accent-border: rgba(111, 100, 255, 0.18);
+    --app-accent-soft: rgba(238, 242, 255, 0.92);
+    --app-accent-border: rgba(99, 91, 235, 0.18);
+    --field-border: rgba(203, 213, 225, 0.84);
+    --field-border-hover: rgba(148, 163, 184, 0.92);
+    --field-border-focus: rgba(99, 117, 255, 0.34);
+    --field-border-invalid: rgba(239, 68, 68, 0.32);
+    --field-surface:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 252, 0.94)),
+        radial-gradient(circle at top left, rgba(129, 140, 248, 0.06), transparent 58%);
+    --field-surface-hover:
+        linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(244, 248, 255, 0.96)),
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.08), transparent 56%);
+    --field-surface-disabled:
+        linear-gradient(180deg, rgba(241, 245, 249, 0.92), rgba(236, 242, 247, 0.88));
+    --field-shadow:
+        0 10px 18px rgba(15, 23, 42, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.94);
+    --field-shadow-hover:
+        0 14px 24px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.96);
+    --field-shadow-focus:
+        0 0 0 4px rgba(99, 117, 255, 0.12),
+        0 18px 28px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.98);
+    --field-shadow-invalid:
+        0 0 0 4px rgba(239, 68, 68, 0.1),
+        0 14px 24px rgba(127, 29, 29, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.94);
+    --field-placeholder: #8a99ad;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-7: 2rem;
+    --space-8: 2.5rem;
+    --radius-sm: 0.75rem;
+    --radius-md: 1rem;
+    --radius-lg: 1.2rem;
+    --radius-xl: 1.4rem;
+    --radius-pill: 999px;
+    --elevation-1: 0 10px 18px rgba(15, 23, 42, 0.04);
+    --elevation-2: 0 14px 24px rgba(15, 23, 42, 0.05);
+    --elevation-3: 0 22px 42px rgba(15, 23, 42, 0.08);
+    --elevation-4: 0 28px 48px rgba(15, 23, 42, 0.1);
+    --control-height-sm: 2.35rem;
+    --control-height-md: 2.7rem;
+    --control-height-lg: 3rem;
+    --type-caption: 0.76rem;
+    --type-overline: 0.74rem;
+    --type-meta: 0.86rem;
+    --type-body: 0.98rem;
+    --type-body-lg: 1.06rem;
+    --type-title-4: 1.02rem;
+    --type-title-3: clamp(1.08rem, 1.55vw, 1.28rem);
+    --type-title-2: clamp(1.22rem, 1.95vw, 1.54rem);
+    --type-title-1: clamp(1.46rem, 2.5vw, 2.04rem);
+    --type-display: clamp(1.8rem, 3.4vw, 2.56rem);
+    --leading-tight: 1.08;
+    --leading-heading: 1.16;
+    --leading-body: 1.62;
+    --leading-loose: 1.72;
+    --tracking-overline: 0.12em;
+    --tracking-title: -0.03em;
+    --tracking-display: -0.045em;
+    --motion-fast: 140ms ease;
+    --motion-base: 180ms ease;
+    --motion-slow: 240ms ease;
+}
+
+html {
+    font-size: 87.5%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+svg.app-icon {
+    width: 1rem;
+    height: 1rem;
+    display: block;
+    flex: 0 0 auto;
+    overflow: visible;
 }
 
 html,
 body {
     margin: 0;
     min-height: 100%;
-    font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    font-family: var(--font-sans);
     background:
-        radial-gradient(circle at top left, rgba(255, 196, 96, 0.22), transparent 28%),
-        radial-gradient(circle at top right, rgba(96, 165, 250, 0.18), transparent 28%),
-        linear-gradient(180deg, #f8f4ef 0%, #eef3f8 100%);
+        radial-gradient(circle at top left, rgba(255, 196, 96, 0.1), transparent 24%),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.11), transparent 24%),
+        linear-gradient(180deg, #f7f8fb 0%, #eef3f8 100%);
     color: var(--app-ink);
+    font-feature-settings: "cv11" 1, "ss01" 1;
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@media (max-width: 980px) {
+    html {
+        font-size: 90.625%;
+    }
+}
+
+@media (max-width: 640px) {
+    html {
+        font-size: 93.75%;
+    }
 }
 
 body {
     overflow-y: scroll;
     position: relative;
+    font-size: var(--type-body);
+    line-height: var(--leading-body);
 }
 
 body::before {
@@ -48,9 +156,9 @@ body::before {
     inset: 0;
     pointer-events: none;
     background:
-        radial-gradient(circle at 12% 14%, rgba(96, 165, 250, 0.14), transparent 18%),
-        radial-gradient(circle at 86% 16%, rgba(129, 140, 248, 0.12), transparent 20%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 42%);
+        radial-gradient(circle at 12% 14%, rgba(96, 165, 250, 0.06), transparent 15%),
+        radial-gradient(circle at 86% 16%, rgba(129, 140, 248, 0.05), transparent 18%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 42%);
     z-index: 0;
 }
 
@@ -66,6 +174,128 @@ select {
     font: inherit;
 }
 
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select) {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    max-width: 100%;
+    min-height: var(--control-height-lg);
+    padding: 0.86rem 1rem;
+    border: 1px solid var(--field-border);
+    border-radius: 1.08rem;
+    background: var(--field-surface);
+    box-shadow: var(--field-shadow);
+    color: var(--app-ink);
+    outline: none;
+    transition:
+        transform var(--motion-fast),
+        opacity var(--motion-base),
+        border-color var(--motion-base),
+        box-shadow var(--motion-base),
+        background var(--motion-base),
+        color var(--motion-base);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select):hover {
+    border-color: var(--field-border-hover);
+    background: var(--field-surface-hover);
+    box-shadow: var(--field-shadow-hover);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select):focus,
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select):focus-visible {
+    border-color: var(--field-border-focus);
+    background: var(--field-surface-hover);
+    box-shadow: var(--field-shadow-focus);
+    transform: translateY(-1px);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select)::placeholder {
+    color: var(--field-placeholder);
+    transition: color var(--motion-base), opacity var(--motion-base);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select):focus::placeholder {
+    color: color-mix(in srgb, var(--field-placeholder) 82%, white);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) textarea {
+    min-height: 6.4rem;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(label, .field-shell, .display-count-control) {
+    transition:
+        transform var(--motion-fast),
+        color var(--motion-base),
+        opacity var(--motion-base);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) select:not([multiple]):not([size]) {
+    padding-right: 2.8rem;
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%238a99ad' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 6 5-6'/%3E%3C/svg%3E") right 0.95rem center / 1rem no-repeat,
+        var(--field-surface);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select):disabled,
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select)[readonly] {
+    background: var(--field-surface-disabled);
+    border-color: rgba(203, 213, 225, 0.74);
+    color: color-mix(in srgb, var(--app-ink) 72%, white);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        0 6px 12px rgba(15, 23, 42, 0.02);
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input.input-validation-error, input.invalid, textarea.input-validation-error, textarea.invalid, select.input-validation-error, select.invalid) {
+    border-color: var(--field-border-invalid);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.94),
+        0 10px 18px rgba(127, 29, 29, 0.04);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input.input-validation-error, input.invalid, textarea.input-validation-error, textarea.invalid, select.input-validation-error, select.invalid):focus,
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input.input-validation-error, input.invalid, textarea.input-validation-error, textarea.invalid, select.input-validation-error, select.invalid):focus-visible {
+    border-color: rgba(239, 68, 68, 0.44);
+    box-shadow: var(--field-shadow-invalid);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(input.valid.modified:not([type="checkbox"]), textarea.valid.modified, select.valid.modified) {
+    border-color: rgba(22, 163, 74, 0.26);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.94),
+        0 10px 18px rgba(21, 128, 61, 0.04);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(label, .field-shell, .display-count-control):focus-within {
+    transform: translateY(-1px);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) :is(label, .field-shell, .display-count-control):focus-within > span {
+    color: var(--app-accent-strong);
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) input[type="number"]::-webkit-outer-spin-button,
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    opacity: 0;
+}
+
+:where(.app-content, .overlay, .auth-shell, .login-page, .components-reconnect-shell) input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    opacity: 0.72;
+    cursor: pointer;
+}
+
 .btn:focus,
 .btn:active:focus,
 .btn-link.nav-link:focus,
@@ -77,21 +307,67 @@ select {
 h1,
 h2,
 h3,
-h4 {
-    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: var(--leading-heading);
+    color: var(--app-ink);
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: var(--type-display);
+    letter-spacing: var(--tracking-display);
+    line-height: 1.02;
+}
+
+h2 {
+    font-size: var(--type-title-1);
+    letter-spacing: -0.038em;
+}
+
+h3 {
+    font-size: var(--type-title-2);
     letter-spacing: -0.03em;
+}
+
+h4 {
+    font-size: var(--type-title-3);
+    letter-spacing: -0.022em;
+}
+
+h5 {
+    font-size: var(--type-title-4);
+    letter-spacing: -0.015em;
+}
+
+h6 {
+    font-size: var(--type-meta);
+    letter-spacing: -0.01em;
+}
+
+p,
+li,
+dd,
+dt {
+    font-size: var(--type-body);
+    line-height: var(--leading-body);
+}
+
+small {
+    font-size: var(--type-meta);
+    line-height: 1.48;
+}
+
+strong {
+    font-weight: 700;
 }
 
 h1:focus {
     outline: none;
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #16a34a;
-}
-
-.invalid {
-    outline: 1px solid #ef4444;
 }
 
 .validation-message {
@@ -131,13 +407,15 @@ body > div:first-child {
 }
 
 .blazor-error-boundary {
-    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveG1sbnM6eGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
-    padding: 1rem 1rem 1rem 3.7rem;
-    color: white;
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, rgba(255, 251, 251, 0.98), rgba(254, 242, 242, 0.96));
+    box-shadow: 0 18px 30px rgba(15, 23, 42, 0.1);
+    color: #991b1b;
 }
 
 .blazor-error-boundary::after {
-    content: "An error has occurred.";
+    content: "Terjadi error pada komponen ini.";
 }
 
 .darker-border-checkbox.form-check-input {
@@ -155,1011 +433,663 @@ body > div:first-child {
     text-align: start;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) {
-    --surface-border: rgba(255, 255, 255, 0.84) !important;
-    --surface-shadow: 0 28px 48px rgba(84, 102, 163, 0.1) !important;
-    --soft-border: rgba(214, 223, 241, 0.94) !important;
-    --line-border: rgba(223, 230, 244, 0.92) !important;
-    --line-border-strong: rgba(206, 217, 237, 0.96) !important;
-    --surface-main: var(--app-surface) !important;
-    --surface-soft: linear-gradient(180deg, rgba(249, 251, 255, 0.95), rgba(239, 245, 255, 0.84)) !important;
-    --text-main: var(--app-ink) !important;
-    --text-muted: var(--app-muted) !important;
-    --accent: var(--app-accent) !important;
-    --accent-soft: var(--app-accent-soft) !important;
+:where(.ds-page) {
+    --surface-border: rgba(255, 255, 255, 0.84);
+    --soft-border: rgba(214, 223, 241, 0.94);
+    --line-border: rgba(223, 230, 244, 0.92);
+    --line-border-strong: rgba(206, 217, 237, 0.96);
+    --surface-main: var(--app-surface);
+    --surface-soft: var(--app-surface-soft);
+    --text-main: var(--app-ink);
+    --text-muted: var(--app-muted);
+    --accent: var(--theme-accent, var(--app-accent));
+    --accent-strong: var(--theme-accent-strong, var(--app-accent-strong));
+    --accent-soft: var(--theme-accent-soft, var(--app-accent-soft));
+    --accent-highlight:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--accent) 92%, white),
+            color-mix(in srgb, var(--accent-strong) 76%, #4338ca)
+        );
+    --accent-shadow: 0 18px 30px color-mix(in srgb, var(--accent) 24%, transparent);
+    --surface-shadow: var(--elevation-3);
+    --surface-shadow-soft: var(--elevation-2);
+    --accent-line: var(--app-accent-border);
+    --focus-ring: 0 0 0 0.24rem color-mix(in srgb, var(--accent) 18%, white);
+    display: grid;
+    gap: var(--space-4);
+    padding-bottom: var(--space-7);
+    color: var(--text-main);
+}
+
+.ds-page-stack,
+.ds-split-workspace,
+.ds-admin-layout,
+.ds-workspace-main,
+.ds-side-rail {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.ds-list-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(18rem, 0.82fr);
+    gap: var(--space-4);
+    align-items: start;
+}
+
+.ds-side-rail {
+    align-content: start;
+}
+
+.theme-indigo {
+    --theme-accent: #5b6ee1;
+    --theme-accent-strong: #4154c7;
+    --theme-accent-soft: rgba(238, 242, 255, 0.94);
+}
+
+.theme-amber {
+    --theme-accent: #c06014;
+    --theme-accent-strong: #c2410c;
+    --theme-accent-soft: rgba(255, 247, 237, 0.92);
+}
+
+:where(.section-tag, .module-eyebrow, .brand-eyebrow, .ds-eyebrow) {
+    display: block;
+    font-size: var(--type-caption);
+    font-weight: 800;
+    letter-spacing: var(--tracking-overline);
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.25;
 }
 
 :where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(
-    .ghost-button,
-    .filter-chip,
-    .action-chip,
-    .method-chip,
-    .icon-button,
-    .close-button,
-    .pager button,
-    .header-pills span,
-    .table-summary-pills span,
-    .back-link,
-    .brand-lane span,
-    .focus-chip
-) {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 247, 255, 0.9)) !important;
-    box-shadow:
-        inset 0 0 0 1px rgba(212, 221, 240, 0.92),
-        0 14px 22px rgba(15, 23, 42, 0.04) !important;
-    color: #475569 !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(.primary-button, .login-button) {
-    background: var(--app-highlight) !important;
-    box-shadow: var(--app-button-shadow) !important;
-    color: #fff !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(.danger-button) {
-    background: var(--app-danger-highlight) !important;
-    box-shadow: 0 18px 30px rgba(168, 85, 247, 0.18) !important;
-    color: #fff !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(.status-chip, .form-message, .inline-note, .detail-note) {
-    background:
-        linear-gradient(145deg, rgba(240, 244, 255, 0.98), rgba(255, 255, 255, 0.82)) !important;
-    box-shadow: inset 0 0 0 1px var(--app-accent-border) !important;
-    color: var(--app-accent-strong) !important;
-}
-
-:where(
-    .materials-page,
-    .warehouse-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(
-    .section-tag,
-    .section-head span,
-    .panel-head span,
-    .modal-head span,
-    .hero-copy > span,
-    .team-header span,
-    .brand-eyebrow,
-    .login-card-head span,
-    .summary-grid small,
-    .preview-grid small,
-    .detail-summary small,
+    .table-primary small,
+    .history-meta-cell small,
+    .timer-meta-cell small,
+    .selected-metrics small,
+    .checkout-metrics small,
+    .summary-row span,
+    .field-label,
+    .display-count-control span,
     .hero-ribbon small,
+    .preview-grid small,
+    .account-entry-grid small,
+    .danger-summary small,
     .team-metrics small,
     .profile-stat small,
     .permission-panel small,
     .upload-card span,
     .file-list small,
-    .receipt-head small,
-    .selected-metrics small,
-    .checkout-metrics small,
-    .product-card-top small,
-    .product-card-metrics small,
-    .audit-pill
+    .selected-material-card small,
+    .row-state,
+    .history-mobile-grid small,
+    .ai-suggestion-grid small,
+    .ai-warning-list span
 ) {
-    color: var(--app-accent) !important;
+    display: block;
+    font-size: var(--type-caption);
+    font-weight: 800;
+    letter-spacing: var(--tracking-overline);
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.25;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.table-head, .panel-head, .section-head) {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto auto !important;
-    gap: 0.9rem 1rem !important;
-    align-items: end !important;
+:where(.ds-page-header, .ds-card-header) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-3);
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.table-head > div:first-child, .panel-head > div:first-child, .section-head > div:first-child) {
-    display: grid !important;
-    gap: 0.28rem !important;
+:where(.ds-page-header, .ds-card-header) > div:first-child {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.table-toolbar, .panel-toolbar, .menu-toolbar) {
-    display: grid !important;
-    gap: 0.8rem !important;
-    margin-top: 1.15rem !important;
+:where(.ds-page-header) h1 {
+    margin: 0.35rem 0 0;
+    color: var(--text-main);
+    font-size: var(--type-display);
+    line-height: 1.06;
+    letter-spacing: var(--tracking-display);
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-toolbar-primary {
-    display: grid !important;
-    grid-template-columns: minmax(18rem, 1.35fr) minmax(0, 1fr) !important;
-    gap: 0.8rem !important;
-    align-items: center !important;
+:where(.ds-card-header) :is(h2, h3) {
+    margin: 0.28rem 0 0;
+    color: var(--text-main);
+    font-size: var(--type-title-2);
+    line-height: 1.18;
+    letter-spacing: var(--tracking-title);
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-toolbar-filters {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(9rem, 1fr)) auto !important;
-    gap: 0.8rem !important;
-    align-items: center !important;
+:where(.ds-page-header, .ds-card-header) :is(p, small:not(.section-tag)) {
+    margin: 0.42rem 0 0;
+    color: var(--text-muted);
+    font-size: var(--type-body);
+    line-height: var(--leading-body);
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-toolbar-meta {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 0.7rem 1rem !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-toolbar-note {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 0.5rem !important;
-    color: var(--text-muted) !important;
-    font-size: 0.8rem !important;
-    font-weight: 700 !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-toolbar-note span {
-    display: inline-flex !important;
-    align-items: center !important;
-    min-height: 2rem !important;
-    padding: 0.28rem 0.78rem !important;
-    border-radius: 999px !important;
-    background: rgba(248, 250, 252, 0.92) !important;
-    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.96) !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.panel-toolbar, .table-toolbar, .search-row) input,
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .display-count-control select {
-    min-height: 3rem !important;
-    padding: 0.82rem 0.96rem !important;
-    border-radius: 1rem !important;
-    border: 1px solid rgba(203, 213, 225, 0.78) !important;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.84)) !important;
+:where(.ghost-button, .primary-button, .danger-button, .icon-button, .icon-action-button, .close-button, .method-chip, .ghost-link, .back-link, .login-button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--control-height-md);
+    padding: 0.72rem 1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(203, 213, 225, 0.82);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.88));
     box-shadow:
-        0 14px 24px rgba(15, 23, 42, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.84) !important;
-    color: #172033 !important;
-    font: inherit !important;
+        var(--elevation-2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    color: #334155;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, opacity 160ms ease;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .display-count-control {
-    display: grid !important;
-    gap: 0.35rem !important;
-    min-width: 10rem !important;
+:where(.primary-button, .login-button) {
+    border: 0;
+    background: var(--accent-highlight);
+    box-shadow: var(--accent-shadow);
+    color: #fff;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .display-count-control span {
-    font-size: 0.72rem !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.14em !important;
-    text-transform: uppercase !important;
-    color: var(--accent) !important;
+:where(.danger-button) {
+    border: 0;
+    background: var(--app-danger-highlight);
+    box-shadow: 0 18px 30px rgba(239, 68, 68, 0.18);
+    color: #fff;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.table-toolbar, .panel-toolbar) {
-    grid-template-columns: minmax(18rem, 1.35fr) auto auto !important;
-    align-items: end !important;
+:where(.icon-button, .icon-action-button, .close-button) {
+    width: 2.35rem;
+    min-width: 2.35rem;
+    min-height: 2.35rem;
+    padding: 0;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.table-toolbar, .panel-toolbar) > .display-count-control {
-    display: block !important;
-    min-width: 10rem !important;
+:where(.icon-button, .icon-action-button, .close-button) ::deep .icon-glyph {
+    width: 0.96rem;
+    height: 0.96rem;
+    display: block;
+    stroke-width: 2;
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.table-toolbar, .panel-toolbar) > .display-count-control span {
-    display: none !important;
+:where(.icon-button.danger, .icon-action-button.danger, .close-button.danger) {
+    color: #b91c1c;
+    background: rgba(254, 242, 242, 0.92);
+    box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.36);
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(.table-toolbar, .panel-toolbar) > .display-count-control select {
-    min-width: 10rem !important;
+:where(.icon-button.success, .icon-action-button.success, .close-button.success) {
+    color: #166534;
+    background: rgba(220, 252, 231, 0.94);
+    box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.32);
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-footer {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
-    align-items: center !important;
-    gap: 0.75rem 1rem !important;
-    margin-top: 1rem !important;
-    padding-top: 0.1rem !important;
+:where(.ghost-button.compact, .primary-button.compact, .danger-button.compact, .method-chip.compact) {
+    min-height: var(--control-height-sm);
+    padding: 0.48rem 0.82rem;
+    font-size: var(--type-meta);
 }
 
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-footer small {
-    color: var(--text-muted) !important;
-    justify-self: start !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .table-footer-spacer {
-    min-width: 0 !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .pager {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-self: center !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 0.8rem !important;
-    padding: 0.45rem 0.65rem !important;
-    border-radius: 1.15rem !important;
-    background: rgba(255, 255, 255, 0.74) !important;
-    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.92) !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .pager-select {
-    display: flex !important;
-    align-items: center !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .pager-select select {
-    min-height: 2.75rem !important;
-    padding: 0.72rem 2.2rem 0.72rem 0.9rem !important;
-    border-radius: 0.95rem !important;
-    border: 1px solid rgba(203, 213, 225, 0.78) !important;
-    background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394a3b8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 6 5-6'/%3E%3C/svg%3E") right 0.8rem center / 0.95rem no-repeat,
-        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.86)) !important;
-    color: #172033 !important;
-    font: inherit !important;
-    appearance: none !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .pager span {
-    display: inline-flex !important;
-    align-items: center !important;
-    min-height: 2.75rem !important;
-    color: var(--text-muted) !important;
-    font-size: 0.88rem !important;
-    font-weight: 600 !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid .pager button:disabled {
-    opacity: 0.48 !important;
-    cursor: default !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-wrap,
-    .table-shell,
-    .material-grid-shell,
-    .requirement-grid-shell,
-    .queue-grid-shell,
-    .history-grid-shell,
-    .cart-grid-shell,
-    .ledger-grid-shell
-) {
-    margin-top: 1rem !important;
-    overflow: auto !important;
-    border: 1px solid rgba(226, 232, 240, 0.94) !important;
-    border-radius: 1.2rem !important;
-    background: rgba(255, 255, 255, 0.82) !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-wrap table,
-    .table-shell table,
-    .material-grid-shell table,
-    .requirement-grid-shell table,
-    .queue-grid-shell table,
-    .history-grid-shell table,
-    .cart-grid-shell table,
-    .ledger-grid-shell table
-),
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-wrap,
-    .table-shell,
-    .material-grid-shell,
-    .requirement-grid-shell,
-    .queue-grid-shell,
-    .history-grid-shell,
-    .cart-grid-shell,
-    .ledger-grid-shell
-) table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    border-spacing: 0 !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-wrap th,
-    .table-wrap td
-),
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-shell,
-    .material-grid-shell,
-    .requirement-grid-shell,
-    .queue-grid-shell,
-    .history-grid-shell,
-    .cart-grid-shell,
-    .ledger-grid-shell
-) :is(th, td) {
-    padding: 1rem !important;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.82) !important;
-    text-align: left !important;
-    vertical-align: middle !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-wrap thead th
-),
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-shell,
-    .material-grid-shell,
-    .requirement-grid-shell,
-    .queue-grid-shell,
-    .history-grid-shell,
-    .cart-grid-shell,
-    .ledger-grid-shell
-) thead th {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 1 !important;
-    background: rgba(248, 250, 252, 0.98) !important;
-    font-size: 0.74rem !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.12em !important;
-    text-transform: uppercase !important;
-    color: #64748b !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-wrap tbody tr:hover
-),
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .table-shell,
-    .material-grid-shell,
-    .requirement-grid-shell,
-    .queue-grid-shell,
-    .history-grid-shell,
-    .cart-grid-shell,
-    .ledger-grid-shell
-) tbody tr:hover {
-    background: rgba(255, 247, 237, 0.42) !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .warehouse-card-list,
-    .recipe-card-list,
-    .production-card-list,
-    .cart-card-list,
-    .history-card-list,
-    .ledger-card-list
-) {
-    gap: 0.85rem !important;
-    margin-top: 1rem !important;
-}
-
-:where(
-    .materials-page,
-    .shopping-page,
-    .warehouse-page,
-    .bookkeeping-page,
-    .pos-page,
-    .recipes-page,
-    .production-page
-) .catalog-datagrid :is(
-    .warehouse-mobile-card,
-    .recipe-card,
-    .production-mobile-card,
-    .shopping-mobile-card,
-    .history-mobile-card,
-    .ledger-mobile-card
-) {
-    border: 1px solid rgba(226, 232, 240, 0.94) !important;
-    border-radius: 1.2rem !important;
-    background:
-        linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72)),
-        radial-gradient(circle at top right, rgba(251, 191, 36, 0.12), transparent 34%) !important;
+:where(.ghost-button.compact.tertiary-button, .primary-button.compact.tertiary-button) {
     box-shadow:
-        0 18px 28px rgba(15, 23, 42, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+        inset 0 0 0 1px rgba(203, 213, 225, 0.88),
+        var(--elevation-1);
 }
 
-@media (max-width: 980px) {
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid :is(.table-head, .panel-head, .section-head) {
-        grid-template-columns: 1fr !important;
-        align-items: stretch !important;
-    }
-
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .table-toolbar-primary {
-        grid-template-columns: 1fr !important;
-    }
-
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .table-toolbar-filters {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    }
-
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .table-toolbar-note {
-        justify-content: flex-start !important;
-    }
-
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .table-footer {
-        grid-template-columns: 1fr !important;
-    }
-
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .table-footer small,
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .pager {
-        justify-self: stretch !important;
-    }
-
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .table-footer-spacer {
-        display: none !important;
-    }
+:where(.ghost-button.danger-outline) {
+    color: #b91c1c;
+    background: rgba(254, 242, 242, 0.92);
+    box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.4);
 }
 
-@media (max-width: 640px) {
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .display-count-control {
-        min-width: 100% !important;
-    }
-
-    :where(
-        .materials-page,
-        .shopping-page,
-        .warehouse-page,
-        .bookkeeping-page,
-        .pos-page,
-        .recipes-page,
-        .production-page
-    ) .catalog-datagrid .table-toolbar-filters {
-        grid-template-columns: 1fr !important;
-    }
+:where(.ghost-button:hover, .primary-button:hover, .danger-button:hover, .icon-button:hover, .icon-action-button:hover, .close-button:hover, .method-chip:hover, .ghost-link:hover, .back-link:hover, .login-button:hover) {
+    transform: translateY(-1px);
 }
 
-:where(
-    .materials-page,
-    .warehouse-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(input, textarea, select):focus {
-    border-color: rgba(99, 117, 255, 0.34) !important;
+:where(.ghost-button:disabled, .primary-button:disabled, .danger-button:disabled, .icon-button:disabled, .icon-action-button:disabled, .close-button:disabled, .method-chip:disabled, .login-button:disabled) {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
+:where(.ghost-button:focus-visible, .primary-button:focus-visible, .danger-button:focus-visible, .icon-button:focus-visible, .icon-action-button:focus-visible, .close-button:focus-visible, .method-chip:focus-visible, .ghost-link:focus-visible, .back-link:focus-visible, .login-button:focus-visible) {
+    outline: none;
     box-shadow:
-        var(--app-focus-ring),
-        0 16px 28px rgba(15, 23, 42, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+        var(--focus-ring),
+        var(--elevation-2);
 }
 
-:where(
-    .materials-page,
-    .warehouse-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(input[type="checkbox"], input[type="radio"]) {
-    accent-color: #6f64ff !important;
+:where(.status-chip, .badge, .method-chip, .table-summary-pills span, .header-pills span, .table-toolbar-note span, .focus-chip) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.2rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem;
+    font-weight: 700;
 }
 
-:where(
-    .materials-page,
-    .warehouse-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) input[type="file"] {
+.status-chip {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--accent-soft) 86%, white), rgba(255, 255, 255, 0.84));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, white);
+    color: var(--accent-strong);
+}
+
+.badge.ok,
+.method-chip.active {
+    background: rgba(220, 252, 231, 0.94);
+    color: #166534;
+}
+
+.badge.warn {
+    background: rgba(254, 242, 242, 0.96);
+    color: #b91c1c;
+}
+
+.badge.running {
+    background: rgba(236, 240, 255, 0.94);
+    color: var(--accent-strong);
+}
+
+.form-message,
+.inline-note,
+.detail-note,
+.read-only-banner,
+.audit-restricted {
+    padding: 0.92rem 1rem;
+    border-radius: var(--radius-md);
+    background: linear-gradient(145deg, rgba(240, 244, 255, 0.98), rgba(255, 255, 255, 0.82));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, white);
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+:where(.form-message.success, .success-message) {
+    background: rgba(220, 252, 231, 0.94);
+    box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.24);
+    color: #166534;
+}
+
+:where(.form-message.error, .error-message, .inline-note.warn-note) {
+    background: rgba(254, 242, 242, 0.96);
+    box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.2);
+    color: #b91c1c;
+}
+
+:where(.form-message.info, .info-message, .inline-note.info-note) {
+    background: color-mix(in srgb, var(--accent-soft) 86%, white);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, white);
+    color: var(--accent-strong);
+}
+
+:where(.toggle-row, .toggle-card) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 3rem;
+    padding: 0.82rem 0.95rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+:where(.toggle-row.compact) {
+    min-height: auto;
+}
+
+:where(.remember-row) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.82rem 0.92rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.76);
+    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.92);
+}
+
+:where(.toggle-row > span, .toggle-card div > span) {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+:where(.toggle-card small, .remember-row small) {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+:where(.toggle-row, .toggle-card, .remember-row) ::deep input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.ds-summary-strip,
+.summary-strip,
+.detail-summary-strip {
+    display: grid;
+    gap: var(--space-3);
+}
+
+:where(.ds-summary-strip, .summary-strip, .detail-summary-strip) article {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    background: var(--surface-main);
+    box-shadow:
+        var(--surface-shadow-soft),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    padding: 0.82rem 0.92rem;
+}
+
+:where(.ds-summary-strip, .summary-strip, .detail-summary-strip) small {
+    display: block;
+    font-size: var(--type-caption);
+    font-weight: 800;
+    letter-spacing: var(--tracking-overline);
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.28;
+}
+
+:where(.ds-summary-strip, .summary-strip, .detail-summary-strip) strong {
+    color: var(--text-main);
+    line-height: 1.18;
+}
+
+:where(.ds-page) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select) {
     width: 100%;
-    border-radius: 1rem;
+    min-height: var(--control-height-lg);
+    padding: 0.82rem 0.96rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(203, 213, 225, 0.78);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.84));
+    box-shadow:
+        var(--elevation-2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+:where(.ds-page) textarea {
+    min-height: 6rem;
+    resize: vertical;
+}
+
+:where(.ds-page) select {
+    appearance: none;
+    padding-right: 2.35rem;
+    background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2394a3b8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7 5 6 5-6'/%3E%3C/svg%3E") right 0.9rem center / 1rem no-repeat,
+        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.84));
+}
+
+:where(.ds-page) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]), textarea, select):focus {
+    border-color: color-mix(in srgb, var(--accent) 32%, white);
+    box-shadow:
+        var(--focus-ring),
+        0 16px 28px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    transform: translateY(-1px);
+}
+
+:where(.ds-page) :is(input[type="checkbox"], input[type="radio"]) {
+    accent-color: var(--accent);
+}
+
+:where(.ds-page) input[type="file"] {
+    width: 100%;
+    border-radius: var(--radius-md);
     border: 1px solid rgba(212, 221, 240, 0.94);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 255, 0.88));
     box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.82),
-        0 14px 24px rgba(15, 23, 42, 0.05);
+        var(--elevation-2);
     color: #475569;
     padding: 0.35rem;
 }
 
-:where(
-    .materials-page,
-    .warehouse-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) input[type="file"]::file-selector-button {
+:where(.ds-page) input[type="file"]::file-selector-button {
     margin-right: 0.8rem;
     border: 0;
     border-radius: 0.85rem;
     padding: 0.78rem 1rem;
-    background: var(--app-highlight);
+    background: var(--accent-highlight);
     color: white;
     font: inherit;
     font-weight: 800;
-    box-shadow: var(--app-button-shadow);
+    box-shadow: var(--accent-shadow);
     cursor: pointer;
 }
 
-:where(
-    .materials-page,
-    .warehouse-page,
-    .pos-page,
-    .reports-page,
-    .recipes-page,
-    .finished-products-page,
-    .production-page,
-    .sales-page,
-    .settings-page,
-    .account-page,
-    .dataops-page,
-    .login-page,
-    .hpp-page
-) :is(
-    .material-mobile-card.selected-row,
-    .recipe-card.active,
-    .product-card.active,
-    .group-detail-card[open]
-) {
-    border-color: rgba(111, 100, 255, 0.26) !important;
-    background:
-        linear-gradient(180deg, rgba(240, 244, 255, 0.96), rgba(255, 255, 255, 0.88)) !important;
+:where(.ds-page) .catalog-datagrid :is(.table-head, .panel-head, .section-head, .ds-card-header) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.9rem 1rem;
+    align-items: end;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-head, .panel-head, .section-head, .ds-card-header) > div:first-child {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-toolbar, .panel-toolbar, .menu-toolbar) {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.15rem;
+}
+
+:where(.ds-page) .catalog-datagrid .table-toolbar-primary {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1.48fr) minmax(0, 1.02fr);
+    gap: 0.8rem;
+    align-items: center;
+}
+
+:where(.ds-page) .catalog-datagrid .table-toolbar-filters {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 1fr) minmax(10rem, 1.12fr) minmax(8rem, 0.92fr) minmax(4.85rem, 0.72fr);
+    gap: 0.8rem;
+    align-items: center;
+}
+
+:where(.ds-page) .catalog-datagrid .table-toolbar-primary > *,
+:where(.ds-page) .catalog-datagrid .table-toolbar-filters > * {
+    min-width: 0;
+}
+
+:where(.ds-page) .catalog-datagrid .table-toolbar-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem 1rem;
+}
+
+:where(.ds-page) .catalog-datagrid .table-toolbar-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+:where(.ds-page) .catalog-datagrid .table-toolbar-note span {
+    background: rgba(248, 250, 252, 0.92);
+    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.96);
+}
+
+:where(.ds-page) .catalog-datagrid :is(.panel-toolbar, .table-toolbar, .search-row) input,
+:where(.ds-page) .catalog-datagrid .display-count-control select {
+    min-height: var(--control-height-lg);
+}
+
+:where(.ds-page) .catalog-datagrid .display-count-control {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 10rem;
+}
+
+:where(.ds-page) .catalog-datagrid .display-count-control span {
+    font-size: var(--type-overline);
+    font-weight: 800;
+    letter-spacing: var(--tracking-overline);
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-toolbar, .panel-toolbar) {
+    grid-template-columns: minmax(18rem, 1.35fr) auto auto;
+    align-items: end;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-toolbar, .panel-toolbar) > .display-count-control {
+    display: block;
+    min-width: 10rem;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-toolbar, .panel-toolbar) > .display-count-control span {
+    display: none;
+}
+
+:where(.ds-page) .catalog-datagrid .table-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: 1rem;
+    padding-top: 0.1rem;
+}
+
+:where(.ds-page) .catalog-datagrid .table-footer small {
+    color: var(--text-muted);
+    justify-self: start;
+}
+
+:where(.ds-page) .catalog-datagrid .table-footer-spacer {
+    min-width: 0;
+}
+
+:where(.ds-page) .catalog-datagrid .pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-self: center;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 1.15rem;
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.92);
+}
+
+:where(.ds-page) .catalog-datagrid .pager-select {
+    display: flex;
+    align-items: center;
+}
+
+:where(.ds-page) .catalog-datagrid .pager-select select {
+    min-height: 2.75rem;
+    padding: 0.72rem 2.2rem 0.72rem 0.9rem;
+    border-radius: 0.95rem;
+}
+
+:where(.ds-page) .catalog-datagrid .pager span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+:where(.ds-page) .catalog-datagrid .pager button {
+    min-height: 2.75rem;
+    padding: 0.72rem 0.95rem;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-wrap, .table-shell, .material-grid-shell, .requirement-grid-shell, .queue-grid-shell, .history-grid-shell, .cart-grid-shell, .ledger-grid-shell) {
+    margin-top: 1rem;
+    overflow: auto;
+    border: 1px solid rgba(226, 232, 240, 0.94);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.82);
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-wrap table, .table-shell table, .material-grid-shell table, .requirement-grid-shell table, .queue-grid-shell table, .history-grid-shell table, .cart-grid-shell table, .ledger-grid-shell table),
+:where(.ds-page) .catalog-datagrid :is(.table-wrap, .table-shell, .material-grid-shell, .requirement-grid-shell, .queue-grid-shell, .history-grid-shell, .cart-grid-shell, .ledger-grid-shell) table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-wrap th, .table-wrap td),
+:where(.ds-page) .catalog-datagrid :is(.table-shell, .material-grid-shell, .requirement-grid-shell, .queue-grid-shell, .history-grid-shell, .cart-grid-shell, .ledger-grid-shell) :is(th, td) {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.82);
+    text-align: left;
+    vertical-align: middle;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-wrap thead th),
+:where(.ds-page) .catalog-datagrid :is(.table-shell, .material-grid-shell, .requirement-grid-shell, .queue-grid-shell, .history-grid-shell, .cart-grid-shell, .ledger-grid-shell) thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: rgba(248, 250, 252, 0.98);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: var(--tracking-overline);
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-wrap tbody tr:hover),
+:where(.ds-page) .catalog-datagrid :is(.table-shell, .material-grid-shell, .requirement-grid-shell, .queue-grid-shell, .history-grid-shell, .cart-grid-shell, .ledger-grid-shell) tbody tr:hover {
+    background: rgba(248, 250, 252, 0.88);
+}
+
+:where(.ds-page) .catalog-datagrid :is(.table-wrap tbody tr:last-child td),
+:where(.ds-page) .catalog-datagrid :is(.table-shell, .material-grid-shell, .requirement-grid-shell, .queue-grid-shell, .history-grid-shell, .cart-grid-shell, .ledger-grid-shell) tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+:where(.ds-page) :is(.material-mobile-card.selected-row, .recipe-card.active, .product-card.active, .group-detail-card[open]) {
+    border-color: rgba(111, 100, 255, 0.26);
+    background: linear-gradient(180deg, rgba(240, 244, 255, 0.96), rgba(255, 255, 255, 0.88));
     box-shadow:
         0 20px 32px rgba(111, 100, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 :where(.materials-page) .materials-table tbody tr.selected-row,
 :where(.recipes-page) .recipe-table tbody tr.active {
-    background: linear-gradient(90deg, rgba(240, 244, 255, 0.96), rgba(255, 255, 255, 0.92)) !important;
-    box-shadow: inset 3px 0 0 rgba(111, 100, 255, 0.72) !important;
+    background: linear-gradient(90deg, rgba(240, 244, 255, 0.96), rgba(255, 255, 255, 0.92));
+    box-shadow: inset 3px 0 0 rgba(111, 100, 255, 0.72);
 }
 
 :where(.login-page) .login-brand,
@@ -1168,11 +1098,216 @@ body > div:first-child {
     background:
         radial-gradient(circle at top left, rgba(129, 140, 248, 0.16), transparent 28%),
         radial-gradient(circle at right center, rgba(96, 165, 250, 0.14), transparent 30%),
-        linear-gradient(155deg, rgba(255, 255, 255, 0.98), rgba(243, 247, 255, 0.84)) !important;
+        linear-gradient(155deg, rgba(255, 255, 255, 0.98), rgba(243, 247, 255, 0.84));
 }
 
 :where(.account-page) .hero-panel-card.primary {
     background:
         radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 34%),
-        linear-gradient(135deg, rgba(79, 143, 255, 0.98), rgba(111, 100, 255, 0.92)) !important;
+        linear-gradient(135deg, rgba(79, 143, 255, 0.98), rgba(111, 100, 255, 0.92));
+}
+
+:where(.warehouse-page) .warehouse-workspace,
+:where(.recipes-page) .recipes-workspace,
+:where(.bookkeeping-page) .bookkeeping-workspace,
+:where(.warehouse-page) .warehouse-workspace > *,
+:where(.recipes-page) .recipes-workspace > *,
+:where(.bookkeeping-page) .bookkeeping-workspace > * {
+    min-width: 0;
+}
+
+:where(.warehouse-page) :is(.table-primary, .table-primary strong, .table-primary small, .warehouse-mobile-copy, .warehouse-mobile-key-metric, .warehouse-mobile-grid strong),
+:where(.recipes-page) :is(.table-primary, .table-primary strong, .table-primary small, .recipe-card-update strong, .recipe-card-update small, .group-summary-copy span, .group-footer-copy span),
+:where(.bookkeeping-page) :is(.table-primary, .table-primary strong, .table-primary small, .history-meta-cell strong, .history-meta-cell small, .ledger-mobile-copy, .amount-cell strong) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 980px) {
+    .ds-list-detail {
+        grid-template-columns: 1fr;
+    }
+
+    :where(.ds-page) .catalog-datagrid :is(.table-head, .panel-head, .section-head, .ds-card-header) {
+        grid-template-columns: 1fr;
+    }
+
+    :where(.ds-page) .catalog-datagrid .table-toolbar-primary {
+        grid-template-columns: 1fr;
+    }
+
+    :where(.ds-page) .catalog-datagrid .table-toolbar-filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :where(.ds-page) .catalog-datagrid .table-toolbar-note {
+        justify-content: flex-start;
+    }
+
+    :where(.ds-page) .catalog-datagrid .table-footer {
+        grid-template-columns: 1fr;
+        justify-items: flex-start;
+    }
+
+    :where(.ds-page) .catalog-datagrid .table-footer small,
+    :where(.ds-page) .catalog-datagrid .pager {
+        justify-self: flex-start;
+    }
+
+    :where(.ds-page) .catalog-datagrid .table-footer-spacer {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    :where(.ds-page) .catalog-datagrid .table-toolbar-filters {
+        grid-template-columns: 1fr;
+    }
+
+    :where(.ds-page) .catalog-datagrid .display-count-control {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 720px) {
+    :where(.ds-page) .catalog-datagrid .display-count-control {
+        min-width: 100%;
+    }
+
+    :where(.warehouse-page) .table-wrap,
+    :where(.recipes-page) .table-shell {
+        display: none;
+        max-height: 0;
+        margin: 0;
+        overflow: hidden;
+        border: 0;
+    }
+
+    :where(.warehouse-page) .warehouse-card-list,
+    :where(.recipes-page) .recipe-card-list {
+        display: grid;
+        min-width: 0;
+    }
+
+    :where(.warehouse-page) .summary-strip,
+    :where(.warehouse-page) .warehouse-mobile-grid,
+    :where(.recipes-page) .recipe-card-grid,
+    :where(.recipes-page) .detail-summary-strip,
+    :where(.recipes-page) .detail-financial-strip {
+        grid-template-columns: 1fr;
+    }
+
+    :where(.warehouse-page) .warehouse-mobile-head,
+    :where(.warehouse-page) .warehouse-mobile-toggle-meta,
+    :where(.recipes-page) .recipe-card-footer {
+        gap: 0.625rem;
+    }
+
+    :where(.warehouse-page) .warehouse-mobile-actions,
+    :where(.warehouse-page) .warehouse-row-actions,
+    :where(.recipes-page) .recipe-card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    :where(.warehouse-page) .warehouse-mobile-actions > *,
+    :where(.warehouse-page) .warehouse-row-actions > *,
+    :where(.recipes-page) .recipe-card-actions > * {
+        width: 100%;
+        min-width: 0;
+    }
+
+    :where(.warehouse-page) .catalog-datagrid .table-footer,
+    :where(.recipes-page) .catalog-datagrid .table-footer {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+    }
+
+    :where(.warehouse-page) .catalog-datagrid .table-footer small,
+    :where(.warehouse-page) .catalog-datagrid .pager,
+    :where(.recipes-page) .catalog-datagrid .table-footer small,
+    :where(.recipes-page) .catalog-datagrid .pager {
+        justify-self: stretch;
+    }
+
+    :where(.warehouse-page) .catalog-datagrid .pager,
+    :where(.recipes-page) .catalog-datagrid .pager {
+        width: 100%;
+    }
+}
+
+@media (max-width: 760px) {
+    :where(.bookkeeping-page) .ledger-grid-shell {
+        display: none;
+        max-height: 0;
+        margin: 0;
+        overflow: hidden;
+        border: 0;
+    }
+
+    :where(.bookkeeping-page) .ledger-grid-shell table {
+        min-width: 0;
+    }
+
+    :where(.bookkeeping-page) .ledger-card-list {
+        display: grid;
+        min-width: 0;
+    }
+
+    :where(.bookkeeping-page) .summary-strip.compact,
+    :where(.bookkeeping-page) .form-grid.compact-grid,
+    :where(.bookkeeping-page) .ledger-mobile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    :where(.bookkeeping-page) .ledger-mobile-head,
+    :where(.bookkeeping-page) .assistant-toolbar,
+    :where(.bookkeeping-page) .bookkeeping-assistant-disclosure summary {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    :where(.bookkeeping-page) .catalog-datagrid .table-footer {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+    }
+
+    :where(.bookkeeping-page) .catalog-datagrid .table-footer small,
+    :where(.bookkeeping-page) .catalog-datagrid .pager {
+        justify-self: stretch;
+    }
+
+    :where(.bookkeeping-page) .catalog-datagrid .pager {
+        width: 100%;
+    }
+}
+
+@media (max-width: 720px) {
+    .warehouse-page .table-wrap,
+    .recipes-page .table-shell {
+        display: none !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        border: 0 !important;
+    }
+
+    .warehouse-page .warehouse-card-list,
+    .recipes-page .recipe-card-list {
+        display: grid !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .bookkeeping-page .ledger-grid-shell {
+        display: none !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        border: 0 !important;
+    }
+
+    .bookkeeping-page .ledger-card-list {
+        display: grid !important;
+    }
 }

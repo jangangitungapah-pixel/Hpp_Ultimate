@@ -4,21 +4,22 @@
 @using System.Globalization
 @inject ShoppingService ShoppingService
 @inject RawMaterialCatalogService RawMaterialCatalogService
+@inject GeminiReceiptParserService GeminiReceiptParserService
 @inject SeededBusinessDataStore Store
+@inject NavigationManager Navigation
 
-<PageTitle>Belanja | HPP Ultimate</PageTitle>
+<PageTitle>Pembelian Material | HPP Ultimate</PageTitle>
 
-<section class="shopping-page">
-    <header class="shopping-header">
+<section class="shopping-page ds-page ds-split-workspace theme-indigo">
+    <header class="shopping-header ds-page-header">
         <div class="header-copy">
-            <span class="section-tag">Belanja material</span>
-            <h1>Checkout belanja material, atur penerimaan barang, dan masuk stok dari satu halaman.</h1>
-            <p>Material diambil dari katalog. Belanja offline langsung menambah stok gudang, sedangkan belanja online baru masuk stok setelah ditandai barang sampai.</p>
+            <span class="section-tag">Pembelian material</span>
+            <h1>Pembelian material</h1>
+            <p>Mulai dari draft, lanjut ke checkout saat siap, lalu buka penerimaan hanya ketika barang memang sudah datang.</p>
         </div>
 
         <div class="header-actions">
-            <div class="status-chip">@_statusMessage</div>
-            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            <small class="header-status">@_statusMessage</small>
         </div>
     </header>
 
@@ -28,201 +29,306 @@
     }
     else if (_snapshot is not null)
     {
-        <div class="summary-strip">
-            <article>
-                <small>Material aktif</small>
-                <strong>@_snapshot.Materials.Count</strong>
-            </article>
-            <article>
-                <small>Belanja tercatat</small>
-                <strong>@_snapshot.TotalOrderCount</strong>
-            </article>
-            <article>
-                <small>Menunggu datang</small>
-                <strong>@_snapshot.PendingReceiptCount</strong>
-            </article>
-            <article>
-                <small>Total belanja</small>
-                <strong>@FormatCurrency(_snapshot.TotalSpend)</strong>
-            </article>
-        </div>
-
-        <section class="shopping-form-card">
-            <div class="section-head">
-                <div>
-                    <span class="section-tag">Form belanja</span>
-                    <h2>Susun item belanja lalu checkout</h2>
-                    <p>Satu checkout bisa memuat beberapa material sekaligus. Jika material belum ada di katalog, buka form material baru langsung dari sini.</p>
-                </div>
-
-                <button type="button" class="ghost-button" @onclick="ToggleInlineMaterialForm">
-                    @(_showInlineMaterialForm ? "Tutup Material Baru" : "Material Baru")
-                </button>
+        <section class="shopping-overview-band">
+            <div class="shopping-flow-copy">
+                <span class="section-tag">Mode kerja</span>
+                <h2>@(_activeStage == ShoppingFlowStage.Draft ? "Susun draft pembelian" : _activeStage == ShoppingFlowStage.Checkout ? "Review checkout supplier" : "Terima barang dan cek riwayat")</h2>
+                <p>Halaman ini tidak lagi diperlakukan seperti dashboard penuh. Jalur utamanya sekarang hanya tiga mode kerja yang dibuka sesuai kebutuhan.</p>
             </div>
+            <nav class="shopping-stage-map" aria-label="Peta kerja pembelian material">
+                <button type="button" class="stage-link @GetShoppingStageClass(ShoppingFlowStage.Draft)" @onclick="() => SetShoppingStage(ShoppingFlowStage.Draft)">
+                    <span>Draft</span>
+                    <strong>Susun item</strong>
+                    <small>Pilih material dan susun item yang ingin dibeli.</small>
+                </button>
+                <button type="button" class="stage-link @GetShoppingStageClass(ShoppingFlowStage.Checkout)" @onclick="() => SetShoppingStage(ShoppingFlowStage.Checkout)">
+                    <span>Checkout</span>
+                    <strong>Finalisasi supplier</strong>
+                    <small>@(_draftLines.Count == 0 ? "Tambahkan minimal satu item dulu sebelum lanjut checkout." : $"{_draftLines.Count} item siap direview sebelum checkout.")</small>
+                </button>
+                <button type="button" class="stage-link @GetShoppingStageClass(ShoppingFlowStage.History)" @onclick="() => SetShoppingStage(ShoppingFlowStage.History, force: true)">
+                    <span>Riwayat</span>
+                    <strong>Penerimaan barang</strong>
+                    <small>@(_snapshot.PendingReceiptCount == 0 ? "Tidak ada barang yang menunggu diterima." : $"{_snapshot.PendingReceiptCount} order menunggu ditandai datang.")</small>
+                </button>
+            </nav>
+        </section>
 
-            @if (!string.IsNullOrWhiteSpace(_message))
-            {
-                <div class="form-message">@_message</div>
-            }
+        @if (_activeStage is not ShoppingFlowStage.History)
+        {
+            <section class="shopping-form-card stage-expanded" id="shopping-draft">
+                <div class="section-head ds-card-header">
+                    <div>
+                        <span class="section-tag">@(_activeStage == ShoppingFlowStage.Draft ? "Draft pembelian" : "Review draft")</span>
+                        <h2>@(_activeStage == ShoppingFlowStage.Draft ? "Susun item pembelian sebelum checkout" : "Periksa ulang list pembelian sebelum checkout")</h2>
+                        <p>@(_activeStage == ShoppingFlowStage.Draft
+                            ? "Jalur default-nya lurus: pilih material, tambah ke draft, lalu lanjut ke checkout saat list sudah siap."
+                            : "Langkah ini khusus untuk mengecek ulang item draft, supplier, kanal belanja, dan total checkout sebelum transaksi disimpan.")</p>
+                    </div>
 
-            <EditForm Model="_checkoutForm" OnValidSubmit="CheckoutAsync">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-
-                <div class="draft-grid">
-                    <label class="wide-field">
-                        <span>Material katalog</span>
-                        <input class="lookup-input"
-                               list="shopping-material-options"
-                               value="@_materialLookupText"
-                               @onchange="OnMaterialLookupChanged"
-                               placeholder="Ketik nama atau kode material" />
-                        <datalist id="shopping-material-options">
-                            @foreach (var material in _snapshot.Materials)
-                            {
-                                <option value="@material.LookupLabel"></option>
-                            }
-                        </datalist>
-                    </label>
-
-                    <label>
-                        <span>Jumlah pack</span>
-                        <input type="number" min="1" step="1" value="@_draftPackCount" @oninput="OnDraftPackCountChanged" />
-                    </label>
-
-                    <article class="readonly-card">
-                        <small>Estimasi subtotal item</small>
-                        <strong>@FormatCurrency(CurrentLineSubtotal)</strong>
-                        <span>@CurrentLineMeta</span>
-                    </article>
+                    @if (_activeStage == ShoppingFlowStage.Draft)
+                    {
+                        <div class="helper-toggle-group">
+                            <button type="button" class="ghost-button compact" @onclick="ToggleAlternateEntryTools">
+                                @(_showAlternateEntryTools ? "Tutup Cara Lain" : "Cara Lain Input")
+                            </button>
+                        </div>
+                    }
                 </div>
 
-                @if (SelectedMaterial is not null)
+                @if (!string.IsNullOrWhiteSpace(_message))
                 {
-                    <article class="material-glance-card">
-                        <div class="table-primary">
-                            <small>@SelectedMaterial.Material.Code</small>
-                            <strong>@SelectedMaterial.Material.Name</strong>
-                        </div>
-
-                        <div class="material-glance-grid">
-                            <article>
-                                <small>Pack</small>
-                                <strong>@FormatQuantity(SelectedMaterial.Material.NetQuantity) @SelectedMaterial.Material.NetUnit</strong>
-                            </article>
-                            <article>
-                                <small>Harga / pack</small>
-                                <strong>@FormatCurrency(SelectedMaterial.Material.PricePerPack)</strong>
-                            </article>
-                            <article>
-                                <small>Stok gudang</small>
-                                <strong>@FormatQuantity(SelectedMaterial.OnHandQuantity) @SelectedMaterial.Material.BaseUnit</strong>
-                            </article>
-                            <article>
-                                <small>Restock item ini</small>
-                                <strong>@FormatQuantity(CurrentBaseQuantity) @SelectedMaterial.Material.BaseUnit</strong>
-                            </article>
-                        </div>
-                    </article>
-                }
-                else
-                {
-                    <div class="inline-note">Pilih material dari daftar katalog sebelum memasukkan item ke list belanja.</div>
+                    <div class="form-message">@_message</div>
                 }
 
-                <div class="draft-actions">
-                    <button type="button" class="primary-button" disabled="@(!CanAddDraftLine)" @onclick="AddDraftLine">Masukkan List</button>
-                </div>
-
-                @if (_showInlineMaterialForm)
+                @if (_activeStage == ShoppingFlowStage.Draft)
                 {
-                    <section class="inline-material-card">
-                        <div class="section-head">
-                            <div>
-                                <span class="section-tag">Material baru</span>
-                                <h3>Tambah material tanpa keluar dari halaman belanja</h3>
-                                <p>Field inti mengikuti pola katalog material. Setelah disimpan, material langsung bisa dipilih ke list belanja.</p>
+                    @if (_showAlternateEntryTools)
+                    {
+                        <div class="helper-toggle-group helper-toggle-group-expanded">
+                            <button type="button" class="ghost-button compact" @onclick="ToggleAiReceiptTools">
+                                @(_showAiReceiptTools ? "Tutup Baca Struk AI" : "Buka Baca Struk AI")
+                            </button>
+                            <button type="button" class="ghost-button compact" @onclick="ToggleInlineMaterialForm">
+                                @(_showInlineMaterialForm ? "Tutup Material Baru" : "Buka Material Baru")
+                            </button>
+                        </div>
+                    }
+
+                    @if (_showAiReceiptTools)
+                    {
+                        <section class="ai-receipt-card">
+                            <div class="section-head ds-card-header">
+                                <div>
+                                    <span class="section-tag">Baca struk AI</span>
+                                    <h3>Upload struk jika ingin isi draft otomatis</h3>
+                                    <p>Ini jalur bantu, bukan jalur utama. Hasil AI tetap masuk ke draft untuk kamu review dulu sebelum checkout.</p>
+                                </div>
+
+                                <div class="status-chip">@GeminiReceiptParserService.ConfigurationHint</div>
                             </div>
-                        </div>
 
-                        @if (!string.IsNullOrWhiteSpace(_inlineMaterialMessage))
-                        {
-                            <div class="form-message inline-message">@_inlineMaterialMessage</div>
-                        }
-
-                        <div class="inline-material-grid">
-                            <label>
-                                <span>Merk</span>
-                                <InputText @bind-Value="_inlineMaterialForm.Brand" />
+                            <label class="upload-trigger ai-upload-trigger @(_isParsingReceiptWithAi ? "is-busy" : null)">
+                                <div class="ai-upload-surface">
+                                    <div class="ai-upload-copy">
+                                        <strong>@(_isParsingReceiptWithAi ? "Sedang membaca struk..." : "Klik untuk upload struk belanja")</strong>
+                                        <small>Format gambar atau PDF, maksimal 4 MB. Draft belanja akan diisi otomatis dari hasil AI.</small>
+                                    </div>
+                                    <span class="ghost-button">@(_isParsingReceiptWithAi ? "Memproses..." : "Baca Struk AI")</span>
+                                </div>
+                                <InputFile OnChange="ParseReceiptWithAiAsync" accept="image/*,.pdf" />
                             </label>
 
-                            <label>
-                                <span>Nama Material</span>
-                                <InputText @bind-Value="_inlineMaterialForm.Name" />
-                            </label>
+                            @if (!string.IsNullOrWhiteSpace(_aiMessage))
+                            {
+                                <div class="form-message ai-message">@_aiMessage</div>
+                            }
 
-                            <label>
-                                <span>Base Unit</span>
-                                <select value="@_inlineMaterialForm.BaseUnit" @onchange="OnInlineBaseUnitChanged">
-                                    <option value="">Pilih base unit</option>
-                                    @foreach (var unit in RawMaterialCatalogService.BaseUnits)
-                                    {
-                                        <option value="@unit.Value">@unit.Label</option>
-                                    }
-                                </select>
-                            </label>
+                            @if (_aiUnmatchedLines.Count > 0)
+                            {
+                                <section class="ai-candidate-card">
+                                    <div class="section-head ds-card-header">
+                                        <div>
+                                            <span class="section-tag">Kandidat material baru</span>
+                                            <h3>Item struk yang belum ditemukan di katalog</h3>
+                                            <p>Klik salah satu item untuk langsung mengisi form material baru. Kamu tinggal cek ulang unit, netto, dan harga sebelum simpan.</p>
+                                        </div>
+                                    </div>
 
-                            <label>
-                                <span>Netto Qty</span>
-                                <InputNumber @bind-Value="_inlineMaterialForm.NetQuantity" />
-                            </label>
+                                    <div class="ai-candidate-list">
+                                        @foreach (var item in _aiUnmatchedLines)
+                                        {
+                                            <button type="button" class="ai-candidate-item" @onclick="() => UseAiCandidateForInlineMaterial(item)">
+                                                <div class="table-primary">
+                                                    <strong>@item.RawItemName</strong>
+                                                    <small>@(string.IsNullOrWhiteSpace(item.SuggestedBrand) ? "Tanpa merk terbaca" : item.SuggestedBrand)</small>
+                                                </div>
+                                                <div class="ai-candidate-meta">
+                                                    <span>@item.PackCount pack</span>
+                                                    <span>@(item.SuggestedNetQuantity is > 0 && !string.IsNullOrWhiteSpace(item.SuggestedNetUnit) ? $"{FormatQuantity(item.SuggestedNetQuantity.Value)} {item.SuggestedNetUnit} / pack" : "Netto belum yakin")</span>
+                                                    <span>@(item.PricePerPack is > 0 ? $"{FormatCurrency(item.PricePerPack.Value)} / pack" : "Harga pack belum yakin")</span>
+                                                </div>
+                                            </button>
+                                        }
+                                    </div>
+                                </section>
+                            }
+                        </section>
+                    }
 
-                            <label>
-                                <span>Netto Unit</span>
-                                <select @bind="_inlineMaterialForm.NetUnit">
-                                    <option value="">Pilih netto unit</option>
-                                    @foreach (var unit in CompatibleInlineMaterialUnits)
-                                    {
-                                        <option value="@unit.Value">@unit.Label</option>
-                                    }
-                                </select>
-                            </label>
+                    <div class="draft-grid">
+                        <label class="wide-field">
+                            <span>Material katalog</span>
+                            <div class="picker-field">
+                                <input class="lookup-input"
+                                       value="@_materialLookupText"
+                                       @oninput="OnMaterialLookupChanged"
+                                       placeholder="Ketik nama atau kode material" />
 
-                            <label>
-                                <span>Harga per Pack</span>
-                                <InputNumber @bind-Value="_inlineMaterialForm.PricePerPack" />
-                            </label>
+                                @if (ShowMaterialSuggestions)
+                                {
+                                    <div class="picker-suggestion-list" role="listbox" aria-label="Saran material pembelian">
+                                        @foreach (var material in MaterialLookupSuggestions)
+                                        {
+                                            <button type="button" class="picker-suggestion" @onclick="() => SelectShoppingMaterialAsync(material.MaterialId)">
+                                                <div class="table-primary">
+                                                    <strong>@material.Name</strong>
+                                                    <small>@material.Code - @(string.IsNullOrWhiteSpace(material.Brand) ? "Tanpa merk" : material.Brand)</small>
+                                                </div>
+                                                <span>@FormatCurrency(material.PricePerPack) / pack</span>
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </label>
 
-                            <label class="wide-field">
-                                <span>Deskripsi</span>
-                                <InputTextArea @bind-Value="_inlineMaterialForm.Description" />
-                            </label>
-                        </div>
+                        <label>
+                            <span>Jumlah pack</span>
+                            <input type="number" min="1" step="1" value="@_draftPackCount" @oninput="OnDraftPackCountChanged" />
+                        </label>
 
-                        <div class="draft-actions">
-                            <button type="button" class="ghost-button" @onclick="ResetInlineMaterialForm">Reset</button>
-                            <button type="button" class="primary-button" @onclick="CreateInlineMaterialAsync">Simpan Material Baru</button>
-                        </div>
-                    </section>
+                        <article class="readonly-card">
+                            <small>Estimasi subtotal item</small>
+                            <strong>@FormatCurrency(CurrentLineSubtotal)</strong>
+                            <span>@CurrentLineMeta</span>
+                        </article>
+                    </div>
+
+                    @if (SelectedMaterial is not null)
+                    {
+                        <article class="material-glance-card">
+                            <div class="table-primary">
+                                <small>@SelectedMaterial.Material.Code</small>
+                                <strong>@SelectedMaterial.Material.Name</strong>
+                            </div>
+
+                            <div class="material-glance-grid">
+                                <article>
+                                    <small>Pack</small>
+                                    <strong>@FormatQuantity(SelectedMaterial.Material.NetQuantity) @SelectedMaterial.Material.NetUnit</strong>
+                                </article>
+                                <article>
+                                    <small>Harga / pack</small>
+                                    <strong>@FormatCurrency(SelectedMaterial.Material.PricePerPack)</strong>
+                                </article>
+                                <article>
+                                    <small>Stok gudang</small>
+                                    <strong>@FormatQuantity(SelectedMaterial.OnHandQuantity) @SelectedMaterial.Material.BaseUnit</strong>
+                                </article>
+                                <article>
+                                    <small>Restock item ini</small>
+                                    <strong>@FormatQuantity(CurrentBaseQuantity) @SelectedMaterial.Material.BaseUnit</strong>
+                                </article>
+                            </div>
+                        </article>
+                    }
+                    else
+                    {
+                        <div class="inline-note">Pilih material dari saran katalog dulu. Bantuan AI dan material baru hanya dipakai jika material memang belum tersedia.</div>
+                    }
+
+                    <div class="draft-actions">
+                        <button type="button" class="primary-button" disabled="@(!CanAddDraftLine)" @onclick="AddDraftLine">Tambah ke Draft</button>
+                    </div>
+
+                    @if (_showInlineMaterialForm)
+                    {
+                        <section class="inline-material-card">
+                            <div class="section-head ds-card-header">
+                                <div>
+                                    <span class="section-tag">Material baru</span>
+                                    <h3>Tambah material tanpa keluar dari halaman belanja</h3>
+                                    <p>Field inti mengikuti pola katalog material. Setelah disimpan, material langsung bisa dipilih ke draft belanja.</p>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(_inlineMaterialMessage))
+                            {
+                                <div class="form-message inline-message">@_inlineMaterialMessage</div>
+                            }
+
+                            <div class="inline-material-grid">
+                                <label>
+                                    <span>Merk</span>
+                                    <InputText @bind-Value="_inlineMaterialForm.Brand" />
+                                </label>
+
+                                <label>
+                                    <span>Nama Material</span>
+                                    <InputText @bind-Value="_inlineMaterialForm.Name" />
+                                </label>
+
+                                <label>
+                                    <span>Base Unit</span>
+                                    <select value="@_inlineMaterialForm.BaseUnit" @onchange="OnInlineBaseUnitChanged">
+                                        <option value="">Pilih base unit</option>
+                                        @foreach (var unit in RawMaterialCatalogService.BaseUnits)
+                                        {
+                                            <option value="@unit.Value">@unit.Label</option>
+                                        }
+                                    </select>
+                                </label>
+
+                                <label>
+                                    <span>Netto Qty</span>
+                                    <InputNumber @bind-Value="_inlineMaterialForm.NetQuantity" />
+                                </label>
+
+                                <label>
+                                    <span>Netto Unit</span>
+                                    <select @bind="_inlineMaterialForm.NetUnit">
+                                        <option value="">Pilih netto unit</option>
+                                        @foreach (var unit in CompatibleInlineMaterialUnits)
+                                        {
+                                            <option value="@unit.Value">@unit.Label</option>
+                                        }
+                                    </select>
+                                </label>
+
+                                <label>
+                                    <span>Harga per Pack</span>
+                                    <InputNumber @bind-Value="_inlineMaterialForm.PricePerPack" />
+                                </label>
+
+                                <label class="wide-field">
+                                    <span>Deskripsi</span>
+                                    <InputTextArea @bind-Value="_inlineMaterialForm.Description" />
+                                </label>
+                            </div>
+
+                            <div class="draft-actions">
+                                <button type="button" class="ghost-button" @onclick="ResetInlineMaterialForm">Reset</button>
+                                <button type="button" class="primary-button" @onclick="CreateInlineMaterialAsync">Simpan Material Baru</button>
+                            </div>
+                        </section>
+                    }
                 }
 
                 <section class="cart-card catalog-datagrid">
-                    <div class="section-head">
+                    <div class="section-head ds-card-header">
                         <div>
                             <span class="section-tag">List belanja</span>
-                            <h3>Item yang akan di-checkout</h3>
-                            <p>Jumlah pack akan dijumlahkan otomatis bila material yang sama dimasukkan lagi.</p>
+                            <h3>@(_activeStage == ShoppingFlowStage.Checkout ? "Review item sebelum checkout" : "Item yang akan di-checkout")</h3>
+                            <p>@(_activeStage == ShoppingFlowStage.Checkout ? "Pastikan jumlah pack dan item yang dibeli sudah benar sebelum transaksi disimpan." : "Jumlah pack akan dijumlahkan otomatis bila material yang sama dimasukkan lagi.")</p>
                         </div>
 
-                        <label class="display-count-control">
-                            <span>Baris tampil</span>
-                            <select value="@_cartDisplayCount" @onchange="OnCartDisplayCountChanged">
-                                @foreach (var option in GridDisplayOptions)
-                                {
-                                    <option value="@option">@option baris</option>
-                                }
-                            </select>
-                        </label>
+                        <div class="section-head-actions">
+                            @if (_activeStage == ShoppingFlowStage.Draft && _draftLines.Count > 0)
+                            {
+                                <button type="button" class="primary-button compact" @onclick="() => SetShoppingStage(ShoppingFlowStage.Checkout)">Lanjut ke Checkout</button>
+                            }
+
+                            <label class="display-count-control">
+                                <span>Baris tampil</span>
+                                <select value="@_cartDisplayCount" @onchange="OnCartDisplayCountChanged">
+                                    @foreach (var option in GridDisplayOptions)
+                                    {
+                                        <option value="@option">@option baris</option>
+                                    }
+                                </select>
+                            </label>
+                        </div>
                     </div>
 
                     @if (_draftLines.Count == 0)
@@ -326,94 +432,116 @@
                     }
                 </section>
 
-                <section class="checkout-detail-card">
-                    <div class="section-head">
-                        <div>
-                            <span class="section-tag">Detail checkout</span>
-                            <h3>Lengkapi supplier dan tipe belanja</h3>
-                            <p>Ongkir bersifat opsional. Untuk belanja online, stok baru masuk saat barang ditandai sampai.</p>
-                        </div>
-                    </div>
+                @if (_activeStage == ShoppingFlowStage.Checkout)
+                {
+                    <EditForm Model="_checkoutForm" OnValidSubmit="CheckoutAsync">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
 
-                    <div class="checkout-grid">
-                        <label>
-                            <span>Nama toko / supplier</span>
-                            <InputText @bind-Value="_checkoutForm.SupplierName" />
-                        </label>
+                        <section class="checkout-detail-card" id="shopping-checkout">
+                            <div class="section-head ds-card-header">
+                                <div>
+                                    <span class="section-tag">Finalisasi pembelian</span>
+                                    <h3>Lengkapi supplier, kanal, dan waktu checkout</h3>
+                                    <p>Ongkir bersifat opsional. Untuk pembelian online, stok baru masuk saat barang ditandai sampai pada area penerimaan barang.</p>
+                                </div>
+                            </div>
 
-                        <label>
-                            <span>Ongkir</span>
-                            <InputNumber @bind-Value="_checkoutForm.ShippingCost" />
-                        </label>
+                            <div class="checkout-grid">
+                                <label>
+                                    <span>Nama toko / supplier</span>
+                                    <InputText @bind-Value="_checkoutForm.SupplierName" />
+                                </label>
 
-                        <label class="wide-field">
-                            <span>Tanggal & jam belanja</span>
-                            <input type="datetime-local" value="@FormatDateTimeLocal(_checkoutForm.OrderedAt)" @onchange="OnOrderedAtChanged" />
-                        </label>
+                                <label>
+                                    <span>Ongkir</span>
+                                    <InputNumber @bind-Value="_checkoutForm.ShippingCost" />
+                                </label>
 
-                        <label class="wide-field">
-                            <span>Catatan belanja</span>
-                            <InputTextArea @bind-Value="_checkoutForm.Notes" />
-                        </label>
-                    </div>
+                                <label class="wide-field">
+                                    <span>Tanggal & jam belanja</span>
+                                    <input type="datetime-local" value="@FormatDateTimeLocal(_checkoutForm.OrderedAt)" @onchange="OnOrderedAtChanged" />
+                                </label>
 
-                    <div class="channel-section">
-                        <span class="field-label">Tipe belanja</span>
-                        <div class="method-row">
-                            <button type="button" class="method-chip @(_checkoutForm.Channel == PurchaseChannel.Offline ? "active" : null)" @onclick="() => SelectChannel(PurchaseChannel.Offline)">Offline</button>
-                            <button type="button" class="method-chip @(_checkoutForm.Channel == PurchaseChannel.Online ? "active" : null)" @onclick="() => SelectChannel(PurchaseChannel.Online)">Online</button>
-                        </div>
-                    </div>
+                                <label class="wide-field">
+                                    <span>Catatan belanja</span>
+                                    <InputTextArea @bind-Value="_checkoutForm.Notes" />
+                                </label>
+                            </div>
 
-                    @if (_checkoutForm.Channel == PurchaseChannel.Online)
-                    {
-                        <div class="checkout-grid ecommerce-grid">
-                            <label>
-                                <span>Ecommerce</span>
-                                <InputSelect @bind-Value="_checkoutForm.EcommercePlatform">
-                                    <option value="">Pilih ecommerce</option>
-                                    @foreach (var platform in EcommercePlatforms)
-                                    {
-                                        <option value="@platform">@platform</option>
-                                    }
-                                </InputSelect>
-                            </label>
-                        </div>
-                    }
+                            <div class="channel-section">
+                                <span class="field-label">Tipe belanja</span>
+                                <div class="method-row">
+                                    <button type="button" class="method-chip @(_checkoutForm.Channel == PurchaseChannel.Offline ? "active" : null)" @onclick="() => SelectChannel(PurchaseChannel.Offline)">Offline</button>
+                                    <button type="button" class="method-chip @(_checkoutForm.Channel == PurchaseChannel.Online ? "active" : null)" @onclick="() => SelectChannel(PurchaseChannel.Online)">Online</button>
+                                </div>
+                            </div>
 
-                    <div class="summary-card">
-                        <div class="summary-row">
-                            <span>Total item</span>
-                            <strong>@_draftLines.Count material</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>Total pack</span>
-                            <strong>@_draftLines.Sum(item => item.PackCount) pack</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <strong>@FormatCurrency(CartSubtotal)</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>Grand total</span>
-                            <strong>@FormatCurrency(CartGrandTotal)</strong>
-                        </div>
-                    </div>
+                            @if (_checkoutForm.Channel == PurchaseChannel.Online)
+                            {
+                                <div class="checkout-grid ecommerce-grid">
+                                    <label>
+                                        <span>Ecommerce</span>
+                                        <InputSelect @bind-Value="_checkoutForm.EcommercePlatform">
+                                            <option value="">Pilih ecommerce</option>
+                                            @foreach (var platform in EcommercePlatforms)
+                                            {
+                                                <option value="@platform">@platform</option>
+                                            }
+                                        </InputSelect>
+                                    </label>
+                                </div>
+                            }
 
-                    <div class="draft-actions">
-                        <button type="button" class="ghost-button" @onclick="ResetShoppingDraft">Reset</button>
-                        <button type="submit" class="primary-button" disabled="@(!CanCheckout)">Check Out</button>
-                    </div>
-                </section>
-            </EditForm>
-        </section>
+                            <div class="summary-card">
+                                <div class="summary-row">
+                                    <span>Total item</span>
+                                    <strong>@_draftLines.Count material</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Total pack</span>
+                                    <strong>@_draftLines.Sum(item => item.PackCount) pack</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Subtotal</span>
+                                    <strong>@FormatCurrency(CartSubtotal)</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Grand total</span>
+                                    <strong>@FormatCurrency(CartGrandTotal)</strong>
+                                </div>
+                            </div>
 
-        <section class="history-card catalog-datagrid">
-            <div class="section-head">
+                            <div class="submit-confidence-note">
+                                @if (_checkoutForm.Channel == PurchaseChannel.Offline)
+                                {
+                                    <span>Checkout offline langsung mencatat pembelian dan menambahkan stok gudang pada saat yang sama.</span>
+                                }
+                                else
+                                {
+                                    <span>Checkout online hanya mencatat order. Stok baru masuk setelah barang ditandai sampai pada tahap <em>Penerimaan & riwayat</em>.</span>
+                                }
+                            </div>
+
+                            <div class="draft-actions">
+                                <button type="button" class="ghost-button" @onclick="() => SetShoppingStage(ShoppingFlowStage.Draft, force: true)">Kembali ke Draft</button>
+                                <button type="button" class="ghost-button" @onclick="ResetShoppingDraft">Reset</button>
+                                <button type="submit" class="primary-button" disabled="@(!CanCheckout)">Checkout Pembelian</button>
+                            </div>
+                        </section>
+                    </EditForm>
+                }
+            </section>
+        }
+
+        @if (_activeStage == ShoppingFlowStage.History)
+        {
+        <section class="history-card catalog-datagrid history-stage-active" id="shopping-history">
+            <div class="section-head ds-card-header">
                 <div>
-                    <span class="section-tag">History belanja</span>
-                    <h2>Datagrid belanja material</h2>
-                    <p>Upload struk bisa dilakukan kapan saja. Order online baru menambah stok setelah tombol barang sampai ditekan.</p>
+                    <span class="section-tag">Penerimaan & riwayat</span>
+                    <h2>Penerimaan barang dan riwayat pembelian</h2>
+                    <p>Bagian ini dipakai untuk dua hal: menandai barang sampai agar stok masuk gudang, lalu meninjau ulang supplier, total, dan file struk dari pembelian sebelumnya.</p>
                 </div>
 
                 <label class="display-count-control">
@@ -582,6 +710,7 @@
                 </div>
             }
         </section>
+        }
     }
 </section>
 
@@ -597,6 +726,9 @@
     private Guid? _selectedMaterialId;
     private string _materialLookupText = string.Empty;
     private int _draftPackCount = 1;
+    private ShoppingFlowStage _activeStage = ShoppingFlowStage.Draft;
+    private bool _showAlternateEntryTools;
+    private bool _showAiReceiptTools;
     private bool _showInlineMaterialForm;
     private readonly List<ShoppingDraftLine> _draftLines = [];
     private int _cartDisplayCount = 8;
@@ -605,8 +737,22 @@
     private int _historyPage = 1;
     private ShoppingCheckoutRequest _checkoutForm = new();
     private RawMaterialUpsertRequest _inlineMaterialForm = CreateInlineMaterialForm();
+    private bool _isParsingReceiptWithAi;
+    private string _aiMessage = string.Empty;
+    private readonly List<ShoppingAiReceiptLine> _aiUnmatchedLines = [];
 
     private ShoppingMaterialDetail? SelectedMaterial => _snapshot?.SelectedMaterial;
+    private IReadOnlyList<ShoppingMaterialOption> MaterialLookupSuggestions
+        => _snapshot is null || string.IsNullOrWhiteSpace(_materialLookupText)
+            ? Array.Empty<ShoppingMaterialOption>()
+            : _snapshot.Materials
+                .Where(item =>
+                    item.Name.Contains(_materialLookupText, StringComparison.OrdinalIgnoreCase) ||
+                    item.Code.Contains(_materialLookupText, StringComparison.OrdinalIgnoreCase) ||
+                    (item.Brand?.Contains(_materialLookupText, StringComparison.OrdinalIgnoreCase) ?? false))
+                .Take(6)
+                .ToArray();
+    private bool ShowMaterialSuggestions => _selectedMaterialId is null && MaterialLookupSuggestions.Count > 0;
     private decimal CurrentLineSubtotal => SelectedMaterial is null ? 0m : SelectedMaterial.Material.PricePerPack * _draftPackCount;
     private decimal CurrentBaseQuantity => SelectedMaterial is null ? 0m : SelectedMaterial.Material.NetQuantityInBaseUnit * _draftPackCount;
     private string CurrentLineMeta
@@ -642,6 +788,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SyncShoppingStageFromUri();
         Store.Changed += HandleStoreChanged;
         await LoadAsync();
     }
@@ -657,6 +804,12 @@
         _statusMessage = _snapshot.PendingReceiptCount > 0
             ? $"{_snapshot.PendingReceiptCount} order menunggu datang"
             : $"{_snapshot.TotalOrderCount} history belanja";
+
+        if (_activeStage == ShoppingFlowStage.Checkout && _draftLines.Count == 0)
+        {
+            _activeStage = ShoppingFlowStage.Draft;
+        }
+
         _isLoading = false;
         await InvokeAsync(StateHasChanged);
     }
@@ -667,8 +820,24 @@
     {
         _materialLookupText = args.Value?.ToString() ?? string.Empty;
         var material = ResolveMaterial(_materialLookupText);
-        _selectedMaterialId = material?.MaterialId;
-        _message = material is null ? "Material belum ditemukan di katalog aktif." : string.Empty;
+        Guid? resolvedId = material is not null && IsExactLookupMatch(material, _materialLookupText)
+            ? material.MaterialId
+            : null;
+        var shouldReload = resolvedId != _selectedMaterialId || (string.IsNullOrWhiteSpace(_materialLookupText) && _selectedMaterialId is not null);
+
+        _selectedMaterialId = resolvedId;
+        _message = string.Empty;
+
+        if (shouldReload)
+        {
+            await LoadAsync();
+        }
+    }
+
+    private async Task SelectShoppingMaterialAsync(Guid materialId)
+    {
+        _selectedMaterialId = materialId;
+        _message = string.Empty;
         await LoadAsync();
     }
 
@@ -751,13 +920,18 @@
 
         _draftPackCount = 1;
         _cartPage = CurrentCartPage;
-        _message = "Item belanja dimasukkan ke list.";
+        _activeStage = ShoppingFlowStage.Draft;
+        _message = "Item ditambahkan ke draft belanja. Lanjut ke checkout saat list sudah siap.";
     }
 
     private void RemoveDraftLine(Guid materialId)
     {
         _draftLines.RemoveAll(item => item.MaterialId == materialId);
         _cartPage = CurrentCartPage;
+        if (_draftLines.Count == 0 && _activeStage == ShoppingFlowStage.Checkout)
+        {
+            _activeStage = ShoppingFlowStage.Draft;
+        }
         _message = _draftLines.Count == 0 ? "List belanja dikosongkan." : "Item belanja dihapus dari list.";
     }
 
@@ -787,20 +961,27 @@
             .ToList();
 
         var result = await ShoppingService.CheckoutAsync(_checkoutForm);
-        _message = result.Message;
+        _message = result.Success
+            ? _checkoutForm.Channel == PurchaseChannel.Offline
+                ? "Pembelian offline tersimpan. Stok gudang langsung bertambah dari checkout ini."
+                : "Pembelian online tersimpan. Buka penerimaan barang saat supplier sudah datang."
+            : result.Message;
         if (!result.Success)
         {
             return;
         }
 
         ResetShoppingDraft();
+        _activeStage = ShoppingFlowStage.History;
         await LoadAsync();
     }
 
     private async Task MarkReceivedAsync(Guid orderId)
     {
         var result = await ShoppingService.MarkReceivedAsync(orderId);
-        _message = result.Message;
+        _message = result.Success
+            ? "Barang ditandai sampai. Stok gudang bertambah dan order pindah ke status diterima."
+            : result.Message;
         await LoadAsync();
     }
 
@@ -831,17 +1012,90 @@
             Base64Content = Convert.ToBase64String(memory.ToArray())
         });
 
-        _message = result.Message;
+        _message = result.Success
+            ? "Struk berhasil diunggah dan menempel ke riwayat pembelian ini."
+            : result.Message;
         await LoadAsync();
+    }
+
+    private async Task ParseReceiptWithAiAsync(InputFileChangeEventArgs args)
+    {
+        if (_snapshot is null)
+        {
+            _aiMessage = "Data belanja belum siap. Coba refresh halaman lalu ulangi.";
+            return;
+        }
+
+        var file = args.File;
+        if (file is null)
+        {
+            return;
+        }
+
+        const long maxSize = 4 * 1024 * 1024;
+        if (file.Size > maxSize)
+        {
+            _aiMessage = "Ukuran file struk AI maksimal 4 MB.";
+            return;
+        }
+
+        _isParsingReceiptWithAi = true;
+        _aiMessage = "Gemini sedang membaca struk dan mencocokkan item ke katalog...";
+
+        try
+        {
+            await using var stream = file.OpenReadStream(maxSize);
+            using var memory = new MemoryStream();
+            await stream.CopyToAsync(memory);
+
+            var result = await GeminiReceiptParserService.ParseShoppingReceiptAsync(new ShoppingAiReceiptRequest(
+                file.Name,
+                file.ContentType,
+                Convert.ToBase64String(memory.ToArray()),
+                _snapshot.Materials));
+
+            _aiMessage = result.Message;
+            if (!result.Success || result.Draft is null)
+            {
+                return;
+            }
+
+            ApplyAiDraft(result.Draft, _snapshot.Materials);
+        }
+        finally
+        {
+            _isParsingReceiptWithAi = false;
+        }
+    }
+
+    private void ToggleAlternateEntryTools()
+    {
+        _showAlternateEntryTools = !_showAlternateEntryTools;
+        if (!_showAlternateEntryTools)
+        {
+            _showAiReceiptTools = false;
+            _showInlineMaterialForm = false;
+        }
     }
 
     private void ToggleInlineMaterialForm()
     {
+        _showAlternateEntryTools = true;
         _showInlineMaterialForm = !_showInlineMaterialForm;
         _inlineMaterialMessage = string.Empty;
         if (_showInlineMaterialForm)
         {
             _inlineMaterialForm = CreateInlineMaterialForm();
+        }
+    }
+
+    private void ToggleAiReceiptTools()
+    {
+        _showAlternateEntryTools = true;
+        _showAiReceiptTools = !_showAiReceiptTools;
+        if (!_showAiReceiptTools)
+        {
+            _aiMessage = string.Empty;
         }
     }
 
@@ -858,7 +1112,7 @@
         _selectedMaterialId = result.Material.Id;
         _materialLookupText = GetMaterialLookupLabel(result.Material);
         _inlineMaterialForm = CreateInlineMaterialForm();
-        _message = "Material baru berhasil ditambahkan dan siap dimasukkan ke list belanja.";
+        _message = "Material baru berhasil ditambahkan dan siap dimasukkan ke draft belanja.";
         await LoadAsync();
     }
 
@@ -883,6 +1137,114 @@
         _draftLines.Clear();
         _draftPackCount = 1;
         _checkoutForm = new ShoppingCheckoutRequest();
+        _activeStage = ShoppingFlowStage.Draft;
+        _showAlternateEntryTools = false;
+        _showAiReceiptTools = false;
+        _showInlineMaterialForm = false;
+        _aiMessage = string.Empty;
+        _aiUnmatchedLines.Clear();
+    }
+
+    private void ApplyAiDraft(ShoppingAiReceiptDraft draft, IReadOnlyList<ShoppingMaterialOption> materials)
+    {
+        var materialsByCode = materials.ToDictionary(item => item.Code, StringComparer.OrdinalIgnoreCase);
+        _aiUnmatchedLines.Clear();
+        var mergedLines = draft.Lines
+            .Where(item => !string.IsNullOrWhiteSpace(item.MaterialCode))
+            .Select(item => new
+            {
+                Material = materialsByCode.GetValueOrDefault(item.MaterialCode!),
+                item.PackCount
+            })
+            .Where(item => item.Material is not null)
+            .GroupBy(item => item.Material!.MaterialId)
+            .Select(group => new
+            {
+                Material = group.First().Material!,
+                PackCount = group.Sum(item => item.PackCount)
+            })
+            .ToArray();
+
+        _aiUnmatchedLines.AddRange(draft.Lines.Where(item =>
+            string.IsNullOrWhiteSpace(item.MaterialCode)
+            || !materialsByCode.ContainsKey(item.MaterialCode)));
+
+        if (mergedLines.Length == 0)
+        {
+            return;
+        }
+
+        _draftLines.Clear();
+        foreach (var item in mergedLines)
+        {
+            _draftLines.Add(new ShoppingDraftLine(
+                item.Material.MaterialId,
+                item.Material.Code,
+                item.Material.Name,
+                item.Material.Brand,
+                item.Material.BaseUnit,
+                item.Material.NetQuantity,
+                item.Material.NetUnit,
+                item.Material.NetQuantityInBaseUnit,
+                item.PackCount,
+                item.Material.PricePerPack,
+                decimal.Round(item.Material.PricePerPack * item.PackCount, 2),
+                item.Material.LookupLabel));
+        }
+
+        _cartPage = 1;
+        _draftPackCount = 1;
+        _selectedMaterialId = mergedLines[0].Material.MaterialId;
+        _materialLookupText = mergedLines[0].Material.LookupLabel;
+        _showAlternateEntryTools = true;
+        _showAiReceiptTools = true;
+
+        _checkoutForm = new ShoppingCheckoutRequest
+        {
+            OrderedAt = draft.OrderedAt ?? DateTime.Now,
+            SupplierName = draft.SupplierName ?? _checkoutForm.SupplierName,
+            Channel = draft.Channel,
+            EcommercePlatform = draft.Channel == PurchaseChannel.Online ? draft.EcommercePlatform : null,
+            ShippingCost = draft.ShippingCost,
+            Notes = draft.Notes
+        };
+
+        if (draft.Warnings.Count > 0)
+        {
+            _aiMessage = $"{_aiMessage} {string.Join(" ", draft.Warnings)}".Trim();
+        }
+    }
+
+    private void UseAiCandidateForInlineMaterial(ShoppingAiReceiptLine item)
+    {
+        _showAlternateEntryTools = true;
+        _showInlineMaterialForm = true;
+        _inlineMaterialMessage = "Draft material baru diisi dari hasil baca struk AI. Cek ulang sebelum simpan.";
+        _inlineMaterialForm = CreateInlineMaterialForm();
+        _inlineMaterialForm.Name = item.RawItemName;
+        _inlineMaterialForm.Brand = item.SuggestedBrand;
+        _inlineMaterialForm.PricePerPack = item.PricePerPack is > 0 ? item.PricePerPack.Value : 0m;
+
+        var baseUnit = ResolveSuggestedBaseUnit(item.SuggestedBaseUnit, item.SuggestedNetUnit);
+        if (!string.IsNullOrWhiteSpace(baseUnit))
+        {
+            _inlineMaterialForm.BaseUnit = baseUnit;
+        }
+
+        var compatibleUnits = CompatibleInlineMaterialUnits;
+        if (item.SuggestedNetQuantity is > 0)
+        {
+            _inlineMaterialForm.NetQuantity = item.SuggestedNetQuantity.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(item.SuggestedNetUnit) && compatibleUnits.Any(unit => unit.Value.Equals(item.SuggestedNetUnit, StringComparison.OrdinalIgnoreCase)))
+        {
+            _inlineMaterialForm.NetUnit = item.SuggestedNetUnit!;
+        }
+        else
+        {
+            _inlineMaterialForm.NetUnit = compatibleUnits.FirstOrDefault()?.Value ?? _inlineMaterialForm.NetUnit;
+        }
     }
 
     private ShoppingMaterialOption? ResolveMaterial(string value)
@@ -898,11 +1260,62 @@
             ?? _snapshot.Materials.FirstOrDefault(item => item.Name.Equals(normalized, StringComparison.OrdinalIgnoreCase));
     }
 
+    private static bool IsExactLookupMatch(ShoppingMaterialOption material, string value)
+        => material.LookupLabel.Equals(value.Trim(), StringComparison.OrdinalIgnoreCase)
+            || material.Code.Equals(value.Trim(), StringComparison.OrdinalIgnoreCase)
+            || material.Name.Equals(value.Trim(), StringComparison.OrdinalIgnoreCase);
+
     private static RawMaterialUpsertRequest CreateInlineMaterialForm()
         => new()
         {
             Status = MaterialStatus.Active
         };
+
+    private static string ResolveSuggestedBaseUnit(string? suggestedBaseUnit, string? suggestedNetUnit)
+    {
+        var normalizedBase = NormalizeSuggestedUnit(suggestedBaseUnit);
+        if (!string.IsNullOrWhiteSpace(normalizedBase)
+            && MaterialUnitCatalog.BaseUnits.Any(unit => unit.Value.Equals(normalizedBase, StringComparison.OrdinalIgnoreCase)))
+        {
+            return normalizedBase;
+        }
+
+        var normalizedNet = NormalizeSuggestedUnit(suggestedNetUnit);
+        if (string.IsNullOrWhiteSpace(normalizedNet))
+        {
+            return string.Empty;
+        }
+
+        if (MaterialUnitCatalog.BaseUnits.Any(unit => unit.Value.Equals(normalizedNet, StringComparison.OrdinalIgnoreCase)))
+        {
+            return normalizedNet;
+        }
+
+        return normalizedNet switch
+        {
+            "kg" or "gr" => "gr",
+            "l" or "ml" => "ml",
+            "pcs" or "pc" => "pcs",
+            _ => string.Empty
+        };
+    }
+
+    private static string NormalizeSuggestedUnit(string? value)
+        => string.IsNullOrWhiteSpace(value)
+            ? string.Empty
+            : value.Trim().ToLowerInvariant() switch
+            {
+                "gram" => "gr",
+                "g" => "gr",
+                "kilogram" => "kg",
+                "milliliter" => "ml",
+                "mililiter" => "ml",
+                "liter" => "l",
+                "piece" => "pcs",
+                "pieces" => "pcs",
+                "pc" => "pcs",
+                _ => value.Trim().ToLowerInvariant()
+            };
 
     private static string GetMaterialLookupLabel(RawMaterial material)
         => $"{material.Code} • {material.Name}{(string.IsNullOrWhiteSpace(material.Brand) ? string.Empty : $" • {material.Brand}")}";
@@ -935,6 +1348,38 @@
     private static int ClampPage(int page, int totalPages)
         => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
+    private void SetShoppingStage(ShoppingFlowStage stage, bool force = false)
+    {
+        if (!force && stage == ShoppingFlowStage.Checkout && _draftLines.Count == 0)
+        {
+            _message = "Tambahkan minimal satu item ke draft dulu sebelum lanjut ke checkout.";
+            _activeStage = ShoppingFlowStage.Draft;
+            return;
+        }
+
+        _activeStage = stage;
+        if (stage == ShoppingFlowStage.History)
+        {
+            _showAlternateEntryTools = false;
+            _showAiReceiptTools = false;
+            _showInlineMaterialForm = false;
+        }
+    }
+
+    private string GetShoppingStageClass(ShoppingFlowStage stage)
+        => _activeStage == stage ? "active" : string.Empty;
+
+    private void SyncShoppingStageFromUri()
+    {
+        var uri = new Uri(Navigation.Uri);
+        _activeStage = uri.Fragment switch
+        {
+            "#shopping-checkout" => ShoppingFlowStage.Checkout,
+            "#shopping-history" => ShoppingFlowStage.History,
+            _ => ShoppingFlowStage.Draft
+        };
+    }
+
     private async void HandleStoreChanged()
         => await InvokeAsync(LoadAsync);
 
@@ -959,5 +1404,12 @@
         string LookupLabel)
     {
         public decimal TotalBaseQuantity => BaseQuantityPerPack * PackCount;
+    }
+
+    private enum ShoppingFlowStage
+    {
+        Draft,
+        Checkout,
+        History
     }
 }

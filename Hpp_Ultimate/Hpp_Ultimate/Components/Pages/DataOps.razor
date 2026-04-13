@@ -2,23 +2,26 @@
 @rendermode InteractiveServer
 @using System.Globalization
 @inject DataOpsService DataOpsService
-@inject SeededBusinessDataStore Store
 
-<PageTitle>Backup & Data Ops | HPP Ultimate</PageTitle>
+<PageTitle>Backup & Impor Data | HPP Ultimate</PageTitle>
 
-<section class="dataops-page">
-    <header class="page-header">
+<section class="dataops-page ds-page ds-admin-layout theme-amber">
+    <header class="ds-page-header">
         <div>
-            <span class="section-tag">Admin data ops</span>
-            <h1>Backup penuh, restore, export, dan import data operasional.</h1>
-            <p>Gunakan halaman ini untuk membuat snapshot aplikasi, memulihkan backup, serta memindahkan resep dan transaksi antar lingkungan.</p>
+            <span class="section-tag">Administrasi data</span>
+            <h1>Backup dan impor data</h1>
+            <p>Kelola snapshot workspace, file ekspor, dan operasi data sensitif dari satu utilitas yang lebih ringkas.</p>
         </div>
 
         <div class="header-actions">
             <div class="status-chip">@_statusMessage</div>
-            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
         </div>
     </header>
+
+    @if (!string.IsNullOrWhiteSpace(_operationMessage))
+    {
+        <div class="@GetMessageClass()">@_operationMessage</div>
+    }
 
     @if (!string.IsNullOrWhiteSpace(_errorMessage))
     {
@@ -30,107 +33,182 @@
     }
     else if (_snapshot is not null)
     {
-        <div class="summary-grid">
-            <article>
-                <small>Backup files</small>
-                <strong>@_snapshot.BackupCount</strong>
-            </article>
-            <article>
-                <small>Export files</small>
-                <strong>@_snapshot.ExportCount</strong>
-            </article>
-            <article>
-                <small>User aktif</small>
-                <strong>@(Store.AuthSession?.FullName ?? "-")</strong>
-            </article>
+        <div class="page-layout ds-list-detail">
+            <div class="page-main ds-workspace-main">
+                <section class="action-panel">
+                    <div class="section-head ds-card-header">
+                        <div>
+                            <span class="section-tag">Aksi cepat</span>
+                            <h2>Backup, ekspor, dan impor</h2>
+                            <p>Fokus utama di sini adalah membuat cadangan penuh, mengekspor file kerja, atau mengimpor data yang sudah disiapkan dari environment lain.</p>
+                        </div>
+                    </div>
+
+                    <div class="action-grid">
+                        <button type="button" class="primary-button" @onclick="CreateBackupAsync">Buat Backup Penuh</button>
+                        <button type="button" class="ghost-button" @onclick="ExportRecipesAsync">Ekspor Resep JSON</button>
+                        <button type="button" class="ghost-button" @onclick="ExportSalesJsonAsync">Ekspor Penjualan JSON</button>
+                        <button type="button" class="ghost-button" @onclick="ExportSalesCsvAsync">Ekspor Penjualan CSV</button>
+                    </div>
+
+                    <div class="import-grid">
+                        <label class="upload-card">
+                            <span>Impor resep</span>
+                            <InputFile OnChange="ImportRecipesAsync" accept=".json" />
+                        </label>
+                        <label class="upload-card">
+                            <span>Impor penjualan</span>
+                            <InputFile OnChange="ImportSalesAsync" accept=".json" />
+                        </label>
+                    </div>
+                </section>
+
+                <section class="danger-panel action-panel">
+                    <div class="section-head ds-card-header">
+                        <div>
+                            <span class="section-tag">Danger zone</span>
+                            <h2>Hapus seluruh data operasional</h2>
+                            <p class="danger-copy">Tindakan ini akan menghapus data transaksi, stok, resep, produksi, pembelian, dan ledger aktif. Backup dan file ekspor tetap disimpan terpisah.</p>
+                        </div>
+                    </div>
+
+                    <div class="danger-summary">
+                        <article>
+                            <small>Produk</small>
+                            <strong>@_snapshot.OperationalData.Products</strong>
+                        </article>
+                        <article>
+                            <small>Material</small>
+                            <strong>@_snapshot.OperationalData.Materials</strong>
+                        </article>
+                        <article>
+                            <small>Mutasi stok</small>
+                            <strong>@_snapshot.OperationalData.StockMovements</strong>
+                        </article>
+                        <article>
+                            <small>Resep</small>
+                            <strong>@_snapshot.OperationalData.Recipes</strong>
+                        </article>
+                        <article>
+                            <small>Produksi</small>
+                            <strong>@_snapshot.OperationalData.ProductionBatches</strong>
+                        </article>
+                        <article>
+                            <small>Pembelian</small>
+                            <strong>@_snapshot.OperationalData.PurchaseOrders</strong>
+                        </article>
+                        <article>
+                            <small>Ledger</small>
+                            <strong>@_snapshot.OperationalData.LedgerEntries</strong>
+                        </article>
+                        <article>
+                            <small>Penjualan</small>
+                            <strong>@_snapshot.OperationalData.Sales</strong>
+                        </article>
+                    </div>
+
+                    <div class="confirm-actions">
+                        <button type="button" class="danger-button" @onclick="OpenClearDataModal">Hapus Semua Data Operasional</button>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="page-rail ds-side-rail">
+                <section class="file-library-panel">
+                    <div class="section-head ds-card-header">
+                        <div>
+                            <span class="section-tag">Pustaka file</span>
+                            <h2>Snapshot dan file keluar</h2>
+                            <p>Satu panel untuk backup penuh dan hasil ekspor terbaru agar administrasi data tidak tersebar.</p>
+                        </div>
+                    </div>
+
+                    <div class="file-library-meta">
+                        <span>@_snapshot.BackupCount backup</span>
+                        <span>@_snapshot.ExportCount file ekspor</span>
+                        <span>@OperationalEntityCount entitas operasional</span>
+                    </div>
+
+                    <section class="file-library-group">
+                        <div class="file-library-head">
+                            <div>
+                                <small>Backup</small>
+                                <strong>Snapshot tersimpan</strong>
+                            </div>
+                            <span>Pulihkan hanya saat ingin mengembalikan workspace ke snapshot tertentu.</span>
+                        </div>
+
+                        @if (_snapshot.Backups.Count == 0)
+                        {
+                            <div class="empty-state">Belum ada backup penuh yang tersimpan.</div>
+                        }
+                        else
+                        {
+                            <div class="file-list">
+                                @foreach (var file in _snapshot.Backups)
+                                {
+                                    <article>
+                                        <div>
+                                            <strong>@file.FileName</strong>
+                                            <small>@($"{file.UpdatedAt:dd MMM yyyy HH:mm} | {FormatSize(file.SizeBytes)}")</small>
+                                            <p>@file.AbsolutePath</p>
+                                        </div>
+                                        <button type="button" class="danger-button compact" @onclick="() => RestoreBackupAsync(file.FileName)">Pulihkan</button>
+                                    </article>
+                                }
+                            </div>
+                        }
+                    </section>
+
+                    <section class="file-library-group">
+                        <div class="file-library-head">
+                            <div>
+                                <small>Ekspor</small>
+                                <strong>File keluar terbaru</strong>
+                            </div>
+                            <span>Gunakan untuk arsip manual, audit ringan, atau pindah data tanpa restore penuh.</span>
+                        </div>
+
+                        @if (_snapshot.Exports.Count == 0)
+                        {
+                            <div class="empty-state">Belum ada file ekspor.</div>
+                        }
+                        else
+                        {
+                            <div class="file-list">
+                                @foreach (var file in _snapshot.Exports)
+                                {
+                                    <article>
+                                        <div>
+                                            <strong>@file.FileName</strong>
+                                            <small>@($"{file.UpdatedAt:dd MMM yyyy HH:mm} | {FormatSize(file.SizeBytes)}")</small>
+                                            <p>@file.AbsolutePath</p>
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        }
+                    </section>
+                </section>
+            </aside>
         </div>
+    }
 
-        <div class="page-layout">
-            <section class="action-panel">
-                <div class="section-head">
-                    <div>
-                        <span>Aksi cepat</span>
-                        <h2>Operasi utama</h2>
-                    </div>
+    @if (_showClearDataModal)
+    {
+        <div class="overlay" @onclick="CloseClearDataModal">
+            <div class="confirm-card" @onclick:stopPropagation="true">
+                <span class="section-tag">Konfirmasi</span>
+                <h2>Hapus seluruh data operasional?</h2>
+                <p>Tindakan ini tidak bisa dibatalkan dari halaman ini. Pastikan backup terbaru sudah dibuat sebelum kamu melanjutkan.</p>
+
+                <div class="confirm-actions">
+                    <button type="button" class="ghost-button" @onclick="CloseClearDataModal" disabled="@_isClearingData">Tutup</button>
+                    <button type="button" class="danger-button" @onclick="ConfirmClearDataAsync" disabled="@_isClearingData">
+                        @(_isClearingData ? "Menghapus..." : "Ya, hapus data")
+                    </button>
                 </div>
-
-                <div class="action-grid">
-                    <button type="button" class="primary-button" @onclick="CreateBackupAsync">Buat Backup Penuh</button>
-                    <button type="button" class="ghost-button" @onclick="ExportRecipesAsync">Export Resep JSON</button>
-                    <button type="button" class="ghost-button" @onclick="ExportSalesJsonAsync">Export Penjualan JSON</button>
-                    <button type="button" class="ghost-button" @onclick="ExportSalesCsvAsync">Export Penjualan CSV</button>
-                </div>
-
-                <div class="import-grid">
-                    <label class="upload-card">
-                        <span>Import resep</span>
-                        <InputFile OnChange="ImportRecipesAsync" accept=".json" />
-                    </label>
-                    <label class="upload-card">
-                        <span>Import penjualan</span>
-                        <InputFile OnChange="ImportSalesAsync" accept=".json" />
-                    </label>
-                </div>
-            </section>
-
-            <section class="file-panel">
-                <div class="section-head">
-                    <div>
-                        <span>Backup</span>
-                        <h2>Snapshot tersimpan</h2>
-                    </div>
-                </div>
-
-                @if (_snapshot.Backups.Count == 0)
-                {
-                    <div class="empty-state">Belum ada backup penuh yang tersimpan.</div>
-                }
-                else
-                {
-                    <div class="file-list">
-                        @foreach (var file in _snapshot.Backups)
-                        {
-                            <article>
-                                <div>
-                                    <strong>@file.FileName</strong>
-                                    <small>@file.UpdatedAt.ToString("dd MMM yyyy HH:mm") · @FormatSize(file.SizeBytes)</small>
-                                    <p>@file.AbsolutePath</p>
-                                </div>
-                                <button type="button" class="danger-button" @onclick="() => RestoreBackupAsync(file.FileName)">Restore</button>
-                            </article>
-                        }
-                    </div>
-                }
-            </section>
-
-            <section class="file-panel">
-                <div class="section-head">
-                    <div>
-                        <span>Export</span>
-                        <h2>File keluar terbaru</h2>
-                    </div>
-                </div>
-
-                @if (_snapshot.Exports.Count == 0)
-                {
-                    <div class="empty-state">Belum ada file export.</div>
-                }
-                else
-                {
-                    <div class="file-list">
-                        @foreach (var file in _snapshot.Exports)
-                        {
-                            <article>
-                                <div>
-                                    <strong>@file.FileName</strong>
-                                    <small>@file.UpdatedAt.ToString("dd MMM yyyy HH:mm") · @FormatSize(file.SizeBytes)</small>
-                                    <p>@file.AbsolutePath</p>
-                                </div>
-                            </article>
-                        }
-                    </div>
-                }
-            </section>
+            </div>
         </div>
     }
 </section>
@@ -140,15 +218,30 @@
 
     private DataOpsSnapshot? _snapshot;
     private bool _isLoading = true;
-    private string _statusMessage = "Memuat data ops...";
+    private bool _showClearDataModal;
+    private bool _isClearingData;
+    private string _statusMessage = "Memuat data operasional...";
+    private string? _operationMessage;
+    private string _messageTone = "info";
     private string? _errorMessage;
+
+    private int OperationalEntityCount => _snapshot is null
+        ? 0
+        : _snapshot.OperationalData.Products
+        + _snapshot.OperationalData.Materials
+        + _snapshot.OperationalData.StockMovements
+        + _snapshot.OperationalData.Recipes
+        + _snapshot.OperationalData.ProductionBatches
+        + _snapshot.OperationalData.PurchaseOrders
+        + _snapshot.OperationalData.LedgerEntries
+        + _snapshot.OperationalData.Sales;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadAsync();
     }
 
-    private async Task LoadAsync()
+    private async Task LoadAsync(bool preserveOperationMessage = false)
     {
         _isLoading = true;
         _errorMessage = null;
@@ -156,7 +249,12 @@
         try
         {
             _snapshot = await DataOpsService.GetSnapshotAsync();
-            _statusMessage = $"{_snapshot.BackupCount} backup, {_snapshot.ExportCount} export tersedia.";
+            _statusMessage = $"{_snapshot.BackupCount} backup, {_snapshot.ExportCount} ekspor tersedia.";
+            if (!preserveOperationMessage)
+            {
+                _operationMessage = null;
+                _messageTone = "info";
+            }
         }
         catch (InvalidOperationException ex)
         {
@@ -169,60 +267,83 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    private Task ReloadAsync() => LoadAsync();
-
     private async Task CreateBackupAsync()
     {
-        var result = await DataOpsService.CreateBackupAsync();
-        _statusMessage = result.Message;
-        await LoadAsync();
+        await ExecuteOperationAsync(() => DataOpsService.CreateBackupAsync());
     }
 
     private async Task RestoreBackupAsync(string fileName)
     {
-        var result = await DataOpsService.RestoreBackupAsync(fileName);
-        _statusMessage = result.Message;
-        await LoadAsync();
+        await ExecuteOperationAsync(() => DataOpsService.RestoreBackupAsync(fileName));
     }
 
     private async Task ExportRecipesAsync()
     {
-        var result = await DataOpsService.ExportRecipesAsync();
-        _statusMessage = result.Message;
-        await LoadAsync();
+        await ExecuteOperationAsync(() => DataOpsService.ExportRecipesAsync());
     }
 
     private async Task ExportSalesJsonAsync()
     {
-        var result = await DataOpsService.ExportSalesJsonAsync();
-        _statusMessage = result.Message;
-        await LoadAsync();
+        await ExecuteOperationAsync(() => DataOpsService.ExportSalesJsonAsync());
     }
 
     private async Task ExportSalesCsvAsync()
     {
-        var result = await DataOpsService.ExportSalesCsvAsync();
-        _statusMessage = result.Message;
-        await LoadAsync();
+        await ExecuteOperationAsync(() => DataOpsService.ExportSalesCsvAsync());
     }
 
     private async Task ImportRecipesAsync(InputFileChangeEventArgs args)
     {
         var file = args.File;
         await using var stream = file.OpenReadStream(MaxUploadSize);
-        var result = await DataOpsService.ImportRecipesAsync(file.Name, stream);
-        _statusMessage = result.Message;
-        await LoadAsync();
+        await ExecuteOperationAsync(() => DataOpsService.ImportRecipesAsync(file.Name, stream));
     }
 
     private async Task ImportSalesAsync(InputFileChangeEventArgs args)
     {
         var file = args.File;
         await using var stream = file.OpenReadStream(MaxUploadSize);
-        var result = await DataOpsService.ImportSalesAsync(file.Name, stream);
-        _statusMessage = result.Message;
-        await LoadAsync();
+        await ExecuteOperationAsync(() => DataOpsService.ImportSalesAsync(file.Name, stream));
     }
+
+    private void OpenClearDataModal()
+    {
+        _showClearDataModal = true;
+    }
+
+    private void CloseClearDataModal()
+    {
+        if (_isClearingData)
+        {
+            return;
+        }
+
+        _showClearDataModal = false;
+    }
+
+    private async Task ConfirmClearDataAsync()
+    {
+        _isClearingData = true;
+        try
+        {
+            await ExecuteOperationAsync(() => DataOpsService.ClearOperationalDataAsync());
+            _showClearDataModal = false;
+        }
+        finally
+        {
+            _isClearingData = false;
+        }
+    }
+
+    private async Task ExecuteOperationAsync(Func<Task<DataOperationResult>> action)
+    {
+        var result = await action();
+        _operationMessage = result.Message;
+        _messageTone = result.Success ? "success" : "error";
+        await LoadAsync(preserveOperationMessage: true);
+    }
+
+    private string GetMessageClass() => $"form-message {_messageTone}";
 
     private static string FormatSize(long bytes)
     {

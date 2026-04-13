@@ -10,7 +10,7 @@ namespace Hpp_Ultimate.Tests;
 public sealed class PhaseThreeWorkflowTests
 {
     [Fact]
-    public async Task SalesService_CheckoutAndVoid_AdjustFinishedGoodsOnHand()
+    public async Task SalesService_CheckoutAndVoid_AdjustRecipeMenuOnHand()
     {
         using var scope = new TestStoreScope();
         var now = DateTime.Now;
@@ -26,6 +26,7 @@ public sealed class PhaseThreeWorkflowTests
 
         var checkout = await salesService.CheckoutAsync(new PosCheckoutRequest
         {
+            CustomerName = "Pelanggan Test",
             PaymentMethod = "Cash",
             AmountReceived = 100000m,
             Lines =
@@ -46,7 +47,7 @@ public sealed class PhaseThreeWorkflowTests
 
         Assert.True(checkout.Success);
         Assert.Single(store.Sales);
-        Assert.Equal(7m, InventoryMath.GetFinishedGoodsOnHand(store, seeded.Product.Id));
+        Assert.Equal(7m, InventoryMath.GetRecipeMenuOnHand(store, seeded.Recipe.Id));
 
         var voidResult = await salesService.VoidSaleAsync(new VoidSaleRequest
         {
@@ -56,49 +57,68 @@ public sealed class PhaseThreeWorkflowTests
 
         Assert.True(voidResult.Success);
         Assert.Equal(SaleStatus.Voided, store.Sales.Single().Status);
-        Assert.Equal(10m, InventoryMath.GetFinishedGoodsOnHand(store, seeded.Product.Id));
+        Assert.Equal(10m, InventoryMath.GetRecipeMenuOnHand(store, seeded.Recipe.Id));
     }
 
     [Fact]
-    public async Task ReportingService_GetSnapshotAsync_AggregatesSalesAndMaterialUsage()
+    public async Task BookkeepingService_GetSnapshotAsync_AggregatesSalesAndManualEntries()
     {
         using var scope = new TestStoreScope();
         var now = DateTime.Now;
         var store = scope.Store;
         var seeded = SeedSalesContext(store, now, UserRole.Admin, includeSeedSale: false);
-        var saleId = Guid.NewGuid();
+        var access = new WorkspaceAccessService(store);
+        var salesService = new SalesService(
+            new MemoryCache(new MemoryCacheOptions()),
+            store,
+            access,
+            new AuditTrailService(store),
+            new HppCalculatorService(new MemoryCache(new MemoryCacheOptions()), store, access));
+        var bookkeeping = new BookkeepingService(
+            new MemoryCache(new MemoryCacheOptions()),
+            store,
+            access,
+            new AuditTrailService(store));
 
-        store.AddSale(
-            new SaleTransaction(
-                saleId,
-                "TRX-000111",
-                now,
-                store.AuthSession!.UserId,
-                store.AuthSession.FullName,
-                "QRIS",
-                1,
-                2,
-                50000m,
-                24000m,
-                26000m,
-                50000m,
-                0m,
-                SaleStatus.Completed,
-                null),
+        var checkout = await salesService.CheckoutAsync(new PosCheckoutRequest
+        {
+            CustomerName = "Pelanggan Test",
+            PaymentMethod = "Cash",
+            AmountReceived = 50000m,
+            Lines =
             [
-                new SaleLine(Guid.NewGuid(), saleId, seeded.Product.Id, seeded.Recipe.Id, seeded.Product.Code, seeded.Product.Name, seeded.Product.Unit, 2, 25000m, 12000m)
-            ]);
+                new PosCheckoutLineRequest
+                {
+                    ProductId = seeded.Product.Id,
+                    RecipeId = seeded.Recipe.Id,
+                    ProductCode = seeded.Product.Code,
+                    ProductName = seeded.Product.Name,
+                    UnitLabel = seeded.Product.Unit,
+                    Quantity = 2,
+                    UnitPrice = 25000m,
+                    HppPerUnit = 12000m
+                }
+            ]
+        });
 
-        var report = await new ReportingService(store, new WorkspaceAccessService(store)).GetSnapshotAsync(
-            DateOnly.FromDateTime(now.AddDays(-1)),
-            DateOnly.FromDateTime(now.AddDays(1)));
+        var manual = await bookkeeping.AddManualEntryAsync(new ManualLedgerEntryRequest
+        {
+            OccurredAt = now.AddMinutes(5),
+            Title = "Biaya parkir",
+            Direction = LedgerEntryDirection.Expense,
+            Amount = 5000m
+        });
 
-        Assert.Equal(1, report.TransactionCount);
-        Assert.Equal(2, report.ItemCount);
-        Assert.Equal(50000m, report.GrossRevenue);
-        Assert.Single(report.TopProducts);
-        Assert.Single(report.MaterialUsage);
-        Assert.NotEmpty(report.PriceTrends);
+        var snapshot = await bookkeeping.GetSnapshotAsync();
+
+        Assert.True(checkout.Success);
+        Assert.True(manual.Success);
+        Assert.Equal(2, snapshot.TotalEntries);
+        Assert.Equal(50000m, snapshot.TotalIncome);
+        Assert.Equal(5000m, snapshot.TotalExpense);
+        Assert.Equal(45000m, snapshot.ClosingBalance);
+        Assert.Contains(snapshot.Items, item => item.SourceType == "POS");
+        Assert.Contains(snapshot.Items, item => item.SourceType == "Manual");
     }
 
     [Fact]
@@ -182,10 +202,8 @@ public sealed class PhaseThreeWorkflowTests
 
         var batchId = Guid.NewGuid();
         store.AddProductionBatch(
-            new ProductionBatch(batchId, product.Id, "BATCH-001", now, 10, recipe.Id, "Batch awal", 25000m, 0m, 0m),
-            [
-                new StockMovementEntry(Guid.NewGuid(), material.Id, StockMovementType.ProductionUsage, -500m, now, "Konsumsi batch", batchId)
-            ],
+            new ProductionBatch(batchId, Guid.Empty, "BATCH-001", now, 1, now, recipe.Id, "Batch awal", 25000m, 0m, 0m, 1, recipe.PortionYield, 30, ProductionRunStatus.Completed, now),
+            [],
             [],
             []);
 
@@ -205,10 +223,13 @@ public sealed class PhaseThreeWorkflowTests
                     25000m,
                     12000m,
                     13000m,
-                    30000m,
-                    5000m,
-                    SaleStatus.Completed,
-                    "Seed sale"),
+                30000m,
+                5000m,
+                SaleStatus.Completed,
+                "Seed sale",
+                "Pelanggan Seed",
+                true,
+                now),
                 [
                     new SaleLine(Guid.NewGuid(), saleId, product.Id, recipe.Id, product.Code, product.Name, product.Unit, 1, 25000m, 12000m)
                 ]);

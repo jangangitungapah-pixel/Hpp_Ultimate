@@ -15,7 +15,8 @@ public sealed record BusinessSettings(
     decimal TaxPercent,
     bool TaxIncluded,
     string Timezone,
-    DateTime UpdatedAt);
+    DateTime UpdatedAt,
+    string GeminiApiKey = "");
 
 public sealed record BusinessSettingsSnapshot(
     BusinessSettings Settings,
@@ -68,4 +69,5 @@ public sealed class BusinessSettingsRequest
 
     public bool TaxIncluded { get; set; }
     public string Timezone { get; set; } = "Asia/Jakarta";
+    public string GeminiApiKey { get; set; } = string.Empty;
 }

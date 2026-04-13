@@ -25,7 +25,16 @@ public sealed class DataOpsService(
             ListFiles(GetBackupDirectory(), "Backup"),
             ListFiles(GetExportDirectory(), "Export"),
             Directory.Exists(GetBackupDirectory()) ? Directory.GetFiles(GetBackupDirectory()).Length : 0,
-            Directory.Exists(GetExportDirectory()) ? Directory.GetFiles(GetExportDirectory()).Length : 0));
+            Directory.Exists(GetExportDirectory()) ? Directory.GetFiles(GetExportDirectory()).Length : 0,
+            new OperationalDataSummary(
+                store.Products.Count,
+                store.RawMaterials.Count,
+                store.StockMovements.Count,
+                store.Recipes.Count,
+                store.ProductionBatches.Count,
+                store.PurchaseOrders.Count,
+                store.ManualLedgerEntries.Count,
+                store.Sales.Count)));
     }
 
     public async Task<DataOperationResult> CreateBackupAsync(CancellationToken cancellationToken = default)
@@ -220,6 +229,23 @@ public sealed class DataOpsService(
         return new DataOperationResult(true, $"{imported} transaksi berhasil diimpor.");
     }
 
+    public Task<DataOperationResult> ClearOperationalDataAsync(CancellationToken cancellationToken = default)
+    {
+        var accessDecision = access.RequireAdmin();
+        if (!accessDecision.Allowed)
+        {
+            return Task.FromResult(new DataOperationResult(false, accessDecision.Message));
+        }
+
+        var actor = accessDecision.Actor!;
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var cleared = store.ClearOperationalData();
+        var message = $"Data operasional dibersihkan. Produk: {cleared.Products}, material: {cleared.Materials}, stok: {cleared.StockMovements}, resep/BOM: {cleared.Recipes}, produksi & belanja: {cleared.ProductionBatches}.";
+        auditTrail.Record(actor, "DataOps", "Clear operational data", "Workspace data", null, message);
+        return Task.FromResult(new DataOperationResult(true, message));
+    }
+
     private string GetBackupDirectory()
         => Path.Combine(environment.ContentRootPath, "App_Data", "Backups");
 
@@ -261,13 +287,26 @@ public sealed class DataOpsService(
             string.IsNullOrWhiteSpace(recipe.PortionUnit)
                 ? recipe.OutputUnit
                 : recipe.PortionUnit);
+        var portioningMode = recipe.PortioningMode;
+        var portionWeightGr = recipe.PortionWeightGr < 0 ? 0m : recipe.PortionWeightGr;
+        var portionWeightGroupId = recipe.PortionWeightGroupId is Guid groupId && recipe.Groups.Any(item => item.Id == groupId)
+            ? recipe.PortionWeightGroupId
+            : null;
+
+        if (portioningMode == RecipePortioningMode.WeightBased && portionWeightGr <= 0)
+        {
+            portioningMode = RecipePortioningMode.Manual;
+        }
 
         return recipe with
         {
             OutputQuantity = portionYield,
             OutputUnit = portionUnit,
             PortionYield = portionYield,
-            PortionUnit = portionUnit
+            PortionUnit = portionUnit,
+            PortioningMode = portioningMode,
+            PortionWeightGr = portionWeightGr,
+            PortionWeightGroupId = portionWeightGroupId
         };
     }
 

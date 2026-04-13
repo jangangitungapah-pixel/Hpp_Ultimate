@@ -1,0 +1,96 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e11]:
+        - link [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e15]
+        - generic [ref=e19]:
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e22]
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e28]
+        - generic [ref=e30]:
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e33]
+          - link [ref=e37] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e39]
+          - link [ref=e43] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e45]
+          - link [ref=e49] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e51]
+        - link [ref=e55] [cursor=pointer]:
+          - /url: /pembukuan
+          - img [ref=e57]
+        - generic [ref=e60]:
+          - link [ref=e61] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e63]
+          - link [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e66]
+          - link [ref=e69] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e71]
+        - link [ref=e77] [cursor=pointer]:
+          - /url: /logout
+          - img [ref=e78]
+  - main [ref=e81]:
+    - generic [ref=e83]:
+      - generic [ref=e84]: Area kerja
+      - strong [ref=e85]: Dashboard
+    - article [ref=e86]:
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: Dashboard
+            - heading "Semua prioritas harian sedang aman." [active] [level=1] [ref=e91]
+            - paragraph [ref=e92]: Tidak ada follow-up mendesak saat ini. Gunakan shortcut ringkas di bawah untuk masuk ke area kerja inti tanpa melewati informasi yang tidak perlu.
+          - link "Masuk ke stok gudang" [ref=e94] [cursor=pointer]:
+            - /url: /gudang
+        - generic [ref=e95]:
+          - generic [ref=e97]:
+            - generic [ref=e98]: Prioritas hari ini
+            - heading "Tidak ada prioritas mendesak" [level=2] [ref=e99]
+            - paragraph [ref=e100]: Semua indikator utama sedang aman. Dashboard tidak lagi menampilkan angka vanity atau modul yang tidak sedang perlu perhatian.
+          - generic [ref=e101]:
+            - strong [ref=e102]: Semua prioritas operasional sedang aman.
+            - generic [ref=e103]: Tidak ada restock kritis, penerimaan pending, batch menunggu jalan, atau pembayaran kasir yang tertahan.
+        - generic [ref=e104]:
+          - generic [ref=e106]:
+            - generic [ref=e107]: Aksi cepat
+            - heading "Masuk ke area kerja inti" [level=2] [ref=e108]
+            - paragraph [ref=e109]: Shortcut ini sengaja dipersempit ke modul yang paling sering dibuka harian. Modul lain tetap tersedia di sidebar.
+          - generic [ref=e110]:
+            - link "Stok Gudang Pantau stok aktif dan catat restock yang memang perlu dilakukan." [ref=e111] [cursor=pointer]:
+              - /url: /gudang
+              - img [ref=e113]
+              - generic [ref=e117]:
+                - strong [ref=e118]: Stok Gudang
+                - generic [ref=e119]: Pantau stok aktif dan catat restock yang memang perlu dilakukan.
+            - link "Pembelian Material Masuk ke draft belanja dan penerimaan barang tanpa lewat informasi tambahan." [ref=e120] [cursor=pointer]:
+              - /url: /belanja
+              - img [ref=e122]
+              - generic [ref=e126]:
+                - strong [ref=e127]: Pembelian Material
+                - generic [ref=e128]: Masuk ke draft belanja dan penerimaan barang tanpa lewat informasi tambahan.
+            - link "Produksi Susun batch baru atau jalankan antrian yang sudah siap." [ref=e129] [cursor=pointer]:
+              - /url: /produksi
+              - img [ref=e131]
+              - generic [ref=e135]:
+                - strong [ref=e136]: Produksi
+                - generic [ref=e137]: Susun batch baru atau jalankan antrian yang sudah siap.
+            - link "Kasir / POS Jual menu siap stok dan pantau pembayaran." [ref=e138] [cursor=pointer]:
+              - /url: /pos
+              - img [ref=e140]
+              - generic [ref=e143]:
+                - strong [ref=e144]: Kasir / POS
+                - generic [ref=e145]: Jual menu siap stok dan pantau pembayaran.

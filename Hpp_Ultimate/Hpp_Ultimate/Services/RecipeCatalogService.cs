@@ -67,6 +67,9 @@ public sealed class RecipeCatalogService(
             OutputUnit = recipe.OutputUnit,
             PortionYield = recipe.PortionYield,
             PortionUnit = recipe.PortionUnit,
+            PortioningMode = recipe.PortioningMode,
+            PortionWeightGr = recipe.PortionWeightGr,
+            PortionWeightGroupId = recipe.PortionWeightGroupId,
             TargetMarginPercent = recipe.TargetMarginPercent,
             SuggestedSellingPrice = recipe.SuggestedSellingPrice,
             Status = recipe.Status,
@@ -145,7 +148,10 @@ public sealed class RecipeCatalogService(
             request.PortionYield,
             portionUnit,
             totals.TargetMarginPercent,
-            totals.SuggestedSellingPrice);
+            totals.SuggestedSellingPrice,
+            request.PortioningMode,
+            request.PortionWeightGr,
+            request.PortionWeightGroupId);
 
         if (request.Id is null)
         {
@@ -184,7 +190,7 @@ public sealed class RecipeCatalogService(
         return Task.FromResult(new RecipeMutationResult(true, "Resep berhasil dihapus.", recipe));
     }
 
-    public RecipeSummaryTotals CalculateTotals(RecipeUpsertRequest request)
+    public RecipeSummaryTotals CalculateTotals(RecipeUpsertRequest request, decimal? overridePortionYield = null)
     {
         var materialMap = store.RawMaterials.ToDictionary(item => item.Id);
         var materialCount = 0;
@@ -210,8 +216,9 @@ public sealed class RecipeCatalogService(
 
         var totalCost = materialCost + operationalCost;
         var normalizedPortionUnit = RecipePortionUnitCatalog.Normalize(request.PortionUnit);
-        var costPerOutput = request.PortionYield <= 0 ? 0m : totalCost / request.PortionYield;
-        var costPerPortion = request.PortionYield <= 0 ? 0m : totalCost / request.PortionYield;
+        var effectivePortionYield = overridePortionYield ?? request.PortionYield;
+        var costPerOutput = effectivePortionYield <= 0 ? 0m : totalCost / effectivePortionYield;
+        var costPerPortion = effectivePortionYield <= 0 ? 0m : totalCost / effectivePortionYield;
         var marginPercent = Math.Clamp(request.TargetMarginPercent, 0m, 500m);
         var suggestedSellingPrice = CalculateSuggestedSellingPrice(costPerPortion, marginPercent);
 
@@ -219,7 +226,7 @@ public sealed class RecipeCatalogService(
             request.Groups.Count,
             materialCount,
             request.Costs.Count(item => !string.IsNullOrWhiteSpace(item.Name) && item.Amount > 0),
-            request.PortionYield,
+            effectivePortionYield,
             normalizedPortionUnit,
             materialCost,
             operationalCost,
@@ -313,9 +320,24 @@ public sealed class RecipeCatalogService(
             return new RecipeMutationResult(false, "Kode resep sudah dipakai.");
         }
 
+        if (request.PortioningMode == RecipePortioningMode.WeightBased)
+        {
+            if (request.PortionWeightGr <= 0)
+            {
+                return new RecipeMutationResult(false, "Berat per porsi harus lebih besar dari 0 gram.");
+            }
+
+            if (request.PortionWeightGroupId is Guid groupId && request.Groups.All(item => item.Id != groupId))
+            {
+                return new RecipeMutationResult(false, "Acuan berat kelompok bahan tidak ditemukan.");
+            }
+        }
+
         if (request.PortionYield <= 0)
         {
-            return new RecipeMutationResult(false, "Jumlah porsi harus lebih besar dari 0.");
+            return request.PortioningMode == RecipePortioningMode.WeightBased
+                ? new RecipeMutationResult(false, "Berat acuan belum cukup untuk menghasilkan minimal 1 porsi.")
+                : new RecipeMutationResult(false, "Jumlah porsi harus lebih besar dari 0.");
         }
 
         if (string.IsNullOrWhiteSpace(request.PortionUnit))

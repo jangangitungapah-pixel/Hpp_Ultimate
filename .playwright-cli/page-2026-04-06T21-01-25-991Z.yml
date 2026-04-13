@@ -1,0 +1,166 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Workspace operasional" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Workspace operasional
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Ringkasan
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: /
+            - img [ref=e19]
+            - strong [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Master Data
+          - link "Katalog Material" [ref=e26] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e28]
+            - strong [ref=e32]: Katalog Material
+          - link "Resep" [ref=e33] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e35]
+            - strong [ref=e37]: Resep
+        - generic [ref=e38]:
+          - generic [ref=e39]: Operasional
+          - link "Stok Gudang" [ref=e40] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e42]
+            - strong [ref=e46]: Stok Gudang
+          - link "Pembelian Material" [ref=e47] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e49]
+            - strong [ref=e53]: Pembelian Material
+          - link "Produksi" [ref=e54] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e56]
+            - strong [ref=e60]: Produksi
+          - link "Kasir / POS" [ref=e61] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e63]
+            - strong [ref=e66]: Kasir / POS
+        - generic [ref=e67]:
+          - generic [ref=e68]: Keuangan
+          - link "Pembukuan" [ref=e69] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e71]
+            - strong [ref=e74]: Pembukuan
+        - generic [ref=e75]:
+          - generic [ref=e76]: Admin
+          - link "Pengaturan Bisnis" [ref=e77] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e79]
+            - strong [ref=e80]: Pengaturan Bisnis
+          - link "Tim & Akun" [ref=e81] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e83]
+            - strong [ref=e86]: Tim & Akun
+          - link "Backup & Impor Data" [ref=e87] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e89]
+            - strong [ref=e94]: Backup & Impor Data
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: A
+            - generic [ref=e98]:
+              - strong [ref=e99]: Arief
+              - generic [ref=e100]: Admin
+          - link "Logout" [ref=e101] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e102]
+            - generic [ref=e105]: Logout
+  - main [ref=e106]:
+    - generic [ref=e108]:
+      - generic [ref=e109]: Area kerja
+      - strong [ref=e110]: Backup & Impor Data
+    - article [ref=e111]:
+      - generic [ref=e198]:
+        - generic [ref=e199]:
+          - generic [ref=e200]:
+            - generic [ref=e201]: Administrasi data
+            - heading "Backup dan impor data" [level=1] [ref=e202]
+            - paragraph [ref=e203]: Kelola snapshot workspace, file ekspor, dan operasi data sensitif dari satu utilitas yang lebih ringkas.
+          - generic [ref=e205]: 0 backup, 0 ekspor tersedia.
+        - generic [ref=e206]:
+          - generic [ref=e207]:
+            - generic [ref=e208]:
+              - generic [ref=e210]:
+                - generic [ref=e211]: Aksi cepat
+                - heading "Backup, ekspor, dan impor" [level=2] [ref=e212]
+                - paragraph [ref=e213]: Fokus utama di sini adalah membuat cadangan penuh, mengekspor file kerja, atau mengimpor data yang sudah disiapkan dari environment lain.
+              - generic [ref=e214]:
+                - button "Buat Backup Penuh" [ref=e215] [cursor=pointer]
+                - button "Ekspor Resep JSON" [ref=e216] [cursor=pointer]
+                - button "Ekspor Penjualan JSON" [ref=e217] [cursor=pointer]
+                - button "Ekspor Penjualan CSV" [ref=e218] [cursor=pointer]
+              - generic [ref=e219]:
+                - generic [ref=e220]:
+                  - generic [ref=e221]: Impor resep
+                  - button "Impor resep" [ref=e222]
+                - generic [ref=e223]:
+                  - generic [ref=e224]: Impor penjualan
+                  - button "Impor penjualan" [ref=e225]
+            - generic [ref=e226]:
+              - generic [ref=e228]:
+                - generic [ref=e229]: Danger zone
+                - heading "Hapus seluruh data operasional" [level=2] [ref=e230]
+                - paragraph [ref=e231]: Tindakan ini akan menghapus data transaksi, stok, resep, produksi, pembelian, dan ledger aktif. Backup dan file ekspor tetap disimpan terpisah.
+              - generic [ref=e232]:
+                - article [ref=e233]:
+                  - generic [ref=e234]: Produk
+                  - strong [ref=e235]: "0"
+                - article [ref=e236]:
+                  - generic [ref=e237]: Material
+                  - strong [ref=e238]: "9"
+                - article [ref=e239]:
+                  - generic [ref=e240]: Mutasi stok
+                  - strong [ref=e241]: "20"
+                - article [ref=e242]:
+                  - generic [ref=e243]: Resep
+                  - strong [ref=e244]: "1"
+                - article [ref=e245]:
+                  - generic [ref=e246]: Produksi
+                  - strong [ref=e247]: "1"
+                - article [ref=e248]:
+                  - generic [ref=e249]: Pembelian
+                  - strong [ref=e250]: "0"
+                - article [ref=e251]:
+                  - generic [ref=e252]: Ledger
+                  - strong [ref=e253]: "0"
+                - article [ref=e254]:
+                  - generic [ref=e255]: Penjualan
+                  - strong [ref=e256]: "1"
+              - button "Hapus Semua Data Operasional" [active] [ref=e258] [cursor=pointer]
+          - complementary [ref=e259]:
+            - generic [ref=e260]:
+              - generic [ref=e262]:
+                - generic [ref=e263]: Pustaka file
+                - heading "Snapshot dan file keluar" [level=2] [ref=e264]
+                - paragraph [ref=e265]: Satu panel untuk backup penuh dan hasil ekspor terbaru agar administrasi data tidak tersebar.
+              - generic [ref=e266]:
+                - generic [ref=e267]: 0 backup
+                - generic [ref=e268]: 0 file ekspor
+                - generic [ref=e269]: 32 entitas operasional
+              - generic [ref=e270]:
+                - generic [ref=e271]:
+                  - generic [ref=e272]:
+                    - generic [ref=e273]: Backup
+                    - strong [ref=e274]: Snapshot tersimpan
+                  - generic [ref=e275]: Pulihkan hanya saat ingin mengembalikan workspace ke snapshot tertentu.
+                - generic [ref=e276]: Belum ada backup penuh yang tersimpan.
+              - generic [ref=e277]:
+                - generic [ref=e278]:
+                  - generic [ref=e279]:
+                    - generic [ref=e280]: Ekspor
+                    - strong [ref=e281]: File keluar terbaru
+                  - generic [ref=e282]: Gunakan untuk arsip manual, audit ringan, atau pindah data tanpa restore penuh.
+                - generic [ref=e283]: Belum ada file ekspor.
+        - generic [ref=e285]:
+          - generic [ref=e286]: Konfirmasi
+          - heading "Hapus seluruh data operasional?" [level=2] [ref=e287]
+          - paragraph [ref=e288]: Tindakan ini tidak bisa dibatalkan dari halaman ini. Pastikan backup terbaru sudah dibuat sebelum kamu melanjutkan.
+          - generic [ref=e289]:
+            - button "Tutup" [ref=e290] [cursor=pointer]
+            - button "Ya, hapus data" [ref=e291] [cursor=pointer]

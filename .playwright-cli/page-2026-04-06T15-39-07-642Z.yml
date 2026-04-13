@@ -1,0 +1,239 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]:
+            - strong [ref=e8]: HPP Ultimate
+            - text: Operational workspace
+        - checkbox [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]:
+            - text: Ringkasan
+            - link "Dashboard" [ref=e12] [cursor=pointer]:
+              - /url: /
+              - img [ref=e14]
+              - strong [ref=e18]: Dashboard
+          - generic [ref=e19]:
+            - text: Master Data
+            - link "Katalog Material" [ref=e20] [cursor=pointer]:
+              - /url: /produk
+              - img [ref=e22]
+              - strong [ref=e26]: Katalog Material
+            - link "Resep" [ref=e27] [cursor=pointer]:
+              - /url: /resep
+              - img [ref=e29]
+              - strong [ref=e31]: Resep
+          - generic [ref=e32]:
+            - text: Operasional
+            - link "Stok Gudang" [ref=e33] [cursor=pointer]:
+              - /url: /gudang
+              - img [ref=e35]
+              - strong [ref=e39]: Stok Gudang
+            - link "Pembelian Material" [ref=e40] [cursor=pointer]:
+              - /url: /belanja
+              - img [ref=e42]
+              - strong [ref=e46]: Pembelian Material
+            - link "Produksi" [ref=e47] [cursor=pointer]:
+              - /url: /produksi
+              - img [ref=e49]
+              - strong [ref=e53]: Produksi
+            - link "Kasir / POS" [ref=e54] [cursor=pointer]:
+              - /url: /pos
+              - img [ref=e56]
+              - strong [ref=e59]: Kasir / POS
+          - generic [ref=e60]:
+            - text: Keuangan
+            - link "Pembukuan" [ref=e61] [cursor=pointer]:
+              - /url: /pembukuan
+              - img [ref=e63]
+              - strong [ref=e66]: Pembukuan
+          - generic [ref=e67]:
+            - text: Admin
+            - link "Pengaturan Bisnis" [ref=e68] [cursor=pointer]:
+              - /url: /pengaturan
+              - img [ref=e70]
+              - strong [ref=e71]: Pengaturan Bisnis
+            - link "Tim & Akun" [ref=e72] [cursor=pointer]:
+              - /url: /pengaturan/akun
+              - img [ref=e74]
+              - strong [ref=e77]: Tim & Akun
+            - link "Backup & Impor Data" [ref=e78] [cursor=pointer]:
+              - /url: /backup-data
+              - img [ref=e80]
+              - strong [ref=e85]: Backup & Impor Data
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - generic [ref=e88]: A
+              - generic [ref=e89]:
+                - strong [ref=e90]: Arief
+                - text: Admin
+            - link "Logout" [ref=e91] [cursor=pointer]:
+              - /url: /logout
+              - img [ref=e92]
+              - text: Logout
+    - main [ref=e95]:
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - text: Workspace aktif
+          - strong [ref=e98]: Kasir / POS
+        - generic "Pengguna aktif" [ref=e100]:
+          - generic [ref=e101]:
+            - text: Signed in
+            - strong [ref=e102]: Arief
+          - generic [ref=e103]: A
+      - article [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - text: Kasir / POS
+              - heading "Layani checkout menu dari stok produksi yang sudah selesai." [active] [level=1] [ref=e108]
+              - paragraph [ref=e109]: Kasir dipusatkan untuk checkout cepat. Pilih menu, atur jumlah, lalu selesaikan pembayaran dari panel yang sama.
+            - button "Perbarui" [ref=e111] [cursor=pointer]
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e115]:
+                - generic [ref=e116]: List menu
+                - heading "Pilih menu siap jual" [level=2] [ref=e117]
+                - paragraph [ref=e118]: Daftar kiri dipadatkan untuk scan cepat. Pilih satu menu untuk mengisi panel checkout.
+              - generic [ref=e119]:
+                - generic [ref=e120]:
+                  - text: Cari menu
+                  - textbox "Cari kode atau nama menu kasir / POS" [ref=e121]:
+                    - /placeholder: Cari kode atau nama menu
+                - generic [ref=e122]:
+                  - generic [ref=e123]: Menu tampil
+                  - combobox "Menu tampil" [ref=e124]:
+                    - option "8 menu"
+                    - option "12 menu" [selected]
+                    - option "20 menu"
+                    - option "50 menu"
+              - paragraph [ref=e126]: 1 siap jual dari 1 menu
+              - button "RCP-001 Kue Soes Ready" [ref=e128] [cursor=pointer]:
+                - generic [ref=e129]:
+                  - generic [ref=e130]:
+                    - text: RCP-001
+                    - strong [ref=e131]: Kue Soes
+                  - generic [ref=e132]: Ready
+                - generic [ref=e133]:
+                  - article [ref=e134]:
+                    - text: Stok
+                    - strong [ref=e135]: 9 pcs
+                  - article [ref=e136]:
+                    - text: Harga jual
+                    - strong [ref=e137]: Rp 6.988
+              - generic [ref=e138]:
+                - generic [ref=e139]: 1 menu
+                - generic [ref=e140]:
+                  - button "Prev" [disabled] [ref=e141]
+                  - combobox "Pilih halaman menu kasir / POS" [ref=e143]:
+                    - option "Halaman 1" [selected]
+                  - generic [ref=e144]: 1 / 1
+                  - button "Next" [disabled] [ref=e145]
+            - generic [ref=e146]:
+              - generic [ref=e148]:
+                - text: Pesanan aktif
+                - heading "Bangun pesanan lalu checkout" [level=2] [ref=e149]
+                - paragraph [ref=e150]: Pilih menu dari panel kiri, masukkan item ke pesanan aktif, lalu selesaikan pembayaran dalam satu checkout.
+              - article [ref=e151]:
+                - generic [ref=e153]:
+                  - text: RCP-001
+                  - heading "Kue Soes" [level=3] [ref=e154]
+                  - paragraph [ref=e155]: Menu aktif siap ditambahkan ke pesanan.
+                - generic [ref=e156]:
+                  - article [ref=e157]:
+                    - text: Stok menu
+                    - strong [ref=e158]: 9 pcs
+                  - article [ref=e159]:
+                    - text: HPP / satuan
+                    - strong [ref=e160]: Rp 4.184
+                  - article [ref=e161]:
+                    - text: Harga jual
+                    - strong [ref=e162]: Rp 6.988
+                - generic [ref=e163]:
+                  - generic [ref=e164]:
+                    - text: Qty masuk ke pesanan
+                    - spinbutton "Qty masuk ke pesanan" [ref=e165]: "1"
+                  - button "Masukkan ke Pesanan" [ref=e166] [cursor=pointer]
+              - generic [ref=e167]:
+                - generic [ref=e169]:
+                  - text: Item pesanan
+                  - heading "Ringkas menu yang akan di-checkout" [level=3] [ref=e170]
+                  - paragraph [ref=e171]: Jumlah item bisa diubah langsung di sini tanpa mengulang flow checkout per menu.
+                - generic [ref=e172]:
+                  - heading "Pesanan masih kosong" [level=2] [ref=e173]
+                  - paragraph [ref=e174]: Pilih menu dari panel kiri lalu masukkan ke pesanan aktif.
+              - article [ref=e175]:
+                - text: Checkout aktif
+                - strong [ref=e176]: Pesanan masih kosong.
+                - text: Gunakan panel menu aktif di atas untuk menambahkan item pertama ke pesanan. Form checkout penuh baru muncul setelah ada item di cart.
+          - generic [ref=e177]:
+            - generic [ref=e178]:
+              - generic [ref=e179]:
+                - generic [ref=e180]: History pesanan
+                - heading "Datagrid pesanan dan penjualan" [level=2] [ref=e181]
+                - paragraph [ref=e182]: Checkout yang selesai langsung masuk ke history. Transfer bank bisa ditandai lunas dari sini.
+              - generic [ref=e183]:
+                - generic [ref=e184]: Baris tampil
+                - combobox "Baris tampil" [ref=e185]:
+                  - option "8 baris"
+                  - option "12 baris" [selected]
+                  - option "20 baris"
+                  - option "50 baris"
+            - paragraph [ref=e187]: 1 pesanan tercatat, 1 tampil di halaman ini
+            - table [ref=e189]:
+              - rowgroup [ref=e190]:
+                - row "Pesanan Pembeli Qty Total Status Waktu Aksi" [ref=e191]:
+                  - columnheader "Pesanan" [ref=e192]:
+                    - generic [ref=e195]: Pesanan
+                  - columnheader "Pembeli" [ref=e196]:
+                    - generic [ref=e199]: Pembeli
+                  - columnheader "Qty" [ref=e200]:
+                    - generic [ref=e203]: Qty
+                  - columnheader "Total" [ref=e204]:
+                    - generic [ref=e207]: Total
+                  - columnheader "Status" [ref=e208]:
+                    - generic [ref=e211]: Status
+                  - columnheader "Waktu" [ref=e212]:
+                    - generic [ref=e215]: Waktu
+                  - columnheader "Aksi" [ref=e216]:
+                    - generic [ref=e219]: Aksi
+              - rowgroup [ref=e220]:
+                - row "Kue Soes TRX-000001 All PO Arief 47 Cash Rp 328.436 Profit Rp 131.777 Lunas 05 Apr 26 03:04" [ref=e221]:
+                  - cell "Kue Soes TRX-000001" [ref=e222]:
+                    - generic [ref=e223]:
+                      - strong [ref=e224]: Kue Soes
+                      - text: TRX-000001
+                  - cell "All PO Arief" [ref=e225]:
+                    - generic [ref=e226]:
+                      - strong [ref=e227]: All PO
+                      - text: Arief
+                  - cell "47 Cash" [ref=e228]:
+                    - generic [ref=e229]:
+                      - strong [ref=e230]: "47"
+                      - text: Cash
+                  - cell "Rp 328.436 Profit Rp 131.777" [ref=e231]:
+                    - generic [ref=e232]:
+                      - strong [ref=e233]: Rp 328.436
+                      - text: Profit Rp 131.777
+                  - cell "Lunas" [ref=e234]:
+                    - generic [ref=e235]: Lunas
+                  - cell "05 Apr 26 03:04" [ref=e236]:
+                    - generic [ref=e237]:
+                      - strong [ref=e238]: 05 Apr 26
+                      - text: 03:04
+                  - cell [ref=e239]
+            - generic [ref=e240]:
+              - generic [ref=e241]: 1 pesanan
+              - generic [ref=e242]:
+                - button "Prev" [disabled] [ref=e243]
+                - combobox "Pilih halaman history kasir / POS" [ref=e245]:
+                  - option "Halaman 1" [selected]
+                - generic [ref=e246]: 1 / 1
+                - button "Next" [disabled] [ref=e247]
+  - generic [ref=e248]:
+    - text: An unhandled error has occurred.
+    - link "Reload" [ref=e249] [cursor=pointer]:
+      - /url: .
+    - text: x

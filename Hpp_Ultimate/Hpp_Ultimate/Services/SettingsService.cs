@@ -80,7 +80,8 @@ public sealed class SettingsService(
             TaxPercent = request.TaxPercent,
             TaxIncluded = request.TaxIncluded,
             Timezone = request.Timezone.Trim(),
-            UpdatedAt = DateTime.Now
+            UpdatedAt = DateTime.Now,
+            GeminiApiKey = request.GeminiApiKey.Trim()
         };
 
         store.UpdateBusinessSettings(updated);
@@ -129,10 +130,13 @@ public sealed class SettingsService(
                 ? $"Pajak {settings.TaxPercent:0.#}% dihitung sebagai include tax."
                 : $"Pajak {settings.TaxPercent:0.#}% masih di mode exclude tax."
         };
+        notes.Add(string.IsNullOrWhiteSpace(settings.GeminiApiKey)
+            ? "Gemini AI belum aktif. Tambahkan API key hanya jika fitur bantu AI memang ingin dipakai."
+            : "Gemini AI aktif di workspace dan saat ini dipakai untuk bantuan input yang masih dipertahankan.");
         var canManageSettings = actor.Role == UserRole.Admin;
         if (!canManageSettings)
         {
-            notes.Add("Mode staff bersifat read-only untuk pengaturan usaha dan clear data.");
+            notes.Add("Mode staff bersifat read-only untuk pengaturan usaha. Operasi data admin dipusatkan di Backup & Impor Data.");
         }
 
         var canViewAuditTrail = canManageSettings;

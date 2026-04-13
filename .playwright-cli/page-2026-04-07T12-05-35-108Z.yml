@@ -1,0 +1,54 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "+ HPP Ultimate Workspace operasional." [ref=e4] [cursor=pointer]:
+      - /url: /login
+      - text: +
+      - generic [ref=e5]:
+        - strong [ref=e6]: HPP Ultimate
+        - text: Workspace operasional.
+    - main [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - text: Workspace operasional
+            - heading "Masuk ke workspace" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Setelah login, user langsung masuk ke dashboard prioritas untuk stok, pembelian, produksi, kasir, dan pembukuan dalam satu workspace operasional.
+          - generic [ref=e13]:
+            - article [ref=e14]:
+              - strong [ref=e15]: Stok dan restock lebih cepat
+              - text: Pantau stok minimum, catat mutasi, dan tindak lanjuti pembelian yang masih pending.
+            - article [ref=e16]:
+              - strong [ref=e17]: Produksi dan kasir tetap nyambung
+              - text: Batch yang selesai langsung bisa dijual, lalu transaksi masuk ke pembukuan tanpa input ulang.
+            - article [ref=e18]:
+              - strong [ref=e19]: Satu workspace per operasi harian
+              - text: Data tersimpan dalam workspace aktif, jadi user bisa lanjut kerja dari dashboard yang sama setelah berhasil masuk.
+          - generic [ref=e20]:
+            - strong [ref=e21]: Masuk aman ke workspace aktif
+            - text: Gunakan akun tim yang sudah dibuat admin. Setelah berhasil login, sistem langsung membuka dashboard prioritas harian.
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - text: Masuk
+            - heading "Login akun" [level=2] [ref=e24]
+            - paragraph [ref=e25]: Isi akun untuk membuka dashboard prioritas, stok, produksi, kasir, dan pembukuan dalam satu workspace.
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - text: Email / Username
+              - textbox "Email / Username" [ref=e29]:
+                - /placeholder: Masukkan email atau username
+            - generic [ref=e30]:
+              - text: Password
+              - textbox "Password" [ref=e32]:
+                - /placeholder: Masukkan password
+            - generic [ref=e33]:
+              - checkbox "Ingat sesi ini" [ref=e34]
+              - text: Ingat sesi ini
+            - button "Masuk ke Dashboard" [ref=e35]
+  - generic [ref=e36]:
+    - generic [ref=e37]:
+      - strong [ref=e38]: Sesi aplikasi terganggu
+      - text: Terjadi error yang belum tertangani. Muat ulang halaman untuk melanjutkan pekerjaan.
+    - generic [ref=e39]:
+      - link "Muat ulang" [ref=e40] [cursor=pointer]:
+        - /url: .
+      - button "Tutup pesan error" [ref=e41]: Tutup

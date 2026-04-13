@@ -10,7 +10,8 @@
         "dependencies": {
           "ClosedXML": "0.105.0",
           "Microsoft.AspNetCore.Components.QuickGrid": "10.0.5",
-          "Microsoft.Data.Sqlite": "10.0.0"
+          "Microsoft.Data.Sqlite": "10.0.0",
+          "Npgsql": "10.0.0"
         },
         "runtime": {
           "Hpp_Ultimate.dll": {}
@@ -92,6 +93,14 @@
           "lib/net8.0/Microsoft.Data.Sqlite.dll": {
             "assemblyVersion": "10.0.0.0",
             "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Npgsql/10.0.0": {
+        "runtime": {
+          "lib/net10.0/Npgsql.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.0.0"
           }
         }
       },
@@ -332,6 +341,13 @@
       "sha512": "sha512-wPKG/Ym6tSMCo06UOZXzVfeFGzawnOZrTba/R3PfK+RhNuNELZ9I7nFns4WGTtv2kKlrlmmErgJ+kgTXHaNdHg==",
       "path": "microsoft.data.sqlite.core/10.0.0",
       "hashPath": "microsoft.data.sqlite.core.10.0.0.nupkg.sha512"
+    },
+    "Npgsql/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xZAYhPOU2rUIFpV48xsqhCx9vXs6Y+0jX2LCoSEfDFYMw9jtAOUk3iQsCnDLrFIv9NT3JGMihn7nnuZsPKqJmA==",
+      "path": "npgsql/10.0.0",
+      "hashPath": "npgsql.10.0.0.nupkg.sha512"
     },
     "RBush.Signed/4.0.0": {
       "type": "package",

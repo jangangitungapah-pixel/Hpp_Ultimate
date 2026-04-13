@@ -1,0 +1,327 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Workflow
+          - link "Katalog Material" [ref=e20] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e22]
+            - strong [ref=e26]: Katalog Material
+          - link "Gudang" [ref=e27] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e29]
+            - strong [ref=e33]: Gudang
+          - link "Resep" [ref=e34] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e36]
+            - strong [ref=e38]: Resep
+          - link "Produksi" [ref=e39] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e41]
+            - strong [ref=e45]: Produksi
+          - link "Point of Sales" [ref=e46] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e48]
+            - strong [ref=e51]: Point of Sales
+          - link "Belanja" [ref=e52] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e54]
+            - strong [ref=e58]: Belanja
+          - link "Pembukuan" [ref=e59] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e61]
+            - strong [ref=e64]: Pembukuan
+        - generic [ref=e65]:
+          - generic [ref=e66]: Pengaturan
+          - link "Pengaturan" [ref=e67] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e69]
+            - strong [ref=e70]: Pengaturan
+          - link "Pengaturan Akun" [ref=e71] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e73]
+            - strong [ref=e76]: Pengaturan Akun
+        - generic [ref=e77]:
+          - generic [ref=e78]: Kontrol Data
+          - link "Backup & Data Ops" [ref=e79] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e81]
+            - strong [ref=e86]: Backup & Data Ops
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - generic [ref=e89]: A
+            - generic [ref=e90]:
+              - strong [ref=e91]: Arief
+              - generic [ref=e92]: Admin
+          - link "Logout" [ref=e93] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e94]
+            - generic [ref=e97]: Logout
+  - main [ref=e98]:
+    - generic [ref=e100]:
+      - generic [ref=e101]:
+        - generic [ref=e102]: ⚲
+        - textbox "Current user" [ref=e103]: Arief
+      - generic [ref=e104]: A
+    - article [ref=e105]:
+      - generic [ref=e385]:
+        - generic [ref=e386]:
+          - generic [ref=e387]:
+            - generic [ref=e388]: Gudang
+            - heading "Catat saldo bahan, minimum stock, dan mutasi gudang." [level=1] [ref=e389]
+          - generic [ref=e390]:
+            - generic [ref=e391]: 9 material ada di gudang
+            - button "Refresh" [ref=e392] [cursor=pointer]
+        - generic [ref=e393]:
+          - article [ref=e394]:
+            - generic [ref=e395]: Material di gudang
+            - strong [ref=e396]: "9"
+          - article [ref=e397]:
+            - generic [ref=e398]: Perlu restock
+            - strong [ref=e399]: "0"
+          - article [ref=e400]:
+            - generic [ref=e401]: Nilai stok
+            - strong [ref=e402]: Rp296.183
+        - generic [ref=e403]:
+          - generic [ref=e404]:
+            - generic [ref=e405]:
+              - generic [ref=e406]:
+                - generic [ref=e407]: Datagrid gudang
+                - heading "Material yang sudah tercatat di gudang" [level=2] [ref=e408]
+                - paragraph [ref=e409]: Daftar stok aktif dengan pola tabel yang sama seperti katalog material.
+              - generic [ref=e411]: 9 material
+            - generic [ref=e412]:
+              - generic [ref=e413]:
+                - textbox "Cari material gudang" [ref=e414]
+                - generic [ref=e416]:
+                  - generic [ref=e417]: Baris tampil
+                  - combobox "Baris tampil" [ref=e418]:
+                    - option "8 baris"
+                    - option "12 baris" [selected]
+                    - option "20 baris"
+                    - option "50 baris"
+              - generic [ref=e419]:
+                - paragraph [ref=e420]: 9 material tercatat di gudang
+                - generic [ref=e422]: 1 halaman
+            - generic [ref=e423]:
+              - article [ref=e424]:
+                - button "Air Mineral BHN-003 Aman Sanqua 16400 ml" [ref=e425] [cursor=pointer]:
+                  - generic [ref=e426]:
+                    - generic [ref=e427]:
+                      - strong [ref=e428]: Air Mineral
+                      - generic [ref=e429]: BHN-003
+                    - generic [ref=e430]: Aman
+                  - generic [ref=e431]:
+                    - paragraph [ref=e433]: Sanqua
+                    - strong [ref=e434]: 16400 ml
+                - generic [ref=e437]:
+                  - article [ref=e438]:
+                    - generic [ref=e439]: Minimum
+                    - strong [ref=e440]: 0 ml
+                  - article [ref=e441]:
+                    - generic [ref=e442]: Nilai Stok
+                    - strong [ref=e443]: Rp43.733
+                  - article [ref=e444]:
+                    - generic [ref=e445]: Last Move
+                    - strong [ref=e446]: 05 Apr 2026 03:04
+              - article [ref=e447]:
+                - button "Butter Margarine BHN-002 Aman Palmia Royal 80 gr" [ref=e448] [cursor=pointer]:
+                  - generic [ref=e449]:
+                    - generic [ref=e450]:
+                      - strong [ref=e451]: Butter Margarine
+                      - generic [ref=e452]: BHN-002
+                    - generic [ref=e453]: Aman
+                  - generic [ref=e454]:
+                    - paragraph [ref=e456]: Palmia Royal
+                    - strong [ref=e457]: 80 gr
+                - generic [ref=e460]:
+                  - article [ref=e461]:
+                    - generic [ref=e462]: Minimum
+                    - strong [ref=e463]: 0 gr
+                  - article [ref=e464]:
+                    - generic [ref=e465]: Nilai Stok
+                    - strong [ref=e466]: Rp3.560
+                  - article [ref=e467]:
+                    - generic [ref=e468]: Last Move
+                    - strong [ref=e469]: 05 Apr 2026 03:04
+              - article [ref=e470]:
+                - button "Garam BHN-004 Aman Prisma 976 gr" [ref=e471] [cursor=pointer]:
+                  - generic [ref=e472]:
+                    - generic [ref=e473]:
+                      - strong [ref=e474]: Garam
+                      - generic [ref=e475]: BHN-004
+                    - generic [ref=e476]: Aman
+                  - generic [ref=e477]:
+                    - paragraph [ref=e479]: Prisma
+                    - strong [ref=e480]: 976 gr
+                - generic [ref=e483]:
+                  - article [ref=e484]:
+                    - generic [ref=e485]: Minimum
+                    - strong [ref=e486]: 0 gr
+                  - article [ref=e487]:
+                    - generic [ref=e488]: Nilai Stok
+                    - strong [ref=e489]: Rp14.640
+                  - article [ref=e490]:
+                    - generic [ref=e491]: Last Move
+                    - strong [ref=e492]: 05 Apr 2026 03:04
+              - article [ref=e493]:
+                - button "Gula Pasir BHN-007 Aman Gulaku 3500 gr" [ref=e494] [cursor=pointer]:
+                  - generic [ref=e495]:
+                    - generic [ref=e496]:
+                      - strong [ref=e497]: Gula Pasir
+                      - generic [ref=e498]: BHN-007
+                    - generic [ref=e499]: Aman
+                  - generic [ref=e500]:
+                    - paragraph [ref=e502]: Gulaku
+                    - strong [ref=e503]: 3500 gr
+                - generic [ref=e506]:
+                  - article [ref=e507]:
+                    - generic [ref=e508]: Minimum
+                    - strong [ref=e509]: 0 gr
+                  - article [ref=e510]:
+                    - generic [ref=e511]: Nilai Stok
+                    - strong [ref=e512]: Rp61.250
+                  - article [ref=e513]:
+                    - generic [ref=e514]: Last Move
+                    - strong [ref=e515]: 05 Apr 2026 03:04
+              - article [ref=e516]:
+                - button "Susu UHT Full Cream BHN-006 Aman Frisian Flag 1600 ml" [ref=e517] [cursor=pointer]:
+                  - generic [ref=e518]:
+                    - generic [ref=e519]:
+                      - strong [ref=e520]: Susu UHT Full Cream
+                      - generic [ref=e521]: BHN-006
+                    - generic [ref=e522]: Aman
+                  - generic [ref=e523]:
+                    - paragraph [ref=e525]: Frisian Flag
+                    - strong [ref=e526]: 1600 ml
+                - generic [ref=e529]:
+                  - article [ref=e530]:
+                    - generic [ref=e531]: Minimum
+                    - strong [ref=e532]: 0 ml
+                  - article [ref=e533]:
+                    - generic [ref=e534]: Nilai Stok
+                    - strong [ref=e535]: Rp32.000
+                  - article [ref=e536]:
+                    - generic [ref=e537]: Last Move
+                    - strong [ref=e538]: 05 Apr 2026 03:04
+              - article [ref=e539]:
+                - button "Telur Ayam BHN-005 Aman Lokal 0 pcs" [ref=e540] [cursor=pointer]:
+                  - generic [ref=e541]:
+                    - generic [ref=e542]:
+                      - strong [ref=e543]: Telur Ayam
+                      - generic [ref=e544]: BHN-005
+                    - generic [ref=e545]: Aman
+                  - generic [ref=e546]:
+                    - paragraph [ref=e548]: Lokal
+                    - strong [ref=e549]: 0 pcs
+                - generic [ref=e552]:
+                  - article [ref=e553]:
+                    - generic [ref=e554]: Minimum
+                    - strong [ref=e555]: 0 pcs
+                  - article [ref=e556]:
+                    - generic [ref=e557]: Nilai Stok
+                    - strong [ref=e558]: Rp0
+                  - article [ref=e559]:
+                    - generic [ref=e560]: Last Move
+                    - strong [ref=e561]: 05 Apr 2026 03:04
+              - article [ref=e562]:
+                - button "Tepung Maizena BHN-008 Aman Maizenaku 300 gr" [ref=e563] [cursor=pointer]:
+                  - generic [ref=e564]:
+                    - generic [ref=e565]:
+                      - strong [ref=e566]: Tepung Maizena
+                      - generic [ref=e567]: BHN-008
+                    - generic [ref=e568]: Aman
+                  - generic [ref=e569]:
+                    - paragraph [ref=e571]: Maizenaku
+                    - strong [ref=e572]: 300 gr
+                - generic [ref=e575]:
+                  - article [ref=e576]:
+                    - generic [ref=e577]: Minimum
+                    - strong [ref=e578]: 0 gr
+                  - article [ref=e579]:
+                    - generic [ref=e580]: Nilai Stok
+                    - strong [ref=e581]: Rp24.000
+                  - article [ref=e582]:
+                    - generic [ref=e583]: Last Move
+                    - strong [ref=e584]: 05 Apr 2026 03:04
+              - article [ref=e585]:
+                - button "Tepung Terigu BHN-001 Aman Segitga Biru 9000 gr" [ref=e586] [cursor=pointer]:
+                  - generic [ref=e587]:
+                    - generic [ref=e588]:
+                      - strong [ref=e589]: Tepung Terigu
+                      - generic [ref=e590]: BHN-001
+                    - generic [ref=e591]: Aman
+                  - generic [ref=e592]:
+                    - paragraph [ref=e594]: Segitga Biru
+                    - strong [ref=e595]: 9000 gr
+                - generic [ref=e598]:
+                  - article [ref=e599]:
+                    - generic [ref=e600]: Minimum
+                    - strong [ref=e601]: 0 gr
+                  - article [ref=e602]:
+                    - generic [ref=e603]: Nilai Stok
+                    - strong [ref=e604]: Rp117.000
+                  - article [ref=e605]:
+                    - generic [ref=e606]: Last Move
+                    - strong [ref=e607]: 05 Apr 2026 03:04
+              - article [ref=e608]:
+                - button "Vanili BHN-009 Aman Garuda 0 gr" [ref=e609] [cursor=pointer]:
+                  - generic [ref=e610]:
+                    - generic [ref=e611]:
+                      - strong [ref=e612]: Vanili
+                      - generic [ref=e613]: BHN-009
+                    - generic [ref=e614]: Aman
+                  - generic [ref=e615]:
+                    - paragraph [ref=e617]: Garuda
+                    - strong [ref=e618]: 0 gr
+                - generic [ref=e621]:
+                  - article [ref=e622]:
+                    - generic [ref=e623]: Minimum
+                    - strong [ref=e624]: 0 gr
+                  - article [ref=e625]:
+                    - generic [ref=e626]: Nilai Stok
+                    - strong [ref=e627]: Rp0
+                  - article [ref=e628]:
+                    - generic [ref=e629]: Last Move
+                    - strong [ref=e630]: 05 Apr 2026 03:04
+            - generic [ref=e631]:
+              - generic [ref=e632]: 9 material
+              - generic [ref=e633]:
+                - button "Prev" [disabled] [ref=e634]
+                - combobox "Pilih halaman gudang" [ref=e636]:
+                  - option "Halaman 1" [selected]
+                - generic [ref=e637]: 1 / 1
+                - button "Next" [disabled] [ref=e638]
+          - generic [ref=e639]:
+            - generic [ref=e641]:
+              - generic [ref=e642]: Input stok
+              - heading "Pilih material katalog lalu simpan mutasinya" [level=2] [ref=e643]
+            - generic [ref=e644]:
+              - generic [ref=e645]:
+                - generic [ref=e646]:
+                  - generic [ref=e647]: Material katalog
+                  - combobox "Material katalog" [ref=e648]
+                - generic [ref=e649]:
+                  - generic [ref=e650]: Flow stok
+                  - combobox "Flow stok" [ref=e651]:
+                    - option "Stok masuk" [selected]
+                    - option "Stok keluar"
+                - generic [ref=e652]:
+                  - generic [ref=e653]: Jumlah
+                  - spinbutton "Jumlah" [ref=e654]: "1"
+                - generic [ref=e655]:
+                  - generic [ref=e656]: Waktu catat
+                  - textbox "Waktu catat" [ref=e657]: 2026-04-05T04:53
+                - generic [ref=e658]:
+                  - generic [ref=e659]: Catatan
+                  - textbox "Catatan" [ref=e660]
+              - generic [ref=e661]: Pilih material dari daftar autocomplete katalog.
+              - generic [ref=e662]:
+                - button "Reset" [ref=e663] [cursor=pointer]
+                - button "Simpan Mutasi" [disabled] [ref=e664] [cursor=pointer]

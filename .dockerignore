@@ -1,0 +1,13 @@
+.git
+.github
+.playwright-cli
+.vs
+output
+**/bin
+**/obj
+**/node_modules
+**/App_Data
+_temp_import_test_root
+_temp_import_test_root_preview
+_temp_import_test_root_preview2
+_temp_settings_clear_test_root

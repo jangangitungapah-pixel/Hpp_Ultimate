@@ -1,0 +1,131 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e11]:
+        - link [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e15]
+        - generic [ref=e19]:
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e22]
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e28]
+        - generic [ref=e30]:
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e33]
+          - link [ref=e37] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e39]
+          - link [ref=e43] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e45]
+          - link [ref=e49] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e51]
+        - link [ref=e55] [cursor=pointer]:
+          - /url: /pembukuan
+          - img [ref=e57]
+        - generic [ref=e60]:
+          - link [ref=e61] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e63]
+          - link [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e66]
+          - link [ref=e69] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e71]
+        - link [ref=e77] [cursor=pointer]:
+          - /url: /logout
+          - img [ref=e78]
+  - main [ref=e81]:
+    - generic [ref=e83]:
+      - generic [ref=e84]: Area kerja
+      - strong [ref=e85]: Backup & Impor Data
+    - article [ref=e86]:
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: Administrasi data
+            - heading "Backup dan impor data" [level=1] [ref=e91]
+            - paragraph [ref=e92]: Kelola snapshot workspace, file ekspor, dan operasi data sensitif dari satu utilitas yang lebih ringkas.
+          - generic [ref=e94]: 0 backup, 0 ekspor tersedia.
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e99]:
+                - generic [ref=e100]: Aksi cepat
+                - heading "Backup, ekspor, dan impor" [level=2] [ref=e101]
+                - paragraph [ref=e102]: Fokus utama di sini adalah membuat cadangan penuh, mengekspor file kerja, atau mengimpor data yang sudah disiapkan dari environment lain.
+              - generic [ref=e103]:
+                - button "Buat Backup Penuh" [ref=e104] [cursor=pointer]
+                - button "Ekspor Resep JSON" [ref=e105] [cursor=pointer]
+                - button "Ekspor Penjualan JSON" [ref=e106] [cursor=pointer]
+                - button "Ekspor Penjualan CSV" [ref=e107] [cursor=pointer]
+              - generic [ref=e108]:
+                - generic [ref=e109]:
+                  - generic [ref=e110]: Impor resep
+                  - button "Impor resep" [ref=e111]
+                - generic [ref=e112]:
+                  - generic [ref=e113]: Impor penjualan
+                  - button "Impor penjualan" [ref=e114]
+            - generic [ref=e115]:
+              - generic [ref=e117]:
+                - generic [ref=e118]: Danger zone
+                - heading "Hapus seluruh data operasional" [level=2] [ref=e119]
+                - paragraph [ref=e120]: Tindakan ini akan menghapus data transaksi, stok, resep, produksi, pembelian, dan ledger aktif. Backup dan file ekspor tetap disimpan terpisah.
+              - generic [ref=e121]:
+                - article [ref=e122]:
+                  - generic [ref=e123]: Produk
+                  - strong [ref=e124]: "0"
+                - article [ref=e125]:
+                  - generic [ref=e126]: Material
+                  - strong [ref=e127]: "9"
+                - article [ref=e128]:
+                  - generic [ref=e129]: Mutasi stok
+                  - strong [ref=e130]: "20"
+                - article [ref=e131]:
+                  - generic [ref=e132]: Resep
+                  - strong [ref=e133]: "1"
+                - article [ref=e134]:
+                  - generic [ref=e135]: Produksi
+                  - strong [ref=e136]: "1"
+                - article [ref=e137]:
+                  - generic [ref=e138]: Pembelian
+                  - strong [ref=e139]: "0"
+                - article [ref=e140]:
+                  - generic [ref=e141]: Ledger
+                  - strong [ref=e142]: "0"
+                - article [ref=e143]:
+                  - generic [ref=e144]: Penjualan
+                  - strong [ref=e145]: "1"
+              - button "Hapus Semua Data Operasional" [ref=e147] [cursor=pointer]
+          - complementary [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e151]:
+                - generic [ref=e152]: Pustaka file
+                - heading "Snapshot dan file keluar" [level=2] [ref=e153]
+                - paragraph [ref=e154]: Satu panel untuk backup penuh dan hasil ekspor terbaru agar administrasi data tidak tersebar.
+              - generic [ref=e155]:
+                - generic [ref=e156]: 0 backup
+                - generic [ref=e157]: 0 file ekspor
+                - generic [ref=e158]: 32 entitas operasional
+              - generic [ref=e159]:
+                - generic [ref=e160]:
+                  - generic [ref=e161]:
+                    - generic [ref=e162]: Backup
+                    - strong [ref=e163]: Snapshot tersimpan
+                  - generic [ref=e164]: Pulihkan hanya saat ingin mengembalikan workspace ke snapshot tertentu.
+                - generic [ref=e165]: Belum ada backup penuh yang tersimpan.
+              - generic [ref=e166]:
+                - generic [ref=e167]:
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: Ekspor
+                    - strong [ref=e170]: File keluar terbaru
+                  - generic [ref=e171]: Gunakan untuk arsip manual, audit ringan, atau pindah data tanpa restore penuh.
+                - generic [ref=e172]: Belum ada file ekspor.

@@ -10,6 +10,7 @@ public sealed record ShoppingMaterialOption(
     string BaseUnit,
     decimal NetQuantity,
     string NetUnit,
+    decimal NetQuantityInBaseUnit,
     decimal PricePerPack,
     decimal CostPerBaseUnit,
     decimal OnHandQuantity,

@@ -1,0 +1,347 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Ringkasan
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: /
+            - img [ref=e19]
+            - strong [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Master Data
+          - link "Katalog Material" [ref=e26] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e28]
+            - strong [ref=e32]: Katalog Material
+          - link "Resep" [ref=e33] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e35]
+            - strong [ref=e37]: Resep
+        - generic [ref=e38]:
+          - generic [ref=e39]: Operasional
+          - link "Stok Gudang" [ref=e40] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e42]
+            - strong [ref=e46]: Stok Gudang
+          - link "Pembelian Material" [ref=e47] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e49]
+            - strong [ref=e53]: Pembelian Material
+          - link "Produksi" [ref=e54] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e56]
+            - strong [ref=e60]: Produksi
+          - link "Kasir / POS" [ref=e61] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e63]
+            - strong [ref=e66]: Kasir / POS
+        - generic [ref=e67]:
+          - generic [ref=e68]: Keuangan
+          - link "Pembukuan" [ref=e69] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e71]
+            - strong [ref=e74]: Pembukuan
+        - generic [ref=e75]:
+          - generic [ref=e76]: Admin
+          - link "Pengaturan Bisnis" [ref=e77] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e79]
+            - strong [ref=e80]: Pengaturan Bisnis
+          - link "Tim & Akun" [ref=e81] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e83]
+            - strong [ref=e86]: Tim & Akun
+          - link "Backup & Impor Data" [ref=e87] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e89]
+            - strong [ref=e94]: Backup & Impor Data
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: A
+            - generic [ref=e98]:
+              - strong [ref=e99]: Arief
+              - generic [ref=e100]: Admin
+          - link "Logout" [ref=e101] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e102]
+            - generic [ref=e105]: Logout
+  - main [ref=e106]:
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - generic [ref=e109]: Stok Gudang
+        - strong [ref=e110]: Pantau saldo bahan, minimum stock, dan mutasi stok gudang
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e113]: ⚲
+          - textbox "Current user" [ref=e114]: Arief
+        - generic [ref=e115]: A
+    - article [ref=e116]:
+      - generic [ref=e117]:
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e120]: Stok gudang
+            - heading "Pantau saldo bahan, minimum stock, dan mutasi stok gudang." [active] [level=1] [ref=e121]
+            - paragraph [ref=e122]: Mutasi stok dicatat dari katalog material, lalu langsung terbaca di datagrid gudang yang sama.
+          - generic [ref=e123]:
+            - generic [ref=e124]: 9 material ada di gudang
+            - button "Refresh" [ref=e125] [cursor=pointer]
+        - generic [ref=e126]:
+          - article [ref=e127]:
+            - generic [ref=e128]: Material di gudang
+            - strong [ref=e129]: "9"
+          - article [ref=e130]:
+            - generic [ref=e131]: Perlu restock
+            - strong [ref=e132]: "0"
+          - article [ref=e133]:
+            - generic [ref=e134]: Nilai stok
+            - strong [ref=e135]: Rp296.183
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - generic [ref=e139]:
+                - generic [ref=e140]: Stok aktif
+                - heading "Material yang sudah tercatat di gudang" [level=2] [ref=e141]
+                - paragraph [ref=e142]: Daftar stok aktif dengan pola tabel yang sama seperti katalog material.
+              - generic [ref=e143]: 9 material
+            - generic [ref=e144]:
+              - generic [ref=e145]:
+                - textbox "Cari material gudang" [ref=e146]
+                - generic [ref=e148]:
+                  - generic [ref=e149]: Baris tampil
+                  - combobox "Baris tampil" [ref=e150]:
+                    - option "8 baris"
+                    - option "12 baris" [selected]
+                    - option "20 baris"
+                    - option "50 baris"
+              - generic [ref=e151]:
+                - paragraph [ref=e152]: 9 material tercatat di gudang • urut nama A-Z
+                - generic [ref=e154]: 1 halaman
+            - table [ref=e156]:
+              - rowgroup [ref=e157]:
+                - row "Nama Material Merk On Hand Minimum Nilai Stok Last Move Status Aksi" [ref=e158]:
+                  - columnheader "Nama Material" [ref=e159]:
+                    - button "Nama Material" [ref=e160] [cursor=pointer]:
+                      - generic [ref=e161]: Nama Material
+                      - generic [ref=e162]: ↑
+                  - columnheader "Merk" [ref=e163]:
+                    - button "Merk" [ref=e164] [cursor=pointer]:
+                      - generic [ref=e165]: Merk
+                      - generic [ref=e166]: ↕
+                  - columnheader "On Hand" [ref=e167]:
+                    - button "On Hand" [ref=e168] [cursor=pointer]:
+                      - generic [ref=e169]: On Hand
+                      - generic [ref=e170]: ↕
+                  - columnheader "Minimum" [ref=e171]:
+                    - button "Minimum" [ref=e172] [cursor=pointer]:
+                      - generic [ref=e173]: Minimum
+                      - generic [ref=e174]: ↕
+                  - columnheader "Nilai Stok" [ref=e175]:
+                    - button "Nilai Stok" [ref=e176] [cursor=pointer]:
+                      - generic [ref=e177]: Nilai Stok
+                      - generic [ref=e178]: ↕
+                  - columnheader "Last Move" [ref=e179]:
+                    - button "Last Move" [ref=e180] [cursor=pointer]:
+                      - generic [ref=e181]: Last Move
+                      - generic [ref=e182]: ↕
+                  - columnheader "Status" [ref=e183]:
+                    - button "Status" [ref=e184] [cursor=pointer]:
+                      - generic [ref=e185]: Status
+                      - generic [ref=e186]: ↕
+                  - columnheader "Aksi" [ref=e187]
+              - rowgroup [ref=e188]:
+                - row "Air Mineral BHN-003 Sanqua 16400 ml 0 ml Rp43.733 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e189] [cursor=pointer]:
+                  - cell "Air Mineral BHN-003" [ref=e190]:
+                    - generic [ref=e191]:
+                      - strong [ref=e192]: Air Mineral
+                      - generic [ref=e193]: BHN-003
+                  - cell "Sanqua" [ref=e194]
+                  - cell "16400 ml" [ref=e195]:
+                    - strong [ref=e196]: 16400 ml
+                  - cell "0 ml" [ref=e197]
+                  - cell "Rp43.733" [ref=e198]
+                  - cell "05 Apr 26 03:04" [ref=e199]
+                  - cell "Aman" [ref=e200]:
+                    - generic [ref=e201]: Aman
+                  - cell "Masuk Keluar" [ref=e202]:
+                    - generic [ref=e203]:
+                      - button "Masuk" [ref=e204]
+                      - button "Keluar" [ref=e205]
+                - row "Butter Margarine BHN-002 Palmia Royal 80 gr 0 gr Rp3.560 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e206] [cursor=pointer]:
+                  - cell "Butter Margarine BHN-002" [ref=e207]:
+                    - generic [ref=e208]:
+                      - strong [ref=e209]: Butter Margarine
+                      - generic [ref=e210]: BHN-002
+                  - cell "Palmia Royal" [ref=e211]
+                  - cell "80 gr" [ref=e212]:
+                    - strong [ref=e213]: 80 gr
+                  - cell "0 gr" [ref=e214]
+                  - cell "Rp3.560" [ref=e215]
+                  - cell "05 Apr 26 03:04" [ref=e216]
+                  - cell "Aman" [ref=e217]:
+                    - generic [ref=e218]: Aman
+                  - cell "Masuk Keluar" [ref=e219]:
+                    - generic [ref=e220]:
+                      - button "Masuk" [ref=e221]
+                      - button "Keluar" [ref=e222]
+                - row "Garam BHN-004 Prisma 976 gr 0 gr Rp14.640 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e223] [cursor=pointer]:
+                  - cell "Garam BHN-004" [ref=e224]:
+                    - generic [ref=e225]:
+                      - strong [ref=e226]: Garam
+                      - generic [ref=e227]: BHN-004
+                  - cell "Prisma" [ref=e228]
+                  - cell "976 gr" [ref=e229]:
+                    - strong [ref=e230]: 976 gr
+                  - cell "0 gr" [ref=e231]
+                  - cell "Rp14.640" [ref=e232]
+                  - cell "05 Apr 26 03:04" [ref=e233]
+                  - cell "Aman" [ref=e234]:
+                    - generic [ref=e235]: Aman
+                  - cell "Masuk Keluar" [ref=e236]:
+                    - generic [ref=e237]:
+                      - button "Masuk" [ref=e238]
+                      - button "Keluar" [ref=e239]
+                - row "Gula Pasir BHN-007 Gulaku 3500 gr 0 gr Rp61.250 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e240] [cursor=pointer]:
+                  - cell "Gula Pasir BHN-007" [ref=e241]:
+                    - generic [ref=e242]:
+                      - strong [ref=e243]: Gula Pasir
+                      - generic [ref=e244]: BHN-007
+                  - cell "Gulaku" [ref=e245]
+                  - cell "3500 gr" [ref=e246]:
+                    - strong [ref=e247]: 3500 gr
+                  - cell "0 gr" [ref=e248]
+                  - cell "Rp61.250" [ref=e249]
+                  - cell "05 Apr 26 03:04" [ref=e250]
+                  - cell "Aman" [ref=e251]:
+                    - generic [ref=e252]: Aman
+                  - cell "Masuk Keluar" [ref=e253]:
+                    - generic [ref=e254]:
+                      - button "Masuk" [ref=e255]
+                      - button "Keluar" [ref=e256]
+                - row "Susu UHT Full Cream BHN-006 Frisian Flag 1600 ml 0 ml Rp32.000 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e257] [cursor=pointer]:
+                  - cell "Susu UHT Full Cream BHN-006" [ref=e258]:
+                    - generic [ref=e259]:
+                      - strong [ref=e260]: Susu UHT Full Cream
+                      - generic [ref=e261]: BHN-006
+                  - cell "Frisian Flag" [ref=e262]
+                  - cell "1600 ml" [ref=e263]:
+                    - strong [ref=e264]: 1600 ml
+                  - cell "0 ml" [ref=e265]
+                  - cell "Rp32.000" [ref=e266]
+                  - cell "05 Apr 26 03:04" [ref=e267]
+                  - cell "Aman" [ref=e268]:
+                    - generic [ref=e269]: Aman
+                  - cell "Masuk Keluar" [ref=e270]:
+                    - generic [ref=e271]:
+                      - button "Masuk" [ref=e272]
+                      - button "Keluar" [ref=e273]
+                - row "Telur Ayam BHN-005 Lokal 0 pcs 0 pcs Rp0 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e274] [cursor=pointer]:
+                  - cell "Telur Ayam BHN-005" [ref=e275]:
+                    - generic [ref=e276]:
+                      - strong [ref=e277]: Telur Ayam
+                      - generic [ref=e278]: BHN-005
+                  - cell "Lokal" [ref=e279]
+                  - cell "0 pcs" [ref=e280]:
+                    - strong [ref=e281]: 0 pcs
+                  - cell "0 pcs" [ref=e282]
+                  - cell "Rp0" [ref=e283]
+                  - cell "05 Apr 26 03:04" [ref=e284]
+                  - cell "Aman" [ref=e285]:
+                    - generic [ref=e286]: Aman
+                  - cell "Masuk Keluar" [ref=e287]:
+                    - generic [ref=e288]:
+                      - button "Masuk" [ref=e289]
+                      - button "Keluar" [ref=e290]
+                - row "Tepung Maizena BHN-008 Maizenaku 300 gr 0 gr Rp24.000 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e291] [cursor=pointer]:
+                  - cell "Tepung Maizena BHN-008" [ref=e292]:
+                    - generic [ref=e293]:
+                      - strong [ref=e294]: Tepung Maizena
+                      - generic [ref=e295]: BHN-008
+                  - cell "Maizenaku" [ref=e296]
+                  - cell "300 gr" [ref=e297]:
+                    - strong [ref=e298]: 300 gr
+                  - cell "0 gr" [ref=e299]
+                  - cell "Rp24.000" [ref=e300]
+                  - cell "05 Apr 26 03:04" [ref=e301]
+                  - cell "Aman" [ref=e302]:
+                    - generic [ref=e303]: Aman
+                  - cell "Masuk Keluar" [ref=e304]:
+                    - generic [ref=e305]:
+                      - button "Masuk" [ref=e306]
+                      - button "Keluar" [ref=e307]
+                - row "Tepung Terigu BHN-001 Segitga Biru 9000 gr 0 gr Rp117.000 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e308] [cursor=pointer]:
+                  - cell "Tepung Terigu BHN-001" [ref=e309]:
+                    - generic [ref=e310]:
+                      - strong [ref=e311]: Tepung Terigu
+                      - generic [ref=e312]: BHN-001
+                  - cell "Segitga Biru" [ref=e313]
+                  - cell "9000 gr" [ref=e314]:
+                    - strong [ref=e315]: 9000 gr
+                  - cell "0 gr" [ref=e316]
+                  - cell "Rp117.000" [ref=e317]
+                  - cell "05 Apr 26 03:04" [ref=e318]
+                  - cell "Aman" [ref=e319]:
+                    - generic [ref=e320]: Aman
+                  - cell "Masuk Keluar" [ref=e321]:
+                    - generic [ref=e322]:
+                      - button "Masuk" [ref=e323]
+                      - button "Keluar" [ref=e324]
+                - row "Vanili BHN-009 Garuda 0 gr 0 gr Rp0 05 Apr 26 03:04 Aman Masuk Keluar" [ref=e325] [cursor=pointer]:
+                  - cell "Vanili BHN-009" [ref=e326]:
+                    - generic [ref=e327]:
+                      - strong [ref=e328]: Vanili
+                      - generic [ref=e329]: BHN-009
+                  - cell "Garuda" [ref=e330]
+                  - cell "0 gr" [ref=e331]:
+                    - strong [ref=e332]: 0 gr
+                  - cell "0 gr" [ref=e333]
+                  - cell "Rp0" [ref=e334]
+                  - cell "05 Apr 26 03:04" [ref=e335]
+                  - cell "Aman" [ref=e336]:
+                    - generic [ref=e337]: Aman
+                  - cell "Masuk Keluar" [ref=e338]:
+                    - generic [ref=e339]:
+                      - button "Masuk" [ref=e340]
+                      - button "Keluar" [ref=e341]
+            - generic [ref=e342]:
+              - generic [ref=e343]: 9 material
+              - generic [ref=e344]:
+                - button "Prev" [disabled] [ref=e345]
+                - combobox "Pilih halaman gudang" [ref=e347]:
+                  - option "Halaman 1" [selected]
+                - generic [ref=e348]: 1 / 1
+                - button "Next" [disabled] [ref=e349]
+          - generic [ref=e350]:
+            - generic [ref=e352]:
+              - generic [ref=e353]: Mutasi stok
+              - heading "Pilih material katalog lalu simpan mutasinya" [level=2] [ref=e354]
+              - paragraph [ref=e355]: Mutasi masuk atau keluar akan memperbarui item gudang secara langsung.
+            - generic [ref=e356]:
+              - generic [ref=e357]:
+                - generic [ref=e358]:
+                  - generic [ref=e359]: Material katalog
+                  - textbox "Material katalog" [ref=e361]:
+                    - /placeholder: Ketik nama atau kode material
+                - generic [ref=e362]:
+                  - generic [ref=e363]: Flow stok
+                  - combobox "Flow stok" [ref=e364]:
+                    - option "Stok masuk" [selected]
+                    - option "Stok keluar"
+                - generic [ref=e365]:
+                  - generic [ref=e366]: Jumlah
+                  - spinbutton "Jumlah" [ref=e367]: "1"
+                - generic [ref=e368]:
+                  - generic [ref=e369]: Waktu catat
+                  - textbox "Waktu catat" [ref=e370]: 2026-04-05T10:51
+                - generic [ref=e371]:
+                  - generic [ref=e372]: Catatan
+                  - textbox "Catatan" [ref=e373]
+              - generic [ref=e374]: Pilih material dari saran katalog atau klik langsung dari tabel stok.
+              - generic [ref=e375]:
+                - button "Reset" [ref=e376] [cursor=pointer]
+                - button "Simpan Mutasi" [disabled] [ref=e377] [cursor=pointer]

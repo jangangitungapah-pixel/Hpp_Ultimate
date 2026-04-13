@@ -1,0 +1,618 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Workflow
+          - link "Katalog Material" [ref=e17] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e19]
+            - strong [ref=e23]: Katalog Material
+          - link "Gudang" [ref=e24] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e26]
+            - strong [ref=e30]: Gudang
+          - link "Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e33]
+            - strong [ref=e35]: Resep
+          - link "Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e38]
+            - strong [ref=e42]: Produksi
+          - link "Point of Sales" [ref=e43] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e45]
+            - strong [ref=e48]: Point of Sales
+          - link "Belanja" [ref=e49] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e51]
+            - strong [ref=e55]: Belanja
+          - link "Pembukuan" [ref=e56] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e58]
+            - strong [ref=e61]: Pembukuan
+        - generic [ref=e62]:
+          - generic [ref=e63]: Pengaturan
+          - link "Pengaturan" [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e66]
+            - strong [ref=e67]: Pengaturan
+          - link "Pengaturan Akun" [ref=e68] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e70]
+            - strong [ref=e73]: Pengaturan Akun
+        - generic [ref=e74]:
+          - generic [ref=e75]: Kontrol Data
+          - link "Backup & Data Ops" [ref=e76] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e78]
+            - strong [ref=e83]: Backup & Data Ops
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: A
+            - generic [ref=e87]:
+              - strong [ref=e88]: Arief
+              - generic [ref=e89]: Admin
+          - link "Logout" [ref=e90] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e91]
+            - generic [ref=e94]: Logout
+  - main [ref=e95]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Belanja
+        - strong [ref=e99]: Catat belanja material, penerimaan barang, dan masuk stok gudang
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - generic [ref=e102]: ⚲
+          - textbox "Current user" [ref=e103]: Arief
+        - generic [ref=e104]: A
+    - article [ref=e105]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]: Belanja material
+            - heading "Checkout belanja material, atur penerimaan barang, dan masuk stok dari satu halaman." [level=1] [ref=e110]
+            - paragraph [ref=e111]: Material diambil dari katalog. Belanja offline langsung menambah stok gudang, sedangkan belanja online baru masuk stok setelah ditandai barang sampai.
+          - generic [ref=e112]:
+            - generic [ref=e113]: 3 order menunggu datang
+            - button "Refresh" [ref=e114] [cursor=pointer]
+        - generic [ref=e115]:
+          - article [ref=e116]:
+            - generic [ref=e117]: Material aktif
+            - strong [ref=e118]: "50"
+          - article [ref=e119]:
+            - generic [ref=e120]: Belanja tercatat
+            - strong [ref=e121]: "50"
+          - article [ref=e122]:
+            - generic [ref=e123]: Menunggu datang
+            - strong [ref=e124]: "3"
+          - article [ref=e125]:
+            - generic [ref=e126]: Total belanja
+            - strong [ref=e127]: Rp 8.438.000
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - generic [ref=e130]:
+              - generic [ref=e131]: Form belanja
+              - heading "Susun item belanja lalu checkout" [level=2] [ref=e132]
+              - paragraph [ref=e133]: Satu checkout bisa memuat beberapa material sekaligus. Jika material belum ada di katalog, buka form material baru langsung dari sini.
+            - button "Material Baru" [ref=e134] [cursor=pointer]
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - generic [ref=e138]: Material katalog
+                - combobox "Material katalog" [ref=e139]: BHN-026 - Ayam Fillet - Fiesta
+              - generic [ref=e140]:
+                - generic [ref=e141]: Jumlah pack
+                - spinbutton "Jumlah pack" [ref=e142]: "1"
+              - article [ref=e143]:
+                - generic [ref=e144]: Estimasi subtotal item
+                - strong [ref=e145]: Rp 56.000
+                - generic [ref=e146]: 1 pack · 1000 gr
+            - article [ref=e147]:
+              - generic [ref=e148]:
+                - generic [ref=e149]: BHN-026
+                - strong [ref=e150]: Ayam Fillet
+              - generic [ref=e151]:
+                - article [ref=e152]:
+                  - generic [ref=e153]: Pack
+                  - strong [ref=e154]: 1000 gr
+                - article [ref=e155]:
+                  - generic [ref=e156]: Harga / pack
+                  - strong [ref=e157]: Rp 56.000
+                - article [ref=e158]:
+                  - generic [ref=e159]: Stok gudang
+                  - strong [ref=e160]: 9138.1 gr
+                - article [ref=e161]:
+                  - generic [ref=e162]: Restock item ini
+                  - strong [ref=e163]: 1000 gr
+            - button "Masukkan List" [ref=e165] [cursor=pointer]
+            - generic [ref=e166]:
+              - generic [ref=e167]:
+                - generic [ref=e168]:
+                  - generic [ref=e169]: List belanja
+                  - heading "Item yang akan di-checkout" [level=3] [ref=e170]
+                  - paragraph [ref=e171]: Jumlah pack akan dijumlahkan otomatis bila material yang sama dimasukkan lagi.
+                - generic [ref=e172]:
+                  - generic [ref=e173]: Baris tampil
+                  - combobox "Baris tampil" [ref=e174]:
+                    - option "8 baris" [selected]
+                    - option "12 baris"
+                    - option "20 baris"
+                    - option "50 baris"
+              - generic [ref=e175]:
+                - heading "Belum ada item" [level=3] [ref=e176]
+                - paragraph [ref=e177]: Masukkan minimal satu material ke list belanja sebelum checkout.
+            - generic [ref=e178]:
+              - generic [ref=e180]:
+                - generic [ref=e181]: Detail checkout
+                - heading "Lengkapi supplier dan tipe belanja" [level=3] [ref=e182]
+                - paragraph [ref=e183]: Ongkir bersifat opsional. Untuk belanja online, stok baru masuk saat barang ditandai sampai.
+              - generic [ref=e184]:
+                - generic [ref=e185]:
+                  - generic [ref=e186]: Nama toko / supplier
+                  - textbox "Nama toko / supplier" [ref=e187]
+                - generic [ref=e188]:
+                  - generic [ref=e189]: Ongkir
+                  - spinbutton "Ongkir" [ref=e190]: "0"
+                - generic [ref=e191]:
+                  - generic [ref=e192]: Tanggal & jam belanja
+                  - textbox "Tanggal & jam belanja" [ref=e193]: 2026-04-04T16:28
+                - generic [ref=e194]:
+                  - generic [ref=e195]: Catatan belanja
+                  - textbox "Catatan belanja" [ref=e196]
+              - generic [ref=e197]:
+                - generic [ref=e198]: Tipe belanja
+                - generic [ref=e199]:
+                  - button "Offline" [ref=e200] [cursor=pointer]
+                  - button "Online" [ref=e201] [cursor=pointer]
+              - generic [ref=e202]:
+                - generic [ref=e203]:
+                  - generic [ref=e204]: Total item
+                  - strong [ref=e205]: 0 material
+                - generic [ref=e206]:
+                  - generic [ref=e207]: Total pack
+                  - strong [ref=e208]: 0 pack
+                - generic [ref=e209]:
+                  - generic [ref=e210]: Subtotal
+                  - strong [ref=e211]: Rp 0
+                - generic [ref=e212]:
+                  - generic [ref=e213]: Grand total
+                  - strong [ref=e214]: Rp 0
+              - generic [ref=e215]:
+                - button "Reset" [ref=e216] [cursor=pointer]
+                - button "Check Out" [disabled] [ref=e217]
+        - generic [ref=e218]:
+          - generic [ref=e219]:
+            - generic [ref=e220]:
+              - generic [ref=e221]: History belanja
+              - heading "Datagrid belanja material" [level=2] [ref=e222]
+              - paragraph [ref=e223]: Upload struk bisa dilakukan kapan saja. Order online baru menambah stok setelah tombol barang sampai ditekan.
+            - generic [ref=e224]:
+              - generic [ref=e225]: Baris tampil
+              - combobox "Baris tampil" [ref=e226]:
+                - option "8 baris"
+                - option "12 baris" [selected]
+                - option "20 baris"
+                - option "50 baris"
+          - table [ref=e228]:
+            - rowgroup [ref=e229]:
+              - row "Belanja Supplier Item Total Status Struk Aksi" [ref=e230]:
+                - columnheader "Belanja" [ref=e231]:
+                  - generic [ref=e234]: Belanja
+                - columnheader "Supplier" [ref=e235]:
+                  - generic [ref=e238]: Supplier
+                - columnheader "Item" [ref=e239]:
+                  - generic [ref=e242]: Item
+                - columnheader "Total" [ref=e243]:
+                  - generic [ref=e246]: Total
+                - columnheader "Status" [ref=e247]:
+                  - generic [ref=e250]: Status
+                - columnheader "Struk" [ref=e251]:
+                  - generic [ref=e254]: Struk
+                - columnheader "Aksi" [ref=e255]:
+                  - generic [ref=e258]: Aksi
+            - rowgroup [ref=e259]:
+              - row "BLJ-000048 04 Apr 2026 21:37 Toko Pendingin Sentosa Offline Pouch Standing +2 material 3 item · 7 pack Rp 283.000 Subtotal Rp 283.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:46 Belum ada Upload kapan saja Selesai" [ref=e260]:
+                - cell "BLJ-000048 04 Apr 2026 21:37" [ref=e261]:
+                  - generic [ref=e262]:
+                    - strong [ref=e263]: BLJ-000048
+                    - generic [ref=e264]: 04 Apr 2026 21:37
+                - cell "Toko Pendingin Sentosa Offline" [ref=e265]:
+                  - generic [ref=e266]:
+                    - strong [ref=e267]: Toko Pendingin Sentosa
+                    - generic [ref=e268]: Offline
+                - cell "Pouch Standing +2 material 3 item · 7 pack" [ref=e269]:
+                  - generic [ref=e270]:
+                    - strong [ref=e271]: Pouch Standing +2 material
+                    - generic [ref=e272]: 3 item · 7 pack
+                - cell "Rp 283.000 Subtotal Rp 283.000 · Ongkir Rp 0" [ref=e273]:
+                  - generic [ref=e274]:
+                    - strong [ref=e275]: Rp 283.000
+                    - generic [ref=e276]: Subtotal Rp 283.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:46" [ref=e277]:
+                  - generic [ref=e278]:
+                    - strong [ref=e279]:
+                      - generic [ref=e280]: Sudah diterima
+                    - generic [ref=e281]: Masuk gudang 04 Apr 02:46
+                - cell "Belum ada Upload kapan saja" [ref=e282]:
+                  - generic [ref=e283]:
+                    - strong [ref=e284]: Belum ada
+                    - generic [ref=e285]: Upload kapan saja
+                - cell "Selesai" [ref=e286]:
+                  - generic [ref=e287]:
+                    - generic [ref=e288]: Selesai
+                    - generic "Upload struk" [ref=e289] [cursor=pointer]:
+                      - img [ref=e290]
+                      - button [ref=e292]
+              - row "BLJ-000024 04 Apr 2026 21:13 Toko Pendingin Sentosa Offline Box Brownies +2 material 3 item · 7 pack Rp 144.000 Subtotal Rp 144.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:40 Belum ada Upload kapan saja Selesai" [ref=e293]:
+                - cell "BLJ-000024 04 Apr 2026 21:13" [ref=e294]:
+                  - generic [ref=e295]:
+                    - strong [ref=e296]: BLJ-000024
+                    - generic [ref=e297]: 04 Apr 2026 21:13
+                - cell "Toko Pendingin Sentosa Offline" [ref=e298]:
+                  - generic [ref=e299]:
+                    - strong [ref=e300]: Toko Pendingin Sentosa
+                    - generic [ref=e301]: Offline
+                - cell "Box Brownies +2 material 3 item · 7 pack" [ref=e302]:
+                  - generic [ref=e303]:
+                    - strong [ref=e304]: Box Brownies +2 material
+                    - generic [ref=e305]: 3 item · 7 pack
+                - cell "Rp 144.000 Subtotal Rp 144.000 · Ongkir Rp 0" [ref=e306]:
+                  - generic [ref=e307]:
+                    - strong [ref=e308]: Rp 144.000
+                    - generic [ref=e309]: Subtotal Rp 144.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:40" [ref=e310]:
+                  - generic [ref=e311]:
+                    - strong [ref=e312]:
+                      - generic [ref=e313]: Sudah diterima
+                    - generic [ref=e314]: Masuk gudang 04 Apr 02:40
+                - cell "Belum ada Upload kapan saja" [ref=e315]:
+                  - generic [ref=e316]:
+                    - strong [ref=e317]: Belum ada
+                    - generic [ref=e318]: Upload kapan saja
+                - cell "Selesai" [ref=e319]:
+                  - generic [ref=e320]:
+                    - generic [ref=e321]: Selesai
+                    - generic "Upload struk" [ref=e322] [cursor=pointer]:
+                      - img [ref=e323]
+                      - button [ref=e325]
+              - row "BLJ-000006 04 Apr 2026 19:55 Toko Pendingin Sentosa Offline Krim Kental Manis +2 material 3 item · 9 pack Rp 365.000 Subtotal Rp 365.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:58 Belum ada Upload kapan saja Selesai" [ref=e326]:
+                - cell "BLJ-000006 04 Apr 2026 19:55" [ref=e327]:
+                  - generic [ref=e328]:
+                    - strong [ref=e329]: BLJ-000006
+                    - generic [ref=e330]: 04 Apr 2026 19:55
+                - cell "Toko Pendingin Sentosa Offline" [ref=e331]:
+                  - generic [ref=e332]:
+                    - strong [ref=e333]: Toko Pendingin Sentosa
+                    - generic [ref=e334]: Offline
+                - cell "Krim Kental Manis +2 material 3 item · 9 pack" [ref=e335]:
+                  - generic [ref=e336]:
+                    - strong [ref=e337]: Krim Kental Manis +2 material
+                    - generic [ref=e338]: 3 item · 9 pack
+                - cell "Rp 365.000 Subtotal Rp 365.000 · Ongkir Rp 0" [ref=e339]:
+                  - generic [ref=e340]:
+                    - strong [ref=e341]: Rp 365.000
+                    - generic [ref=e342]: Subtotal Rp 365.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:58" [ref=e343]:
+                  - generic [ref=e344]:
+                    - strong [ref=e345]:
+                      - generic [ref=e346]: Sudah diterima
+                    - generic [ref=e347]: Masuk gudang 04 Apr 02:58
+                - cell "Belum ada Upload kapan saja" [ref=e348]:
+                  - generic [ref=e349]:
+                    - strong [ref=e350]: Belum ada
+                    - generic [ref=e351]: Upload kapan saja
+                - cell "Selesai" [ref=e352]:
+                  - generic [ref=e353]:
+                    - generic [ref=e354]: Selesai
+                    - generic "Upload struk" [ref=e355] [cursor=pointer]:
+                      - img [ref=e356]
+                      - button [ref=e358]
+              - row "BLJ-000030 04 Apr 2026 19:19 Toko Pendingin Sentosa Offline Keju Cheddar +2 material 3 item · 9 pack Rp 668.000 Subtotal Rp 668.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:34 Belum ada Upload kapan saja Selesai" [ref=e359]:
+                - cell "BLJ-000030 04 Apr 2026 19:19" [ref=e360]:
+                  - generic [ref=e361]:
+                    - strong [ref=e362]: BLJ-000030
+                    - generic [ref=e363]: 04 Apr 2026 19:19
+                - cell "Toko Pendingin Sentosa Offline" [ref=e364]:
+                  - generic [ref=e365]:
+                    - strong [ref=e366]: Toko Pendingin Sentosa
+                    - generic [ref=e367]: Offline
+                - cell "Keju Cheddar +2 material 3 item · 9 pack" [ref=e368]:
+                  - generic [ref=e369]:
+                    - strong [ref=e370]: Keju Cheddar +2 material
+                    - generic [ref=e371]: 3 item · 9 pack
+                - cell "Rp 668.000 Subtotal Rp 668.000 · Ongkir Rp 0" [ref=e372]:
+                  - generic [ref=e373]:
+                    - strong [ref=e374]: Rp 668.000
+                    - generic [ref=e375]: Subtotal Rp 668.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:34" [ref=e376]:
+                  - generic [ref=e377]:
+                    - strong [ref=e378]:
+                      - generic [ref=e379]: Sudah diterima
+                    - generic [ref=e380]: Masuk gudang 04 Apr 02:34
+                - cell "Belum ada Upload kapan saja" [ref=e381]:
+                  - generic [ref=e382]:
+                    - strong [ref=e383]: Belum ada
+                    - generic [ref=e384]: Upload kapan saja
+                - cell "Selesai" [ref=e385]:
+                  - generic [ref=e386]:
+                    - generic [ref=e387]: Selesai
+                    - generic "Upload struk" [ref=e388] [cursor=pointer]:
+                      - img [ref=e389]
+                      - button [ref=e391]
+              - row "BLJ-000036 04 Apr 2026 17:25 Toko Pendingin Sentosa Offline Minyak Goreng +2 material 3 item · 7 pack Rp 141.000 Subtotal Rp 136.000 · Ongkir Rp 5.000 Sudah diterima Masuk gudang 04 Apr 02:58 Belum ada Upload kapan saja Selesai" [ref=e392]:
+                - cell "BLJ-000036 04 Apr 2026 17:25" [ref=e393]:
+                  - generic [ref=e394]:
+                    - strong [ref=e395]: BLJ-000036
+                    - generic [ref=e396]: 04 Apr 2026 17:25
+                - cell "Toko Pendingin Sentosa Offline" [ref=e397]:
+                  - generic [ref=e398]:
+                    - strong [ref=e399]: Toko Pendingin Sentosa
+                    - generic [ref=e400]: Offline
+                - cell "Minyak Goreng +2 material 3 item · 7 pack" [ref=e401]:
+                  - generic [ref=e402]:
+                    - strong [ref=e403]: Minyak Goreng +2 material
+                    - generic [ref=e404]: 3 item · 7 pack
+                - cell "Rp 141.000 Subtotal Rp 136.000 · Ongkir Rp 5.000" [ref=e405]:
+                  - generic [ref=e406]:
+                    - strong [ref=e407]: Rp 141.000
+                    - generic [ref=e408]: Subtotal Rp 136.000 · Ongkir Rp 5.000
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:58" [ref=e409]:
+                  - generic [ref=e410]:
+                    - strong [ref=e411]:
+                      - generic [ref=e412]: Sudah diterima
+                    - generic [ref=e413]: Masuk gudang 04 Apr 02:58
+                - cell "Belum ada Upload kapan saja" [ref=e414]:
+                  - generic [ref=e415]:
+                    - strong [ref=e416]: Belum ada
+                    - generic [ref=e417]: Upload kapan saja
+                - cell "Selesai" [ref=e418]:
+                  - generic [ref=e419]:
+                    - generic [ref=e420]: Selesai
+                    - generic "Upload struk" [ref=e421] [cursor=pointer]:
+                      - img [ref=e422]
+                      - button [ref=e424]
+              - row "BLJ-000012 04 Apr 2026 17:01 Toko Pendingin Sentosa Offline Cream Cheese +2 material 3 item · 7 pack Rp 550.000 Subtotal Rp 550.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:52 Belum ada Upload kapan saja Selesai" [ref=e425]:
+                - cell "BLJ-000012 04 Apr 2026 17:01" [ref=e426]:
+                  - generic [ref=e427]:
+                    - strong [ref=e428]: BLJ-000012
+                    - generic [ref=e429]: 04 Apr 2026 17:01
+                - cell "Toko Pendingin Sentosa Offline" [ref=e430]:
+                  - generic [ref=e431]:
+                    - strong [ref=e432]: Toko Pendingin Sentosa
+                    - generic [ref=e433]: Offline
+                - cell "Cream Cheese +2 material 3 item · 7 pack" [ref=e434]:
+                  - generic [ref=e435]:
+                    - strong [ref=e436]: Cream Cheese +2 material
+                    - generic [ref=e437]: 3 item · 7 pack
+                - cell "Rp 550.000 Subtotal Rp 550.000 · Ongkir Rp 0" [ref=e438]:
+                  - generic [ref=e439]:
+                    - strong [ref=e440]: Rp 550.000
+                    - generic [ref=e441]: Subtotal Rp 550.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:52" [ref=e442]:
+                  - generic [ref=e443]:
+                    - strong [ref=e444]:
+                      - generic [ref=e445]: Sudah diterima
+                    - generic [ref=e446]: Masuk gudang 04 Apr 02:52
+                - cell "Belum ada Upload kapan saja" [ref=e447]:
+                  - generic [ref=e448]:
+                    - strong [ref=e449]: Belum ada
+                    - generic [ref=e450]: Upload kapan saja
+                - cell "Selesai" [ref=e451]:
+                  - generic [ref=e452]:
+                    - generic [ref=e453]: Selesai
+                    - generic "Upload struk" [ref=e454] [cursor=pointer]:
+                      - img [ref=e455]
+                      - button [ref=e457]
+              - row "BLJ-000042 04 Apr 2026 15:31 Toko Pendingin Sentosa Offline Saus Keju +2 material 3 item · 9 pack Rp 233.000 Subtotal Rp 233.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:52 Belum ada Upload kapan saja Selesai" [ref=e458]:
+                - cell "BLJ-000042 04 Apr 2026 15:31" [ref=e459]:
+                  - generic [ref=e460]:
+                    - strong [ref=e461]: BLJ-000042
+                    - generic [ref=e462]: 04 Apr 2026 15:31
+                - cell "Toko Pendingin Sentosa Offline" [ref=e463]:
+                  - generic [ref=e464]:
+                    - strong [ref=e465]: Toko Pendingin Sentosa
+                    - generic [ref=e466]: Offline
+                - cell "Saus Keju +2 material 3 item · 9 pack" [ref=e467]:
+                  - generic [ref=e468]:
+                    - strong [ref=e469]: Saus Keju +2 material
+                    - generic [ref=e470]: 3 item · 9 pack
+                - cell "Rp 233.000 Subtotal Rp 233.000 · Ongkir Rp 0" [ref=e471]:
+                  - generic [ref=e472]:
+                    - strong [ref=e473]: Rp 233.000
+                    - generic [ref=e474]: Subtotal Rp 233.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:52" [ref=e475]:
+                  - generic [ref=e476]:
+                    - strong [ref=e477]:
+                      - generic [ref=e478]: Sudah diterima
+                    - generic [ref=e479]: Masuk gudang 04 Apr 02:52
+                - cell "Belum ada Upload kapan saja" [ref=e480]:
+                  - generic [ref=e481]:
+                    - strong [ref=e482]: Belum ada
+                    - generic [ref=e483]: Upload kapan saja
+                - cell "Selesai" [ref=e484]:
+                  - generic [ref=e485]:
+                    - generic [ref=e486]: Selesai
+                    - generic "Upload struk" [ref=e487] [cursor=pointer]:
+                      - img [ref=e488]
+                      - button [ref=e490]
+              - row "BLJ-000018 04 Apr 2026 15:07 Toko Pendingin Sentosa Offline Saus BBQ +2 material 3 item · 9 pack Rp 140.000 Subtotal Rp 140.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:46 Belum ada Upload kapan saja Selesai" [ref=e491]:
+                - cell "BLJ-000018 04 Apr 2026 15:07" [ref=e492]:
+                  - generic [ref=e493]:
+                    - strong [ref=e494]: BLJ-000018
+                    - generic [ref=e495]: 04 Apr 2026 15:07
+                - cell "Toko Pendingin Sentosa Offline" [ref=e496]:
+                  - generic [ref=e497]:
+                    - strong [ref=e498]: Toko Pendingin Sentosa
+                    - generic [ref=e499]: Offline
+                - cell "Saus BBQ +2 material 3 item · 9 pack" [ref=e500]:
+                  - generic [ref=e501]:
+                    - strong [ref=e502]: Saus BBQ +2 material
+                    - generic [ref=e503]: 3 item · 9 pack
+                - cell "Rp 140.000 Subtotal Rp 140.000 · Ongkir Rp 0" [ref=e504]:
+                  - generic [ref=e505]:
+                    - strong [ref=e506]: Rp 140.000
+                    - generic [ref=e507]: Subtotal Rp 140.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:46" [ref=e508]:
+                  - generic [ref=e509]:
+                    - strong [ref=e510]:
+                      - generic [ref=e511]: Sudah diterima
+                    - generic [ref=e512]: Masuk gudang 04 Apr 02:46
+                - cell "Belum ada Upload kapan saja" [ref=e513]:
+                  - generic [ref=e514]:
+                    - strong [ref=e515]: Belum ada
+                    - generic [ref=e516]: Upload kapan saja
+                - cell "Selesai" [ref=e517]:
+                  - generic [ref=e518]:
+                    - generic [ref=e519]: Selesai
+                    - generic "Upload struk" [ref=e520] [cursor=pointer]:
+                      - img [ref=e521]
+                      - button [ref=e523]
+              - row "BLJ-000047 03 Apr 2026 20:26 Grosir Pantry Nusantara Offline Cup Plastik 16 oz +1 material 2 item · 7 pack Rp 488.000 Subtotal Rp 488.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 02:47 Belum ada Upload kapan saja Selesai" [ref=e524]:
+                - cell "BLJ-000047 03 Apr 2026 20:26" [ref=e525]:
+                  - generic [ref=e526]:
+                    - strong [ref=e527]: BLJ-000047
+                    - generic [ref=e528]: 03 Apr 2026 20:26
+                - cell "Grosir Pantry Nusantara Offline" [ref=e529]:
+                  - generic [ref=e530]:
+                    - strong [ref=e531]: Grosir Pantry Nusantara
+                    - generic [ref=e532]: Offline
+                - cell "Cup Plastik 16 oz +1 material 2 item · 7 pack" [ref=e533]:
+                  - generic [ref=e534]:
+                    - strong [ref=e535]: Cup Plastik 16 oz +1 material
+                    - generic [ref=e536]: 2 item · 7 pack
+                - cell "Rp 488.000 Subtotal Rp 488.000 · Ongkir Rp 0" [ref=e537]:
+                  - generic [ref=e538]:
+                    - strong [ref=e539]: Rp 488.000
+                    - generic [ref=e540]: Subtotal Rp 488.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:47" [ref=e541]:
+                  - generic [ref=e542]:
+                    - strong [ref=e543]:
+                      - generic [ref=e544]: Sudah diterima
+                    - generic [ref=e545]: Masuk gudang 04 Apr 02:47
+                - cell "Belum ada Upload kapan saja" [ref=e546]:
+                  - generic [ref=e547]:
+                    - strong [ref=e548]: Belum ada
+                    - generic [ref=e549]: Upload kapan saja
+                - cell "Selesai" [ref=e550]:
+                  - generic [ref=e551]:
+                    - generic [ref=e552]: Selesai
+                    - generic "Upload struk" [ref=e553] [cursor=pointer]:
+                      - img [ref=e554]
+                      - button [ref=e556]
+              - row "BLJ-000023 03 Apr 2026 20:02 Grosir Pantry Nusantara Offline Pouch Standing +1 material 2 item · 7 pack Rp 209.000 Subtotal Rp 209.000 · Ongkir Rp 0 Sudah diterima Masuk gudang 04 Apr 03:02 Belum ada Upload kapan saja Selesai" [ref=e557]:
+                - cell "BLJ-000023 03 Apr 2026 20:02" [ref=e558]:
+                  - generic [ref=e559]:
+                    - strong [ref=e560]: BLJ-000023
+                    - generic [ref=e561]: 03 Apr 2026 20:02
+                - cell "Grosir Pantry Nusantara Offline" [ref=e562]:
+                  - generic [ref=e563]:
+                    - strong [ref=e564]: Grosir Pantry Nusantara
+                    - generic [ref=e565]: Offline
+                - cell "Pouch Standing +1 material 2 item · 7 pack" [ref=e566]:
+                  - generic [ref=e567]:
+                    - strong [ref=e568]: Pouch Standing +1 material
+                    - generic [ref=e569]: 2 item · 7 pack
+                - cell "Rp 209.000 Subtotal Rp 209.000 · Ongkir Rp 0" [ref=e570]:
+                  - generic [ref=e571]:
+                    - strong [ref=e572]: Rp 209.000
+                    - generic [ref=e573]: Subtotal Rp 209.000 · Ongkir Rp 0
+                - cell "Sudah diterima Masuk gudang 04 Apr 03:02" [ref=e574]:
+                  - generic [ref=e575]:
+                    - strong [ref=e576]:
+                      - generic [ref=e577]: Sudah diterima
+                    - generic [ref=e578]: Masuk gudang 04 Apr 03:02
+                - cell "Belum ada Upload kapan saja" [ref=e579]:
+                  - generic [ref=e580]:
+                    - strong [ref=e581]: Belum ada
+                    - generic [ref=e582]: Upload kapan saja
+                - cell "Selesai" [ref=e583]:
+                  - generic [ref=e584]:
+                    - generic [ref=e585]: Selesai
+                    - generic "Upload struk" [ref=e586] [cursor=pointer]:
+                      - img [ref=e587]
+                      - button [ref=e589]
+              - row "BLJ-000005 03 Apr 2026 18:44 Grosir Pantry Nusantara Online · Shopee Keju Cheddar +1 material 2 item · 3 pack Rp 148.000 Subtotal Rp 122.000 · Ongkir Rp 26.000 Sudah diterima Masuk gudang 04 Apr 02:59 Belum ada Upload kapan saja Selesai" [ref=e590]:
+                - cell "BLJ-000005 03 Apr 2026 18:44" [ref=e591]:
+                  - generic [ref=e592]:
+                    - strong [ref=e593]: BLJ-000005
+                    - generic [ref=e594]: 03 Apr 2026 18:44
+                - cell "Grosir Pantry Nusantara Online · Shopee" [ref=e595]:
+                  - generic [ref=e596]:
+                    - strong [ref=e597]: Grosir Pantry Nusantara
+                    - generic [ref=e598]: Online · Shopee
+                - cell "Keju Cheddar +1 material 2 item · 3 pack" [ref=e599]:
+                  - generic [ref=e600]:
+                    - strong [ref=e601]: Keju Cheddar +1 material
+                    - generic [ref=e602]: 2 item · 3 pack
+                - cell "Rp 148.000 Subtotal Rp 122.000 · Ongkir Rp 26.000" [ref=e603]:
+                  - generic [ref=e604]:
+                    - strong [ref=e605]: Rp 148.000
+                    - generic [ref=e606]: Subtotal Rp 122.000 · Ongkir Rp 26.000
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:59" [ref=e607]:
+                  - generic [ref=e608]:
+                    - strong [ref=e609]:
+                      - generic [ref=e610]: Sudah diterima
+                    - generic [ref=e611]: Masuk gudang 04 Apr 02:59
+                - cell "Belum ada Upload kapan saja" [ref=e612]:
+                  - generic [ref=e613]:
+                    - strong [ref=e614]: Belum ada
+                    - generic [ref=e615]: Upload kapan saja
+                - cell "Selesai" [ref=e616]:
+                  - generic [ref=e617]:
+                    - generic [ref=e618]: Selesai
+                    - generic "Upload struk" [ref=e619] [cursor=pointer]:
+                      - img [ref=e620]
+                      - button [ref=e622]
+              - row "BLJ-000029 03 Apr 2026 18:08 Grosir Pantry Nusantara Online · Shopee Ragi Instan +1 material 2 item · 3 pack Rp 154.500 Subtotal Rp 128.500 · Ongkir Rp 26.000 Sudah diterima Masuk gudang 04 Apr 02:35 Belum ada Upload kapan saja Selesai" [ref=e623]:
+                - cell "BLJ-000029 03 Apr 2026 18:08" [ref=e624]:
+                  - generic [ref=e625]:
+                    - strong [ref=e626]: BLJ-000029
+                    - generic [ref=e627]: 03 Apr 2026 18:08
+                - cell "Grosir Pantry Nusantara Online · Shopee" [ref=e628]:
+                  - generic [ref=e629]:
+                    - strong [ref=e630]: Grosir Pantry Nusantara
+                    - generic [ref=e631]: Online · Shopee
+                - cell "Ragi Instan +1 material 2 item · 3 pack" [ref=e632]:
+                  - generic [ref=e633]:
+                    - strong [ref=e634]: Ragi Instan +1 material
+                    - generic [ref=e635]: 2 item · 3 pack
+                - cell "Rp 154.500 Subtotal Rp 128.500 · Ongkir Rp 26.000" [ref=e636]:
+                  - generic [ref=e637]:
+                    - strong [ref=e638]: Rp 154.500
+                    - generic [ref=e639]: Subtotal Rp 128.500 · Ongkir Rp 26.000
+                - cell "Sudah diterima Masuk gudang 04 Apr 02:35" [ref=e640]:
+                  - generic [ref=e641]:
+                    - strong [ref=e642]:
+                      - generic [ref=e643]: Sudah diterima
+                    - generic [ref=e644]: Masuk gudang 04 Apr 02:35
+                - cell "Belum ada Upload kapan saja" [ref=e645]:
+                  - generic [ref=e646]:
+                    - strong [ref=e647]: Belum ada
+                    - generic [ref=e648]: Upload kapan saja
+                - cell "Selesai" [ref=e649]:
+                  - generic [ref=e650]:
+                    - generic [ref=e651]: Selesai
+                    - generic "Upload struk" [ref=e652] [cursor=pointer]:
+                      - img [ref=e653]
+                      - button [ref=e655]
+          - generic [ref=e656]:
+            - generic [ref=e657]: 50 history
+            - generic [ref=e658]:
+              - button "Prev" [disabled] [ref=e659]
+              - generic "Pilih halaman history belanja" [ref=e660]:
+                - combobox "Pilih halaman history belanja" [ref=e661]:
+                  - option "Halaman 1" [selected]
+                  - option "Halaman 2"
+                  - option "Halaman 3"
+                  - option "Halaman 4"
+                  - option "Halaman 5"
+              - generic [ref=e662]: 1 / 5
+              - button "Next" [ref=e663] [cursor=pointer]

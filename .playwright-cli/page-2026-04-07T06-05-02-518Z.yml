@@ -1,0 +1,521 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Workspace operasional" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Workspace operasional
+      - generic:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Ringkasan
+          - link "Dashboard" [ref=e20] [cursor=pointer]:
+            - /url: /
+            - img [ref=e22]
+            - strong [ref=e26]: Dashboard
+        - generic [ref=e27]:
+          - generic [ref=e28]: Master Data
+          - link "Katalog Material" [ref=e29] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e31]
+            - strong [ref=e35]: Katalog Material
+          - link "Resep" [ref=e36] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e38]
+            - strong [ref=e40]: Resep
+        - generic [ref=e41]:
+          - generic [ref=e42]: Operasional
+          - link "Stok Gudang" [ref=e43] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e45]
+            - strong [ref=e49]: Stok Gudang
+          - link "Pembelian Material" [ref=e50] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e52]
+            - strong [ref=e56]: Pembelian Material
+          - link "Produksi" [ref=e57] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e59]
+            - strong [ref=e63]: Produksi
+          - link "Kasir / POS" [ref=e64] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e66]
+            - strong [ref=e69]: Kasir / POS
+        - generic [ref=e70]:
+          - generic [ref=e71]: Keuangan
+          - link "Pembukuan" [ref=e72] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e74]
+            - strong [ref=e77]: Pembukuan
+        - generic [ref=e78]:
+          - generic [ref=e79]: Admin
+          - link "Pengaturan Bisnis" [ref=e80] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e82]
+            - strong [ref=e83]: Pengaturan Bisnis
+          - link "Tim & Akun" [ref=e84] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e86]
+            - strong [ref=e89]: Tim & Akun
+          - link "Backup & Impor Data" [ref=e90] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e92]
+            - strong [ref=e97]: Backup & Impor Data
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e100]: A
+            - generic [ref=e101]:
+              - strong [ref=e102]: Arief
+              - generic [ref=e103]: Admin
+          - link "Logout" [ref=e104] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e105]
+            - generic [ref=e108]: Logout
+  - main [ref=e109]:
+    - generic [ref=e111]:
+      - generic [ref=e112]: Area kerja
+      - strong [ref=e113]: Katalog Material
+    - article [ref=e114]:
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - generic [ref=e157]:
+            - generic [ref=e158]: Master material
+            - heading "Katalog Material" [level=1] [ref=e159]
+            - paragraph [ref=e160]: Master bahan baku untuk resep, gudang, dan kalkulasi biaya.
+          - generic [ref=e161]:
+            - link "Template" [ref=e162] [cursor=pointer]:
+              - /url: /api/bahan-baku-template
+            - link "Export CSV" [ref=e163] [cursor=pointer]:
+              - /url: /api/bahan-baku-export
+            - button "Import Excel" [ref=e164] [cursor=pointer]
+            - button "+ Tambah Material" [active] [ref=e165] [cursor=pointer]
+        - generic [ref=e166]:
+          - generic [ref=e167]:
+            - generic [ref=e168]:
+              - generic [ref=e169]: Daftar material
+              - heading "Master bahan baku aktif dan nonaktif" [level=2] [ref=e170]
+              - paragraph [ref=e171]: Cari, filter, lalu buka detail atau edit langsung dari tabel.
+            - generic [ref=e173]: 9 material
+          - generic [ref=e174]:
+            - generic [ref=e175]:
+              - textbox "Cari nama material atau merk" [ref=e176]
+              - generic [ref=e177]:
+                - combobox [ref=e178]:
+                  - option "Semua status" [selected]
+                  - option "Aktif"
+                  - option "Nonaktif"
+                - combobox [ref=e179]:
+                  - 'option "Urutkan: Update" [selected]'
+                  - 'option "Urutkan: Nama"'
+                  - 'option "Urutkan: Merk"'
+                  - 'option "Urutkan: Netto"'
+                  - 'option "Urutkan: Harga"'
+                  - 'option "Urutkan: Modal"'
+                - combobox [ref=e180]:
+                  - option "5 baris"
+                  - option "10 baris" [selected]
+                  - option "15 baris"
+                  - option "25 baris"
+                - button "Desc" [ref=e181] [cursor=pointer]
+            - generic [ref=e182]:
+              - paragraph [ref=e183]: 9 material ditemukan
+              - generic [ref=e184]:
+                - generic [ref=e185]: Update terbaru
+                - generic [ref=e186]: 1 halaman
+          - generic [ref=e187]:
+            - article [ref=e188]:
+              - button "BHN-009 Vanili Garuda Aktif Lihat detail" [ref=e189] [cursor=pointer]:
+                - generic [ref=e190]:
+                  - generic [ref=e191]: BHN-009
+                  - strong [ref=e192]: Vanili
+                  - generic [ref=e193]: Garuda
+                - generic [ref=e194]:
+                  - generic [ref=e195]: Aktif
+                  - generic [ref=e196]:
+                    - generic [ref=e197]: Lihat detail
+                    - generic [ref=e198]: +
+              - generic:
+                - generic:
+                  - generic [ref=e199]:
+                    - article [ref=e200]:
+                      - generic [ref=e201]: Netto
+                      - strong [ref=e202]: 2 gr
+                    - article [ref=e203]:
+                      - generic [ref=e204]: Harga / Pack
+                      - strong [ref=e205]: Rp 1.500
+                    - article [ref=e206]:
+                      - generic [ref=e207]: Modal / Unit
+                      - strong [ref=e208]: Rp 750 / gr
+                    - article [ref=e209]:
+                      - generic [ref=e210]: Konversi
+                      - strong [ref=e211]: 0 unit
+                  - generic [ref=e212]:
+                    - generic [ref=e213]: Update 05 Apr 2026 02:33
+                    - generic [ref=e215]:
+                      - button "Edit" [ref=e216] [cursor=pointer]:
+                        - img [ref=e217]
+                      - button "Hapus" [ref=e219] [cursor=pointer]:
+                        - img [ref=e220]
+            - article [ref=e223]:
+              - button "BHN-008 Tepung Maizena Maizenaku Aktif Lihat detail" [ref=e224] [cursor=pointer]:
+                - generic [ref=e225]:
+                  - generic [ref=e226]: BHN-008
+                  - strong [ref=e227]: Tepung Maizena
+                  - generic [ref=e228]: Maizenaku
+                - generic [ref=e229]:
+                  - generic [ref=e230]: Aktif
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: Lihat detail
+                    - generic [ref=e233]: +
+              - generic:
+                - generic:
+                  - generic [ref=e234]:
+                    - article [ref=e235]:
+                      - generic [ref=e236]: Netto
+                      - strong [ref=e237]: 100 gr
+                    - article [ref=e238]:
+                      - generic [ref=e239]: Harga / Pack
+                      - strong [ref=e240]: Rp 8.000
+                    - article [ref=e241]:
+                      - generic [ref=e242]: Modal / Unit
+                      - strong [ref=e243]: Rp 80 / gr
+                    - article [ref=e244]:
+                      - generic [ref=e245]: Konversi
+                      - strong [ref=e246]: 0 unit
+                  - generic [ref=e247]:
+                    - generic [ref=e248]: Update 05 Apr 2026 02:33
+                    - generic [ref=e250]:
+                      - button "Edit" [ref=e251] [cursor=pointer]:
+                        - img [ref=e252]
+                      - button "Hapus" [ref=e254] [cursor=pointer]:
+                        - img [ref=e255]
+            - article [ref=e258]:
+              - button "BHN-007 Gula Pasir Gulaku Aktif Lihat detail" [ref=e259] [cursor=pointer]:
+                - generic [ref=e260]:
+                  - generic [ref=e261]: BHN-007
+                  - strong [ref=e262]: Gula Pasir
+                  - generic [ref=e263]: Gulaku
+                - generic [ref=e264]:
+                  - generic [ref=e265]: Aktif
+                  - generic [ref=e266]:
+                    - generic [ref=e267]: Lihat detail
+                    - generic [ref=e268]: +
+              - generic:
+                - generic:
+                  - generic [ref=e269]:
+                    - article [ref=e270]:
+                      - generic [ref=e271]: Netto
+                      - strong [ref=e272]: 1000 gr
+                    - article [ref=e273]:
+                      - generic [ref=e274]: Harga / Pack
+                      - strong [ref=e275]: Rp 17.500
+                    - article [ref=e276]:
+                      - generic [ref=e277]: Modal / Unit
+                      - strong [ref=e278]: Rp 18 / gr
+                    - article [ref=e279]:
+                      - generic [ref=e280]: Konversi
+                      - strong [ref=e281]: 0 unit
+                  - generic [ref=e282]:
+                    - generic [ref=e283]: Update 05 Apr 2026 02:32
+                    - generic [ref=e285]:
+                      - button "Edit" [ref=e286] [cursor=pointer]:
+                        - img [ref=e287]
+                      - button "Hapus" [ref=e289] [cursor=pointer]:
+                        - img [ref=e290]
+            - article [ref=e293]:
+              - button "BHN-006 Susu UHT Full Cream Frisian Flag Aktif Lihat detail" [ref=e294] [cursor=pointer]:
+                - generic [ref=e295]:
+                  - generic [ref=e296]: BHN-006
+                  - strong [ref=e297]: Susu UHT Full Cream
+                  - generic [ref=e298]: Frisian Flag
+                - generic [ref=e299]:
+                  - generic [ref=e300]: Aktif
+                  - generic [ref=e301]:
+                    - generic [ref=e302]: Lihat detail
+                    - generic [ref=e303]: +
+              - generic:
+                - generic:
+                  - generic [ref=e304]:
+                    - article [ref=e305]:
+                      - generic [ref=e306]: Netto
+                      - strong [ref=e307]: 900 ml
+                    - article [ref=e308]:
+                      - generic [ref=e309]: Harga / Pack
+                      - strong [ref=e310]: Rp 18.000
+                    - article [ref=e311]:
+                      - generic [ref=e312]: Modal / Unit
+                      - strong [ref=e313]: Rp 20 / ml
+                    - article [ref=e314]:
+                      - generic [ref=e315]: Konversi
+                      - strong [ref=e316]: 0 unit
+                  - generic [ref=e317]:
+                    - generic [ref=e318]: Update 05 Apr 2026 02:31
+                    - generic [ref=e320]:
+                      - button "Edit" [ref=e321] [cursor=pointer]:
+                        - img [ref=e322]
+                      - button "Hapus" [ref=e324] [cursor=pointer]:
+                        - img [ref=e325]
+            - article [ref=e328]:
+              - button "BHN-005 Telur Ayam Lokal Aktif Lihat detail" [ref=e329] [cursor=pointer]:
+                - generic [ref=e330]:
+                  - generic [ref=e331]: BHN-005
+                  - strong [ref=e332]: Telur Ayam
+                  - generic [ref=e333]: Lokal
+                - generic [ref=e334]:
+                  - generic [ref=e335]: Aktif
+                  - generic [ref=e336]:
+                    - generic [ref=e337]: Lihat detail
+                    - generic [ref=e338]: +
+              - generic:
+                - generic:
+                  - generic [ref=e339]:
+                    - article [ref=e340]:
+                      - generic [ref=e341]: Netto
+                      - strong [ref=e342]: 1 pcs
+                    - article [ref=e343]:
+                      - generic [ref=e344]: Harga / Pack
+                      - strong [ref=e345]: Rp 2.500
+                    - article [ref=e346]:
+                      - generic [ref=e347]: Modal / Unit
+                      - strong [ref=e348]: Rp 2.500 / pcs
+                    - article [ref=e349]:
+                      - generic [ref=e350]: Konversi
+                      - strong [ref=e351]: 0 unit
+                  - generic [ref=e352]:
+                    - generic [ref=e353]: Update 05 Apr 2026 02:31
+                    - generic [ref=e355]:
+                      - button "Edit" [ref=e356] [cursor=pointer]:
+                        - img [ref=e357]
+                      - button "Hapus" [ref=e359] [cursor=pointer]:
+                        - img [ref=e360]
+            - article [ref=e363]:
+              - button "BHN-004 Garam Prisma Aktif Lihat detail" [ref=e364] [cursor=pointer]:
+                - generic [ref=e365]:
+                  - generic [ref=e366]: BHN-004
+                  - strong [ref=e367]: Garam
+                  - generic [ref=e368]: Prisma
+                - generic [ref=e369]:
+                  - generic [ref=e370]: Aktif
+                  - generic [ref=e371]:
+                    - generic [ref=e372]: Lihat detail
+                    - generic [ref=e373]: +
+              - generic:
+                - generic:
+                  - generic [ref=e374]:
+                    - article [ref=e375]:
+                      - generic [ref=e376]: Netto
+                      - strong [ref=e377]: 200 gr
+                    - article [ref=e378]:
+                      - generic [ref=e379]: Harga / Pack
+                      - strong [ref=e380]: Rp 3.000
+                    - article [ref=e381]:
+                      - generic [ref=e382]: Modal / Unit
+                      - strong [ref=e383]: Rp 15 / gr
+                    - article [ref=e384]:
+                      - generic [ref=e385]: Konversi
+                      - strong [ref=e386]: 0 unit
+                  - generic [ref=e387]:
+                    - generic [ref=e388]: Update 05 Apr 2026 02:30
+                    - generic [ref=e390]:
+                      - button "Edit" [ref=e391] [cursor=pointer]:
+                        - img [ref=e392]
+                      - button "Hapus" [ref=e394] [cursor=pointer]:
+                        - img [ref=e395]
+            - article [ref=e398]:
+              - button "BHN-003 Air Mineral Sanqua Aktif Lihat detail" [ref=e399] [cursor=pointer]:
+                - generic [ref=e400]:
+                  - generic [ref=e401]: BHN-003
+                  - strong [ref=e402]: Air Mineral
+                  - generic [ref=e403]: Sanqua
+                - generic [ref=e404]:
+                  - generic [ref=e405]: Aktif
+                  - generic [ref=e406]:
+                    - generic [ref=e407]: Lihat detail
+                    - generic [ref=e408]: +
+              - generic:
+                - generic:
+                  - generic [ref=e409]:
+                    - article [ref=e410]:
+                      - generic [ref=e411]: Netto
+                      - strong [ref=e412]: 1500 ml
+                    - article [ref=e413]:
+                      - generic [ref=e414]: Harga / Pack
+                      - strong [ref=e415]: Rp 4.000
+                    - article [ref=e416]:
+                      - generic [ref=e417]: Modal / Unit
+                      - strong [ref=e418]: Rp 3 / ml
+                    - article [ref=e419]:
+                      - generic [ref=e420]: Konversi
+                      - strong [ref=e421]: 0 unit
+                  - generic [ref=e422]:
+                    - generic [ref=e423]: Update 05 Apr 2026 02:30
+                    - generic [ref=e425]:
+                      - button "Edit" [ref=e426] [cursor=pointer]:
+                        - img [ref=e427]
+                      - button "Hapus" [ref=e429] [cursor=pointer]:
+                        - img [ref=e430]
+            - article [ref=e433]:
+              - button "BHN-002 Butter Margarine Palmia Royal Aktif Lihat detail" [ref=e434] [cursor=pointer]:
+                - generic [ref=e435]:
+                  - generic [ref=e436]: BHN-002
+                  - strong [ref=e437]: Butter Margarine
+                  - generic [ref=e438]: Palmia Royal
+                - generic [ref=e439]:
+                  - generic [ref=e440]: Aktif
+                  - generic [ref=e441]:
+                    - generic [ref=e442]: Lihat detail
+                    - generic [ref=e443]: +
+              - generic:
+                - generic:
+                  - generic [ref=e444]:
+                    - article [ref=e445]:
+                      - generic [ref=e446]: Netto
+                      - strong [ref=e447]: 200 gr
+                    - article [ref=e448]:
+                      - generic [ref=e449]: Harga / Pack
+                      - strong [ref=e450]: Rp 8.900
+                    - article [ref=e451]:
+                      - generic [ref=e452]: Modal / Unit
+                      - strong [ref=e453]: Rp 45 / gr
+                    - article [ref=e454]:
+                      - generic [ref=e455]: Konversi
+                      - strong [ref=e456]: 0 unit
+                  - generic [ref=e457]:
+                    - generic [ref=e458]: Update 05 Apr 2026 02:27
+                    - generic [ref=e460]:
+                      - button "Edit" [ref=e461] [cursor=pointer]:
+                        - img [ref=e462]
+                      - button "Hapus" [ref=e464] [cursor=pointer]:
+                        - img [ref=e465]
+            - article [ref=e468]:
+              - button "BHN-001 Tepung Terigu Segitga Biru Aktif Lihat detail" [ref=e469] [cursor=pointer]:
+                - generic [ref=e470]:
+                  - generic [ref=e471]: BHN-001
+                  - strong [ref=e472]: Tepung Terigu
+                  - generic [ref=e473]: Segitga Biru
+                - generic [ref=e474]:
+                  - generic [ref=e475]: Aktif
+                  - generic [ref=e476]:
+                    - generic [ref=e477]: Lihat detail
+                    - generic [ref=e478]: +
+              - generic:
+                - generic:
+                  - generic [ref=e479]:
+                    - article [ref=e480]:
+                      - generic [ref=e481]: Netto
+                      - strong [ref=e482]: 1000 gr
+                    - article [ref=e483]:
+                      - generic [ref=e484]: Harga / Pack
+                      - strong [ref=e485]: Rp 13.000
+                    - article [ref=e486]:
+                      - generic [ref=e487]: Modal / Unit
+                      - strong [ref=e488]: Rp 13 / gr
+                    - article [ref=e489]:
+                      - generic [ref=e490]: Konversi
+                      - strong [ref=e491]: 0 unit
+                  - generic [ref=e492]:
+                    - generic [ref=e493]: Update 05 Apr 2026 02:27
+                    - generic [ref=e495]:
+                      - button "Edit" [ref=e496] [cursor=pointer]:
+                        - img [ref=e497]
+                      - button "Hapus" [ref=e499] [cursor=pointer]:
+                        - img [ref=e500]
+          - generic [ref=e503]:
+            - generic [ref=e504]: 9 material
+            - generic [ref=e505]:
+              - button "Prev" [disabled] [ref=e506]
+              - generic "Pilih halaman" [ref=e507]:
+                - combobox "Pilih halaman" [ref=e508]:
+                  - option "Halaman 1" [selected]
+              - generic [ref=e509]: 1 / 1
+              - button "Next" [disabled] [ref=e510]
+      - generic [ref=e512]:
+        - generic [ref=e513]:
+          - generic [ref=e514]:
+            - generic [ref=e515]:
+              - generic [ref=e516]: Tambah material
+              - generic [ref=e517]:
+                - generic [ref=e518]: BHN-010
+                - generic [ref=e519]: Aktif
+            - heading "Buat master material baru" [level=2] [ref=e520]
+            - paragraph [ref=e521]: Isi identitas, satuan dasar, dan harga pack agar material siap dipakai di resep dan gudang.
+          - button "Tutup form" [ref=e522] [cursor=pointer]:
+            - img [ref=e523]
+        - generic [ref=e526]:
+          - generic [ref=e527]:
+            - article [ref=e528]:
+              - generic [ref=e529]: Base Unit
+              - strong [ref=e530]: gr
+            - article [ref=e531]:
+              - generic [ref=e532]: Netto
+              - strong [ref=e533]: "-"
+            - article [ref=e534]:
+              - generic [ref=e535]: Harga / Pack
+              - strong [ref=e536]: Rp 0
+            - article [ref=e537]:
+              - generic [ref=e538]: Modal / Unit
+              - strong [ref=e539]: Rp 0
+          - generic [ref=e540]:
+            - generic [ref=e541]:
+              - generic [ref=e543]:
+                - generic [ref=e544]: Identitas
+                - heading "Profil material" [level=3] [ref=e545]
+                - paragraph [ref=e546]: Nama, merk, kode, dan catatan utama material.
+              - generic [ref=e547]:
+                - generic [ref=e548]:
+                  - generic [ref=e549]: Kode Material
+                  - textbox "Kode Material" [ref=e550]: BHN-010
+                - generic [ref=e551]:
+                  - generic [ref=e552]: Merk
+                  - textbox "Merk" [ref=e553]
+                - generic [ref=e554]:
+                  - generic [ref=e555]: Nama Material
+                  - textbox "Nama Material" [ref=e556]
+                - generic [ref=e557]:
+                  - generic [ref=e558]: Deskripsi
+                  - textbox "Deskripsi" [ref=e559]
+            - generic [ref=e560]:
+              - generic [ref=e562]:
+                - generic [ref=e563]: Dimensi & harga
+                - heading "Pack dan kalkulasi biaya" [level=3] [ref=e564]
+                - paragraph [ref=e565]: Isi data pack di kiri. Modal unit dihitung otomatis di panel ringkasan.
+              - generic [ref=e566]:
+                - generic [ref=e567]:
+                  - generic [ref=e568]:
+                    - generic [ref=e569]: Base Unit
+                    - combobox "Base Unit" [ref=e570]:
+                      - option "Pilih base unit"
+                      - option "Gram (gr)" [selected]
+                      - option "Mililiter (ml)"
+                      - option "Pieces (pcs)"
+                  - generic [ref=e571]:
+                    - generic [ref=e572]: Netto Qty
+                    - spinbutton "Netto Qty" [ref=e573]: "0"
+                  - generic [ref=e574]:
+                    - generic [ref=e575]: Netto Unit
+                    - combobox "Netto Unit" [ref=e576]:
+                      - option "Pilih netto unit"
+                      - option "Gram (gr)" [selected]
+                      - option "Kilogram (kg)"
+                  - generic [ref=e577]:
+                    - generic [ref=e578]: Harga per Pack
+                    - spinbutton "Harga per Pack" [ref=e579]: "0"
+                - article [ref=e580]:
+                  - generic [ref=e581]: Modal / Unit
+                  - strong [ref=e582]: Rp 0
+                  - generic [ref=e583]: Terhitung otomatis per gr
+            - generic [ref=e584]:
+              - generic [ref=e585]:
+                - generic [ref=e586]:
+                  - generic [ref=e587]: Unit Konversi Tambahan
+                  - heading "Satuan turunan opsional" [level=3] [ref=e588]
+                  - paragraph [ref=e589]: Tambahkan hanya jika material dipakai dengan satuan lain.
+                - button "+ Tambah Unit" [ref=e590] [cursor=pointer]
+              - generic [ref=e591]: Belum ada unit tambahan.
+          - generic [ref=e592]:
+            - generic [ref=e594]:
+              - generic [ref=e595]: Status Aktif
+              - checkbox "Status Aktif" [checked] [ref=e596]
+            - generic [ref=e597]:
+              - button "Batal" [ref=e598] [cursor=pointer]
+              - button "Simpan Material" [ref=e599] [cursor=pointer]

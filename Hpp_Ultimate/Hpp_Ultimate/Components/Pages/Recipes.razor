@@ -3,26 +3,28 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 @inject RecipeCatalogService RecipeCatalogService
+@inject GeminiRecipeDraftService GeminiRecipeDraftService
+@inject GeminiRecipeWeightEstimatorService GeminiRecipeWeightEstimatorService
 @inject SeededBusinessDataStore Store
 
 <PageTitle>Resep | HPP Ultimate</PageTitle>
 
-<section class="recipes-page">
-    <header class="recipes-header">
+<section class="recipes-page ds-page ds-page-stack theme-indigo">
+    <header class="recipes-header ds-page-header">
         <div class="header-copy">
             <span class="section-tag">Resep</span>
             <h1>Resep produksi</h1>
-            <p>Buat resep lewat popup panel, susun kelompok bahan, cek biaya, lalu pantau resep aktif dari datagrid.</p>
+            <p>Susun resep dari katalog aktif, cek detailnya di panel samping, lalu buka editor hanya saat perlu membuat atau mengubah formula.</p>
         </div>
 
         <div class="header-actions">
-            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
             <button type="button" class="primary-button" @onclick="OpenCreateModalAsync">+ Resep Baru</button>
         </div>
     </header>
 
+    <div class="recipes-workspace ds-list-detail">
     <section class="recipes-panel list-panel catalog-datagrid">
-        <div class="panel-head">
+        <div class="panel-head ds-card-header">
             <div>
                 <span class="section-tag">Daftar resep</span>
                 <h2>Resep yang sudah dibuat</h2>
@@ -78,7 +80,6 @@
                             <th>Material</th>
                             <th>Status</th>
                             <th>Update</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,13 +102,7 @@
                                         @(recipe.Status == RecipeStatus.Active ? "Aktif" : "Draft")
                                     </span>
                                 </td>
-                                <td>@recipe.UpdatedAt.ToString("dd MMM yyyy HH:mm")</td>
-                                <td>
-                                    <div class="table-actions" @onclick:stopPropagation="true">
-                                        <button type="button" class="ghost-button compact" @onclick="() => OpenEditModalAsync(recipe.Id)">Edit</button>
-                                        <button type="button" class="danger-button subtle compact" @onclick="() => AskDelete(recipe)">Hapus</button>
-                                    </div>
-                                </td>
+                                <td>@recipe.UpdatedAt.ToString("dd MMM yy HH:mm")</td>
                             </tr>
                         }
                     </tbody>
@@ -135,10 +130,6 @@
                                 <strong>@FormatCurrency(recipe.CostPerPortion)</strong>
                             </article>
                             <article>
-                                <small>Margin</small>
-                                <strong>@FormatPercent(recipe.TargetMarginPercent)</strong>
-                            </article>
-                            <article>
                                 <small>Harga Jual / Satuan</small>
                                 <strong>@FormatCurrency(recipe.SuggestedSellingPrice)</strong>
                             </article>
@@ -155,8 +146,12 @@
                             </div>
 
                             <div class="recipe-card-actions" @onclick:stopPropagation="true">
-                                <button type="button" class="ghost-button compact" @onclick="() => OpenEditModalAsync(recipe.Id)">Edit</button>
-                                <button type="button" class="danger-button subtle compact" @onclick="() => AskDelete(recipe)">Hapus</button>
+                                <button type="button" class="icon-action-button" title="Edit" aria-label="Edit" @onclick="() => OpenEditModalAsync(recipe.Id)">
+                                    <AppIcon Name="edit" Class="icon-glyph" />
+                                </button>
+                                <button type="button" class="icon-action-button danger" title="Hapus" aria-label="Hapus" @onclick="() => AskDelete(recipe)">
+                                    <AppIcon Name="delete" Class="icon-glyph" />
+                                </button>
                             </div>
                         </div>
                     </article>
@@ -195,7 +190,8 @@
         {
             var selectedRecipe = _selectedRecipe;
             var selectedDraft = _selectedDraft;
-            var selectedTotals = RecipeCatalogService.CalculateTotals(selectedDraft);
+            var selectedEffectivePortionYield = GetEffectivePortionYield(selectedDraft, _selectedWeightEstimate);
+            var selectedTotals = RecipeCatalogService.CalculateTotals(selectedDraft, selectedEffectivePortionYield);
             var visibleCosts = selectedDraft.Costs
                 .Where(item => !string.IsNullOrWhiteSpace(item.Name) && item.Amount > 0)
                 .ToList();
@@ -214,19 +210,29 @@
                     <span class="badge @(selectedRecipe.Status == RecipeStatus.Active ? "active" : "inactive")">
                         @(selectedRecipe.Status == RecipeStatus.Active ? "Aktif" : "Draft")
                     </span>
-                    <button type="button" class="ghost-button" @onclick="() => OpenEditModalAsync(selectedRecipe.Id)">Edit Resep</button>
-                    <button type="button" class="danger-button subtle" @onclick="() => AskDelete(selectedRecipe)">Hapus</button>
+                    <button type="button" class="icon-action-button" title="Edit resep" aria-label="Edit resep" @onclick="() => OpenEditModalAsync(selectedRecipe.Id)">
+                        <AppIcon Name="edit" Class="icon-glyph" />
+                    </button>
+                    <button type="button" class="icon-action-button danger" title="Hapus resep" aria-label="Hapus resep" @onclick="() => AskDelete(selectedRecipe)">
+                        <AppIcon Name="delete" Class="icon-glyph" />
+                    </button>
                 </div>
             </div>
 
             <div class="detail-summary-strip">
-                <article><small>HPP / Satuan</small><strong>@FormatCurrency(selectedTotals.CostPerPortion)</strong></article>
-                <article><small>Margin Target</small><strong>@FormatPercent(selectedRecipe.TargetMarginPercent)</strong></article>
-                <article><small>Harga Jual / Satuan</small><strong>@FormatCurrency(selectedRecipe.SuggestedSellingPrice)</strong></article>
                 <article><small>Total Batch</small><strong>@FormatCurrency(selectedTotals.TotalCost)</strong></article>
-                <article><small>Kelompok</small><strong>@selectedTotals.GroupCount</strong></article>
-                <article><small>Material</small><strong>@selectedTotals.MaterialCount</strong></article>
-                <article><small>Porsi / Batch</small><strong>@selectedRecipe.PortionYield.ToString("0.##") @selectedRecipe.PortionUnit</strong></article>
+                <article><small>HPP / Satuan</small><strong>@FormatCurrency(selectedTotals.CostPerPortion)</strong></article>
+                <article><small>Harga Jual / Satuan</small><strong>@FormatCurrency(selectedRecipe.SuggestedSellingPrice)</strong></article>
+                <article>
+                    <small>Porsi / Batch</small>
+                    <strong>@GetPortionYieldValueLabel(selectedDraft, _selectedWeightEstimate, selectedEffectivePortionYield)</strong>
+                    <span>@GetPortionYieldMetaLabel(selectedDraft, _selectedWeightEstimate, selectedEffectivePortionYield)</span>
+                </article>
+                <article class="@GetDoughWeightCardClass(_selectedWeightEstimate, _isSelectedWeightLoading)">
+                    <small>Total Berat Adonan</small>
+                    <strong>@GetDoughWeightValueLabel(_selectedWeightEstimate, _isSelectedWeightLoading)</strong>
+                    <span>@GetDoughWeightMetaLabel(_selectedWeightEstimate, _isSelectedWeightLoading)</span>
+                </article>
             </div>
 
             <div class="detail-stack">
@@ -243,6 +249,7 @@
                         @for (var groupIndex = 0; groupIndex < selectedDraft.Groups.Count; groupIndex++)
                         {
                             var group = selectedDraft.Groups[groupIndex];
+                            var groupWeightEstimate = GetGroupDoughWeightEstimate(_selectedWeightEstimate, group);
                             <details class="group-detail-card" open="@(selectedDraft.Groups.Count == 1 || groupIndex == 0)">
                                 <summary class="group-detail-summary">
                                     <div class="group-summary-copy">
@@ -254,7 +261,17 @@
                                         }
                                     </div>
 
-                                    <strong class="group-total">@FormatCurrency(GetGroupTotal(group))</strong>
+                                    <div class="group-summary-totals">
+                                        <div class="group-total-stack">
+                                            <small>Subtotal</small>
+                                            <strong class="group-total">@FormatCurrency(GetGroupTotal(group))</strong>
+                                        </div>
+                                        <div class="@GetInlineWeightClass(groupWeightEstimate, _isSelectedWeightLoading)">
+                                            <small>Berat kelompok</small>
+                                            <strong>@GetGroupWeightValueLabel(groupWeightEstimate, _isSelectedWeightLoading)</strong>
+                                            <span>@GetGroupWeightMetaLabel(groupWeightEstimate, _isSelectedWeightLoading)</span>
+                                        </div>
+                                    </div>
                                 </summary>
 
                                 @if (group.Materials.Count == 0)
@@ -273,6 +290,7 @@
                                     <div class="group-lines">
                                         @foreach (var item in group.Materials)
                                         {
+                                            var lineWeightEstimate = GetLineDoughWeightEstimate(_selectedWeightEstimate, item);
                                             <div class="line-row">
                                                 <div class="line-main">
                                                     <strong>@GetMaterialShortLabel(item)</strong>
@@ -285,6 +303,10 @@
                                                 <div class="line-meta">
                                                     <strong>@GetConversionLabel(item)</strong>
                                                     <span>@GetMaterialNettoLabel(item)</span>
+                                                    <div class="line-weight-stack @GetInlineWeightClass(lineWeightEstimate, _isSelectedWeightLoading)">
+                                                        <strong>@GetLineWeightValueLabel(lineWeightEstimate, _isSelectedWeightLoading)</strong>
+                                                        <span>@GetLineWeightMetaLabel(lineWeightEstimate, _isSelectedWeightLoading)</span>
+                                                    </div>
                                                 </div>
                                                 <div class="line-meta emphasis">
                                                     <strong>@FormatCurrency(GetLineCost(item))</strong>
@@ -343,20 +365,21 @@
                     </div>
 
                     <div class="detail-financial-strip">
+                        <article><small>Margin Target</small><strong>@FormatPercent(selectedRecipe.TargetMarginPercent)</strong></article>
                         <article><small>Total Material</small><strong>@FormatCurrency(selectedTotals.MaterialCost)</strong></article>
                         <article><small>Operasional</small><strong>@FormatCurrency(selectedTotals.OperationalCost)</strong></article>
-                        <article><small>Satuan Porsi</small><strong>@selectedRecipe.PortionUnit</strong></article>
                         <article><small>Update</small><strong>@selectedRecipe.UpdatedAt.ToString("dd MMM yyyy HH:mm")</strong></article>
                     </div>
                 </section>
             </div>
         }
     </section>
+    </div>
 </section>
 
 @if (_showEditor)
 {
-    <div class="overlay" @onclick="CloseEditor">
+    <div class="overlay">
         <div class="studio-shell modal-card form-modal-card recipe-form-modal" @onclick:stopPropagation="true">
             <EditForm Model="_formModel" OnValidSubmit="SaveAsync" class="studio-form">
                 <DataAnnotationsValidator />
@@ -394,7 +417,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="close-button recipe-close-button" @onclick="CloseEditor" aria-label="Tutup form">
+                    <button type="button" class="close-button" @onclick="RequestCloseEditor" aria-label="Tutup form">
                         <AppIcon Name="close" Class="icon-glyph" />
                     </button>
                 </div>
@@ -407,12 +430,29 @@
                 <div class="editor-summary-strip">
                     <article><small>Total Batch</small><strong>@FormatCurrency(CurrentTotals.TotalCost)</strong></article>
                     <article><small>HPP / Satuan</small><strong>@FormatCurrency(CurrentTotals.CostPerPortion)</strong></article>
-                    <article><small>Margin Target</small><strong>@FormatPercent(_formModel.TargetMarginPercent)</strong></article>
                     <article><small>Harga Jual / Satuan</small><strong>@FormatCurrency(CurrentSuggestedSellingPrice)</strong></article>
+                    <article>
+                        <small>Porsi / Batch</small>
+                        <strong>@GetPortionYieldValueLabel(_formModel, _editorWeightEstimate, CurrentEffectivePortionYield)</strong>
+                        <span>@GetPortionYieldMetaLabel(_formModel, _editorWeightEstimate, CurrentEffectivePortionYield)</span>
+                    </article>
+                    <article class="@GetDoughWeightCardClass(_editorWeightEstimate, _isEditorWeightLoading)">
+                        <small>Total Berat Adonan</small>
+                        <strong>@GetDoughWeightValueLabel(_editorWeightEstimate, _isEditorWeightLoading)</strong>
+                        <span>@GetDoughWeightMetaLabel(_editorWeightEstimate, _isEditorWeightLoading)</span>
+                    </article>
+                </div>
+
+                <div class="editor-stage-strip" aria-label="Tahapan editor resep">
+                    <button type="button" class="editor-stage-pill @(_editorStage == 1 ? "active" : null)" @onclick="() => GoToEditorStage(1)">1. Detail</button>
+                    <button type="button" class="editor-stage-pill @(_editorStage == 2 ? "active" : null)" @onclick="() => GoToEditorStage(2)">2. Bahan</button>
+                    <button type="button" class="editor-stage-pill @(_editorStage == 3 ? "active" : null)" @onclick="() => GoToEditorStage(3)">3. Biaya & Harga</button>
                 </div>
 
                 <div class="studio-layout">
                     <div class="studio-main form-stack">
+                        @if (_editorStage == 1)
+                        {
                         <section class="studio-card form-section recipe-entry-card">
                             <div class="section-head section-inline-head">
                                 <div>
@@ -423,9 +463,27 @@
                             </div>
 
                             <div class="recipe-detail-grid">
-                                <label class="wide-field"><span>Nama resep</span><InputText @bind-Value="_formModel.Name" class="recipe-name-input" /></label>
+                                <label class="wide-field">
+                                    <span>Nama resep</span>
+                                    <InputText @bind-Value="_formModel.Name" class="recipe-name-input" />
+                                    <ValidationMessage For="@(() => _formModel.Name)" />
+                                </label>
                                 <label><span>Kode / nomor resep</span><InputText @bind-Value="_formModel.Code" /></label>
-                                <label><span>Porsi / batch</span><InputNumber @bind-Value="_formModel.PortionYield" /></label>
+                                <label>
+                                    <span>Porsi / batch</span>
+                                    @if (_formModel.PortioningMode == RecipePortioningMode.WeightBased)
+                                    {
+                                        <div class="readonly-field">
+                                            <strong>@GetPortionYieldValueLabel(_formModel, _editorWeightEstimate, CurrentEffectivePortionYield)</strong>
+                                            <span>Jumlah porsi dihitung otomatis dari berat acuan dan berat per porsi.</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <InputNumber @bind-Value="_formModel.PortionYield" />
+                                        <ValidationMessage For="@(() => _formModel.PortionYield)" />
+                                    }
+                                </label>
                                 <label>
                                     <span>Satuan porsi</span>
                                     <InputSelect @bind-Value="_formModel.PortionUnit">
@@ -434,6 +492,7 @@
                                             <option value="@unit">@unit</option>
                                         }
                                     </InputSelect>
+                                    <ValidationMessage For="@(() => _formModel.PortionUnit)" />
                                 </label>
                                 <label>
                                     <span>Status</span>
@@ -442,10 +501,42 @@
                                         <option value="@RecipeStatus.Draft">Draft</option>
                                     </InputSelect>
                                 </label>
+                                <label>
+                                    <span>Mode hitung porsi</span>
+                                    <InputSelect @bind-Value="_formModel.PortioningMode">
+                                        <option value="@RecipePortioningMode.Manual">Manual</option>
+                                        <option value="@RecipePortioningMode.WeightBased">Berdasarkan berat adonan</option>
+                                    </InputSelect>
+                                </label>
+                                @if (_formModel.PortioningMode == RecipePortioningMode.WeightBased)
+                                {
+                                    <label>
+                                        <span>Acuan berat</span>
+                                        <select value="@GetSelectedPortionWeightBasisValue(_formModel)" @onchange="OnPortionWeightBasisChanged">
+                                            <option value="total">Total seluruh berat adonan</option>
+                                            @foreach (var group in _formModel.Groups)
+                                            {
+                                                <option value="@GetPortionWeightBasisGroupValue(group.Id)">@GetPortionWeightBasisGroupLabel(group)</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <label>
+                                        <span>Berat per porsi (gr)</span>
+                                        <InputNumber @bind-Value="_formModel.PortionWeightGr" />
+                                    </label>
+                                    <div class="portion-weight-preview inline-weight full @GetPortionWeightPreviewClass(_formModel, _editorWeightEstimate, _isEditorWeightLoading)">
+                                        <small>Hasil pembagian porsi</small>
+                                        <strong>@GetPortionYieldValueLabel(_formModel, _editorWeightEstimate, CurrentEffectivePortionYield)</strong>
+                                        <span>@GetPortionYieldMetaLabel(_formModel, _editorWeightEstimate, CurrentEffectivePortionYield)</span>
+                                    </div>
+                                }
                                 <label class="full"><span>Deskripsi</span><InputTextArea @bind-Value="_formModel.Description" /></label>
                             </div>
                         </section>
+                        }
 
+                        @if (_editorStage == 2)
+                        {
                         <section class="studio-card form-section recipe-entry-card">
                             <div class="section-head section-inline-head">
                                 <div>
@@ -460,6 +551,7 @@
                             @for (var groupIndex = 0; groupIndex < _formModel.Groups.Count; groupIndex++)
                             {
                                 var group = _formModel.Groups[groupIndex];
+                                var groupWeightEstimate = GetGroupDoughWeightEstimate(_editorWeightEstimate, group);
                                 <section class="group-card @(_activeGroupId == group.Id ? "active" : null)">
                                     <div class="group-row-main">
                                         <div class="group-index">@((groupIndex + 1).ToString("00"))</div>
@@ -474,13 +566,18 @@
                                         <div class="group-footer-copy">
                                             <strong>@group.Materials.Count material</strong>
                                             <span>@GetGroupSummary(group)</span>
+                                            <span class="@GetInlineWeightClass(groupWeightEstimate, _isEditorWeightLoading)">
+                                                Berat kelompok: @GetGroupWeightValueLabel(groupWeightEstimate, _isEditorWeightLoading)
+                                            </span>
                                         </div>
 
                                         <div class="group-actions">
-                                            <button type="button" class="ghost-button" @onclick="() => OpenMaterialWorkspaceAsync(group)">
-                                                @(_activeGroupId == group.Id ? "Aktif" : "Pilih")
+                                            <button type="button" class="ghost-button" disabled="@(_activeGroupId == group.Id)" @onclick="() => OpenMaterialWorkspaceAsync(group)">
+                                                @(_activeGroupId == group.Id ? "Sedang Aktif" : "Kelola Material")
                                             </button>
-                                            <button type="button" class="danger-button subtle" disabled="@(_formModel.Groups.Count == 1)" @onclick="() => RemoveGroup(group)">Hapus</button>
+                                            <button type="button" class="icon-action-button danger" title="Hapus kelompok" aria-label="Hapus kelompok" disabled="@(_formModel.Groups.Count == 1)" @onclick="() => RemoveGroup(group)">
+                                                <AppIcon Name="delete" Class="icon-glyph" />
+                                            </button>
                                         </div>
                                     </div>
                                 </section>
@@ -516,6 +613,7 @@
                             else
                             {
                                 var activeGroup = ActiveEditingGroup;
+                                var activeGroupWeightEstimate = GetGroupDoughWeightEstimate(_editorWeightEstimate, activeGroup);
                                 <div class="material-workspace-head">
                                     <div>
                                         <span class="section-tag">Kelompok aktif</span>
@@ -523,28 +621,17 @@
                                         <p>@GetGroupSummary(activeGroup)</p>
                                     </div>
 
-                                    <div class="header-pills">
-                                        <span>@activeGroup.Materials.Count material</span>
-                                        <span>@FormatCurrency(GetGroupTotal(activeGroup))</span>
+                                    <div class="material-workspace-tools">
+                                        <div class="header-pills">
+                                            <span>@activeGroup.Materials.Count material</span>
+                                            <span>@FormatCurrency(GetGroupTotal(activeGroup))</span>
+                                            <span class="@GetInlineWeightClass(activeGroupWeightEstimate, _isEditorWeightLoading)">
+                                                Berat @GetGroupWeightValueLabel(activeGroupWeightEstimate, _isEditorWeightLoading)
+                                            </span>
+                                        </div>
+                                        <button type="button" class="ghost-button compact" @onclick="OpenMaterialCatalogAsync">Buka Katalog Material</button>
                                     </div>
                                 </div>
-
-                                @if (_formModel.Groups.Count > 1)
-                                {
-                                    <div class="group-quick-switch">
-                                        @for (var groupIndex = 0; groupIndex < _formModel.Groups.Count; groupIndex++)
-                                        {
-                                            var group = _formModel.Groups[groupIndex];
-                                            <button type="button"
-                                                    class="group-pill @(_activeGroupId == group.Id ? "active" : null)"
-                                                    @onclick="() => OpenMaterialWorkspaceAsync(group)">
-                                                <small>@((groupIndex + 1).ToString("00"))</small>
-                                                <strong>@(string.IsNullOrWhiteSpace(group.Name) ? "Kelompok baru" : group.Name)</strong>
-                                                <span>@group.Materials.Count material</span>
-                                            </button>
-                                        }
-                                    </div>
-                                }
 
                                 <div class="material-entry-card">
                                     <div class="material-entry-summary">
@@ -552,7 +639,7 @@
                                             <small>Input material</small>
                                             <strong>@(_editingMaterialId is null ? "Tambah bahan ke kelompok aktif" : "Edit bahan yang dipilih")</strong>
                                         </div>
-                                        <span>@(string.IsNullOrWhiteSpace(MaterialAvailabilityWarning) ? "Siap disimpan" : "Perlu cek stok")</span>
+                                        <span>@(_editingMaterialId is null ? "Mode tambah" : "Mode edit")</span>
                                     </div>
 
                                     <div class="material-entry-grid">
@@ -561,7 +648,7 @@
                                             <input class="material-picker-input"
                                                    list="recipe-material-options"
                                                    value="@_materialLookupText"
-                                                   @onchange="OnDraftMaterialChangedAsync"
+                                                   @oninput="OnDraftMaterialChangedAsync"
                                                    placeholder="Ketik nama atau kode material katalog" />
                                             <datalist id="recipe-material-options">
                                                 @foreach (var material in ActiveMaterials)
@@ -622,25 +709,25 @@
                                     <div class="material-grid-shell">
                                         <QuickGrid Items="VisibleActiveGroupMaterials.AsQueryable()" Class="material-quickgrid">
                                             <TemplateColumn Title="Nama Material" Context="item">
-                                                <div class="material-name-cell"
-                                                     @oncontextmenu="(args => OpenMaterialContextMenu(args, item))"
-                                                     @oncontextmenu:preventDefault="true">
+                                                <div class="material-name-cell">
                                                     <strong>@GetMaterialDisplayName(item)</strong>
                                                     <small>@GetMaterialMetaSummary(item)</small>
                                                 </div>
                                             </TemplateColumn>
                                             <TemplateColumn Title="Kuantitas bahan" Context="item">
-                                                <div class="material-meta-cell"
-                                                     @oncontextmenu="(args => OpenMaterialContextMenu(args, item))"
-                                                     @oncontextmenu:preventDefault="true">
+                                                <div class="material-meta-cell">
                                                     <strong>@GetMaterialQuantityLabel(item)</strong>
                                                     <small>@GetMaterialUsageHint(item)</small>
                                                 </div>
                                             </TemplateColumn>
+                                            <TemplateColumn Title="Berat ke gram" Context="item">
+                                                <div class="material-meta-cell">
+                                                    <strong>@GetLineWeightValueLabel(GetLineDoughWeightEstimate(_editorWeightEstimate, item), _isEditorWeightLoading)</strong>
+                                                    <small>@GetLineWeightMetaLabel(GetLineDoughWeightEstimate(_editorWeightEstimate, item), _isEditorWeightLoading)</small>
+                                                </div>
+                                            </TemplateColumn>
                                             <TemplateColumn Title="Modal" Context="item">
-                                                <div class="material-cost-cell"
-                                                     @oncontextmenu="(args => OpenMaterialContextMenu(args, item))"
-                                                     @oncontextmenu:preventDefault="true">
+                                                <div class="material-cost-cell">
                                                     <strong>@FormatCurrency(GetLineCost(item))</strong>
                                                     <small>@GetMaterialCostHint(item)</small>
                                                 </div>
@@ -679,6 +766,10 @@
                             }
                         </section>
 
+                        }
+
+                        @if (_editorStage == 3)
+                        {
                         <section class="studio-card form-section recipe-entry-card">
                             <div class="section-head section-inline-head">
                                 <div>
@@ -718,7 +809,9 @@
 
                                             <div class="cost-card-footer">
                                                 <strong>@FormatCurrency(cost.Amount)</strong>
-                                                <button type="button" class="ghost-button" @onclick="() => RemoveCost(cost)">Hapus</button>
+                                                <button type="button" class="icon-action-button danger" title="Hapus biaya" aria-label="Hapus biaya" @onclick="() => RemoveCost(cost)">
+                                                    <AppIcon Name="delete" Class="icon-glyph" />
+                                                </button>
                                             </div>
                                         </article>
                                     }
@@ -739,6 +832,7 @@
                                 <label>
                                     <span>Margin target (%)</span>
                                     <InputNumber @bind-Value="_formModel.TargetMarginPercent" />
+                                    <ValidationMessage For="@(() => _formModel.TargetMarginPercent)" />
                                 </label>
                                 <article class="pricing-output-card">
                                     <small>HPP / Satuan</small>
@@ -750,6 +844,8 @@
                                 </article>
                             </div>
                         </section>
+                        }
+
                     </div>
 
                 </div>
@@ -763,8 +859,20 @@
                     </div>
 
                     <div class="modal-action-group editor-submit-panel">
-                        <button type="button" class="ghost-button" @onclick="CloseEditor">Batal</button>
-                        <button type="submit" class="primary-button">Simpan Resep</button>
+                        <button type="button" class="ghost-button" @onclick="RequestCloseEditor">Batal</button>
+                        @if (_editorStage > 1)
+                        {
+                            <button type="button" class="ghost-button" @onclick="PrevEditorStage">Kembali</button>
+                        }
+
+                        @if (_editorStage < 3)
+                        {
+                            <button type="button" class="primary-button" @onclick="NextEditorStage">Lanjut</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="primary-button">Simpan Resep</button>
+                        }
                     </div>
                 </div>
             </EditForm>
@@ -772,15 +880,18 @@
     </div>
 }
 
-@if (_showMaterialContextMenu)
+@if (_showCloseConfirm)
 {
-    <div class="context-menu-overlay" @onclick="CloseMaterialContextMenu">
-        <div class="material-context-menu"
-             style="@GetMaterialContextMenuStyle()"
-             @onclick:stopPropagation="true">
-            <button type="button" class="context-menu-item" @onclick="OpenMaterialCatalogAsync">
-                Buka halaman katalog material
-            </button>
+    <div class="overlay" @onclick="ContinueEditing">
+        <div class="confirm-card" @onclick:stopPropagation="true">
+            <span class="section-tag">Perubahan belum disimpan</span>
+            <h2>Tutup editor resep?</h2>
+            <p>Perubahan pada resep ini akan hilang jika editor ditutup sekarang.</p>
+
+            <div class="confirm-actions">
+                <button type="button" class="ghost-button" @onclick="ContinueEditing">Lanjut Edit</button>
+                <button type="button" class="danger-button" @onclick="DiscardEditorChanges">Buang Perubahan</button>
+            </div>
         </div>
     </div>
 }
@@ -809,6 +920,7 @@
     private string _searchText = string.Empty;
     private bool _showEditor;
     private Guid? _editingId;
+    private int _editorStage = 1;
     private RecipeUpsertRequest _formModel = new();
     private string _formMessage = string.Empty;
     private RecipeListItem? _pendingDelete;
@@ -819,18 +931,29 @@
     private Guid? _editingMaterialId;
     private RecipeMaterialInput _materialDraft = CreateMaterialInput();
     private string _materialLookupText = string.Empty;
-    private RecipeMaterialInput? _materialContextTarget;
-    private bool _showMaterialContextMenu;
-    private double _materialContextX;
-    private double _materialContextY;
     private int _recipeDisplayCount = 12;
     private int _recipePage = 1;
     private int _materialDisplayCount = 10;
     private int _materialPage = 1;
+    private string _aiRecipePrompt = string.Empty;
+    private string _aiRecipeMessage = string.Empty;
+    private bool _showCloseConfirm;
+    private string _editorSnapshot = string.Empty;
+    private IReadOnlyList<RawMaterial> _activeMaterials = Array.Empty<RawMaterial>();
+    private HashSet<Guid> _warehouseMaterialIds = [];
+    private RecipeDoughWeightEstimateResult _selectedWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
+    private RecipeDoughWeightEstimateResult _editorWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
+    private bool _isSelectedWeightLoading;
+    private bool _isEditorWeightLoading;
+    private string _selectedWeightSignature = string.Empty;
+    private string _editorWeightSignature = string.Empty;
+    private CancellationTokenSource? _selectedWeightEstimateCts;
+    private CancellationTokenSource? _editorWeightEstimateCts;
 
-    private IReadOnlyList<RawMaterial> ActiveMaterials => Store.RawMaterials.Where(item => item.Status == MaterialStatus.Active).OrderBy(item => item.Name).ToArray();
-    private HashSet<Guid> WarehouseMaterialIds => Store.StockMovements.Select(item => item.MaterialId).ToHashSet();
-    private RecipeSummaryTotals CurrentTotals => RecipeCatalogService.CalculateTotals(_formModel);
+    private IReadOnlyList<RawMaterial> ActiveMaterials => _activeMaterials;
+    private HashSet<Guid> WarehouseMaterialIds => _warehouseMaterialIds;
+    private decimal CurrentEffectivePortionYield => GetEffectivePortionYield(_formModel, _editorWeightEstimate);
+    private RecipeSummaryTotals CurrentTotals => RecipeCatalogService.CalculateTotals(_formModel, CurrentEffectivePortionYield);
     private decimal CurrentSuggestedSellingPrice => CurrentTotals.SuggestedSellingPrice;
     private int RecipeTotalPages => CalculateTotalPages(_result?.Items.Count ?? 0, _recipeDisplayCount);
     private int CurrentRecipePage => ClampPage(_recipePage, RecipeTotalPages);
@@ -858,18 +981,19 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!_focusEditorRequested)
+        if (_focusEditorRequested)
         {
-            return;
+            _focusEditorRequested = false;
+            await JS.InvokeVoidAsync("recipeEditor.focusFirst", ".recipe-name-input");
         }
 
-        _focusEditorRequested = false;
-        await JS.InvokeVoidAsync("recipeEditor.focusFirst", ".recipe-name-input");
+        await RefreshDoughWeightEstimatesIfNeededAsync();
     }
 
     private async Task LoadAsync()
     {
         _isLoading = true;
+        RefreshMaterialCaches();
         _result = await RecipeCatalogService.QueryAsync(_searchText);
         _recipePage = CurrentRecipePage;
         _materialPage = CurrentMaterialPage;
@@ -924,6 +1048,8 @@
         {
             _selectedRecipeId = null;
             _selectedDraft = null;
+            _selectedWeightSignature = string.Empty;
+            _selectedWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
             return;
         }
 
@@ -946,6 +1072,8 @@
         if (_selectedRecipeId is not Guid id)
         {
             _selectedDraft = null;
+            _selectedWeightSignature = string.Empty;
+            _selectedWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
             return;
         }
 
@@ -981,13 +1109,41 @@
         BeginEditing(draft, id);
     }
 
-    private void CloseEditor()
+    private bool HasUnsavedEditorChanges => _showEditor && !string.IsNullOrWhiteSpace(_editorSnapshot) && _editorSnapshot != SerializeRecipeSnapshot(_formModel);
+
+    private void RequestCloseEditor()
     {
+        if (HasUnsavedEditorChanges)
+        {
+            _showCloseConfirm = true;
+            return;
+        }
+
+        ResetEditorState();
+    }
+
+    private void ContinueEditing()
+        => _showCloseConfirm = false;
+
+    private void DiscardEditorChanges()
+        => ResetEditorState();
+
+    private void ResetEditorState()
+    {
+        CancelEstimate(ref _editorWeightEstimateCts);
+        _showCloseConfirm = false;
         _showEditor = false;
         _editingId = null;
+        _editorStage = 1;
         _activeGroupId = null;
-        CloseMaterialContextMenu();
+        _formMessage = string.Empty;
+        _aiRecipePrompt = string.Empty;
+        _aiRecipeMessage = string.Empty;
         ResetMaterialDraft();
+        _editorSnapshot = string.Empty;
+        _editorWeightSignature = string.Empty;
+        _editorWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
+        _isEditorWeightLoading = false;
     }
 
     private void AddGroup()
@@ -1004,6 +1160,11 @@
         {
             var removedActive = _activeGroupId == group.Id;
             _formModel.Groups.Remove(group);
+            if (_formModel.PortionWeightGroupId == group.Id)
+            {
+                _formModel.PortionWeightGroupId = null;
+            }
+
             if (removedActive)
             {
                 _activeGroupId = _formModel.Groups.FirstOrDefault()?.Id;
@@ -1018,7 +1179,6 @@
         if (group.Materials.Contains(item))
         {
             group.Materials.Remove(item);
-            CloseMaterialContextMenu();
             if (_editingMaterialId == item.Id)
             {
                 ResetMaterialDraft();
@@ -1044,13 +1204,16 @@
         {
             _materialDraft.MaterialId = null;
             _materialDraft.Unit = string.Empty;
-            await FocusMaterialPickerAsync();
             return;
         }
 
+        var shouldShiftFocus = _materialDraft.MaterialId != material.Id;
         _materialDraft.MaterialId = material.Id;
-        _materialDraft.Unit = material is null ? string.Empty : GetSuggestedDraftUnit(material);
-        await FocusMaterialQuantityAsync();
+        _materialDraft.Unit = GetSuggestedDraftUnit(material);
+        if (shouldShiftFocus)
+        {
+            await FocusMaterialQuantityAsync();
+        }
     }
 
     private async Task AddDraftMaterialToActiveGroupAsync()
@@ -1113,7 +1276,6 @@
     {
         _activeGroupId = group.Id;
         _editingMaterialId = item.Id;
-        CloseMaterialContextMenu();
         _materialDraft = new RecipeMaterialInput
         {
             Id = item.Id,
@@ -1149,6 +1311,7 @@
 
     private async Task SaveAsync()
     {
+        _formModel.PortionYield = CurrentEffectivePortionYield;
         _formModel.SuggestedSellingPrice = CurrentSuggestedSellingPrice;
         var result = await RecipeCatalogService.SaveAsync(_formModel);
         _formMessage = result.Message;
@@ -1157,11 +1320,48 @@
             return;
         }
 
-        _showEditor = false;
-        _editingId = null;
+        ResetEditorState();
         _selectedRecipeId = result.Recipe?.Id;
         await LoadAsync();
         _statusMessage = result.Message;
+    }
+
+    private void UseSuggestedRecipePrompt()
+    {
+        _aiRecipePrompt = "Buat resep snack gurih untuk 20 pcs. Gunakan bahan yang ada di katalog, pisahkan kelompok adonan dan finishing, tambahkan overhead kecil untuk gas atau listrik, dan target margin 35%.";
+    }
+
+    private async Task GenerateRecipeDraftWithAiAsync()
+    {
+        _aiRecipeMessage = string.Empty;
+
+        try
+        {
+            var materialContexts = ActiveMaterials
+                .Select(material => new RecipeAiMaterialContext(
+                    material.Code,
+                    material.Name,
+                    material.Brand,
+                    material.BaseUnit,
+                    RecipeCatalogMath.GetAvailableUnits(material).ToArray(),
+                    WarehouseMaterialIds.Contains(material.Id)))
+                .ToArray();
+
+            var result = await GeminiRecipeDraftService.GenerateDraftAsync(new RecipeAiDraftRequest(
+                _aiRecipePrompt,
+                materialContexts));
+
+            _aiRecipeMessage = result.Message;
+            if (!result.Success || result.Draft is null)
+            {
+                return;
+            }
+
+            ApplyAiRecipeDraft(result.Draft);
+        }
+        finally
+        {
+        }
     }
 
     private void AskDelete(RecipeListItem recipe) => _pendingDelete = recipe;
@@ -1285,6 +1485,248 @@
         return baseQuantity <= 0 ? "-" : $"{baseQuantity.ToString("0.####")} {material.BaseUnit}";
     }
 
+    private static RecipeDoughWeightGroupEstimate? GetGroupDoughWeightEstimate(RecipeDoughWeightEstimateResult estimate, RecipeGroupInput group)
+        => estimate.Groups.FirstOrDefault(item => item.GroupId == group.Id);
+
+    private static RecipeDoughWeightLineEstimate? GetLineDoughWeightEstimate(RecipeDoughWeightEstimateResult estimate, RecipeMaterialInput item)
+        => estimate.Lines.FirstOrDefault(line => line.LineId == item.Id);
+
+    private static string GetGroupWeightValueLabel(RecipeDoughWeightGroupEstimate? estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "Menghitung...";
+        }
+
+        if (estimate is null)
+        {
+            return "Belum ada";
+        }
+
+        if (estimate.TotalWeightGr <= 0 && !estimate.IsComplete)
+        {
+            return "Belum lengkap";
+        }
+
+        var prefix = estimate.UsedAi ? "~ " : string.Empty;
+        return $"{prefix}{FormatWeight(estimate.TotalWeightGr)}";
+    }
+
+    private static string GetGroupWeightMetaLabel(RecipeDoughWeightGroupEstimate? estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "Konversi bahan kelompok sedang diproses.";
+        }
+
+        return estimate?.Message ?? "Belum ada bahan yang dihitung.";
+    }
+
+    private static string GetLineWeightValueLabel(RecipeDoughWeightLineEstimate? estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "Menghitung...";
+        }
+
+        if (estimate is null)
+        {
+            return "Belum ada";
+        }
+
+        if (!estimate.IsResolved)
+        {
+            return "Belum lengkap";
+        }
+
+        var prefix = estimate.UsedAi ? "~ " : string.Empty;
+        return $"{prefix}{FormatWeight(estimate.WeightGr)}";
+    }
+
+    private static string GetLineWeightMetaLabel(RecipeDoughWeightLineEstimate? estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "Estimasi gram sedang dihitung.";
+        }
+
+        return estimate?.Message ?? "Belum ada konversi gram.";
+    }
+
+    private static string GetInlineWeightClass(RecipeDoughWeightGroupEstimate? estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "inline-weight pending";
+        }
+
+        if (estimate is null || !estimate.IsComplete)
+        {
+            return "inline-weight warning";
+        }
+
+        return estimate.UsedAi
+            ? "inline-weight ai"
+            : "inline-weight";
+    }
+
+    private static string GetInlineWeightClass(RecipeDoughWeightLineEstimate? estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "inline-weight pending";
+        }
+
+        if (estimate is null || !estimate.IsResolved)
+        {
+            return "inline-weight warning";
+        }
+
+        return estimate.UsedAi
+            ? "inline-weight ai"
+            : "inline-weight";
+    }
+
+    private static decimal GetEffectivePortionYield(RecipeUpsertRequest request, RecipeDoughWeightEstimateResult estimate)
+    {
+        if (request.PortioningMode != RecipePortioningMode.WeightBased)
+        {
+            return request.PortionYield;
+        }
+
+        if (request.PortionWeightGr <= 0)
+        {
+            return 0m;
+        }
+
+        var referenceWeightGr = GetSelectedPortionWeightGr(request, estimate);
+        if (referenceWeightGr <= 0)
+        {
+            return 0m;
+        }
+
+        return decimal.Floor(referenceWeightGr / request.PortionWeightGr);
+    }
+
+    private static decimal GetSelectedPortionWeightGr(RecipeUpsertRequest request, RecipeDoughWeightEstimateResult estimate)
+    {
+        if (request.PortionWeightGroupId is Guid groupId)
+        {
+            return estimate.Groups.FirstOrDefault(item => item.GroupId == groupId)?.TotalWeightGr ?? 0m;
+        }
+
+        return estimate.TotalWeightGr;
+    }
+
+    private static RecipeDoughWeightGroupEstimate? GetSelectedPortionWeightGroupEstimate(RecipeUpsertRequest request, RecipeDoughWeightEstimateResult estimate)
+        => request.PortionWeightGroupId is Guid groupId
+            ? estimate.Groups.FirstOrDefault(item => item.GroupId == groupId)
+            : null;
+
+    private static string GetPortionWeightPreviewClass(RecipeUpsertRequest request, RecipeDoughWeightEstimateResult estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "inline-weight pending";
+        }
+
+        if (request.PortionWeightGroupId is Guid)
+        {
+            return GetInlineWeightClass(GetSelectedPortionWeightGroupEstimate(request, estimate), isLoading);
+        }
+
+        if (!estimate.IsComplete)
+        {
+            return "inline-weight warning";
+        }
+
+        return estimate.UsedAi
+            ? "inline-weight ai"
+            : "inline-weight";
+    }
+
+    private static string GetPortionYieldValueLabel(RecipeUpsertRequest request, RecipeDoughWeightEstimateResult estimate, decimal effectivePortionYield)
+    {
+        if (request.PortioningMode == RecipePortioningMode.WeightBased)
+        {
+            return effectivePortionYield > 0
+                ? $"{effectivePortionYield.ToString("0")} {request.PortionUnit}"
+                : "Belum lengkap";
+        }
+
+        return $"{request.PortionYield.ToString("0.##")} {request.PortionUnit}";
+    }
+
+    private static string GetPortionYieldMetaLabel(RecipeUpsertRequest request, RecipeDoughWeightEstimateResult estimate, decimal effectivePortionYield)
+    {
+        if (request.PortioningMode != RecipePortioningMode.WeightBased)
+        {
+            return "Porsi manual dipakai sebagai acuan HPP.";
+        }
+
+        var referenceWeightGr = GetSelectedPortionWeightGr(request, estimate);
+        var referenceLabel = GetPortionWeightReferenceLabel(request);
+        if (request.PortionWeightGr <= 0)
+        {
+            return "Isi berat target per porsi untuk menghitung jumlah pcs.";
+        }
+
+        if (referenceWeightGr <= 0)
+        {
+            return $"Berat acuan {referenceLabel.ToLowerInvariant()} belum lengkap.";
+        }
+
+        if (effectivePortionYield <= 0)
+        {
+            return $"Berat acuan {FormatWeight(referenceWeightGr)} belum cukup untuk 1 {request.PortionUnit} @ {FormatWeight(request.PortionWeightGr)}.";
+        }
+
+        return $"{referenceLabel}: {FormatWeight(referenceWeightGr)} / {FormatWeight(request.PortionWeightGr)} per {request.PortionUnit}.";
+    }
+
+    private static string GetPortionWeightReferenceLabel(RecipeUpsertRequest request)
+    {
+        if (request.PortionWeightGroupId is not Guid groupId)
+        {
+            return "Total seluruh adonan";
+        }
+
+        var groupName = request.Groups.FirstOrDefault(item => item.Id == groupId)?.Name;
+        return string.IsNullOrWhiteSpace(groupName)
+            ? "Kelompok bahan terpilih"
+            : $"Kelompok {groupName.Trim()}";
+    }
+
+    private string GetPortionWeightBasisGroupLabel(RecipeGroupInput group)
+        => string.IsNullOrWhiteSpace(group.Name) ? "Kelompok tanpa nama" : group.Name;
+
+    private static string GetPortionWeightBasisGroupValue(Guid groupId)
+        => $"group:{groupId:N}";
+
+    private static string GetSelectedPortionWeightBasisValue(RecipeUpsertRequest request)
+        => request.PortionWeightGroupId is Guid groupId
+            ? GetPortionWeightBasisGroupValue(groupId)
+            : "total";
+
+    private void OnPortionWeightBasisChanged(ChangeEventArgs args)
+    {
+        var value = args.Value?.ToString()?.Trim() ?? string.Empty;
+        if (string.Equals(value, "total", StringComparison.OrdinalIgnoreCase))
+        {
+            _formModel.PortionWeightGroupId = null;
+            return;
+        }
+
+        if (value.StartsWith("group:", StringComparison.OrdinalIgnoreCase)
+            && Guid.TryParse(value["group:".Length..], out var groupId))
+        {
+            _formModel.PortionWeightGroupId = groupId;
+            return;
+        }
+
+        _formModel.PortionWeightGroupId = null;
+    }
+
     private string GetGroupSummary(RecipeGroupInput group)
     {
         var itemCount = group.Materials.Count(item => item.MaterialId is not null);
@@ -1324,26 +1766,8 @@
         return $"{material.Code} - {material.Name} - {brand}";
     }
 
-    private void OpenMaterialContextMenu(MouseEventArgs args, RecipeMaterialInput item)
-    {
-        _materialContextTarget = item;
-        _materialContextX = args.ClientX;
-        _materialContextY = args.ClientY;
-        _showMaterialContextMenu = true;
-    }
-
-    private void CloseMaterialContextMenu()
-    {
-        _showMaterialContextMenu = false;
-        _materialContextTarget = null;
-    }
-
-    private string GetMaterialContextMenuStyle()
-        => $"left:{_materialContextX}px; top:{_materialContextY}px;";
-
     private async Task OpenMaterialCatalogAsync()
     {
-        CloseMaterialContextMenu();
         await JS.InvokeVoidAsync("open", "/produk", "_blank");
     }
 
@@ -1356,16 +1780,180 @@
     private void BeginEditing(RecipeUpsertRequest draft, Guid? editingId)
     {
         _editingId = editingId;
+        _editorStage = 1;
         _formMessage = string.Empty;
+        _aiRecipeMessage = string.Empty;
         _formModel = draft;
         _materialPage = 1;
 
         EnsureEditorHasGroup();
         _activeGroupId = _formModel.Groups[0].Id;
         ResetMaterialDraft();
-        CloseMaterialContextMenu();
         _focusEditorRequested = true;
+        _showCloseConfirm = false;
+        _editorSnapshot = SerializeRecipeSnapshot(_formModel);
+        _editorWeightSignature = string.Empty;
+        _editorWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
         _showEditor = true;
+    }
+
+    private async Task RefreshDoughWeightEstimatesIfNeededAsync()
+    {
+        var selectedSignature = BuildDoughWeightSignature(_selectedDraft);
+        if (!string.Equals(_selectedWeightSignature, selectedSignature, StringComparison.Ordinal))
+        {
+            _selectedWeightSignature = selectedSignature;
+            await RefreshSelectedDoughWeightAsync();
+        }
+
+        var editorSignature = _showEditor ? BuildDoughWeightSignature(_formModel) : string.Empty;
+        if (!string.Equals(_editorWeightSignature, editorSignature, StringComparison.Ordinal))
+        {
+            _editorWeightSignature = editorSignature;
+            await RefreshEditorDoughWeightAsync();
+        }
+    }
+
+    private async Task RefreshSelectedDoughWeightAsync()
+    {
+        CancelEstimate(ref _selectedWeightEstimateCts);
+
+        if (_selectedDraft is null)
+        {
+            _selectedWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
+            _isSelectedWeightLoading = false;
+            return;
+        }
+
+        var cts = new CancellationTokenSource();
+        _selectedWeightEstimateCts = cts;
+        _isSelectedWeightLoading = true;
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            var result = await GeminiRecipeWeightEstimatorService.EstimateAsync(_selectedDraft, cts.Token);
+            if (!ReferenceEquals(_selectedWeightEstimateCts, cts) || cts.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _selectedWeightEstimate = result;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        finally
+        {
+            if (ReferenceEquals(_selectedWeightEstimateCts, cts))
+            {
+                _selectedWeightEstimateCts = null;
+                _isSelectedWeightLoading = false;
+                await InvokeAsync(StateHasChanged);
+            }
+
+            cts.Dispose();
+        }
+    }
+
+    private async Task RefreshEditorDoughWeightAsync()
+    {
+        CancelEstimate(ref _editorWeightEstimateCts);
+
+        if (!_showEditor)
+        {
+            _editorWeightEstimate = RecipeDoughWeightEstimateResult.Empty;
+            _isEditorWeightLoading = false;
+            return;
+        }
+
+        var cts = new CancellationTokenSource();
+        _editorWeightEstimateCts = cts;
+        _isEditorWeightLoading = true;
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            await Task.Delay(260, cts.Token);
+            var result = await GeminiRecipeWeightEstimatorService.EstimateAsync(_formModel, cts.Token);
+            if (!ReferenceEquals(_editorWeightEstimateCts, cts) || cts.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _editorWeightEstimate = result;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        finally
+        {
+            if (ReferenceEquals(_editorWeightEstimateCts, cts))
+            {
+                _editorWeightEstimateCts = null;
+                _isEditorWeightLoading = false;
+                await InvokeAsync(StateHasChanged);
+            }
+
+            cts.Dispose();
+        }
+    }
+
+    private void GoToEditorStage(int stage)
+        => _editorStage = Math.Min(3, Math.Max(1, stage));
+
+    private void NextEditorStage()
+        => GoToEditorStage(_editorStage + 1);
+
+    private void PrevEditorStage()
+        => GoToEditorStage(_editorStage - 1);
+
+    private void ApplyAiRecipeDraft(RecipeAiDraft draft)
+    {
+        _formModel.Name = draft.Name;
+        _formModel.Description = draft.Description;
+        _formModel.PortionYield = draft.PortionYield;
+        _formModel.PortionUnit = RecipePortionUnitCatalog.Normalize(draft.PortionUnit);
+        _formModel.TargetMarginPercent = draft.TargetMarginPercent;
+        _formModel.Costs = draft.Costs
+            .Select(item => new RecipeCostInput
+            {
+                Type = item.Type,
+                Name = item.Name,
+                Amount = item.Amount,
+                Notes = item.Notes
+            })
+            .ToList();
+
+        _formModel.Groups = draft.Groups
+            .Select(group => new RecipeGroupInput
+            {
+                Name = group.Name,
+                Notes = group.Notes,
+                Materials = group.Materials
+                    .Select(material => new RecipeMaterialInput
+                    {
+                        MaterialId = ActiveMaterials.FirstOrDefault(item => item.Code.Equals(material.MaterialCode, StringComparison.OrdinalIgnoreCase))?.Id,
+                        Quantity = material.Quantity,
+                        Unit = material.Unit,
+                        WastePercent = material.WastePercent,
+                        Notes = material.Notes
+                    })
+                    .Where(item => item.MaterialId is not null)
+                    .ToList()
+            })
+            .Where(group => group.Materials.Count > 0)
+            .ToList();
+
+        EnsureEditorHasGroup();
+        _activeGroupId = _formModel.Groups[0].Id;
+        _materialPage = 1;
+        ResetMaterialDraft();
+
+        if (draft.Warnings.Count > 0)
+        {
+            _aiRecipeMessage = $"{_aiRecipeMessage} {string.Join(" ", draft.Warnings)}".Trim();
+        }
     }
 
     private void EnsureEditorHasGroup()
@@ -1427,19 +2015,118 @@
     private static RecipeMaterialInput CreateMaterialInput() => new() { Quantity = 1m };
     private static string FormatCurrency(decimal value) => string.Create(new System.Globalization.CultureInfo("id-ID"), $"Rp {value:N0}");
     private static string FormatPercent(decimal value) => $"{value:0.##}%";
+    private static string FormatWeight(decimal value) => string.Create(new System.Globalization.CultureInfo("id-ID"), $"{decimal.Round(value, 0, MidpointRounding.AwayFromZero):N0} gr");
     private static int ParseDisplayCount(string? value, int fallback) => int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
     private static int ParsePage(string? value, int fallback, int totalPages) => int.TryParse(value, out var parsed) && parsed > 0 ? Math.Min(parsed, Math.Max(1, totalPages)) : fallback;
     private static int CalculateTotalPages(int totalItems, int pageSize) => Math.Max(1, (int)Math.Ceiling(totalItems / (double)Math.Max(1, pageSize)));
     private static int ClampPage(int page, int totalPages) => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
+    private static string SerializeRecipeSnapshot(RecipeUpsertRequest draft) => System.Text.Json.JsonSerializer.Serialize(draft);
 
-    private async void HandleStoreChanged()
+    private static string BuildDoughWeightSignature(RecipeUpsertRequest? draft)
     {
-        await InvokeAsync(async () => await LoadAsync());
+        if (draft is null)
+        {
+            return string.Empty;
+        }
+
+        var builder = new System.Text.StringBuilder();
+        foreach (var group in draft.Groups)
+        {
+            builder.Append(group.Id.ToString("N"));
+            builder.Append(':');
+            foreach (var item in group.Materials)
+            {
+                builder.Append(item.MaterialId?.ToString("N") ?? "-");
+                builder.Append('|');
+                builder.Append(decimal.Round(item.Quantity, 4, MidpointRounding.AwayFromZero).ToString("0.####", System.Globalization.CultureInfo.InvariantCulture));
+                builder.Append('|');
+                builder.Append(item.Unit?.Trim().ToLowerInvariant() ?? string.Empty);
+                builder.Append(';');
+            }
+
+            builder.Append('#');
+        }
+
+        return builder.ToString();
+    }
+
+    private static void CancelEstimate(ref CancellationTokenSource? source)
+    {
+        if (source is null)
+        {
+            return;
+        }
+
+        source.Cancel();
+        source.Dispose();
+        source = null;
+    }
+
+    private static string GetDoughWeightCardClass(RecipeDoughWeightEstimateResult estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "weight-estimate-card pending";
+        }
+
+        if (!estimate.IsComplete)
+        {
+            return "weight-estimate-card warning";
+        }
+
+        return estimate.UsedAi
+            ? "weight-estimate-card ai"
+            : "weight-estimate-card";
+    }
+
+    private static string GetDoughWeightValueLabel(RecipeDoughWeightEstimateResult estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "Menghitung...";
+        }
+
+        if (estimate.TotalWeightGr <= 0 && estimate.UnresolvedLineCount > 0)
+        {
+            return "Belum lengkap";
+        }
+
+        var prefix = estimate.UsedAi ? "~ " : string.Empty;
+        return $"{prefix}{FormatWeight(estimate.TotalWeightGr)}";
+    }
+
+    private static string GetDoughWeightMetaLabel(RecipeDoughWeightEstimateResult estimate, bool isLoading)
+    {
+        if (isLoading)
+        {
+            return "Konversi bahan non-gram sedang diproses.";
+        }
+
+        return estimate.Message;
+    }
+
+    private void RefreshMaterialCaches()
+    {
+        _activeMaterials = Store.RawMaterials
+            .Where(item => item.Status == MaterialStatus.Active)
+            .OrderBy(item => item.Name)
+            .ToArray();
+
+        _warehouseMaterialIds = Store.StockMovements
+            .Select(item => item.MaterialId)
+            .ToHashSet();
+    }
+
+    private void HandleStoreChanged()
+    {
+        _ = InvokeAsync(LoadAsync);
     }
 
     public ValueTask DisposeAsync()
     {
         Store.Changed -= HandleStoreChanged;
+        CancelEstimate(ref _selectedWeightEstimateCts);
+        CancelEstimate(ref _editorWeightEstimateCts);
         return ValueTask.CompletedTask;
     }
 }

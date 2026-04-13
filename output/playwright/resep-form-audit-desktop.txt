@@ -1,0 +1,517 @@
+HPP Ultimate
+Operational workspace
+WORKFLOW
+Katalog Material
+Gudang
+Resep
+Produksi
+Point of Sales
+Belanja
+Pembukuan
+PENGATURAN
+Pengaturan
+Pengaturan Akun
+KONTROL DATA
+Backup & Data Ops
+A
+Arief
+Admin
+Logout
+RESEP
+Rancang formula bahan, kelompok material, dan biaya produksi
+⚲
+A
+RESEP
+Resep produksi
+
+Buat resep lewat popup panel, susun kelompok bahan, cek biaya, lalu pantau resep aktif dari datagrid.
+
+Refresh
++ Resep Baru
+DAFTAR RESEP
+Resep yang sudah dibuat
+
+Pilih satu resep untuk melihat komposisi bahan dan biaya batch tanpa pindah halaman.
+
+8 baris
+12 baris
+20 baris
+50 baris
+RESEP	HPP / SATUAN	MARGIN	HARGA JUAL / SATUAN	KELOMPOK	MATERIAL	STATUS	UPDATE	AKSI
+
+Kroket Ayam Keju Asap
+RCP-051
+	Rp 7.384	50%	Rp 11.076	4 kelompok	14 material	Aktif	04 Apr 2026 23:05	
+
+
+Donat Keju
+RCP-012
+	Rp 2.636	48%	Rp 3.836	2 kelompok	4 material	Aktif	04 Apr 2026 17:55	
+
+
+Pudding Kopi
+RCP-024
+	Rp 1.902	48%	Rp 2.815	2 kelompok	4 material	Aktif	04 Apr 2026 17:55	
+
+
+Sandwich Cokelat
+RCP-036
+	Rp 3.744	48%	Rp 5.541	2 kelompok	4 material	Aktif	04 Apr 2026 17:55	
+
+
+Mie Box Matcha
+RCP-048
+	Rp 3.645	48%	Rp 5.394	2 kelompok	4 material	Aktif	04 Apr 2026 17:55	
+
+
+Brownies Cokelat
+RCP-006
+	Rp 4.336	48%	Rp 6.439	2 kelompok	4 material	Aktif	04 Apr 2026 17:25	
+
+
+Cookies Matcha
+RCP-018
+	Rp 3.981	48%	Rp 5.891	2 kelompok	4 material	Aktif	04 Apr 2026 17:25	
+
+
+Muffin Red Velvet
+RCP-030
+	Rp 1.151	48%	Rp 1.666	2 kelompok	4 material	Aktif	04 Apr 2026 17:25	
+
+
+Rice Bowl Keju
+RCP-042
+	Rp 3.948	48%	Rp 5.843	2 kelompok	4 material	Aktif	04 Apr 2026 17:25	
+
+
+Donat Cokelat
+RCP-011
+	Rp 4.961	44%	Rp 7.144	2 kelompok	4 material	Aktif	03 Apr 2026 17:50	
+
+
+Pudding Matcha
+RCP-023
+	Rp 1.987	44%	Rp 2.699	2 kelompok	4 material	Aktif	03 Apr 2026 17:50	
+
+
+Croissant Red Velvet
+RCP-035
+	Rp 1.318	44%	Rp 1.898	2 kelompok	4 material	Aktif	03 Apr 2026 17:50	
+51 resep
+Prev
+Halaman 1
+Halaman 2
+Halaman 3
+Halaman 4
+Halaman 5
+1 / 5
+Next
+RCP-051
+Kroket Ayam Keju Asap
+
+Kroket gurih dengan isian ayam cincang, daging asap, dan lelehan keju creamy, dibalut renyahnya tepung roti. Cocok sebagai camilan atau lauk.
+
+Aktif
+HPP / SATUAN
+Rp 7.384
+MARGIN TARGET
+50%
+HARGA JUAL / SATUAN
+Rp 11.076
+TOTAL BATCH
+Rp 147.686
+KELOMPOK
+4
+MATERIAL
+14
+PORSI / BATCH
+20 pcs
+KELOMPOK BAHAN
+Struktur formula resep
+
+Buka kelompok yang diperlukan untuk audit komposisi dan subtotal materialnya.
+
+7 MATERIAL
+Isian Kroket
+Campuran bahan utama untuk isian kroket.
+Rp 52.863
+MATERIAL
+PEMAKAIAN
+KONVERSI
+MODAL
+Ayam Fillet (BHN-026)
+Fiesta
+300 gr
+Waste 5%
+300 gr
+1000 gr
+Rp 17.640
+Rp 56.000 / pack
+Daging Asap (BHN-025)
+Fiesta
+100 gr
+Waste 0%
+100 gr
+500 gr
+Rp 10.600
+Rp 53.000 / pack
+Bawang Bombay (BHN-030)
+Lokal
+50 gr
+Waste 10%
+50 gr
+1000 gr
+Rp 1.540
+Rp 28.000 / pack
+Bawang Putih Bubuk (BHN-031)
+Koepoe Koepoe
+5 gr
+Waste 0%
+5 gr
+100 gr
+Rp 800
+Rp 16.000 / pack
+Keju Cheddar (BHN-009)
+Kraft
+100 gr
+Waste 0%
+100 gr
+165 gr
+Rp 13.333
+Rp 22.000 / pack
+Cream Cheese (BHN-023)
+Anchor
+50 gr
+Waste 0%
+50 gr
+1 kg
+Rp 6.750
+Rp 135.000 / pack
+Susu Cair UHT (BHN-005)
+Ultra Milk
+100 ml
+Waste 0%
+100 ml
+1000 ml
+Rp 2.200
+Rp 22.000 / pack
+3 MATERIAL
+Pelapis Kroket
+Bahan untuk melapisi kroket sebelum digoreng.
+Rp 21.850
+1 MATERIAL
+Penggorengan
+Minyak untuk menggoreng kroket hingga keemasan.
+Rp 23.100
+3 MATERIAL
+Pelengkap (Opsional)
+Saus dan taburan untuk penyajian.
+Rp 4.873
+OVERHEAD
+Biaya non-material
+
+Biaya tambahan di luar material utama resep.
+
+BIAYA PRODUKSI
+Tenaga Kerja Produksi
+
+Biaya tenaga kerja untuk satu batch produksi (20 pcs).
+
+Rp 20.000
+BIAYA PRODUKSI
+Energi Penggorengan
+
+Biaya listrik/gas untuk proses penggorengan satu batch.
+
+Rp 5.000
+BIAYA PRODUKSI
+Pouch Standing (Kemasan)
+
+Biaya 4 pouch untuk mengemas 20 pcs kroket (asumsi 5 pcs/pouch).
+
+Rp 8.000
+BIAYA PRODUKSI
+Sticker Label (Kemasan)
+
+Biaya 4 sticker label untuk 4 pouch.
+
+Rp 2.000
+OVERHEAD
+Sewa Dapur & Utilitas Umum
+
+Estimasi biaya overhead per batch produksi.
+
+Rp 10.000
+RINGKASAN BIAYA
+Angka inti resep
+TOTAL MATERIAL
+Rp 102.686
+OPERASIONAL
+Rp 45.000
+SATUAN PORSI
+pcs
+UPDATE
+04 Apr 2026 23:05
+EDIT RESEP
+RCP-051
+Aktif
+Perbarui resep
+
+Lengkapi identitas, susun kelompok bahan, lalu finalkan biaya dan margin dalam satu panel.
+
+KELOMPOK
+4
+MATERIAL
+14
+TOTAL BATCH
+Rp 147.686
+HPP / SATUAN
+Rp 7.384
+MARGIN TARGET
+50%
+HARGA JUAL / SATUAN
+Rp 11.076
+DRAFT AI
+Susun resep dari prompt singkat
+
+Gemini akan menyiapkan identitas resep, kelompok bahan, dan biaya awal dari katalog material yang ada.
+
+Gemini aktif
+Prompt resep AI
+Contoh prompt
+Buat Draft AI
+DETAIL RESEP
+Identitas utama resep
+
+Isi data inti resep sebelum masuk ke komposisi bahan.
+
+Nama resep
+Kode / nomor resep
+Porsi / batch
+Satuan porsi
+pcs
+pouch
+box
+pack
+cup
+bottle
+tray
+Status
+Aktif
+Draft
+Deskripsi
+KELOMPOK BAHAN
+Struktur formula
+
+Pilih kelompok aktif untuk target input material.
+
+Tambah Kelompok
+01
+Nama kelompok bahan
+Catatan kelompok
+7 MATERIAL
+7 material aktif - subtotal Rp 52.863
+Aktif
+02
+Nama kelompok bahan
+Catatan kelompok
+3 MATERIAL
+3 material aktif - subtotal Rp 21.850
+Pilih
+03
+Nama kelompok bahan
+Catatan kelompok
+1 MATERIAL
+1 material aktif - subtotal Rp 23.100
+Pilih
+04
+Nama kelompok bahan
+Catatan kelompok
+3 MATERIAL
+3 material aktif - subtotal Rp 4.873
+Pilih
+MATERIAL
+Input dan list material
+
+Input singkat di atas, review material terpilih di datagrid bawah.
+
+BARIS TAMPIL
+8 baris
+12 baris
+20 baris
+50 baris
+KELOMPOK AKTIF
+Isian Kroket
+
+7 material aktif - subtotal Rp 52.863
+
+7 material
+Rp 52.863
+01
+Isian Kroket
+7 material
+02
+Pelapis Kroket
+3 material
+03
+Penggorengan
+1 material
+04
+Pelengkap (Opsional)
+3 material
+INPUT MATERIAL
+Tambah bahan ke kelompok aktif
+Siap disimpan
+Pilih material
+Kuantitas
+Pilih satuan
+Pilih unit
+Waste %
+Catatan
+✓ Masukkan
+NAMA MATERIAL
+	
+KUANTITAS BAHAN
+	
+MODAL
+	
+AKSI
+
+
+Ayam Fillet
+BHN-026 • Fiesta
+	
+300 gr
+300 GR • WASTE 5%
+	
+Rp 17.640
+Rp 56.000 / pack
+	
+
+
+Daging Asap
+BHN-025 • Fiesta
+	
+100 gr
+100 GR • TANPA WASTE
+	
+Rp 10.600
+Rp 53.000 / pack
+	
+
+
+Bawang Bombay
+BHN-030 • Lokal
+	
+50 gr
+50 GR • WASTE 10%
+	
+Rp 1.540
+Rp 28.000 / pack
+	
+
+
+Bawang Putih Bubuk
+BHN-031 • Koepoe Koepoe
+	
+5 gr
+5 GR • TANPA WASTE
+	
+Rp 800
+Rp 16.000 / pack
+	
+
+
+Keju Cheddar
+BHN-009 • Kraft
+	
+100 gr
+100 GR • TANPA WASTE
+	
+Rp 13.333
+Rp 22.000 / pack
+	
+
+
+Cream Cheese
+BHN-023 • Anchor
+	
+50 gr
+50 GR • TANPA WASTE
+	
+Rp 6.750
+Rp 135.000 / pack
+	
+
+
+Susu Cair UHT
+BHN-005 • Ultra Milk
+	
+100 ml
+100 ML • TANPA WASTE
+	
+Rp 2.200
+Rp 22.000 / pack
+	
+7 material
+Prev
+Halaman 1
+1 / 1 Next
+OVERHEAD
+Biaya non-material
+
+Tambahkan overhead atau biaya produksi yang ikut membentuk total batch.
+
++ Overhead
++ Produksi
+Tipe
+Overhead
+Biaya Produksi
+Nama
+Nominal
+Catatan
+Rp 20.000
+Tipe
+Overhead
+Biaya Produksi
+Nama
+Nominal
+Catatan
+Rp 5.000
+Tipe
+Overhead
+Biaya Produksi
+Nama
+Nominal
+Catatan
+Rp 8.000
+Tipe
+Overhead
+Biaya Produksi
+Nama
+Nominal
+Catatan
+Rp 2.000
+Tipe
+Overhead
+Biaya Produksi
+Nama
+Nominal
+Catatan
+Rp 10.000
+HARGA JUAL
+Atur harga jual berdasarkan margin
+
+Margin dihitung dari HPP per satuan porsi agar harga jual resep langsung terbentuk saat resep disimpan.
+
+Margin target (%)
+HPP / Satuan
+Rp 7.384
+Harga Jual / Satuan
+Rp 11.076
+RINGKAS
+
+Pastikan kelompok bahan dan material sudah lengkap sebelum simpan resep.
+
+Batal
+Simpan Resep

@@ -1,0 +1,204 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Ringkasan
+          - link "Dashboard" [ref=e17] [cursor=pointer]:
+            - /url: /
+            - img [ref=e19]
+            - strong [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Master Data
+          - link "Katalog Material" [ref=e26] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e28]
+            - strong [ref=e32]: Katalog Material
+          - link "Resep" [ref=e33] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e35]
+            - strong [ref=e37]: Resep
+        - generic [ref=e38]:
+          - generic [ref=e39]: Operasional
+          - link "Stok Gudang" [ref=e40] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e42]
+            - strong [ref=e46]: Stok Gudang
+          - link "Pembelian Material" [ref=e47] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e49]
+            - strong [ref=e53]: Pembelian Material
+          - link "Produksi" [ref=e54] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e56]
+            - strong [ref=e60]: Produksi
+          - link "Kasir / POS" [ref=e61] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e63]
+            - strong [ref=e66]: Kasir / POS
+        - generic [ref=e67]:
+          - generic [ref=e68]: Keuangan
+          - link "Pembukuan" [ref=e69] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e71]
+            - strong [ref=e74]: Pembukuan
+        - generic [ref=e75]:
+          - generic [ref=e76]: Admin
+          - link "Pengaturan Bisnis" [ref=e77] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e79]
+            - strong [ref=e80]: Pengaturan Bisnis
+          - link "Tim & Akun" [ref=e81] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e83]
+            - strong [ref=e86]: Tim & Akun
+          - link "Backup & Impor Data" [ref=e87] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e89]
+            - strong [ref=e94]: Backup & Impor Data
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]: A
+            - generic [ref=e98]:
+              - strong [ref=e99]: Arief
+              - generic [ref=e100]: Admin
+          - link "Logout" [ref=e101] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e102]
+            - generic [ref=e105]: Logout
+  - main [ref=e106]:
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - generic [ref=e109]: Pembukuan
+        - strong [ref=e110]: Gabungkan pemasukan, pengeluaran, dan saldo berjalan ke satu ledger
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e113]: ⚲
+          - textbox "Current user" [ref=e114]: Arief
+        - generic [ref=e115]: A
+    - article [ref=e116]:
+      - generic [ref=e117]:
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e120]: Pembukuan
+            - heading "Gabungkan pemasukan kasir / POS, pembelian selesai, dan entry manual ke satu ledger." [active] [level=1] [ref=e121]
+            - paragraph [ref=e122]: Seluruh riwayat kasir / POS dan pembelian yang sudah selesai masuk ke halaman ini. Kamu juga bisa menambah pemasukan atau pengeluaran lain secara manual.
+          - generic [ref=e123]:
+            - generic [ref=e124]: 1 entry tercatat
+            - button "Refresh" [ref=e125] [cursor=pointer]
+        - generic [ref=e126]:
+          - generic [ref=e128]:
+            - generic [ref=e129]: Form pembukuan
+            - heading "Tambah pemasukan atau pengeluaran manual" [level=2] [ref=e130]
+            - paragraph [ref=e131]: Form dibuat singkat agar cepat dipakai untuk gas, token listrik, ongkos kecil, atau pemasukan lain di luar kasir / POS.
+          - generic [ref=e132]:
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: Analisa AI
+                - heading "Rapikan draft entry manual" [level=2] [ref=e137]
+                - paragraph [ref=e138]: Pakai hanya saat draft manual butuh bantuan perapihan cepat sebelum disimpan.
+              - generic [ref=e139]:
+                - generic [ref=e140]: Gemini aktif
+                - button "Analisa Draft" [ref=e141] [cursor=pointer]
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - generic [ref=e144]: Jenis / nama list
+                - textbox "Jenis / nama list" [ref=e145]
+              - generic [ref=e146]:
+                - generic [ref=e147]: Nominal uang
+                - spinbutton "Nominal uang" [ref=e148]: "0"
+              - generic [ref=e149]:
+                - generic [ref=e150]: Tanggal & jam transaksi
+                - textbox "Tanggal & jam transaksi" [ref=e151]: 2026-04-05T10:52
+              - generic [ref=e152]:
+                - generic [ref=e153]: Supplier / toko
+                - textbox "Supplier / toko" [ref=e154]
+            - generic [ref=e155]:
+              - generic [ref=e156]: Tipe transaksi
+              - generic [ref=e157]:
+                - button "Pemasukan" [ref=e158] [cursor=pointer]
+                - button "Pengeluaran" [ref=e159] [cursor=pointer]
+            - generic [ref=e160]:
+              - button "Reset" [ref=e161] [cursor=pointer]
+              - button "Tambahkan" [ref=e162] [cursor=pointer]
+        - generic [ref=e163]:
+          - generic [ref=e164]:
+            - generic [ref=e165]:
+              - generic [ref=e166]: List pembukuan
+              - heading "Ledger pembukuan" [level=2] [ref=e167]
+              - paragraph [ref=e168]: "Format tabel disusun seperti buku kas kerja: tanggal, referensi, sumber, pihak, mutasi, dan saldo berjalan."
+            - generic [ref=e169]:
+              - generic [ref=e170]: Baris tampil
+              - combobox "Baris tampil" [ref=e171]:
+                - option "8 baris"
+                - option "12 baris" [selected]
+                - option "20 baris"
+                - option "50 baris"
+          - generic [ref=e172]:
+            - article [ref=e173]:
+              - generic [ref=e174]: Total pemasukan
+              - strong [ref=e175]: Rp 328.436
+            - article [ref=e176]:
+              - generic [ref=e177]: Total pengeluaran
+              - strong [ref=e178]: Rp 0
+            - article [ref=e179]:
+              - generic [ref=e180]: Saldo berjalan
+              - strong [ref=e181]: Rp 328.436
+            - article [ref=e182]:
+              - generic [ref=e183]: Total entry
+              - strong [ref=e184]: "1"
+          - table [ref=e186]:
+            - rowgroup [ref=e187]:
+              - row "Tanggal Ref Keterangan Pihak Masuk Keluar Saldo" [ref=e188]:
+                - columnheader "Tanggal" [ref=e189]:
+                  - generic [ref=e192]: Tanggal
+                - columnheader "Ref" [ref=e193]:
+                  - generic [ref=e196]: Ref
+                - columnheader "Keterangan" [ref=e197]:
+                  - generic [ref=e200]: Keterangan
+                - columnheader "Pihak" [ref=e201]:
+                  - generic [ref=e204]: Pihak
+                - columnheader "Masuk" [ref=e205]:
+                  - generic [ref=e208]: Masuk
+                - columnheader "Keluar" [ref=e209]:
+                  - generic [ref=e212]: Keluar
+                - columnheader "Saldo" [ref=e213]:
+                  - generic [ref=e216]: Saldo
+            - rowgroup [ref=e217]:
+              - row "05 Apr 2026 03:04 TRX-000001 POS Penjualan ke All PO 47 item - Cash All PO Lunas Rp 328.436 - Rp 328.436" [ref=e218]:
+                - cell "05 Apr 2026 03:04" [ref=e219]:
+                  - generic [ref=e220]:
+                    - strong [ref=e221]: 05 Apr 2026
+                    - generic [ref=e222]: 03:04
+                - cell "TRX-000001 POS" [ref=e223]:
+                  - generic [ref=e224]:
+                    - strong [ref=e225]: TRX-000001
+                    - generic [ref=e226]: POS
+                - cell "Penjualan ke All PO 47 item - Cash" [ref=e227]:
+                  - generic [ref=e228]:
+                    - strong [ref=e229]: Penjualan ke All PO
+                    - generic [ref=e230]: 47 item - Cash
+                - cell "All PO Lunas" [ref=e231]:
+                  - generic [ref=e232]:
+                    - strong [ref=e233]: All PO
+                    - generic [ref=e234]: Lunas
+                - cell "Rp 328.436" [ref=e235]:
+                  - strong [ref=e237]: Rp 328.436
+                - cell "-" [ref=e238]:
+                  - strong [ref=e240]: "-"
+                - cell "Rp 328.436" [ref=e241]:
+                  - strong [ref=e243]: Rp 328.436
+          - generic [ref=e244]:
+            - generic [ref=e245]: 1 entry
+            - generic [ref=e246]:
+              - button "Prev" [disabled] [ref=e247]
+              - generic "Pilih halaman pembukuan" [ref=e248]:
+                - combobox "Pilih halaman pembukuan" [ref=e249]:
+                  - option "Halaman 1" [selected]
+              - generic [ref=e250]: 1 / 1
+              - button "Next" [disabled] [ref=e251]

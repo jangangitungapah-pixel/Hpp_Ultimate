@@ -131,6 +131,8 @@ public sealed class PosCheckoutRequest
     [Required]
     public string PaymentMethod { get; set; } = "Cash";
 
+    public bool MarkAsPaid { get; set; } = true;
+
     [Range(0, double.MaxValue)]
     public decimal AmountReceived { get; set; }
 

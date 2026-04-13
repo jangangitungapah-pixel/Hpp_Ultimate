@@ -6,16 +6,16 @@
 
 <PageTitle>Pengaturan | HPP Ultimate</PageTitle>
 
-<section class="settings-page">
+<section class="settings-page ds-page ds-admin-layout theme-indigo">
     @if (_isLoading && _snapshot is null)
     {
         <div class="skeleton-card"></div>
     }
     else if (_snapshot is not null)
     {
-        <header class="settings-hero">
+        <header class="settings-hero ds-page-header">
             <div class="hero-copy">
-                <span class="section-tag">System preferences</span>
+                <span class="section-tag">Pengaturan bisnis</span>
                 <h1>Pengaturan workspace bisnis</h1>
                 <p>Kelola identitas usaha, default operasional, dan aturan harga dari satu workspace yang lebih rapi dan cepat dibaca.</p>
 
@@ -34,23 +34,15 @@
                     <span>@(string.IsNullOrWhiteSpace(_snapshot.Settings.LegalName) ? "Identitas usaha belum dilengkapi" : _snapshot.Settings.LegalName)</span>
                 </div>
 
-                <div class="hero-business-stats">
-                    <article><small>Mata uang</small><strong>@_snapshot.Settings.CurrencyCode</strong></article>
-                    <article><small>Pajak</small><strong>@_snapshot.Settings.TaxPercent.ToString("0.#")%</strong></article>
-                    <article><small>Satuan menu</small><strong>@_snapshot.Settings.DefaultProductUnit</strong></article>
-                    <article><small>Satuan bahan</small><strong>@_snapshot.Settings.DefaultMaterialUnit</strong></article>
-                </div>
-
                 <div class="hero-actions">
-                    <button type="button" class="ghost-button" @onclick="ReloadAsync">Reload</button>
                     <a class="ghost-button account-link secondary-link" href="/pengaturan/akun">Akun & akses</a>
                 </div>
             </article>
         </header>
 
-        <div class="settings-layout">
+        <div class="settings-layout ds-list-detail">
             <section class="settings-primary-shell">
-                <div class="primary-shell-head">
+                <div class="primary-shell-head ds-card-header">
                     <div>
                         <span class="section-tag">Form pengaturan</span>
                         <h2>Konfigurasi inti bisnis</h2>
@@ -72,7 +64,7 @@
                     <DataAnnotationsValidator />
                     <ValidationSummary />
 
-                    <div class="settings-form-stack">
+                    <div class="settings-form-stack ds-workspace-main">
                         <section class="settings-module">
                             <div class="module-head">
                                 <div class="module-icon-wrap"><AppIcon Name="settings" Class="module-icon" /></div>
@@ -189,6 +181,38 @@
                                 </article>
                             </div>
                         </section>
+
+                        <section class="settings-module ai-module">
+                            <div class="module-head">
+                                <div class="module-icon-wrap"><AppIcon Name="settings" Class="module-icon" /></div>
+                                <div>
+                                    <span class="module-eyebrow">Fitur bantu</span>
+                                    <h3>Gemini API key</h3>
+                                    <p>API key disimpan di level workspace agar fitur bantu yang benar-benar dipakai tim, seperti baca struk belanja dan rapikan draft pembukuan, tetap membaca konfigurasi yang sama.</p>
+                                </div>
+                            </div>
+
+                            <div class="pricing-module-grid">
+                                <div class="form-grid compact-form-grid">
+                                    <label class="full">
+                                        <span>Gemini API Key</span>
+                                        <input type="password"
+                                               value="@_formModel.GeminiApiKey"
+                                               @oninput="OnGeminiApiKeyChanged"
+                                               disabled="@(!_snapshot.CanManageSettings)"
+                                               placeholder="Tempel API key Gemini di sini" />
+                                    </label>
+                                </div>
+
+                                <article class="pricing-preview-card ai-preview-card">
+                                    <small>Status AI workspace</small>
+                                    <strong>@(string.IsNullOrWhiteSpace(_snapshot.Settings.GeminiApiKey) ? "Belum aktif" : "Gemini aktif")</strong>
+                                    <span>@(string.IsNullOrWhiteSpace(_snapshot.Settings.GeminiApiKey)
+                                        ? "Tambahkan API key hanya jika fitur bantu AI memang ingin dipakai."
+                                        : "API key sudah tersimpan di workspace ini dan siap dipakai oleh fitur bantu yang masih aktif.")</span>
+                                </article>
+                            </div>
+                        </section>
                     </div>
 
                     <div class="form-actions settings-form-actions">
@@ -198,35 +222,7 @@
                 </EditForm>
             </section>
 
-            <aside class="settings-side-rail">
-                <section class="preview-card spotlight-card">
-                    <div class="section-head">
-                        <div>
-                            <span>Snapshot</span>
-                            <h2>Ringkasan profil dan default aktif</h2>
-                        </div>
-                    </div>
-
-                    <div class="preview-grid">
-                        <article>
-                            <small>Brand</small>
-                            <strong>@_snapshot.Settings.BusinessName</strong>
-                        </article>
-                        <article>
-                            <small>Kontak</small>
-                            <strong>@(string.IsNullOrWhiteSpace(_snapshot.Settings.Phone) ? "-" : _snapshot.Settings.Phone)</strong>
-                        </article>
-                        <article>
-                            <small>Email</small>
-                            <strong>@(string.IsNullOrWhiteSpace(_snapshot.Settings.Email) ? "-" : _snapshot.Settings.Email)</strong>
-                        </article>
-                        <article>
-                            <small>Pembulatan</small>
-                            <strong>@_snapshot.Settings.DefaultPriceRounding.ToString("N0")</strong>
-                        </article>
-                    </div>
-                </section>
-
+            <aside class="settings-side-rail ds-side-rail">
                 <section class="account-entry-card">
                     <div class="section-head">
                         <div>
@@ -239,7 +235,7 @@
                         <article>
                             <small>Sesi aktif</small>
                             <strong>@(Store.AuthSession?.FullName ?? "Belum login")</strong>
-                            <p>@(Store.AuthSession is null ? "Masuk terlebih dulu untuk mengelola profil akun." : $"{Store.AuthSession.Role} aktif sejak {Store.AuthSession.SignedInAt:dd MMM HH:mm}")</p>
+                            <p>@(Store.AuthSession is null ? "Masuk terlebih dulu untuk mengelola profil akun." : $"{FormatRole(Store.AuthSession.Role)} aktif sejak {Store.AuthSession.SignedInAt:dd MMM HH:mm}")</p>
                         </article>
                         <article>
                             <small>Total akun</small>
@@ -249,31 +245,15 @@
                     </div>
 
                     <div class="account-entry-actions">
-                        <a class="primary-button account-link" href="/pengaturan/akun">Buka Pengaturan Akun</a>
-                    </div>
-                </section>
-
-                <section class="notes-card">
-                    <div class="section-head">
-                        <div>
-                            <span>Catatan sistem</span>
-                            <h2>Dampak pengaturan pada aplikasi</h2>
-                        </div>
-                    </div>
-
-                    <div class="note-list">
-                        @foreach (var note in _snapshot.Notes)
-                        {
-                            <article>@note</article>
-                        }
+                        <a class="primary-button account-link" href="/pengaturan/akun">Buka Tim & Akun</a>
                     </div>
                 </section>
 
                 <section class="audit-card">
                     <div class="section-head">
                         <div>
-                            <span>Audit trail</span>
-                            <h2>Perubahan workspace terbaru</h2>
+                            <span>Audit workspace</span>
+                            <h2>Perubahan terbaru</h2>
                         </div>
                     </div>
 
@@ -282,7 +262,7 @@
                         @if (_snapshot.RecentAuditEntries.Count > 0)
                         {
                             <div class="audit-list">
-                                @foreach (var entry in _snapshot.RecentAuditEntries)
+                                @foreach (var entry in _snapshot.RecentAuditEntries.Take(4))
                                 {
                                     <article>
                                         <div class="audit-head">
@@ -310,65 +290,10 @@
                     }
                 </section>
 
-                <section class="danger-card">
-                    <div class="section-head">
-                        <div>
-                            <span>Danger zone</span>
-                            <h2>Clear seluruh data operasional</h2>
-                        </div>
-                    </div>
-
-                    <div class="danger-summary">
-                        <article>
-                            <small>Produk</small>
-                            <strong>@Store.Products.Count</strong>
-                        </article>
-                        <article>
-                            <small>Material</small>
-                            <strong>@Store.RawMaterials.Count</strong>
-                        </article>
-                        <article>
-                            <small>Stok</small>
-                            <strong>@Store.StockMovements.Count</strong>
-                        </article>
-                        <article>
-                            <small>Resep</small>
-                            <strong>@Store.Recipes.Count</strong>
-                        </article>
-                        <article>
-                            <small>Produksi</small>
-                            <strong>@Store.ProductionBatches.Count</strong>
-                        </article>
-                    </div>
-
-                    <p class="danger-copy">Aksi ini membersihkan data produk, katalog material, stok, resep/BOM, dan histori produksi. Pengaturan usaha serta akun login tetap dipertahankan.</p>
-
-                    <div class="form-actions">
-                        <button type="button" class="danger-button" disabled="@(!_snapshot.CanManageSettings)" @onclick="OpenClearDataModal">Clear Data</button>
-                    </div>
-                </section>
             </aside>
         </div>
     }
 </section>
-
-@if (_showClearDataModal)
-{
-    <div class="overlay" @onclick="CloseClearDataModal">
-        <div class="confirm-card" @onclick:stopPropagation="true">
-            <span>Konfirmasi</span>
-            <h2>Clear semua data operasional?</h2>
-            <p>Semua data produk, material, stok, resep, dan produksi akan dihapus permanen. Pengaturan usaha dan akun tetap tersimpan.</p>
-
-            <div class="form-actions">
-                <button type="button" class="ghost-button" @onclick="CloseClearDataModal">Batal</button>
-                <button type="button" class="danger-button" disabled="@_isClearingData" @onclick="ConfirmClearDataAsync">
-                    @(_isClearingData ? "Membersihkan..." : "Ya, Clear Data")
-                </button>
-            </div>
-        </div>
-    </div>
-}
 
 @code {
     private BusinessSettingsSnapshot? _snapshot;
@@ -376,8 +301,6 @@
     private bool _isLoading = true;
     private string _statusMessage = "Memuat...";
     private string _formMessage = string.Empty;
-    private bool _showClearDataModal;
-    private bool _isClearingData;
     private string BusinessInitials
     {
         get
@@ -397,6 +320,13 @@
         }
     }
 
+    private static string FormatRole(UserRole role) => role switch
+    {
+        UserRole.Admin => "Admin",
+        UserRole.Staff => "Staf",
+        _ => role.ToString()
+    };
+
     protected override async Task OnInitializedAsync()
     {
         Store.Changed += HandleStoreChanged;
@@ -413,9 +343,6 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task ReloadAsync()
-        => await LoadAsync();
-
     private async Task SaveAsync()
     {
         var result = await SettingsService.SaveAsync(_formModel);
@@ -428,43 +355,13 @@
         await LoadAsync();
     }
 
+    private void OnGeminiApiKeyChanged(ChangeEventArgs args)
+        => _formModel.GeminiApiKey = args.Value?.ToString() ?? string.Empty;
+
     private void ResetForm()
     {
         SyncForm();
         _formMessage = "Form dikembalikan ke nilai yang tersimpan.";
-    }
-
-    private void OpenClearDataModal()
-    {
-        if (_snapshot is not { CanManageSettings: true })
-        {
-            _formMessage = "Aksi ini hanya tersedia untuk admin.";
-            return;
-        }
-
-        _showClearDataModal = true;
-    }
-
-    private void CloseClearDataModal()
-    {
-        if (_isClearingData)
-        {
-            return;
-        }
-
-        _showClearDataModal = false;
-    }
-
-    private async Task ConfirmClearDataAsync()
-    {
-        _isClearingData = true;
-        var result = await SettingsService.ClearOperationalDataAsync();
-        _isClearingData = false;
-        _showClearDataModal = false;
-
-        _formMessage = result.Message;
-        await LoadAsync();
-        _statusMessage = result.Message;
     }
 
     private void SyncForm()
@@ -487,7 +384,8 @@
             DefaultPriceRounding = _snapshot.Settings.DefaultPriceRounding,
             TaxPercent = _snapshot.Settings.TaxPercent,
             TaxIncluded = _snapshot.Settings.TaxIncluded,
-            Timezone = _snapshot.Settings.Timezone
+            Timezone = _snapshot.Settings.Timezone,
+            GeminiApiKey = _snapshot.Settings.GeminiApiKey
         };
     }
 

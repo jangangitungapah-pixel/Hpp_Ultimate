@@ -1,0 +1,447 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "HPP Ultimate Operational workspace" [ref=e6] [cursor=pointer]:
+        - /url: /pengaturan
+        - generic [ref=e11]:
+          - strong [ref=e12]: HPP Ultimate
+          - generic [ref=e13]: Operational workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Workflow
+          - link "Katalog Material" [ref=e17] [cursor=pointer]:
+            - /url: /produk
+            - img [ref=e19]
+            - strong [ref=e23]: Katalog Material
+          - link "Gudang" [ref=e24] [cursor=pointer]:
+            - /url: /gudang
+            - img [ref=e26]
+            - strong [ref=e30]: Gudang
+          - link "Resep" [ref=e31] [cursor=pointer]:
+            - /url: /resep
+            - img [ref=e33]
+            - strong [ref=e35]: Resep
+          - link "Produksi" [ref=e36] [cursor=pointer]:
+            - /url: /produksi
+            - img [ref=e38]
+            - strong [ref=e42]: Produksi
+          - link "Point of Sales" [ref=e43] [cursor=pointer]:
+            - /url: /pos
+            - img [ref=e45]
+            - strong [ref=e48]: Point of Sales
+          - link "Belanja" [ref=e49] [cursor=pointer]:
+            - /url: /belanja
+            - img [ref=e51]
+            - strong [ref=e55]: Belanja
+          - link "Pembukuan" [ref=e56] [cursor=pointer]:
+            - /url: /pembukuan
+            - img [ref=e58]
+            - strong [ref=e61]: Pembukuan
+        - generic [ref=e62]:
+          - generic [ref=e63]: Pengaturan
+          - link "Pengaturan" [ref=e64] [cursor=pointer]:
+            - /url: /pengaturan
+            - img [ref=e66]
+            - strong [ref=e67]: Pengaturan
+          - link "Pengaturan Akun" [ref=e68] [cursor=pointer]:
+            - /url: /pengaturan/akun
+            - img [ref=e70]
+            - strong [ref=e73]: Pengaturan Akun
+        - generic [ref=e74]:
+          - generic [ref=e75]: Kontrol Data
+          - link "Backup & Data Ops" [ref=e76] [cursor=pointer]:
+            - /url: /backup-data
+            - img [ref=e78]
+            - strong [ref=e83]: Backup & Data Ops
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: A
+            - generic [ref=e87]:
+              - strong [ref=e88]: Arief
+              - generic [ref=e89]: Admin
+          - link "Logout" [ref=e90] [cursor=pointer]:
+            - /url: /logout
+            - img [ref=e91]
+            - generic [ref=e94]: Logout
+  - main [ref=e95]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Resep
+        - strong [ref=e99]: Rancang formula bahan, kelompok material, dan biaya produksi
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - generic [ref=e102]: ⚲
+          - textbox "Current user" [ref=e103]: Arief
+        - generic [ref=e104]: A
+    - article [ref=e105]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]: Resep
+            - heading "Resep produksi" [active] [level=1] [ref=e110]
+            - paragraph [ref=e111]: Buat resep lewat popup panel, susun kelompok bahan, cek biaya, lalu pantau resep aktif dari datagrid.
+          - generic [ref=e112]:
+            - button "Refresh" [ref=e113] [cursor=pointer]
+            - button "+ Resep Baru" [ref=e114] [cursor=pointer]
+        - generic [ref=e115]:
+          - generic [ref=e117]:
+            - generic [ref=e118]: Daftar resep
+            - heading "Resep yang sudah dibuat" [level=2] [ref=e119]
+            - paragraph [ref=e120]: Pilih satu resep untuk melihat komposisi bahan dan biaya batch tanpa pindah halaman.
+          - generic [ref=e122]:
+            - textbox "Cari nama resep atau kode" [ref=e123]
+            - combobox [ref=e125]:
+              - option "8 baris"
+              - option "12 baris" [selected]
+              - option "20 baris"
+              - option "50 baris"
+          - table [ref=e127]:
+            - rowgroup [ref=e128]:
+              - row "Resep HPP / Satuan Margin Harga Jual / Satuan Kelompok Material Status Update Aksi" [ref=e129]:
+                - columnheader "Resep" [ref=e130]
+                - columnheader "HPP / Satuan" [ref=e131]
+                - columnheader "Margin" [ref=e132]
+                - columnheader "Harga Jual / Satuan" [ref=e133]
+                - columnheader "Kelompok" [ref=e134]
+                - columnheader "Material" [ref=e135]
+                - columnheader "Status" [ref=e136]
+                - columnheader "Update" [ref=e137]
+                - columnheader "Aksi" [ref=e138]
+            - rowgroup [ref=e139]:
+              - row "Donat Keju RCP-012 Rp 2.592 48% Rp 3.836 2 kelompok 4 material Aktif 04 Apr 2026 17:55 Edit Hapus" [ref=e140] [cursor=pointer]:
+                - cell "Donat Keju RCP-012" [ref=e141]:
+                  - generic [ref=e142]:
+                    - strong [ref=e143]: Donat Keju
+                    - generic [ref=e144]: RCP-012
+                - cell "Rp 2.592" [ref=e145]
+                - cell "48%" [ref=e146]
+                - cell "Rp 3.836" [ref=e147]
+                - cell "2 kelompok" [ref=e148]
+                - cell "4 material" [ref=e149]
+                - cell "Aktif" [ref=e150]:
+                  - generic [ref=e151]: Aktif
+                - cell "04 Apr 2026 17:55" [ref=e152]
+                - cell "Edit Hapus" [ref=e153]:
+                  - generic [ref=e154]:
+                    - button "Edit" [ref=e155]
+                    - button "Hapus" [ref=e156]
+              - row "Pudding Kopi RCP-024 Rp 1.902 48% Rp 2.815 2 kelompok 4 material Aktif 04 Apr 2026 17:55 Edit Hapus" [ref=e157] [cursor=pointer]:
+                - cell "Pudding Kopi RCP-024" [ref=e158]:
+                  - generic [ref=e159]:
+                    - strong [ref=e160]: Pudding Kopi
+                    - generic [ref=e161]: RCP-024
+                - cell "Rp 1.902" [ref=e162]
+                - cell "48%" [ref=e163]
+                - cell "Rp 2.815" [ref=e164]
+                - cell "2 kelompok" [ref=e165]
+                - cell "4 material" [ref=e166]
+                - cell "Aktif" [ref=e167]:
+                  - generic [ref=e168]: Aktif
+                - cell "04 Apr 2026 17:55" [ref=e169]
+                - cell "Edit Hapus" [ref=e170]:
+                  - generic [ref=e171]:
+                    - button "Edit" [ref=e172]
+                    - button "Hapus" [ref=e173]
+              - row "Sandwich Cokelat RCP-036 Rp 3.744 48% Rp 5.541 2 kelompok 4 material Aktif 04 Apr 2026 17:55 Edit Hapus" [ref=e174] [cursor=pointer]:
+                - cell "Sandwich Cokelat RCP-036" [ref=e175]:
+                  - generic [ref=e176]:
+                    - strong [ref=e177]: Sandwich Cokelat
+                    - generic [ref=e178]: RCP-036
+                - cell "Rp 3.744" [ref=e179]
+                - cell "48%" [ref=e180]
+                - cell "Rp 5.541" [ref=e181]
+                - cell "2 kelompok" [ref=e182]
+                - cell "4 material" [ref=e183]
+                - cell "Aktif" [ref=e184]:
+                  - generic [ref=e185]: Aktif
+                - cell "04 Apr 2026 17:55" [ref=e186]
+                - cell "Edit Hapus" [ref=e187]:
+                  - generic [ref=e188]:
+                    - button "Edit" [ref=e189]
+                    - button "Hapus" [ref=e190]
+              - row "Mie Box Matcha RCP-048 Rp 3.645 48% Rp 5.394 2 kelompok 4 material Aktif 04 Apr 2026 17:55 Edit Hapus" [ref=e191] [cursor=pointer]:
+                - cell "Mie Box Matcha RCP-048" [ref=e192]:
+                  - generic [ref=e193]:
+                    - strong [ref=e194]: Mie Box Matcha
+                    - generic [ref=e195]: RCP-048
+                - cell "Rp 3.645" [ref=e196]
+                - cell "48%" [ref=e197]
+                - cell "Rp 5.394" [ref=e198]
+                - cell "2 kelompok" [ref=e199]
+                - cell "4 material" [ref=e200]
+                - cell "Aktif" [ref=e201]:
+                  - generic [ref=e202]: Aktif
+                - cell "04 Apr 2026 17:55" [ref=e203]
+                - cell "Edit Hapus" [ref=e204]:
+                  - generic [ref=e205]:
+                    - button "Edit" [ref=e206]
+                    - button "Hapus" [ref=e207]
+              - row "Brownies Cokelat RCP-006 Rp 4.351 48% Rp 6.439 2 kelompok 4 material Aktif 04 Apr 2026 17:25 Edit Hapus" [ref=e208] [cursor=pointer]:
+                - cell "Brownies Cokelat RCP-006" [ref=e209]:
+                  - generic [ref=e210]:
+                    - strong [ref=e211]: Brownies Cokelat
+                    - generic [ref=e212]: RCP-006
+                - cell "Rp 4.351" [ref=e213]
+                - cell "48%" [ref=e214]
+                - cell "Rp 6.439" [ref=e215]
+                - cell "2 kelompok" [ref=e216]
+                - cell "4 material" [ref=e217]
+                - cell "Aktif" [ref=e218]:
+                  - generic [ref=e219]: Aktif
+                - cell "04 Apr 2026 17:25" [ref=e220]
+                - cell "Edit Hapus" [ref=e221]:
+                  - generic [ref=e222]:
+                    - button "Edit" [ref=e223]
+                    - button "Hapus" [ref=e224]
+              - row "Cookies Matcha RCP-018 Rp 3.981 48% Rp 5.891 2 kelompok 4 material Aktif 04 Apr 2026 17:25 Edit Hapus" [ref=e225] [cursor=pointer]:
+                - cell "Cookies Matcha RCP-018" [ref=e226]:
+                  - generic [ref=e227]:
+                    - strong [ref=e228]: Cookies Matcha
+                    - generic [ref=e229]: RCP-018
+                - cell "Rp 3.981" [ref=e230]
+                - cell "48%" [ref=e231]
+                - cell "Rp 5.891" [ref=e232]
+                - cell "2 kelompok" [ref=e233]
+                - cell "4 material" [ref=e234]
+                - cell "Aktif" [ref=e235]:
+                  - generic [ref=e236]: Aktif
+                - cell "04 Apr 2026 17:25" [ref=e237]
+                - cell "Edit Hapus" [ref=e238]:
+                  - generic [ref=e239]:
+                    - button "Edit" [ref=e240]
+                    - button "Hapus" [ref=e241]
+              - row "Muffin Red Velvet RCP-030 Rp 1.126 48% Rp 1.666 2 kelompok 4 material Aktif 04 Apr 2026 17:25 Edit Hapus" [ref=e242] [cursor=pointer]:
+                - cell "Muffin Red Velvet RCP-030" [ref=e243]:
+                  - generic [ref=e244]:
+                    - strong [ref=e245]: Muffin Red Velvet
+                    - generic [ref=e246]: RCP-030
+                - cell "Rp 1.126" [ref=e247]
+                - cell "48%" [ref=e248]
+                - cell "Rp 1.666" [ref=e249]
+                - cell "2 kelompok" [ref=e250]
+                - cell "4 material" [ref=e251]
+                - cell "Aktif" [ref=e252]:
+                  - generic [ref=e253]: Aktif
+                - cell "04 Apr 2026 17:25" [ref=e254]
+                - cell "Edit Hapus" [ref=e255]:
+                  - generic [ref=e256]:
+                    - button "Edit" [ref=e257]
+                    - button "Hapus" [ref=e258]
+              - row "Rice Bowl Keju RCP-042 Rp 3.948 48% Rp 5.843 2 kelompok 4 material Aktif 04 Apr 2026 17:25 Edit Hapus" [ref=e259] [cursor=pointer]:
+                - cell "Rice Bowl Keju RCP-042" [ref=e260]:
+                  - generic [ref=e261]:
+                    - strong [ref=e262]: Rice Bowl Keju
+                    - generic [ref=e263]: RCP-042
+                - cell "Rp 3.948" [ref=e264]
+                - cell "48%" [ref=e265]
+                - cell "Rp 5.843" [ref=e266]
+                - cell "2 kelompok" [ref=e267]
+                - cell "4 material" [ref=e268]
+                - cell "Aktif" [ref=e269]:
+                  - generic [ref=e270]: Aktif
+                - cell "04 Apr 2026 17:25" [ref=e271]
+                - cell "Edit Hapus" [ref=e272]:
+                  - generic [ref=e273]:
+                    - button "Edit" [ref=e274]
+                    - button "Hapus" [ref=e275]
+              - row "Donat Cokelat RCP-011 Rp 4.961 44% Rp 7.144 2 kelompok 4 material Aktif 03 Apr 2026 17:50 Edit Hapus" [ref=e276] [cursor=pointer]:
+                - cell "Donat Cokelat RCP-011" [ref=e277]:
+                  - generic [ref=e278]:
+                    - strong [ref=e279]: Donat Cokelat
+                    - generic [ref=e280]: RCP-011
+                - cell "Rp 4.961" [ref=e281]
+                - cell "44%" [ref=e282]
+                - cell "Rp 7.144" [ref=e283]
+                - cell "2 kelompok" [ref=e284]
+                - cell "4 material" [ref=e285]
+                - cell "Aktif" [ref=e286]:
+                  - generic [ref=e287]: Aktif
+                - cell "03 Apr 2026 17:50" [ref=e288]
+                - cell "Edit Hapus" [ref=e289]:
+                  - generic [ref=e290]:
+                    - button "Edit" [ref=e291]
+                    - button "Hapus" [ref=e292]
+              - row "Pudding Matcha RCP-023 Rp 1.874 44% Rp 2.699 2 kelompok 4 material Aktif 03 Apr 2026 17:50 Edit Hapus" [ref=e293] [cursor=pointer]:
+                - cell "Pudding Matcha RCP-023" [ref=e294]:
+                  - generic [ref=e295]:
+                    - strong [ref=e296]: Pudding Matcha
+                    - generic [ref=e297]: RCP-023
+                - cell "Rp 1.874" [ref=e298]
+                - cell "44%" [ref=e299]
+                - cell "Rp 2.699" [ref=e300]
+                - cell "2 kelompok" [ref=e301]
+                - cell "4 material" [ref=e302]
+                - cell "Aktif" [ref=e303]:
+                  - generic [ref=e304]: Aktif
+                - cell "03 Apr 2026 17:50" [ref=e305]
+                - cell "Edit Hapus" [ref=e306]:
+                  - generic [ref=e307]:
+                    - button "Edit" [ref=e308]
+                    - button "Hapus" [ref=e309]
+              - row "Croissant Red Velvet RCP-035 Rp 1.318 44% Rp 1.898 2 kelompok 4 material Aktif 03 Apr 2026 17:50 Edit Hapus" [ref=e310] [cursor=pointer]:
+                - cell "Croissant Red Velvet RCP-035" [ref=e311]:
+                  - generic [ref=e312]:
+                    - strong [ref=e313]: Croissant Red Velvet
+                    - generic [ref=e314]: RCP-035
+                - cell "Rp 1.318" [ref=e315]
+                - cell "44%" [ref=e316]
+                - cell "Rp 1.898" [ref=e317]
+                - cell "2 kelompok" [ref=e318]
+                - cell "4 material" [ref=e319]
+                - cell "Aktif" [ref=e320]:
+                  - generic [ref=e321]: Aktif
+                - cell "03 Apr 2026 17:50" [ref=e322]
+                - cell "Edit Hapus" [ref=e323]:
+                  - generic [ref=e324]:
+                    - button "Edit" [ref=e325]
+                    - button "Hapus" [ref=e326]
+              - row "Mie Box Keju RCP-047 Rp 2.162 44% Rp 3.113 2 kelompok 4 material Aktif 03 Apr 2026 17:50 Edit Hapus" [ref=e327] [cursor=pointer]:
+                - cell "Mie Box Keju RCP-047" [ref=e328]:
+                  - generic [ref=e329]:
+                    - strong [ref=e330]: Mie Box Keju
+                    - generic [ref=e331]: RCP-047
+                - cell "Rp 2.162" [ref=e332]
+                - cell "44%" [ref=e333]
+                - cell "Rp 3.113" [ref=e334]
+                - cell "2 kelompok" [ref=e335]
+                - cell "4 material" [ref=e336]
+                - cell "Aktif" [ref=e337]:
+                  - generic [ref=e338]: Aktif
+                - cell "03 Apr 2026 17:50" [ref=e339]
+                - cell "Edit Hapus" [ref=e340]:
+                  - generic [ref=e341]:
+                    - button "Edit" [ref=e342]
+                    - button "Hapus" [ref=e343]
+          - generic [ref=e344]:
+            - generic [ref=e345]: 50 resep
+            - generic [ref=e346]:
+              - button "Prev" [disabled] [ref=e347]
+              - generic "Pilih halaman resep" [ref=e348]:
+                - combobox "Pilih halaman resep" [ref=e349]:
+                  - option "Halaman 1" [selected]
+                  - option "Halaman 2"
+                  - option "Halaman 3"
+                  - option "Halaman 4"
+                  - option "Halaman 5"
+              - generic [ref=e350]: 1 / 5
+              - button "Next" [ref=e351] [cursor=pointer]
+        - generic [ref=e352]:
+          - generic [ref=e353]:
+            - generic [ref=e354]:
+              - generic [ref=e355]: RCP-012
+              - heading "Donat Keju" [level=2] [ref=e356]
+              - paragraph [ref=e357]: Resep contoh Donat Keju untuk simulasi operasi 6 hari.
+            - generic [ref=e358]:
+              - generic [ref=e359]: Aktif
+              - button "Edit Resep" [ref=e360] [cursor=pointer]
+              - button "Hapus" [ref=e361] [cursor=pointer]
+          - generic [ref=e362]:
+            - article [ref=e363]:
+              - generic [ref=e364]: HPP / Satuan
+              - strong [ref=e365]: Rp 2.592
+            - article [ref=e366]:
+              - generic [ref=e367]: Margin Target
+              - strong [ref=e368]: 48%
+            - article [ref=e369]:
+              - generic [ref=e370]: Harga Jual / Satuan
+              - strong [ref=e371]: Rp 3.836
+            - article [ref=e372]:
+              - generic [ref=e373]: Total Batch
+              - strong [ref=e374]: Rp 41.475
+            - article [ref=e375]:
+              - generic [ref=e376]: Kelompok
+              - strong [ref=e377]: "2"
+            - article [ref=e378]:
+              - generic [ref=e379]: Material
+              - strong [ref=e380]: "4"
+            - article [ref=e381]:
+              - generic [ref=e382]: Porsi / Batch
+              - strong [ref=e383]: 16 box
+          - generic [ref=e384]:
+            - generic [ref=e385]:
+              - generic [ref=e387]:
+                - generic [ref=e388]: Kelompok bahan
+                - heading "Struktur formula resep" [level=3] [ref=e389]
+                - paragraph [ref=e390]: Buka kelompok yang diperlukan untuk audit komposisi dan subtotal materialnya.
+              - generic [ref=e391]:
+                - group [ref=e392]:
+                  - generic "2 material AdonanKelompok bahan utama. Rp 8.889" [ref=e393] [cursor=pointer]:
+                    - generic [ref=e394]:
+                      - generic [ref=e395]: 2 material
+                      - strong [ref=e396]: Adonan
+                      - text: Kelompok bahan utama.
+                    - strong [ref=e397]: Rp 8.889
+                  - generic [ref=e398]:
+                    - generic [ref=e399]: Material
+                    - generic [ref=e400]: Pemakaian
+                    - generic [ref=e401]: Konversi
+                    - generic [ref=e402]: Modal
+                  - generic [ref=e403]:
+                    - generic [ref=e404]:
+                      - generic [ref=e405]:
+                        - strong [ref=e406]: Mesis Cokelat (BHN-012)
+                        - generic [ref=e407]: Ceres
+                      - generic [ref=e408]:
+                        - strong [ref=e409]: 105 gr
+                        - generic [ref=e410]: Waste 2%
+                      - generic [ref=e411]:
+                        - strong [ref=e412]: 105 gr
+                        - generic [ref=e413]: 500 gr
+                      - generic [ref=e414]:
+                        - strong [ref=e415]: Rp 6.319
+                        - generic [ref=e416]: Rp 29.500 / pack
+                    - generic [ref=e417]:
+                      - generic [ref=e418]:
+                        - strong [ref=e419]: Pisang Cavendish (BHN-015)
+                        - generic [ref=e420]: Sunpride
+                      - generic [ref=e421]:
+                        - strong [ref=e422]: 105 gr
+                        - generic [ref=e423]: Waste 2%
+                      - generic [ref=e424]:
+                        - strong [ref=e425]: 105 gr
+                        - generic [ref=e426]: 1000 gr
+                      - generic [ref=e427]:
+                        - strong [ref=e428]: Rp 2.570
+                        - generic [ref=e429]: Rp 24.000 / pack
+                - group [ref=e430]:
+                  - generic "2 material FinishingPelengkap dan topping akhir. Rp 15.586" [ref=e431] [cursor=pointer]:
+                    - generic [ref=e432]:
+                      - generic [ref=e433]: 2 material
+                      - strong [ref=e434]: Finishing
+                      - text: Pelengkap dan topping akhir.
+                    - strong [ref=e435]: Rp 15.586
+            - generic [ref=e436]:
+              - generic [ref=e438]:
+                - generic [ref=e439]: Overhead
+                - heading "Biaya non-material" [level=3] [ref=e440]
+                - paragraph [ref=e441]: Biaya tambahan di luar material utama resep.
+              - generic [ref=e442]:
+                - article [ref=e443]:
+                  - generic [ref=e444]:
+                    - generic [ref=e445]: Overhead
+                    - strong [ref=e446]: Gas & utilitas
+                    - paragraph [ref=e447]: Biaya energi per batch.
+                  - strong [ref=e448]: Rp 9.000
+                - article [ref=e449]:
+                  - generic [ref=e450]:
+                    - generic [ref=e451]: Biaya Produksi
+                    - strong [ref=e452]: Tenaga bantu
+                    - paragraph [ref=e453]: Biaya operator per batch.
+                  - strong [ref=e454]: Rp 8.000
+            - generic [ref=e455]:
+              - generic [ref=e457]:
+                - generic [ref=e458]: Ringkasan biaya
+                - heading "Angka inti resep" [level=3] [ref=e459]
+              - generic [ref=e460]:
+                - article [ref=e461]:
+                  - generic [ref=e462]: Total Material
+                  - strong [ref=e463]: Rp 24.475
+                - article [ref=e464]:
+                  - generic [ref=e465]: Operasional
+                  - strong [ref=e466]: Rp 17.000
+                - article [ref=e467]:
+                  - generic [ref=e468]: Satuan Porsi
+                  - strong [ref=e469]: box
+                - article [ref=e470]:
+                  - generic [ref=e471]: Update
+                  - strong [ref=e472]: 04 Apr 2026 17:55

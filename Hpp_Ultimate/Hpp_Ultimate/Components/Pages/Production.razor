@@ -1,23 +1,21 @@
 @page "/produksi"
 @rendermode InteractiveServer
 @implements IAsyncDisposable
+@using Microsoft.AspNetCore.Components.Forms
 @inject IJSRuntime JS
 @inject ProductionService ProductionService
+@inject WarehouseService WarehouseService
+@inject GeminiProductionRecommendationService GeminiProductionRecommendationService
 @inject SeededBusinessDataStore Store
 
 <PageTitle>Produksi | HPP Ultimate</PageTitle>
 
-<section class="production-page">
-    <header class="production-header">
+<section class="production-page ds-page ds-page-stack theme-indigo">
+    <header class="production-header ds-page-header">
         <div class="header-copy">
-            <span class="section-tag">Produksi praktis</span>
-            <h1>Siapkan antrian produksi, atur timer target, lalu mulai dari satu workspace.</h1>
-            <p>Resep aktif diambil langsung dari halaman resep. Saat produksi dimulai, stok gudang otomatis berkurang. Jika stok kurang, produksi tetap bisa diantrikan tetapi belum bisa dijalankan.</p>
-        </div>
-
-        <div class="header-actions">
-            <div class="status-chip">@_statusMessage</div>
-            <button type="button" class="ghost-button" @onclick="ReloadAsync">Refresh</button>
+            <span class="section-tag">Produksi</span>
+            <h1>Workspace produksi</h1>
+            <p>Gunakan tiga mode kerja ini untuk menyusun batch, menjalankan antrian, lalu memantau batch yang sedang atau sudah selesai.</p>
         </div>
     </header>
 
@@ -27,33 +25,47 @@
     }
     else if (_snapshot is not null)
     {
-        <div class="summary-strip compact">
-            <article>
-                <small>Resep tersedia</small>
-                <strong>@_snapshot.TotalRecipeCount</strong>
-            </article>
-            <article>
-                <small>Dalam antrian</small>
-                <strong>@_snapshot.QueueCount</strong>
-            </article>
-            <article>
-                <small>Sedang berjalan</small>
-                <strong>@_snapshot.RunningCount</strong>
-            </article>
-            <article>
-                <small>Selesai</small>
-                <strong>@_snapshot.CompletedCount</strong>
-            </article>
-        </div>
+        <section class="production-flow-band">
+            <div class="production-flow-copy">
+                <span class="section-tag">Mode kerja</span>
+                <h2>Rencana, antrian, lalu riwayat eksekusi</h2>
+                <p>Panel atas sekarang hanya dipakai untuk orientasi cepat, bukan lagi wizard panjang sebelum masuk ke workspace inti.</p>
+            </div>
+
+            <div class="production-flow-meta">
+                <span>@_snapshot.TotalRecipeCount resep tersedia</span>
+                <span>@_snapshot.QueueCount batch dalam antrian</span>
+                <span>@_snapshot.RunningCount batch sedang berjalan</span>
+                <span>@_snapshot.CompletedCount batch selesai</span>
+            </div>
+
+            <nav class="production-stage-map" aria-label="Peta kerja produksi">
+                <button type="button" class="stage-link" @onclick='() => ScrollToSectionAsync("production-plan")' aria-controls="production-plan">
+                    <span>Rencana</span>
+                    <strong>Susun batch</strong>
+                    <small>Pilih resep, atur batch, dan cek kebutuhan bahan.</small>
+                </button>
+                <button type="button" class="stage-link" @onclick='() => ScrollToSectionAsync("production-queue")' aria-controls="production-queue">
+                    <span>Antrian</span>
+                    <strong>Jalankan queue</strong>
+                    <small>Mulai batch yang sudah siap dan edit queue sebelum jalan.</small>
+                </button>
+                <button type="button" class="stage-link" @onclick='() => ScrollToSectionAsync("production-history")' aria-controls="production-history">
+                    <span>Riwayat</span>
+                    <strong>Pantau hasil</strong>
+                    <small>Pantau timer, batch berjalan, dan batch yang sudah selesai.</small>
+                </button>
+            </nav>
+        </section>
 
         <div class="page-layout">
-            <div class="workspace-column">
-                <section class="production-entry-card">
-                    <div class="section-head draft-head">
+            <div class="draft-column">
+                <section class="production-entry-card" id="production-plan">
+                    <div class="section-head draft-head ds-card-header">
                         <div>
-                            <span class="section-tag">Draft produksi</span>
-                            <h2>@(_snapshot.Draft?.RecipeName ?? "Pilih resep untuk memulai produksi")</h2>
-                            <p>@(_snapshot.Draft is null ? "Pilih resep lewat autocomplete agar draft, kebutuhan bahan, dan antrian aktif tampil dalam satu panel penuh." : $"{_snapshot.Draft.RecipeCode} - {_snapshot.Draft.PortionYieldPerBatch.ToString("0.##")} {_snapshot.Draft.PortionUnit} per batch")</p>
+                            <span class="section-tag">Susun batch</span>
+                            <h2>@(_snapshot.Draft?.RecipeName ?? "Pilih resep untuk mulai menyusun batch produksi")</h2>
+                            <p>@(_snapshot.Draft is null ? "Mulai dari lookup resep. Setelah resep aktif dipilih, batch, timer, dan kebutuhan bahan langsung muncul di workspace yang sama." : $"{_snapshot.Draft.RecipeCode} - {_snapshot.Draft.PortionYieldPerBatch.ToString("0.##")} {_snapshot.Draft.PortionUnit} per batch")</p>
                         </div>
 
                         <div class="draft-head-actions">
@@ -74,44 +86,45 @@
                     </div>
 
                     <section class="recipe-lookup-panel">
-                        <div class="section-head lookup-head">
+                        <div class="section-head lookup-head ds-card-header">
                             <div>
                                 <span class="section-tag">Pilih resep</span>
                                 <h3>Cari resep produksi dari katalog resep</h3>
-                                <p>Autocomplete akan memfilter kode dan nama resep tanpa membuat panel daftar yang panjang ke bawah.</p>
+                                <p>Gunakan autocomplete untuk memilih resep aktif, lalu langsung atur batch dan timer targetnya.</p>
                             </div>
                         </div>
 
-                        <div class="recipe-lookup-grid">
+                        <div class="recipe-lookup-grid lookup-single">
                             <label class="recipe-lookup-field wide-field">
                                 <span>Resep produksi</span>
-                                <input list="production-recipe-options"
-                                       value="@_recipeLookupText"
-                                       @oninput="OnRecipeLookupInput"
-                                       @onchange="OnRecipeLookupCommitAsync"
-                                       placeholder="Cari kode atau nama resep" />
-                                <datalist id="production-recipe-options">
-                                    @foreach (var recipe in _snapshot.Recipes)
+                                <div class="picker-field">
+                                    <input value="@_recipeLookupText"
+                                           @oninput="OnRecipeLookupInput"
+                                           @onchange="OnRecipeLookupCommitAsync"
+                                           placeholder="Cari kode atau nama resep" />
+
+                                    @if (ShowRecipeSuggestions)
                                     {
-                                        <option value="@GetRecipeLookupLabel(recipe)"></option>
+                                        <div class="picker-suggestion-list" role="listbox" aria-label="Saran resep produksi">
+                                            @foreach (var recipe in RecipeLookupSuggestions)
+                                            {
+                                                <button type="button" class="picker-suggestion" @onclick="() => SelectRecipeAsync(recipe.RecipeId)">
+                                                    <div class="table-primary">
+                                                        <strong>@recipe.Name</strong>
+                                                        <small>@recipe.Code - @recipe.PortionYieldPerBatch.ToString("0.##") @recipe.PortionUnit / batch</small>
+                                                    </div>
+                                                    <span class="badge @(recipe.CanStart ? "ok" : "warn")">@(recipe.CanStart ? "Siap" : "Tertahan")</span>
+                                                </button>
+                                            }
+                                        </div>
                                     }
-                                </datalist>
+                                </div>
                             </label>
+                        </div>
 
-                            <article class="lookup-summary-card">
-                                <small>Resep tersedia</small>
-                                <strong>@_snapshot.TotalRecipeCount</strong>
-                                <span>@ReadyRecipeCount siap mulai / @BlockedRecipeCount tertahan stok</span>
-                            </article>
-
-                            @if (SelectedRecipeOption is not null)
-                            {
-                                <article class="lookup-summary-card status-card @(SelectedRecipeOption.CanStart ? "ok" : "warn")">
-                                    <small>Status resep</small>
-                                    <strong>@(SelectedRecipeOption.HasRunningBatch ? "Ada batch berjalan" : SelectedRecipeOption.CanStart ? "Siap diproduksi" : "Tertahan stok")</strong>
-                                    <span>@SelectedRecipeOption.ReadinessMessage</span>
-                                </article>
-                            }
+                        <div class="lookup-inline-meta">
+                            <span>@ReadyRecipeCount resep siap mulai</span>
+                            <span>@BlockedRecipeCount resep tertahan stok</span>
                         </div>
                     </section>
 
@@ -124,14 +137,10 @@
                     else
                     {
 
-                        <div class="detail-summary-strip">
+                        <div class="detail-summary-strip draft-summary-strip">
                             <article>
                                 <small>Batch</small>
                                 <strong>@_productionForm.BatchCount</strong>
-                            </article>
-                            <article>
-                                <small>Porsi / batch</small>
-                                <strong>@_snapshot.Draft.PortionYieldPerBatch.ToString("0.##") @_snapshot.Draft.PortionUnit</strong>
                             </article>
                             <article>
                                 <small>Total porsi</small>
@@ -148,23 +157,20 @@
                             <div class="form-message">@_message</div>
                         }
 
-                        <div class="draft-notice @(GetDraftReadinessClass(_snapshot.Draft))">
-                            <strong>@GetDraftReadinessLabel(_snapshot.Draft)</strong>
-                            <span>@GetDraftNoticeCopy(_snapshot.Draft)</span>
-                        </div>
-
                         @if (_snapshot.Draft.ValidationMessages.Count > 0)
                         {
-                            <div class="warning-stack compact">
-                                @foreach (var warning in _snapshot.Draft.ValidationMessages.Distinct().Take(3))
+                            <div class="draft-alert-summary">
+                                <strong>@_snapshot.Draft.ValidationMessages.Count catatan stok perlu diperhatikan</strong>
+                                <span>@_snapshot.Draft.ValidationMessages[0]</span>
+                                @if (_snapshot.Draft.ValidationMessages.Count > 1)
                                 {
-                                    <article>@warning</article>
+                                    <small>+@(_snapshot.Draft.ValidationMessages.Count - 1) catatan lain tersedia di panel kebutuhan bahan.</small>
                                 }
                             </div>
                         }
 
                         <section class="entry-form-card">
-                            <div class="section-head">
+                            <div class="section-head ds-card-header">
                                 <div>
                                     <span class="section-tag">Tambah antrian</span>
                                     <h3>Atur batch, timer target, dan detail produksi</h3>
@@ -172,19 +178,27 @@
                                 </div>
                             </div>
 
-                            <EditForm Model="_productionForm" OnValidSubmit="SaveQueueAsync">
+                            <EditForm EditContext="_productionEditContext" OnValidSubmit="SaveQueueAsync">
                                 <DataAnnotationsValidator />
                                 <ValidationSummary />
 
                                 <div class="entry-grid">
                                     <label>
                                         <span>Jumlah batch</span>
-                                        <input type="number" min="1" step="1" value="@_productionForm.BatchCount" @oninput="OnBatchCountInputAsync" />
+                                        <InputNumber TValue="int"
+                                                     Value="_productionForm.BatchCount"
+                                                     ValueChanged="OnBatchCountChangedAsync"
+                                                     ValueExpression="() => _productionForm.BatchCount" />
+                                        <ValidationMessage For="() => _productionForm.BatchCount" />
                                     </label>
 
                                     <label>
                                         <span>Timer target (menit)</span>
-                                        <input type="number" min="1" step="1" value="@_productionForm.TargetDurationMinutes" @oninput="OnTargetDurationInputAsync" />
+                                        <InputNumber TValue="int"
+                                                     Value="_productionForm.TargetDurationMinutes"
+                                                     ValueChanged="OnTargetDurationChangedAsync"
+                                                     ValueExpression="() => _productionForm.TargetDurationMinutes" />
+                                        <ValidationMessage For="() => _productionForm.TargetDurationMinutes" />
                                     </label>
 
                                     <label class="wide-field">
@@ -196,7 +210,12 @@
                                 <div class="timer-preview">
                                     <small>Target produksi</small>
                                     <strong>@FormatDuration(_productionForm.TargetDurationMinutes)</strong>
-                                    <span>Timer berjalan saat tombol <em>Mulai Produksi</em> ditekan dari antrian aktif.</span>
+                                    <span>Batch bisa langsung dijalankan dari sini, atau hanya diantrikan dulu jika belum siap dieksekusi.</span>
+                                </div>
+
+                                <div class="submit-confidence-note">
+                                    <strong>Konsekuensi aksi</strong>
+                                    <span><em>Antrikan Saja</em> hanya menyimpan batch ke queue. <em>Antrikan & Mulai</em> akan langsung memulai timer produksi dan memindahkan batch ke status berjalan.</span>
                                 </div>
 
                                 <div class="form-actions">
@@ -205,18 +224,29 @@
                                         <button type="button" class="ghost-button" @onclick="CancelQueueEdit">Batal Edit</button>
                                     }
 
-                                    <button type="button" class="ghost-button" @onclick="RefreshDraftAsync">Preview ulang</button>
-                                    <button type="submit" class="primary-button" disabled="@(!_snapshot.Draft.CanQueue)">@QueueSubmitLabel</button>
+                                    <button type="submit" class="@(_snapshot.Draft.CanStart ? "ghost-button" : "primary-button")" disabled="@(!_snapshot.Draft.CanQueue)">@QueueSubmitLabel</button>
+
+                                    @if (_snapshot.Draft.CanStart)
+                                    {
+                                        <button type="button" class="primary-button" disabled="@(!_snapshot.Draft.CanQueue)" @onclick="SaveQueueAndStartAsync">@QueueAndStartLabel</button>
+                                    }
                                 </div>
                             </EditForm>
                         </section>
+                    }
+                </section>
 
-                        <section class="requirement-card catalog-datagrid">
-                        <div class="section-head">
+            </div>
+
+            <div class="operations-column">
+                @if (_snapshot.Draft is not null)
+                {
+                    <section class="requirement-card catalog-datagrid" id="production-requirement-card">
+                        <div class="section-head ds-card-header">
                             <div>
                                 <span class="section-tag">Kebutuhan bahan</span>
                                 <h3>Simulasi stok untuk draft ini</h3>
-                                <p>Prioritaskan bahan yang masih kurang. Produksi hanya bisa dimulai jika semua kebutuhan sudah aman.</p>
+                                <p>Panel ini dipindah ke sisi operasi supaya kebutuhan bahan, antrian, dan riwayat produksi terbaca sebagai satu cluster eksekusi.</p>
                             </div>
 
                             <label class="display-count-control compact">
@@ -229,6 +259,55 @@
                                 </select>
                             </label>
                         </div>
+
+                        @if (QuickStockRequirement is not null)
+                        {
+                            <section class="quick-stock-panel" id="production-quick-stock">
+                                <div class="quick-stock-head">
+                                    <div>
+                                        <span class="section-tag">Isi stok cepat</span>
+                                        <h4>@QuickStockRequirement.MaterialName</h4>
+                                        <p>Tambahkan stok langsung dari halaman produksi. Setelah disimpan, simulasi bahan akan refresh otomatis tanpa pindah ke gudang.</p>
+                                    </div>
+
+                                    <button type="button" class="ghost-button compact" @onclick="CloseQuickStockComposer">Tutup</button>
+                                </div>
+
+                                <div class="quick-stock-metrics">
+                                    <article>
+                                        <small>Stok sekarang</small>
+                                        <strong>@QuickStockRequirement.AvailableQuantity.ToString("0.####") @QuickStockRequirement.BaseUnit</strong>
+                                    </article>
+                                    <article>
+                                        <small>Total butuh</small>
+                                        <strong>@QuickStockRequirement.RequiredQuantity.ToString("0.####") @QuickStockRequirement.BaseUnit</strong>
+                                    </article>
+                                    <article>
+                                        <small>Kekurangan</small>
+                                        <strong>@QuickStockRequirement.ShortageQuantity.ToString("0.####") @QuickStockRequirement.BaseUnit</strong>
+                                    </article>
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(_quickStockMessage))
+                                {
+                                    <div class="form-message @_quickStockMessageTone">@_quickStockMessage</div>
+                                }
+
+                                <div class="quick-stock-form">
+                                    <label>
+                                        <span>Tambah stok sekarang</span>
+                                        <InputNumber @bind-Value="_quickStockForm.Quantity" id="production-quick-stock-input" />
+                                    </label>
+
+                                    <div class="quick-stock-actions">
+                                        <button type="button" class="ghost-button compact" @onclick="UseSuggestedQuickStockQuantity">Gunakan nilai kurang</button>
+                                        <button type="button" class="primary-button compact" disabled="@(!CanSaveQuickStock)" @onclick="SaveQuickStockAsync">
+                                            @(_isSavingQuickStock ? "Menyimpan..." : "Simpan stok cepat")
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                        }
 
                         @if (_snapshot.Draft.Requirements.Count == 0)
                         {
@@ -245,6 +324,7 @@
                                             <th>Total butuh</th>
                                             <th>Stok</th>
                                             <th>Status</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -265,6 +345,12 @@
                                                         @(item.IsSufficient ? "Cukup" : item.AvailableQuantity <= 0 ? "Kosong" : $"Kurang {item.ShortageQuantity:0.####}")
                                                     </span>
                                                 </td>
+                                                <td class="requirement-action-cell">
+                                                    @if (!item.IsSufficient)
+                                                    {
+                                                        <button type="button" class="ghost-button compact" @onclick="() => OpenQuickStockAsync(item)">Isi stok</button>
+                                                    }
+                                                </td>
                                             </tr>
                                         }
                                     </tbody>
@@ -274,8 +360,8 @@
                             <div class="production-card-list requirement-card-list">
                                 @foreach (var item in VisibleDraftRequirements)
                                 {
-                                    <article class="production-mobile-card">
-                                        <div class="production-mobile-head">
+                                    <article class="requirement-list-item">
+                                        <div class="requirement-list-main">
                                             <div class="table-primary">
                                                 <strong>@item.MaterialName</strong>
                                                 <small>@item.MaterialCode - @(string.IsNullOrWhiteSpace(item.Brand) ? "Tanpa merk" : item.Brand)</small>
@@ -286,20 +372,18 @@
                                             </span>
                                         </div>
 
-                                        <div class="production-mobile-grid">
-                                            <article>
-                                                <small>Butuh / batch</small>
-                                                <strong>@item.QuantityPerBatch.ToString("0.####") @item.BaseUnit</strong>
-                                            </article>
-                                            <article>
-                                                <small>Total butuh</small>
-                                                <strong>@item.RequiredQuantity.ToString("0.####") @item.BaseUnit</strong>
-                                            </article>
-                                            <article>
-                                                <small>Stok</small>
-                                                <strong>@item.AvailableQuantity.ToString("0.####") @item.BaseUnit</strong>
-                                            </article>
+                                        <div class="requirement-list-stats">
+                                            <span>Per batch @item.QuantityPerBatch.ToString("0.####") @item.BaseUnit</span>
+                                            <span>Total @item.RequiredQuantity.ToString("0.####") @item.BaseUnit</span>
+                                            <span>Stok @item.AvailableQuantity.ToString("0.####") @item.BaseUnit</span>
                                         </div>
+
+                                        @if (!item.IsSufficient)
+                                        {
+                                            <div class="requirement-list-actions">
+                                                <button type="button" class="ghost-button compact" @onclick="() => OpenQuickStockAsync(item)">Isi stok cepat</button>
+                                            </div>
+                                        }
                                     </article>
                                 }
                             </div>
@@ -308,8 +392,8 @@
                                 <small>@(_snapshot.Draft.Requirements.Count) bahan</small>
                                 <div class="pager">
                                     <button type="button" @onclick="PrevRequirementPage" disabled="@(CurrentRequirementPage <= 1)">Prev</button>
-                                    <label class="pager-select" aria-label="Pilih halaman kebutuhan bahan">
-                                        <select value="@CurrentRequirementPage" @onchange="OnRequirementPageChanged">
+                                    <label class="pager-select">
+                                        <select aria-label="Pilih halaman kebutuhan bahan" value="@CurrentRequirementPage" @onchange="OnRequirementPageChanged">
                                             @for (var pageNumber = 1; pageNumber <= RequirementTotalPages; pageNumber++)
                                             {
                                                 <option value="@pageNumber">Halaman @pageNumber</option>
@@ -322,37 +406,38 @@
                                 <div class="table-footer-spacer" aria-hidden="true"></div>
                             </div>
                         }
-                        </section>
+                    </section>
+                }
+
+                <div class="operations-section" id="production-queue">
+                    @if (_snapshot.Queue.Count == 0)
+                    {
+                        <div class="queue-empty-strip">
+                            <strong>Belum ada antrian aktif.</strong>
+                            <span>Tambahkan batch dari draft untuk mulai mengisi queue produksi.</span>
+                        </div>
                     }
-                </section>
+                    else
+                    {
+                        <section class="queue-card catalog-datagrid">
+                        <div class="section-head ds-card-header">
+                            <div>
+                                <span class="section-tag">Antrian aktif</span>
+                                <h2>Draft yang siap dijalankan</h2>
+                                <p>Produksi dimulai dari sini agar batch masih bisa diedit sampai sebelum benar-benar berjalan.</p>
+                            </div>
 
-                <section class="queue-card inline-queue-card catalog-datagrid">
-            <div class="section-head">
-                <div>
-                    <span class="section-tag">Antrian produksi</span>
-                    <h2>Draft yang siap dijalankan</h2>
-                    <p>Mulai produksi dijalankan dari sini agar detail batch tetap bisa diubah sampai detik terakhir.</p>
-                </div>
+                            <label class="display-count-control compact">
+                                <span>Baris tampil</span>
+                                <select value="@_queueDisplayCount" @onchange="OnQueueDisplayCountChanged">
+                                    @foreach (var option in GridDisplayOptions)
+                                    {
+                                        <option value="@option">@option baris</option>
+                                    }
+                                </select>
+                            </label>
+                        </div>
 
-                <label class="display-count-control compact">
-                    <span>Baris tampil</span>
-                    <select value="@_queueDisplayCount" @onchange="OnQueueDisplayCountChanged">
-                        @foreach (var option in GridDisplayOptions)
-                        {
-                            <option value="@option">@option baris</option>
-                        }
-                    </select>
-                </label>
-            </div>
-
-            @if (_snapshot.Queue.Count == 0)
-            {
-                <div class="empty-state">
-                    Belum ada antrian produksi.
-                </div>
-            }
-            else
-            {
                 <div class="queue-grid-shell">
                     <QuickGrid Items="VisibleQueueItems.AsQueryable()" Class="queue-quickgrid">
                         <TemplateColumn Title="Produksi" Context="item">
@@ -386,7 +471,9 @@
                         </TemplateColumn>
                         <TemplateColumn Title="Aksi" Context="item">
                             <div class="queue-actions">
-                                <button type="button" class="ghost-button compact" @onclick="() => EditQueueAsync(item.Id)">Edit</button>
+                                <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => EditQueueAsync(item.Id)">
+                                    <AppIcon Name="edit" Class="icon-glyph" />
+                                </button>
                                 <button type="button" class="primary-button compact" @onclick="() => StartQueuedProductionAsync(item.Id)" disabled="@(!item.CanStart)">Mulai Produksi</button>
                             </div>
                         </TemplateColumn>
@@ -427,7 +514,9 @@
                             </div>
 
                             <div class="production-mobile-actions">
-                                <button type="button" class="ghost-button compact" @onclick="() => EditQueueAsync(item.Id)">Edit</button>
+                                <button type="button" class="icon-button" title="Edit" aria-label="Edit" @onclick="() => EditQueueAsync(item.Id)">
+                                    <AppIcon Name="edit" Class="icon-glyph" />
+                                </button>
                                 <button type="button" class="primary-button compact" @onclick="() => StartQueuedProductionAsync(item.Id)" disabled="@(!item.CanStart)">Mulai Produksi</button>
                             </div>
                         </article>
@@ -438,8 +527,8 @@
                     <small>@_snapshot.Queue.Count antrian</small>
                     <div class="pager">
                         <button type="button" @onclick="PrevQueuePage" disabled="@(CurrentQueuePage <= 1)">Prev</button>
-                        <label class="pager-select" aria-label="Pilih halaman antrian produksi">
-                            <select value="@CurrentQueuePage" @onchange="OnQueuePageChanged">
+                        <label class="pager-select">
+                            <select aria-label="Pilih halaman antrian produksi" value="@CurrentQueuePage" @onchange="OnQueuePageChanged">
                                 @for (var pageNumber = 1; pageNumber <= QueueTotalPages; pageNumber++)
                                 {
                                     <option value="@pageNumber">Halaman @pageNumber</option>
@@ -451,38 +540,37 @@
                     </div>
                     <div class="table-footer-spacer" aria-hidden="true"></div>
                 </div>
-            }
-        </section>
-            </div>
-        </div>
-
-        <section class="history-card catalog-datagrid">
-            <div class="section-head">
-                <div>
-                    <span class="section-tag">History produksi</span>
-                    <h2>Produksi berjalan dan selesai</h2>
-                    <p>Timer target akan berjalan otomatis saat produksi dimulai, lalu alarm berbunyi saat target waktunya habis.</p>
+                        </section>
+                    }
                 </div>
 
-                <label class="display-count-control compact">
-                    <span>Baris tampil</span>
-                    <select value="@_historyDisplayCount" @onchange="OnHistoryDisplayCountChanged">
-                        @foreach (var option in GridDisplayOptions)
-                        {
-                            <option value="@option">@option baris</option>
-                        }
-                    </select>
-                </label>
-            </div>
+                <section class="history-card catalog-datagrid" id="production-history">
+                    <div class="section-head ds-card-header">
+                        <div>
+                            <span class="section-tag">Riwayat produksi</span>
+                            <h2>Produksi berjalan dan selesai</h2>
+                            <p>Timer target berjalan otomatis saat produksi dimulai, lalu alarm berbunyi saat target waktunya habis.</p>
+                        </div>
 
-            @if (_snapshot.History.Count == 0)
-            {
-                <div class="empty-state">
-                    Belum ada histori produksi.
-                </div>
-            }
-            else
-            {
+                        <label class="display-count-control compact">
+                            <span>Baris tampil</span>
+                            <select value="@_historyDisplayCount" @onchange="OnHistoryDisplayCountChanged">
+                                @foreach (var option in GridDisplayOptions)
+                                {
+                                    <option value="@option">@option baris</option>
+                                }
+                            </select>
+                        </label>
+                    </div>
+
+                    @if (_snapshot.History.Count == 0)
+                    {
+                        <div class="empty-state">
+                            Belum ada histori produksi.
+                        </div>
+                    }
+                    else
+                    {
                 <div class="history-grid-shell">
                     <QuickGrid Items="VisibleHistoryItems.AsQueryable()" Class="history-quickgrid">
                         <TemplateColumn Title="Produksi" Context="item">
@@ -505,8 +593,8 @@
                         </TemplateColumn>
                         <TemplateColumn Title="Mulai" Context="item">
                             <div class="history-meta-cell">
-                                <strong>@(item.StartedAt?.ToString("dd MMM yyyy HH:mm") ?? "-")</strong>
-                                <small>@(item.CompletedAt is null ? "Belum selesai" : $"Selesai {item.CompletedAt.Value:dd MMM yyyy HH:mm}")</small>
+                                <strong>@(item.StartedAt?.ToString("dd MMM yy HH:mm") ?? "-")</strong>
+                                <small>@(item.CompletedAt is null ? "Belum selesai" : $"Selesai {item.CompletedAt.Value:dd MMM yy HH:mm}")</small>
                             </div>
                         </TemplateColumn>
                         <TemplateColumn Title="Status" Context="item">
@@ -519,10 +607,6 @@
                                 @if (item.Status == ProductionRunStatus.Running)
                                 {
                                     <button type="button" class="ghost-button compact" @onclick="() => CompleteProductionAsync(item.Id)">Selesai</button>
-                                }
-                                else
-                                {
-                                    <span class="history-done-text">Selesai</span>
                                 }
                             </div>
                         </TemplateColumn>
@@ -557,21 +641,17 @@
                                 </article>
                                 <article>
                                     <small>Mulai</small>
-                                    <strong>@(item.StartedAt?.ToString("dd MMM yyyy HH:mm") ?? "-")</strong>
-                                    <span>@(item.CompletedAt is null ? "Belum selesai" : $"Selesai {item.CompletedAt.Value:dd MMM yyyy HH:mm}")</span>
+                                    <strong>@(item.StartedAt?.ToString("dd MMM yy HH:mm") ?? "-")</strong>
+                                    <span>@(item.CompletedAt is null ? "Belum selesai" : $"Selesai {item.CompletedAt.Value:dd MMM yy HH:mm}")</span>
                                 </article>
                             </div>
 
-                            <div class="production-mobile-actions">
-                                @if (item.Status == ProductionRunStatus.Running)
-                                {
+                            @if (item.Status == ProductionRunStatus.Running)
+                            {
+                                <div class="production-mobile-actions">
                                     <button type="button" class="ghost-button compact" @onclick="() => CompleteProductionAsync(item.Id)">Selesai</button>
-                                }
-                                else
-                                {
-                                    <span class="history-done-text">Selesai</span>
-                                }
-                            </div>
+                                </div>
+                            }
                         </article>
                     }
                 </div>
@@ -580,8 +660,8 @@
                     <small>@_snapshot.History.Count histori</small>
                     <div class="pager">
                         <button type="button" @onclick="PrevHistoryPage" disabled="@(CurrentHistoryPage <= 1)">Prev</button>
-                        <label class="pager-select" aria-label="Pilih halaman history produksi">
-                            <select value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
+                        <label class="pager-select">
+                            <select aria-label="Pilih halaman history produksi" value="@CurrentHistoryPage" @onchange="OnHistoryPageChanged">
                                 @for (var pageNumber = 1; pageNumber <= HistoryTotalPages; pageNumber++)
                                 {
                                     <option value="@pageNumber">Halaman @pageNumber</option>
@@ -593,8 +673,10 @@
                     </div>
                     <div class="table-footer-spacer" aria-hidden="true"></div>
                 </div>
-            }
-        </section>
+                    }
+                </section>
+            </div>
+        </div>
     }
 </section>
 
@@ -606,9 +688,8 @@
     private Guid? _editingQueueId;
     private bool _isLoading = true;
     private bool _isDisposed;
-    private string _statusMessage = "Memuat produksi...";
     private string _message = string.Empty;
-    private int _requirementDisplayCount = 10;
+    private int _requirementDisplayCount = 12;
     private int _requirementPage = 1;
     private int _queueDisplayCount = 8;
     private int _queuePage = 1;
@@ -617,14 +698,23 @@
     private CancellationTokenSource? _clockCts;
     private Task? _clockTask;
     private readonly HashSet<Guid> _alarmedBatchIds = [];
+    private string _productionAiMessage = string.Empty;
+    private readonly List<ProductionAiSuggestion> _productionAiSuggestions = [];
+    private Guid? _quickStockMaterialId;
+    private bool _isSavingQuickStock;
+    private string _quickStockMessage = string.Empty;
+    private string _quickStockMessageTone = "info";
     private ProductionBatchCreateRequest _productionForm = new()
     {
         BatchCount = 1,
         TargetDurationMinutes = 30,
         StartedAt = DateTime.Now
     };
+    private StockMovementRequest _quickStockForm = CreateQuickStockRequest();
+    private EditContext _productionEditContext = default!;
 
-    private string QueueSubmitLabel => _editingQueueId is null ? "Tambah Antrian" : "Simpan Antrian";
+    private string QueueSubmitLabel => _editingQueueId is null ? "Antrikan Saja" : "Simpan Tanpa Mulai";
+    private string QueueAndStartLabel => _editingQueueId is null ? "Antrikan & Mulai" : "Simpan & Mulai";
 
     private int ReadyRecipeCount
         => _snapshot?.Recipes.Count(item => item.CanStart) ?? 0;
@@ -636,6 +726,17 @@
         => _selectedRecipeId is Guid recipeId
             ? _snapshot?.Recipes.FirstOrDefault(item => item.RecipeId == recipeId)
             : null;
+    private IReadOnlyList<ProductionRecipeOption> RecipeLookupSuggestions
+        => _snapshot is null || string.IsNullOrWhiteSpace(_recipeLookupText)
+            ? Array.Empty<ProductionRecipeOption>()
+            : _snapshot.Recipes
+                .Where(item =>
+                    item.Name.Contains(_recipeLookupText, StringComparison.OrdinalIgnoreCase) ||
+                    item.Code.Contains(_recipeLookupText, StringComparison.OrdinalIgnoreCase))
+                .Take(6)
+                .ToArray();
+    private bool ShowRecipeSuggestions
+        => _selectedRecipeId is null && RecipeLookupSuggestions.Count > 0;
 
     private int RequirementTotalPages => CalculateTotalPages(_snapshot?.Draft?.Requirements.Count ?? 0, _requirementDisplayCount);
     private int CurrentRequirementPage => ClampPage(_requirementPage, RequirementTotalPages);
@@ -665,9 +766,16 @@
         => _selectedRecipeId is Guid recipeId
             ? _snapshot?.History.FirstOrDefault(item => item.RecipeId == recipeId && item.Status == ProductionRunStatus.Running)
             : null;
+    private ProductionRequirementLine? QuickStockRequirement
+        => _quickStockMaterialId is Guid materialId
+            ? _snapshot?.Draft?.Requirements.FirstOrDefault(item => item.MaterialId == materialId && !item.IsSufficient)
+            : null;
+    private bool CanSaveQuickStock
+        => !_isSavingQuickStock && _quickStockForm.MaterialId is not null && _quickStockForm.Quantity > 0;
 
     protected override async Task OnInitializedAsync()
     {
+        InitializeProductionEditContext();
         Store.Changed += HandleStoreChanged;
         await LoadAsync();
     }
@@ -708,9 +816,6 @@
             _productionForm.RecipeId = _selectedRecipeId;
         }
 
-        _statusMessage = _snapshot.QueueCount > 0 || _snapshot.RunningCount > 0
-            ? $"{_snapshot.QueueCount} antrian / {_snapshot.RunningCount} berjalan"
-            : $"{_snapshot.CompletedCount} histori produksi";
         SyncRecipeLookupText();
 
         _alarmedBatchIds.RemoveWhere(id => _snapshot.History.All(item => item.Id != id || item.Status != ProductionRunStatus.Running));
@@ -720,6 +825,58 @@
     }
 
     private Task ReloadAsync() => LoadAsync();
+
+    private async Task GenerateProductionRecommendationsAsync()
+    {
+        if (_snapshot is null)
+        {
+            return;
+        }
+
+        _productionAiMessage = string.Empty;
+
+        try
+        {
+            var result = await GeminiProductionRecommendationService.RecommendAsync(new ProductionAiRecommendationRequest(
+                _snapshot.Recipes.Select(item => new ProductionAiRecipeContext(
+                    item.RecipeId,
+                    item.Code,
+                    item.Name,
+                    item.PortionYieldPerBatch,
+                    item.PortionUnit,
+                    item.MaterialCount,
+                    item.HasRunningBatch,
+                    item.CanStart,
+                    item.ReadinessMessage)).ToArray(),
+                _snapshot.Queue.Select(item => new ProductionAiHistoryContext(
+                    item.RecipeId,
+                    item.RecipeCode,
+                    item.RecipeName,
+                    item.BatchCount,
+                    item.TotalPortions,
+                    item.QueuedAt,
+                    item.Status)).ToArray(),
+                _snapshot.History.Select(item => new ProductionAiHistoryContext(
+                    item.RecipeId,
+                    item.RecipeCode,
+                    item.RecipeName,
+                    item.BatchCount,
+                    item.TotalPortions,
+                    item.QueuedAt,
+                    item.Status)).ToArray()));
+
+            _productionAiSuggestions.Clear();
+            if (result.Success)
+            {
+                _productionAiSuggestions.AddRange(result.Suggestions);
+            }
+
+            _productionAiMessage = result.Message;
+        }
+        finally
+        {
+        }
+    }
 
     private void OnRequirementDisplayCountChanged(ChangeEventArgs args)
     {
@@ -767,7 +924,15 @@
         => _historyPage = Math.Min(HistoryTotalPages, CurrentHistoryPage + 1);
 
     private void OnRecipeLookupInput(ChangeEventArgs args)
-        => _recipeLookupText = args.Value?.ToString() ?? string.Empty;
+    {
+        _recipeLookupText = args.Value?.ToString() ?? string.Empty;
+
+        if (SelectedRecipeOption is not null
+            && !string.Equals(GetRecipeLookupLabel(SelectedRecipeOption), _recipeLookupText, StringComparison.OrdinalIgnoreCase))
+        {
+            _selectedRecipeId = null;
+        }
+    }
 
     private async Task OnRecipeLookupCommitAsync(ChangeEventArgs args)
     {
@@ -803,27 +968,121 @@
         await LoadAsync();
     }
 
-    private Task RefreshDraftAsync() => LoadAsync();
-
-    private async Task OnBatchCountInputAsync(ChangeEventArgs args)
+    private async Task ApplyProductionRecommendationAsync(ProductionAiSuggestion suggestion)
     {
-        _productionForm.BatchCount = int.TryParse(args.Value?.ToString(), out var value) && value > 0
-            ? value
-            : 1;
+        _selectedRecipeId = suggestion.RecipeId;
+        _editingQueueId = null;
+        ResetProductionForm(suggestion.RecipeId, suggestion.SuggestedBatchCount, suggestion.SuggestedTargetDurationMinutes);
+        _message = $"Draft produksi diisi dari rekomendasi AI untuk {suggestion.RecipeName}.";
+        await LoadAsync();
+    }
+
+    private async Task OnBatchCountChangedAsync(int value)
+    {
+        _productionForm.BatchCount = Math.Max(1, value);
         _message = string.Empty;
         await LoadAsync();
     }
 
-    private async Task OnTargetDurationInputAsync(ChangeEventArgs args)
+    private async Task OnTargetDurationChangedAsync(int value)
     {
-        _productionForm.TargetDurationMinutes = int.TryParse(args.Value?.ToString(), out var value) && value > 0
-            ? value
-            : 30;
+        _productionForm.TargetDurationMinutes = Math.Max(1, value);
         _message = string.Empty;
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task SaveQueueAsync()
+    private async Task OpenQuickStockAsync(ProductionRequirementLine requirement)
+    {
+        if (requirement.IsSufficient)
+        {
+            return;
+        }
+
+        _quickStockMaterialId = requirement.MaterialId;
+        _quickStockForm = CreateQuickStockRequest(requirement);
+        _quickStockMessage = string.Empty;
+        _quickStockMessageTone = "info";
+        await FocusQuickStockAsync();
+    }
+
+    private void CloseQuickStockComposer()
+    {
+        _quickStockMaterialId = null;
+        _quickStockForm = CreateQuickStockRequest();
+        _quickStockMessage = string.Empty;
+        _quickStockMessageTone = "info";
+    }
+
+    private void UseSuggestedQuickStockQuantity()
+    {
+        if (QuickStockRequirement is null)
+        {
+            return;
+        }
+
+        _quickStockForm.Quantity = GetSuggestedQuickStockQuantity(QuickStockRequirement);
+        _quickStockMessage = string.Empty;
+        _quickStockMessageTone = "info";
+    }
+
+    private async Task SaveQuickStockAsync()
+    {
+        var requirement = QuickStockRequirement;
+        if (requirement is null)
+        {
+            CloseQuickStockComposer();
+            return;
+        }
+
+        _isSavingQuickStock = true;
+        _quickStockMessage = string.Empty;
+        _quickStockMessageTone = "info";
+        _quickStockForm.MaterialId = requirement.MaterialId;
+        _quickStockForm.Type = StockMovementType.StockIn;
+        _quickStockForm.OccurredAt = DateTime.Now;
+        _quickStockForm.Note = $"Isi stok cepat dari produksi untuk {requirement.MaterialName}";
+
+        var result = await WarehouseService.RecordMovementAsync(_quickStockForm);
+        _isSavingQuickStock = false;
+        _quickStockMessage = result.Message;
+        _quickStockMessageTone = result.Success ? "success" : "error";
+        if (!result.Success)
+        {
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        await LoadAsync();
+
+        var refreshedRequirement = QuickStockRequirement;
+        if (refreshedRequirement is null)
+        {
+            _message = $"Stok {requirement.MaterialName} sudah ditambahkan dan kebutuhan draft ini sekarang cukup.";
+            CloseQuickStockComposer();
+            return;
+        }
+
+        _quickStockForm = CreateQuickStockRequest(refreshedRequirement);
+        _quickStockMessage = $"Stok masuk dicatat. Tersisa kurang {refreshedRequirement.ShortageQuantity:0.####} {refreshedRequirement.BaseUnit} untuk draft ini.";
+        _quickStockMessageTone = "info";
+        await FocusQuickStockAsync();
+    }
+
+    private Task SaveQueueAsync()
+        => SaveQueueCoreAsync(false);
+
+    private async Task SaveQueueAndStartAsync()
+    {
+        if (!_productionEditContext.Validate())
+        {
+            _message = "Periksa lagi batch dan timer target yang masih belum valid.";
+            return;
+        }
+
+        await SaveQueueCoreAsync(true);
+    }
+
+    private async Task SaveQueueCoreAsync(bool startImmediately)
     {
         _productionForm.BatchId = _editingQueueId;
         _productionForm.RecipeId = _selectedRecipeId;
@@ -833,6 +1092,17 @@
         if (!result.Success)
         {
             return;
+        }
+
+        if (startImmediately && result.Batch is { Id: var batchId, CanStart: true })
+        {
+            var started = await ProductionService.StartQueuedProductionAsync(batchId);
+            _message = started.Message;
+            if (!started.Success)
+            {
+                await LoadAsync();
+                return;
+            }
         }
 
         _editingQueueId = null;
@@ -865,6 +1135,7 @@
             StartedAt = item.StartedAt ?? DateTime.Now,
             Notes = item.Notes
         };
+        InitializeProductionEditContext();
 
         _message = $"Mode edit aktif untuk antrian {item.BatchCode}.";
         await LoadAsync();
@@ -1036,6 +1307,23 @@
     private static int ClampPage(int page, int totalPages)
         => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
 
+    private async Task FocusQuickStockAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            await JS.InvokeVoidAsync("viewportHelper.scrollToId", "production-quick-stock", "nearest");
+            await JS.InvokeVoidAsync("viewportHelper.focusById", "production-quick-stock-input", true);
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+        catch (InvalidOperationException)
+        {
+        }
+    }
+
     private void ResetProductionForm(Guid? recipeId, int batchCount = 1, int targetDuration = 30)
     {
         _productionForm = new ProductionBatchCreateRequest
@@ -1045,6 +1333,34 @@
             TargetDurationMinutes = Math.Max(1, targetDuration),
             StartedAt = DateTime.Now
         };
+        InitializeProductionEditContext();
+    }
+
+    private void InitializeProductionEditContext()
+        => _productionEditContext = new EditContext(_productionForm);
+
+    private static StockMovementRequest CreateQuickStockRequest(ProductionRequirementLine? requirement = null)
+        => new()
+        {
+            MaterialId = requirement?.MaterialId,
+            Type = StockMovementType.StockIn,
+            Quantity = GetSuggestedQuickStockQuantity(requirement),
+            OccurredAt = DateTime.Now,
+            Note = requirement is null ? string.Empty : $"Isi stok cepat dari produksi untuk {requirement.MaterialName}"
+        };
+
+    private static decimal GetSuggestedQuickStockQuantity(ProductionRequirementLine? requirement)
+    {
+        if (requirement is null)
+        {
+            return 1m;
+        }
+
+        var suggested = requirement.ShortageQuantity > 0
+            ? requirement.ShortageQuantity
+            : requirement.RequiredQuantity;
+
+        return decimal.Round(Math.Max(0.0001m, suggested), 4);
     }
 
     private static string FormatCurrency(decimal value)
@@ -1098,29 +1414,42 @@
     private static string GetDraftReadinessLabel(ProductionDraft draft)
         => draft.CanStart ? "Siap masuk produksi" : draft.CanQueue ? "Bisa diantrikan" : "Perlu perbaikan resep";
 
-    private static string GetDraftNoticeCopy(ProductionDraft draft)
+    private static string GetAiConfidenceLabel(string confidence) => confidence switch
     {
-        if (draft.CanStart)
-        {
-            return "Batch ini aman untuk diantrikan atau langsung dipersiapkan dari workspace yang sama.";
-        }
+        "high" => "Tinggi",
+        "low" => "Rendah",
+        _ => "Sedang"
+    };
 
-        if (draft.CanQueue)
-        {
-            return draft.ValidationMessages.FirstOrDefault() ?? "Masih ada bahan yang belum aman, tetapi draft bisa tetap diantrikan.";
-        }
+    private static string GetAiConfidenceClass(string confidence) => confidence switch
+    {
+        "high" => "ok",
+        "low" => "muted",
+        _ => "running"
+    };
 
-        return draft.ValidationMessages.FirstOrDefault() ?? "Lengkapi resep lebih dulu sebelum produksi.";
+    private async Task ScrollToSectionAsync(string sectionId)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("viewportHelper.scrollToId", sectionId);
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+        catch (InvalidOperationException)
+        {
+        }
     }
 
-    private async void HandleStoreChanged()
+    private void HandleStoreChanged()
     {
         if (_isDisposed)
         {
             return;
         }
 
-        await InvokeAsync(async () => await LoadAsync());
+        _ = InvokeAsync(LoadAsync);
     }
 
     public async ValueTask DisposeAsync()

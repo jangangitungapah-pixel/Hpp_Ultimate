@@ -1,0 +1,210 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - link "HPP Ultimate Workspace operasional" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e8]:
+            - strong [ref=e9]: HPP Ultimate
+            - text: Workspace operasional
+        - checkbox [ref=e10]
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - text: Ringkasan
+            - link "Dashboard" [ref=e13] [cursor=pointer]:
+              - /url: /
+              - img [ref=e15]
+              - strong [ref=e19]: Dashboard
+          - generic [ref=e20]:
+            - text: Master Data
+            - link "Katalog Material" [ref=e21] [cursor=pointer]:
+              - /url: /produk
+              - img [ref=e23]
+              - strong [ref=e27]: Katalog Material
+            - link "Resep" [ref=e28] [cursor=pointer]:
+              - /url: /resep
+              - img [ref=e30]
+              - strong [ref=e32]: Resep
+          - generic [ref=e33]:
+            - text: Operasional
+            - link "Stok Gudang" [ref=e34] [cursor=pointer]:
+              - /url: /gudang
+              - img [ref=e36]
+              - strong [ref=e40]: Stok Gudang
+            - link "Pembelian Material" [ref=e41] [cursor=pointer]:
+              - /url: /belanja
+              - img [ref=e43]
+              - strong [ref=e47]: Pembelian Material
+            - link "Produksi" [ref=e48] [cursor=pointer]:
+              - /url: /produksi
+              - img [ref=e50]
+              - strong [ref=e54]: Produksi
+            - link "Kasir / POS" [ref=e55] [cursor=pointer]:
+              - /url: /pos
+              - img [ref=e57]
+              - strong [ref=e60]: Kasir / POS
+          - generic [ref=e61]:
+            - text: Keuangan
+            - link "Pembukuan" [ref=e62] [cursor=pointer]:
+              - /url: /pembukuan
+              - img [ref=e64]
+              - strong [ref=e67]: Pembukuan
+          - generic [ref=e68]:
+            - text: Admin
+            - link "Pengaturan Bisnis" [ref=e69] [cursor=pointer]:
+              - /url: /pengaturan
+              - img [ref=e71]
+              - strong [ref=e72]: Pengaturan Bisnis
+            - link "Tim & Akun" [ref=e73] [cursor=pointer]:
+              - /url: /pengaturan/akun
+              - img [ref=e75]
+              - strong [ref=e78]: Tim & Akun
+            - link "Backup & Impor Data" [ref=e79] [cursor=pointer]:
+              - /url: /backup-data
+              - img [ref=e81]
+              - strong [ref=e86]: Backup & Impor Data
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e89]: A
+              - generic [ref=e90]:
+                - strong [ref=e91]: Arief
+                - text: Admin
+            - link "Logout" [ref=e92] [cursor=pointer]:
+              - /url: /logout
+              - img [ref=e93]
+              - text: Logout
+    - main [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - text: Workspace aktif
+          - strong [ref=e99]: Dashboard
+        - generic "Pengguna aktif" [ref=e101]:
+          - generic [ref=e102]:
+            - text: Masuk sebagai
+            - strong [ref=e103]: Arief
+          - generic [ref=e104]: A
+      - article [ref=e105]:
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e108]:
+              - generic [ref=e109]: Dashboard
+              - heading "Mulai dari tugas yang perlu diselesaikan sekarang." [active] [level=1] [ref=e110]
+              - paragraph [ref=e111]: Dashboard ini tidak lagi berfungsi seperti sitemap. Fokus utamanya adalah satu next action yang jelas, lalu shortcut ke area kerja inti saat kamu memang perlu masuk lebih dalam.
+            - generic [ref=e112]:
+              - generic [ref=e113]: Arief
+              - link "Masuk ke katalog material" [ref=e114] [cursor=pointer]:
+                - /url: /produk
+              - button "Perbarui dashboard" [ref=e115] [cursor=pointer]: Perbarui
+          - generic [ref=e116]:
+            - generic [ref=e118]:
+              - generic [ref=e119]: Prioritas hari ini
+              - heading "Mulai dari pekerjaan yang paling mendesak" [level=2] [ref=e120]
+              - paragraph [ref=e121]: Semua angka prioritas di bawah ini langsung menjadi jalur aksi. Klik kartu yang paling relevan untuk membuka pekerjaan yang memang perlu ditangani sekarang.
+            - generic "Prioritas kerja harian HPP Ultimate" [ref=e122]:
+              - link "Saat ini aman Catat restock gudang Semua stok minimum masih aman. Buka stok gudang 0 Perlu restock" [ref=e123] [cursor=pointer]:
+                - /url: /gudang
+                - generic [ref=e124]:
+                  - generic [ref=e125]: Saat ini aman
+                  - strong [ref=e126]: Catat restock gudang
+                  - text: Semua stok minimum masih aman. Buka stok gudang
+                - generic [ref=e127]: 0 Perlu restock
+              - link "Saat ini aman Tandai barang datang Tidak ada barang yang menunggu datang. Buka penerimaan barang 0 Penerimaan pending" [ref=e128] [cursor=pointer]:
+                - /url: /belanja#shopping-history
+                - generic [ref=e129]:
+                  - generic [ref=e130]: Saat ini aman
+                  - strong [ref=e131]: Tandai barang datang
+                  - text: Tidak ada barang yang menunggu datang. Buka penerimaan barang
+                - generic [ref=e132]: 0 Penerimaan pending
+              - link "Saat ini aman Mulai batch produksi Belum ada batch dalam antrian. Buka antrian produksi 0 Antrian produksi" [ref=e133] [cursor=pointer]:
+                - /url: /produksi#production-queue
+                - generic [ref=e134]:
+                  - generic [ref=e135]: Saat ini aman
+                  - strong [ref=e136]: Mulai batch produksi
+                  - text: Belum ada batch dalam antrian. Buka antrian produksi
+                - generic [ref=e137]: 0 Antrian produksi
+              - link "Saat ini aman Tandai pembayaran masuk Semua transaksi sudah lunas. Buka history kasir 0 Piutang kasir" [ref=e138] [cursor=pointer]:
+                - /url: /pos#pos-history
+                - generic [ref=e139]:
+                  - generic [ref=e140]: Saat ini aman
+                  - strong [ref=e141]: Tandai pembayaran masuk
+                  - text: Semua transaksi sudah lunas. Buka history kasir
+                - generic [ref=e142]: 0 Piutang kasir
+          - generic [ref=e143]:
+            - generic [ref=e144]:
+              - generic [ref=e146]:
+                - generic [ref=e147]: Core workflow
+                - heading "Area kerja utama" [level=2] [ref=e148]
+                - paragraph [ref=e149]: Gunakan shortcut ini setelah prioritas harian ditangani, atau saat kamu memang perlu membuka modul secara langsung.
+              - generic [ref=e150]:
+                - link "Katalog Material Rapikan master bahan baku dan harga pack." [ref=e151] [cursor=pointer]:
+                  - /url: /produk
+                  - img [ref=e153]
+                  - generic [ref=e157]:
+                    - strong [ref=e158]: Katalog Material
+                    - text: Rapikan master bahan baku dan harga pack.
+                - link "Stok Gudang Cek stok aktif, minimum stock, dan mutasi terbaru." [ref=e159] [cursor=pointer]:
+                  - /url: /gudang
+                  - img [ref=e161]
+                  - generic [ref=e165]:
+                    - strong [ref=e166]: Stok Gudang
+                    - text: Cek stok aktif, minimum stock, dan mutasi terbaru.
+                - link "Resep Susun formula, HPP, dan harga jual." [ref=e167] [cursor=pointer]:
+                  - /url: /resep
+                  - img [ref=e169]
+                  - generic [ref=e171]:
+                    - strong [ref=e172]: Resep
+                    - text: Susun formula, HPP, dan harga jual.
+                - link "Produksi Antrekan batch dan pantau progres produksi." [ref=e173] [cursor=pointer]:
+                  - /url: /produksi
+                  - img [ref=e175]
+                  - generic [ref=e179]:
+                    - strong [ref=e180]: Produksi
+                    - text: Antrekan batch dan pantau progres produksi.
+                - link "Pembelian Material Susun pembelian bahan dan terima barang yang datang." [ref=e181] [cursor=pointer]:
+                  - /url: /belanja
+                  - img [ref=e183]
+                  - generic [ref=e187]:
+                    - strong [ref=e188]: Pembelian Material
+                    - text: Susun pembelian bahan dan terima barang yang datang.
+                - link "Kasir / POS Jual menu siap stok dan pantau pembayaran." [ref=e189] [cursor=pointer]:
+                  - /url: /pos
+                  - img [ref=e191]
+                  - generic [ref=e194]:
+                    - strong [ref=e195]: Kasir / POS
+                    - text: Jual menu siap stok dan pantau pembayaran.
+                - link "Pembukuan Pantau ledger kas dari seluruh operasional." [ref=e196] [cursor=pointer]:
+                  - /url: /pembukuan
+                  - img [ref=e198]
+                  - generic [ref=e201]:
+                    - strong [ref=e202]: Pembukuan
+                    - text: Pantau ledger kas dari seluruh operasional.
+            - complementary [ref=e203]:
+              - generic [ref=e204]:
+                - generic [ref=e206]:
+                  - generic [ref=e207]: Snapshot bisnis
+                  - heading "Status data aktif" [level=2] [ref=e208]
+                - generic [ref=e209]:
+                  - article [ref=e210]:
+                    - text: Material aktif
+                    - strong [ref=e211]: "9"
+                  - article [ref=e212]:
+                    - text: Resep aktif
+                    - strong [ref=e213]: "1"
+                  - article [ref=e214]:
+                    - text: Belanja tercatat
+                    - strong [ref=e215]: "0"
+                  - article [ref=e216]:
+                    - text: Sales tercatat
+                    - strong [ref=e217]: "1"
+              - group [ref=e218]:
+                - generic "Panduan alur Lihat peta modul utama Gunakan ini hanya jika kamu masih butuh orientasi urutan kerja lintas modul. Buka panduan" [ref=e219] [cursor=pointer]:
+                  - generic [ref=e220]:
+                    - generic [ref=e221]: Panduan alur
+                    - heading "Lihat peta modul utama" [level=2] [ref=e222]
+                    - paragraph [ref=e223]: Gunakan ini hanya jika kamu masih butuh orientasi urutan kerja lintas modul.
+                  - text: Buka panduan
+  - generic [ref=e224]:
+    - text: Terjadi error yang belum tertangani.
+    - link "Muat ulang" [ref=e225] [cursor=pointer]:
+      - /url: .
+    - text: x

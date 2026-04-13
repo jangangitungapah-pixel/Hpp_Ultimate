@@ -5,43 +5,40 @@
 
 <PageTitle>Login | HPP Ultimate</PageTitle>
 
-<section class="login-page">
-    <div class="login-brand">
-        <span class="brand-eyebrow">HPP Ultimate</span>
-        <h1>Masuk ke workspace operasional yang ringkas dan terhubung.</h1>
-        <p>Gunakan email atau username yang tersimpan untuk melanjutkan ke alur kerja persiapan, master formula, gudang, belanja, produksi, dan POS.</p>
+<section class="login-page ds-page ds-page-stack theme-indigo">
+    <section class="login-intro-card">
+        <div class="login-intro-copy">
+            <span>Workspace operasional</span>
+            <h1>Masuk ke workspace</h1>
+            <p>Setelah login, user langsung masuk ke dashboard prioritas untuk stok, pembelian, produksi, kasir, dan pembukuan dalam satu workspace operasional.</p>
+        </div>
 
-        <div class="brand-grid">
+        <div class="login-benefit-list">
             <article>
-                <small>Persiapan</small>
-                <strong>Pengaturan & akun</strong>
-                <span>Satu titik kontrol untuk identitas usaha dan akses tim.</span>
+                <strong>Stok dan restock lebih cepat</strong>
+                <small>Pantau stok minimum, catat mutasi, dan tindak lanjuti pembelian yang masih pending.</small>
             </article>
             <article>
-                <small>Master & Formula</small>
-                <strong>Material, resep, produk</strong>
-                <span>Data inti biaya dan formula tetap sinkron lintas modul.</span>
+                <strong>Produksi dan kasir tetap nyambung</strong>
+                <small>Batch yang selesai langsung bisa dijual, lalu transaksi masuk ke pembukuan tanpa input ulang.</small>
             </article>
             <article>
-                <small>Operasional</small>
-                <strong>Gudang, produksi, POS</strong>
-                <span>Catat pergerakan stok dan transaksi dari satu workspace.</span>
+                <strong>Satu workspace per operasi harian</strong>
+                <small>Data tersimpan dalam workspace aktif, jadi user bisa lanjut kerja dari dashboard yang sama setelah berhasil masuk.</small>
             </article>
         </div>
 
-        <div class="brand-lane">
-            <span>3D glass surfaces</span>
-            <span>fast operator flow</span>
-            <span>live costing</span>
-            <span>persistent sales</span>
+        <div class="login-trust-note">
+            <strong>Masuk aman ke workspace aktif</strong>
+            <small>Gunakan akun tim yang sudah dibuat admin. Setelah berhasil login, sistem langsung membuka dashboard prioritas harian.</small>
         </div>
-    </div>
+    </section>
 
     <section class="login-card">
         <div class="login-card-head">
-            <span>Sign In</span>
-            <h2>Masuk ke akun kamu</h2>
-            <p>Autentikasi ini membuka seluruh workspace sesuai peran admin atau staff.</p>
+            <span>Masuk</span>
+            <h2>Login akun</h2>
+            <p>Isi akun untuk membuka dashboard prioritas, stok, produksi, kasir, dan pembukuan dalam satu workspace.</p>
         </div>
 
         @if (!string.IsNullOrWhiteSpace(_loginMessage))
@@ -55,26 +52,26 @@
 
             <label>
                 <span>Email / Username</span>
-                <InputText @bind-Value="_loginForm.Identity" placeholder="Masukkan email atau username" />
+                <div class="field-shell">
+                    <InputText @bind-Value="_loginForm.Identity" class="login-input" autocomplete="username" placeholder="Masukkan email atau username" />
+                </div>
                 <ValidationMessage For="@(() => _loginForm.Identity)" />
             </label>
 
             <label>
                 <span>Password</span>
-                <InputText @bind-Value="_loginForm.Password" type="password" placeholder="Masukkan password" />
+                <div class="field-shell">
+                    <InputText @bind-Value="_loginForm.Password" class="login-input" type="password" autocomplete="current-password" placeholder="Masukkan password" />
+                </div>
                 <ValidationMessage For="@(() => _loginForm.Password)" />
             </label>
 
             <label class="remember-row">
-                <InputCheckbox @bind-Value="_loginForm.RememberMe" />
+                <InputCheckbox @bind-Value="_loginForm.RememberMe" class="remember-input" />
                 <small>Ingat sesi ini</small>
             </label>
 
-            <button type="submit" class="login-button">Masuk</button>
-
-            <div class="login-note">
-                <small>Akses kamu akan diarahkan ke workspace yang sudah disusun mengikuti flow operasional aplikasi.</small>
-            </div>
+            <button type="submit" class="login-button">Masuk ke Dashboard</button>
         </EditForm>
     </section>
 </section>
@@ -88,7 +85,7 @@
         var snapshot = await AuthService.GetSnapshotAsync();
         if (snapshot.Session is not null)
         {
-            Navigation.NavigateTo("/produk", replace: true);
+            Navigation.NavigateTo("/", replace: true);
         }
     }
 
@@ -102,6 +99,6 @@
         }
 
         _loginForm = new LoginRequest();
-        Navigation.NavigateTo("/produk", replace: true);
+        Navigation.NavigateTo("/", replace: true);
     }
 }

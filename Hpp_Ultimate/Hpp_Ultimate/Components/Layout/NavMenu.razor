@@ -2,7 +2,7 @@
 
 <div class="nav-shell">
     <div class="nav-head">
-        <a class="brand" href="/pengaturan">
+        <a class="brand" href="/">
             <span class="brand-mark">
                 <span></span>
                 <span></span>
@@ -10,7 +10,7 @@
             </span>
             <span class="brand-copy">
                 <strong>HPP Ultimate</strong>
-                <small>Operational workspace</small>
+                <small>Workspace operasional</small>
             </span>
         </a>
 
@@ -45,8 +45,8 @@
             <div class="nav-user-card">
                 <div class="nav-user-avatar">@CurrentUserInitials</div>
                 <div class="nav-user-copy">
-                    <strong>@(Store.AuthSession?.FullName ?? "Workspace User")</strong>
-                    <small>@(Store.AuthSession?.Role.ToString() ?? "Operator")</small>
+                    <strong>@(Store.AuthSession?.FullName ?? "Pengguna workspace")</strong>
+                    <small>@(Store.AuthSession is null ? "Operator" : FormatRole(Store.AuthSession.Role))</small>
                 </div>
             </div>
             <a class="nav-logout" href="/logout">
@@ -59,6 +59,13 @@
 
 @code {
     private bool IsAdmin => Store.AuthSession?.Role == UserRole.Admin;
+
+    private static string FormatRole(UserRole role) => role switch
+    {
+        UserRole.Admin => "Admin",
+        UserRole.Staff => "Staf",
+        _ => role.ToString()
+    };
     private string CurrentUserInitials
     {
         get
@@ -85,26 +92,50 @@
 
     private static readonly IReadOnlyList<NavGroup> StaffGroups =
     [
-        new("Workflow", [
+        new("Ringkasan", [
+            new("/", "home", "Dashboard", NavLinkMatch.All)
+        ]),
+        new("Master Data", [
             new("/produk", "materials", "Katalog Material"),
-            new("/gudang", "warehouse", "Gudang"),
-            new("/resep", "recipe", "Resep"),
+            new("/resep", "recipe", "Resep")
+        ]),
+        new("Operasional", [
+            new("/gudang", "warehouse", "Stok Gudang"),
+            new("/belanja", "shopping", "Pembelian Material"),
             new("/produksi", "production", "Produksi"),
-            new("/pos", "pos", "Point of Sales"),
-            new("/belanja", "shopping", "Belanja"),
+            new("/pos", "pos", "Kasir / POS")
+        ]),
+        new("Keuangan", [
             new("/pembukuan", "bookkeeping", "Pembukuan")
         ]),
-        new("Pengaturan", [
-            new("/pengaturan", "settings", "Pengaturan"),
-            new("/pengaturan/akun", "account", "Pengaturan Akun")
+        new("Admin", [
+            new("/pengaturan", "settings", "Pengaturan Bisnis"),
+            new("/pengaturan/akun", "account", "Tim & Akun")
         ])
     ];
 
     private static readonly IReadOnlyList<NavGroup> AdminGroups =
     [
-        ..StaffGroups,
-        new("Kontrol Data", [
-            new("/backup-data", "backup", "Backup & Data Ops")
+        new("Ringkasan", [
+            new("/", "home", "Dashboard", NavLinkMatch.All)
+        ]),
+        new("Master Data", [
+            new("/produk", "materials", "Katalog Material"),
+            new("/resep", "recipe", "Resep")
+        ]),
+        new("Operasional", [
+            new("/gudang", "warehouse", "Stok Gudang"),
+            new("/belanja", "shopping", "Pembelian Material"),
+            new("/produksi", "production", "Produksi"),
+            new("/pos", "pos", "Kasir / POS")
+        ]),
+        new("Keuangan", [
+            new("/pembukuan", "bookkeeping", "Pembukuan")
+        ]),
+        new("Admin", [
+            new("/pengaturan", "settings", "Pengaturan Bisnis"),
+            new("/pengaturan/akun", "account", "Tim & Akun"),
+            new("/backup-data", "backup", "Backup & Impor Data")
         ])
     ];
 

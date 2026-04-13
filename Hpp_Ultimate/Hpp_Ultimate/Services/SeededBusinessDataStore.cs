@@ -1,6 +1,9 @@
+using System.Data.Common;
 using System.Text.Json;
 using Microsoft.Data.Sqlite;
 using Hpp_Ultimate.Domain;
+using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace Hpp_Ultimate.Services;
 
@@ -9,7 +12,10 @@ public sealed class SeededBusinessDataStore
     private const string TableName = "AppState";
     private const string DemoSeedAction = "Seed demo operasi 6 hari";
     private readonly Lock _gate = new();
-    private readonly string _dbPath;
+    private readonly BusinessDataStoreProvider _provider;
+    private readonly string _connectionString;
+    private readonly string? _localSqlitePath;
+    private readonly ILogger<SeededBusinessDataStore> _logger;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
     private readonly List<Product> _products = [];
     private readonly List<RawMaterial> _rawMaterials = [];
@@ -42,11 +48,15 @@ public sealed class SeededBusinessDataStore
         11m,
         false,
         "Asia/Jakarta",
-        DateTime.Now);
+        DateTime.Now,
+        string.Empty);
 
-    public SeededBusinessDataStore(string dbPath)
+    public SeededBusinessDataStore(SeededBusinessDataStoreOptions options, ILogger<SeededBusinessDataStore> logger)
     {
-        _dbPath = dbPath;
+        _provider = options.Provider;
+        _connectionString = options.ConnectionString;
+        _localSqlitePath = options.LocalSqlitePath;
+        _logger = logger;
         LoadOrInitialize();
     }
 
@@ -76,13 +86,26 @@ public sealed class SeededBusinessDataStore
 
     private void LoadOrInitialize()
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(_dbPath)!);
+        if (_provider == BusinessDataStoreProvider.Sqlite &&
+            !string.IsNullOrWhiteSpace(_localSqlitePath) &&
+            Path.GetDirectoryName(_localSqlitePath) is { } sqliteDirectory)
+        {
+            Directory.CreateDirectory(sqliteDirectory);
+        }
+
         EnsureDatabase();
 
         if (!TryLoadFromDatabase())
         {
-            InitializeEmptyState();
-            PersistStateUnsafe();
+            if (TryImportLegacySqliteState() && TryLoadFromDatabase())
+            {
+                _logger.LogInformation("Imported legacy SQLite state into Postgres successfully.");
+            }
+            else
+            {
+                InitializeEmptyState();
+                PersistStateUnsafe();
+            }
         }
 
         EnsureOperationalDemoSeed();
@@ -898,13 +921,23 @@ public sealed class SeededBusinessDataStore
         connection.Open();
 
         using var command = connection.CreateCommand();
-        command.CommandText = $"""
-            CREATE TABLE IF NOT EXISTS {TableName} (
-                StateKey TEXT PRIMARY KEY,
-                Json TEXT NOT NULL,
-                UpdatedAt TEXT NOT NULL
-            );
-            """;
+        command.CommandText = _provider switch
+        {
+            BusinessDataStoreProvider.Postgres => $"""
+                CREATE TABLE IF NOT EXISTS {TableName} (
+                    StateKey TEXT PRIMARY KEY,
+                    Json TEXT NOT NULL,
+                    UpdatedAt TIMESTAMPTZ NOT NULL
+                );
+                """,
+            _ => $"""
+                CREATE TABLE IF NOT EXISTS {TableName} (
+                    StateKey TEXT PRIMARY KEY,
+                    Json TEXT NOT NULL,
+                    UpdatedAt TEXT NOT NULL
+                );
+                """
+        };
         command.ExecuteNonQuery();
     }
 
@@ -913,15 +946,7 @@ public sealed class SeededBusinessDataStore
         using var connection = CreateConnection();
         connection.Open();
 
-        using var command = connection.CreateCommand();
-        command.CommandText = $"SELECT StateKey, Json FROM {TableName};";
-
-        using var reader = command.ExecuteReader();
-        var state = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        while (reader.Read())
-        {
-            state[reader.GetString(0)] = reader.GetString(1);
-        }
+        var state = LoadStateDictionary(connection);
 
         if (state.Count == 0)
         {
@@ -1003,20 +1028,28 @@ public sealed class SeededBusinessDataStore
         transaction.Commit();
     }
 
-    private void UpsertState(SqliteConnection connection, SqliteTransaction transaction, string key, object? value)
+    private void UpsertState(DbConnection connection, DbTransaction transaction, string key, object? value)
+        => UpsertStateJson(connection, transaction, key, JsonSerializer.Serialize(value, _jsonOptions));
+
+    private void UpsertStateJson(DbConnection connection, DbTransaction transaction, string key, string json)
     {
         using var command = connection.CreateCommand();
         command.Transaction = transaction;
         command.CommandText = $"""
             INSERT INTO {TableName} (StateKey, Json, UpdatedAt)
-            VALUES ($key, $json, $updatedAt)
+            VALUES (@key, @json, @updatedAt)
             ON CONFLICT(StateKey) DO UPDATE SET
-                Json = excluded.Json,
-                UpdatedAt = excluded.UpdatedAt;
+                Json = EXCLUDED.Json,
+                UpdatedAt = EXCLUDED.UpdatedAt;
             """;
-        command.Parameters.AddWithValue("$key", key);
-        command.Parameters.AddWithValue("$json", JsonSerializer.Serialize(value, _jsonOptions));
-        command.Parameters.AddWithValue("$updatedAt", DateTime.UtcNow.ToString("O"));
+        AddParameter(command, "@key", key);
+        AddParameter(command, "@json", json);
+        AddParameter(
+            command,
+            "@updatedAt",
+            _provider == BusinessDataStoreProvider.Postgres
+                ? DateTime.UtcNow
+                : DateTime.UtcNow.ToString("O"));
         command.ExecuteNonQuery();
     }
 
@@ -1141,8 +1174,90 @@ public sealed class SeededBusinessDataStore
             MinimumStock = Math.Max(0m, material.MinimumStock)
         };
 
-    private SqliteConnection CreateConnection()
-        => new($"Data Source={_dbPath}");
+    private DbConnection CreateConnection()
+        => _provider switch
+        {
+            BusinessDataStoreProvider.Postgres => new NpgsqlConnection(_connectionString),
+            _ => new SqliteConnection(_connectionString)
+        };
+
+    private Dictionary<string, string> LoadStateDictionary(DbConnection connection)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = $"SELECT StateKey, Json FROM {TableName};";
+
+        using var reader = command.ExecuteReader();
+        var state = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        while (reader.Read())
+        {
+            state[reader.GetString(0)] = reader.GetString(1);
+        }
+
+        return state;
+    }
+
+    private bool TryImportLegacySqliteState()
+    {
+        if (_provider != BusinessDataStoreProvider.Postgres ||
+            string.IsNullOrWhiteSpace(_localSqlitePath) ||
+            !File.Exists(_localSqlitePath))
+        {
+            return false;
+        }
+
+        var legacyState = LoadLegacySqliteState(_localSqlitePath);
+        if (legacyState.Count == 0)
+        {
+            return false;
+        }
+
+        using var connection = CreateConnection();
+        connection.Open();
+        using var transaction = connection.BeginTransaction();
+        foreach (var entry in legacyState)
+        {
+            UpsertStateJson(connection, transaction, entry.Key, entry.Value);
+        }
+
+        transaction.Commit();
+        return true;
+    }
+
+    private static Dictionary<string, string> LoadLegacySqliteState(string sqlitePath)
+    {
+        using var connection = new SqliteConnection($"Data Source={sqlitePath}");
+        connection.Open();
+
+        using (var existsCommand = connection.CreateCommand())
+        {
+            existsCommand.CommandText = "SELECT name FROM sqlite_master WHERE type = 'table' AND name = @tableName;";
+            existsCommand.Parameters.AddWithValue("@tableName", TableName);
+            var exists = existsCommand.ExecuteScalar();
+            if (exists is null)
+            {
+                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            }
+        }
+
+        using var command = connection.CreateCommand();
+        command.CommandText = $"SELECT StateKey, Json FROM {TableName};";
+        using var reader = command.ExecuteReader();
+        var state = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        while (reader.Read())
+        {
+            state[reader.GetString(0)] = reader.GetString(1);
+        }
+
+        return state;
+    }
+
+    private static void AddParameter(DbCommand command, string name, object? value)
+    {
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = name;
+        parameter.Value = value ?? DBNull.Value;
+        command.Parameters.Add(parameter);
+    }
 
     private void InitializeEmptyState()
     {
@@ -1247,6 +1362,16 @@ public sealed class SeededBusinessDataStore
             string.IsNullOrWhiteSpace(recipe.PortionUnit)
                 ? recipe.OutputUnit
                 : recipe.PortionUnit);
+        var portioningMode = recipe.PortioningMode;
+        var portionWeightGr = recipe.PortionWeightGr < 0 ? 0m : recipe.PortionWeightGr;
+        var portionWeightGroupId = recipe.PortionWeightGroupId is Guid groupId && recipe.Groups.Any(item => item.Id == groupId)
+            ? recipe.PortionWeightGroupId
+            : null;
+
+        if (portioningMode == RecipePortioningMode.WeightBased && portionWeightGr <= 0)
+        {
+            portioningMode = RecipePortioningMode.Manual;
+        }
 
         return recipe with
         {
@@ -1255,7 +1380,10 @@ public sealed class SeededBusinessDataStore
             PortionYield = portionYield,
             PortionUnit = portionUnit,
             TargetMarginPercent = recipe.TargetMarginPercent < 0 ? 0m : recipe.TargetMarginPercent,
-            SuggestedSellingPrice = recipe.SuggestedSellingPrice < 0 ? 0m : recipe.SuggestedSellingPrice
+            SuggestedSellingPrice = recipe.SuggestedSellingPrice < 0 ? 0m : recipe.SuggestedSellingPrice,
+            PortioningMode = portioningMode,
+            PortionWeightGr = portionWeightGr,
+            PortionWeightGroupId = portionWeightGroupId
         };
     }
 

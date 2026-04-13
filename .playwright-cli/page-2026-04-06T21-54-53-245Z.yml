@@ -1,0 +1,167 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - link "HPP Ultimate Workspace operasional" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]:
+            - strong [ref=e8]: HPP Ultimate
+            - text: Workspace operasional
+        - checkbox [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]:
+            - text: Ringkasan
+            - link "Dashboard" [ref=e12] [cursor=pointer]:
+              - /url: /
+              - img [ref=e14]
+              - strong [ref=e18]: Dashboard
+          - generic [ref=e19]:
+            - text: Master Data
+            - link "Katalog Material" [ref=e20] [cursor=pointer]:
+              - /url: /produk
+              - img [ref=e22]
+              - strong [ref=e26]: Katalog Material
+            - link "Resep" [ref=e27] [cursor=pointer]:
+              - /url: /resep
+              - img [ref=e29]
+              - strong [ref=e31]: Resep
+          - generic [ref=e32]:
+            - text: Operasional
+            - link "Stok Gudang" [ref=e33] [cursor=pointer]:
+              - /url: /gudang
+              - img [ref=e35]
+              - strong [ref=e39]: Stok Gudang
+            - link "Pembelian Material" [ref=e40] [cursor=pointer]:
+              - /url: /belanja
+              - img [ref=e42]
+              - strong [ref=e46]: Pembelian Material
+            - link "Produksi" [ref=e47] [cursor=pointer]:
+              - /url: /produksi
+              - img [ref=e49]
+              - strong [ref=e53]: Produksi
+            - link "Kasir / POS" [ref=e54] [cursor=pointer]:
+              - /url: /pos
+              - img [ref=e56]
+              - strong [ref=e59]: Kasir / POS
+          - generic [ref=e60]:
+            - text: Keuangan
+            - link "Pembukuan" [ref=e61] [cursor=pointer]:
+              - /url: /pembukuan
+              - img [ref=e63]
+              - strong [ref=e66]: Pembukuan
+          - generic [ref=e67]:
+            - text: Admin
+            - link "Pengaturan Bisnis" [ref=e68] [cursor=pointer]:
+              - /url: /pengaturan
+              - img [ref=e70]
+              - strong [ref=e71]: Pengaturan Bisnis
+            - link "Tim & Akun" [ref=e72] [cursor=pointer]:
+              - /url: /pengaturan/akun
+              - img [ref=e74]
+              - strong [ref=e77]: Tim & Akun
+            - link "Backup & Impor Data" [ref=e78] [cursor=pointer]:
+              - /url: /backup-data
+              - img [ref=e80]
+              - strong [ref=e85]: Backup & Impor Data
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - generic [ref=e88]: A
+              - generic [ref=e89]:
+                - strong [ref=e90]: Arief
+                - text: Admin
+            - link "Logout" [ref=e91] [cursor=pointer]:
+              - /url: /logout
+              - img [ref=e92]
+              - text: Logout
+    - main [ref=e95]:
+      - generic [ref=e97]:
+        - text: Area kerja
+        - strong [ref=e98]: Pembelian Material
+      - article [ref=e99]:
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - text: Pembelian material
+              - heading "Pembelian material" [active] [level=1] [ref=e103]
+              - paragraph [ref=e104]: Mulai dari draft, lanjut ke checkout saat siap, lalu buka penerimaan hanya ketika barang memang sudah datang.
+            - generic [ref=e105]: 0 history belanja
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - text: Mode kerja
+              - heading "Susun draft pembelian" [level=2] [ref=e108]
+              - paragraph [ref=e109]: Halaman ini tidak lagi diperlakukan seperti dashboard penuh. Jalur utamanya sekarang hanya tiga mode kerja yang dibuka sesuai kebutuhan.
+            - navigation "Peta kerja pembelian material" [ref=e110]:
+              - button "Draft Susun item Pilih material dan susun item yang ingin dibeli." [ref=e111]:
+                - text: Draft
+                - strong [ref=e112]: Susun item
+                - text: Pilih material dan susun item yang ingin dibeli.
+              - button "Checkout Finalisasi supplier Tambahkan minimal satu item dulu sebelum lanjut checkout." [ref=e113]:
+                - text: Checkout
+                - strong [ref=e114]: Finalisasi supplier
+                - text: Tambahkan minimal satu item dulu sebelum lanjut checkout.
+              - button "Riwayat Penerimaan barang Tidak ada barang yang menunggu diterima." [ref=e115]:
+                - text: Riwayat
+                - strong [ref=e116]: Penerimaan barang
+                - text: Tidak ada barang yang menunggu diterima.
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - text: Draft pembelian
+                - heading "Susun item pembelian sebelum checkout" [level=2] [ref=e120]
+                - paragraph [ref=e121]: "Jalur default-nya lurus: pilih material, tambah ke draft, lalu lanjut ke checkout saat list sudah siap."
+              - button "Cara Lain Input" [ref=e123]
+            - generic [ref=e124]:
+              - generic [ref=e125]:
+                - text: Material katalog
+                - textbox "Material katalog" [ref=e127]:
+                  - /placeholder: Ketik nama atau kode material
+                  - text: BHN-003 - Air Mineral - Sanqua
+              - generic [ref=e128]:
+                - text: Jumlah pack
+                - spinbutton "Jumlah pack" [ref=e129]: "1"
+              - article [ref=e130]:
+                - text: Estimasi subtotal item
+                - strong [ref=e131]: Rp 4.000
+                - text: 1 pack · 1500 ml
+            - article [ref=e132]:
+              - generic [ref=e133]:
+                - text: BHN-003
+                - strong [ref=e134]: Air Mineral
+              - generic [ref=e135]:
+                - article [ref=e136]:
+                  - text: Pack
+                  - strong [ref=e137]: 1500 ml
+                - article [ref=e138]:
+                  - text: Harga / pack
+                  - strong [ref=e139]: Rp 4.000
+                - article [ref=e140]:
+                  - text: Stok gudang
+                  - strong [ref=e141]: 16400 ml
+                - article [ref=e142]:
+                  - text: Restock item ini
+                  - strong [ref=e143]: 1500 ml
+            - button "Tambah ke Draft" [ref=e145]
+            - generic [ref=e146]:
+              - generic [ref=e147]:
+                - generic [ref=e148]:
+                  - text: List belanja
+                  - heading "Item yang akan di-checkout" [level=3] [ref=e149]
+                  - paragraph [ref=e150]: Jumlah pack akan dijumlahkan otomatis bila material yang sama dimasukkan lagi.
+                - generic [ref=e152]:
+                  - text: Baris tampil
+                  - combobox "Baris tampil" [ref=e153]:
+                    - option "8 baris" [selected]
+                    - option "12 baris"
+                    - option "20 baris"
+                    - option "50 baris"
+              - generic [ref=e154]:
+                - heading "Belum ada item" [level=3] [ref=e155]
+                - paragraph [ref=e156]: Masukkan minimal satu material ke list belanja sebelum checkout.
+  - generic [ref=e157]:
+    - generic [ref=e158]:
+      - strong [ref=e159]: Sesi aplikasi terganggu
+      - text: Terjadi error yang belum tertangani. Muat ulang halaman untuk melanjutkan pekerjaan.
+    - generic [ref=e160]:
+      - link "Muat ulang" [ref=e161] [cursor=pointer]:
+        - /url: .
+      - button "Tutup pesan error" [ref=e162]: Tutup
