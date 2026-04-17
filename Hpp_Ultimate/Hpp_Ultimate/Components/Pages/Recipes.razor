@@ -365,7 +365,7 @@
                     </div>
 
                     <div class="detail-financial-strip">
-                        <article><small>Margin Target</small><strong>@FormatPercent(selectedRecipe.TargetMarginPercent)</strong></article>
+                        <article><small>Margin</small><strong>@FormatPercent(selectedRecipe.TargetMarginPercent)</strong></article>
                         <article><small>Total Material</small><strong>@FormatCurrency(selectedTotals.MaterialCost)</strong></article>
                         <article><small>Operasional</small><strong>@FormatCurrency(selectedTotals.OperationalCost)</strong></article>
                         <article><small>Update</small><strong>@selectedRecipe.UpdatedAt.ToString("dd MMM yyyy HH:mm")</strong></article>
@@ -823,25 +823,56 @@
                             <div class="section-head section-inline-head">
                                 <div>
                                     <span class="section-tag">Harga jual</span>
-                                    <h3>Atur harga jual berdasarkan margin</h3>
-                                    <p>Margin dihitung dari HPP per satuan porsi agar harga jual resep langsung terbentuk saat resep disimpan.</p>
+                                    <h3>Atur harga jual atau margin</h3>
+                                    <p>Pilih apakah resep mengikuti margin target atau harga jual manual. Nilai lawannya akan dihitung otomatis dari HPP per satuan.</p>
                                 </div>
                             </div>
 
                             <div class="pricing-grid">
                                 <label>
-                                    <span>Margin target (%)</span>
-                                    <InputNumber @bind-Value="_formModel.TargetMarginPercent" />
-                                    <ValidationMessage For="@(() => _formModel.TargetMarginPercent)" />
+                                    <span>Mode penetapan harga</span>
+                                    <select value="@_formModel.SellingPriceMode" @onchange="OnSellingPriceModeChanged">
+                                        <option value="@RecipeSellingPriceMode.MarginBased">Ikuti margin target</option>
+                                        <option value="@RecipeSellingPriceMode.ManualPrice">Harga jual manual</option>
+                                    </select>
                                 </label>
+                                @if (_formModel.SellingPriceMode == RecipeSellingPriceMode.MarginBased)
+                                {
+                                    <label>
+                                        <span>Margin target (%)</span>
+                                        <InputNumber @bind-Value="_formModel.TargetMarginPercent" />
+                                        <ValidationMessage For="@(() => _formModel.TargetMarginPercent)" />
+                                    </label>
+                                }
+                                else
+                                {
+                                    <label>
+                                        <span>Harga jual manual / satuan</span>
+                                        <InputNumber @bind-Value="_formModel.SuggestedSellingPrice" />
+                                        <ValidationMessage For="@(() => _formModel.SuggestedSellingPrice)" />
+                                    </label>
+                                }
                                 <article class="pricing-output-card">
                                     <small>HPP / Satuan</small>
                                     <strong>@FormatCurrency(CurrentTotals.CostPerPortion)</strong>
+                                    <span>Angka dasar ini dipakai untuk membentuk margin atau harga jual final resep.</span>
                                 </article>
-                                <article class="pricing-output-card">
-                                    <small>Harga Jual / Satuan</small>
-                                    <strong>@FormatCurrency(CurrentSuggestedSellingPrice)</strong>
-                                </article>
+                                @if (_formModel.SellingPriceMode == RecipeSellingPriceMode.MarginBased)
+                                {
+                                    <article class="pricing-output-card">
+                                        <small>Harga Jual / Satuan</small>
+                                        <strong>@FormatCurrency(CurrentSuggestedSellingPrice)</strong>
+                                        <span>Terbentuk otomatis dari HPP dan margin target yang kamu isi.</span>
+                                    </article>
+                                }
+                                else
+                                {
+                                    <article class="pricing-output-card">
+                                        <small>Margin Otomatis</small>
+                                        <strong>@FormatPercent(CurrentMarginPercent)</strong>
+                                        <span>@GetCurrentMarginMetaLabel()</span>
+                                    </article>
+                                }
                             </div>
                         </section>
                         }
@@ -954,6 +985,7 @@
     private HashSet<Guid> WarehouseMaterialIds => _warehouseMaterialIds;
     private decimal CurrentEffectivePortionYield => GetEffectivePortionYield(_formModel, _editorWeightEstimate);
     private RecipeSummaryTotals CurrentTotals => RecipeCatalogService.CalculateTotals(_formModel, CurrentEffectivePortionYield);
+    private decimal CurrentMarginPercent => CurrentTotals.TargetMarginPercent;
     private decimal CurrentSuggestedSellingPrice => CurrentTotals.SuggestedSellingPrice;
     private int RecipeTotalPages => CalculateTotalPages(_result?.Items.Count ?? 0, _recipeDisplayCount);
     private int CurrentRecipePage => ClampPage(_recipePage, RecipeTotalPages);
@@ -1089,6 +1121,7 @@
             OutputUnit = "pcs",
             PortionYield = 1m,
             PortionUnit = "pcs",
+            SellingPriceMode = RecipeSellingPriceMode.MarginBased,
             TargetMarginPercent = 35m,
             Status = RecipeStatus.Active,
             Groups = [CreateGroup("Bahan utama")]
@@ -1312,6 +1345,7 @@
     private async Task SaveAsync()
     {
         _formModel.PortionYield = CurrentEffectivePortionYield;
+        _formModel.TargetMarginPercent = CurrentMarginPercent;
         _formModel.SuggestedSellingPrice = CurrentSuggestedSellingPrice;
         var result = await RecipeCatalogService.SaveAsync(_formModel);
         _formMessage = result.Message;
@@ -1700,6 +1734,18 @@
     private string GetPortionWeightBasisGroupLabel(RecipeGroupInput group)
         => string.IsNullOrWhiteSpace(group.Name) ? "Kelompok tanpa nama" : group.Name;
 
+    private string GetCurrentMarginMetaLabel()
+    {
+        if (CurrentTotals.CostPerPortion <= 0)
+        {
+            return "Margin akan terbentuk setelah HPP per satuan tersedia.";
+        }
+
+        return CurrentMarginPercent < 0
+            ? "Harga jual manual saat ini berada di bawah HPP per satuan."
+            : "Menyesuaikan otomatis dari HPP dan harga jual manual.";
+    }
+
     private static string GetPortionWeightBasisGroupValue(Guid groupId)
         => $"group:{groupId:N}";
 
@@ -1725,6 +1771,32 @@
         }
 
         _formModel.PortionWeightGroupId = null;
+    }
+
+    private void OnSellingPriceModeChanged(ChangeEventArgs args)
+    {
+        var rawValue = args.Value?.ToString();
+        if (!Enum.TryParse<RecipeSellingPriceMode>(rawValue, out var mode))
+        {
+            mode = RecipeSellingPriceMode.MarginBased;
+        }
+
+        if (mode == _formModel.SellingPriceMode)
+        {
+            return;
+        }
+
+        var totals = CurrentTotals;
+        if (mode == RecipeSellingPriceMode.ManualPrice)
+        {
+            _formModel.SuggestedSellingPrice = totals.SuggestedSellingPrice;
+        }
+        else
+        {
+            _formModel.TargetMarginPercent = NormalizeMarginTargetInput(totals.TargetMarginPercent);
+        }
+
+        _formModel.SellingPriceMode = mode;
     }
 
     private string GetGroupSummary(RecipeGroupInput group)
@@ -1914,6 +1986,7 @@
         _formModel.Description = draft.Description;
         _formModel.PortionYield = draft.PortionYield;
         _formModel.PortionUnit = RecipePortionUnitCatalog.Normalize(draft.PortionUnit);
+        _formModel.SellingPriceMode = RecipeSellingPriceMode.MarginBased;
         _formModel.TargetMarginPercent = draft.TargetMarginPercent;
         _formModel.Costs = draft.Costs
             .Select(item => new RecipeCostInput
@@ -2020,6 +2093,7 @@
     private static int ParsePage(string? value, int fallback, int totalPages) => int.TryParse(value, out var parsed) && parsed > 0 ? Math.Min(parsed, Math.Max(1, totalPages)) : fallback;
     private static int CalculateTotalPages(int totalItems, int pageSize) => Math.Max(1, (int)Math.Ceiling(totalItems / (double)Math.Max(1, pageSize)));
     private static int ClampPage(int page, int totalPages) => Math.Min(Math.Max(1, page), Math.Max(1, totalPages));
+    private static decimal NormalizeMarginTargetInput(decimal value) => Math.Clamp(value, 0m, 500m);
     private static string SerializeRecipeSnapshot(RecipeUpsertRequest draft) => System.Text.Json.JsonSerializer.Serialize(draft);
 
     private static string BuildDoughWeightSignature(RecipeUpsertRequest? draft)

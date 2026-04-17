@@ -1272,16 +1272,20 @@ label > span {
 
 .pricing-grid {
     display: grid;
-    grid-template-columns: minmax(14rem, 1fr) repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(13rem, 0.9fr) repeat(3, minmax(0, 1fr));
     gap: 1rem;
     align-items: stretch;
 }
 
+.pricing-grid > * {
+    min-width: 0;
+}
+
 .pricing-output-card {
     display: grid;
-    gap: 0.25rem;
+    gap: 0.3rem;
     min-height: 100%;
-    align-content: center;
+    align-content: start;
     padding: 1.15rem;
     border-radius: 1rem;
     border: 1px solid var(--line-border);
@@ -1290,6 +1294,12 @@ label > span {
 
 .pricing-output-card strong {
     color: var(--text-main);
+}
+
+.pricing-output-card span {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.45;
 }
 
 .pricing-section .pricing-output-card {

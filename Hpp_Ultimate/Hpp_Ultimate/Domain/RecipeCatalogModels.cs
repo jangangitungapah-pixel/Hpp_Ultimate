@@ -20,6 +20,12 @@ public enum RecipePortioningMode
     WeightBased
 }
 
+public enum RecipeSellingPriceMode
+{
+    MarginBased,
+    ManualPrice
+}
+
 public static class RecipePortionUnitCatalog
 {
     private static readonly string[] _options =
@@ -66,7 +72,8 @@ public sealed record RecipeBook(
     decimal SuggestedSellingPrice = 0m,
     RecipePortioningMode PortioningMode = RecipePortioningMode.Manual,
     decimal PortionWeightGr = 0m,
-    Guid? PortionWeightGroupId = null);
+    Guid? PortionWeightGroupId = null,
+    RecipeSellingPriceMode SellingPriceMode = RecipeSellingPriceMode.MarginBased);
 
 public sealed record RecipeMaterialGroup(
     Guid Id,
@@ -122,7 +129,7 @@ public sealed record RecipeMutationResult(
     string Message,
     RecipeBook? Recipe = null);
 
-public sealed class RecipeUpsertRequest
+public sealed class RecipeUpsertRequest : IValidatableObject
 {
     public Guid? Id { get; set; }
 
@@ -152,7 +159,8 @@ public sealed class RecipeUpsertRequest
 
     public Guid? PortionWeightGroupId { get; set; }
 
-    [Range(0, 500, ErrorMessage = "Margin harus di antara 0 sampai 500.")]
+    public RecipeSellingPriceMode SellingPriceMode { get; set; } = RecipeSellingPriceMode.MarginBased;
+
     public decimal TargetMarginPercent { get; set; }
 
     public decimal SuggestedSellingPrice { get; set; }
@@ -162,6 +170,28 @@ public sealed class RecipeUpsertRequest
     public List<RecipeGroupInput> Groups { get; set; } = [];
 
     public List<RecipeCostInput> Costs { get; set; } = [];
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (SellingPriceMode == RecipeSellingPriceMode.ManualPrice)
+        {
+            if (SuggestedSellingPrice <= 0)
+            {
+                yield return new ValidationResult(
+                    "Harga jual harus lebih besar dari 0.",
+                    [nameof(SuggestedSellingPrice)]);
+            }
+
+            yield break;
+        }
+
+        if (TargetMarginPercent < 0 || TargetMarginPercent > 500)
+        {
+            yield return new ValidationResult(
+                "Margin target harus di antara 0 sampai 500.",
+                [nameof(TargetMarginPercent)]);
+        }
+    }
 }
 
 public sealed class RecipeGroupInput

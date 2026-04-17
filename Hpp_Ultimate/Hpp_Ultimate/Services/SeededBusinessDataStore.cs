@@ -1367,10 +1367,23 @@ public sealed class SeededBusinessDataStore
         var portionWeightGroupId = recipe.PortionWeightGroupId is Guid groupId && recipe.Groups.Any(item => item.Id == groupId)
             ? recipe.PortionWeightGroupId
             : null;
+        var sellingPriceMode = recipe.SellingPriceMode;
+        var targetMarginPercent = recipe.TargetMarginPercent;
+        var suggestedSellingPrice = recipe.SuggestedSellingPrice < 0 ? 0m : recipe.SuggestedSellingPrice;
 
         if (portioningMode == RecipePortioningMode.WeightBased && portionWeightGr <= 0)
         {
             portioningMode = RecipePortioningMode.Manual;
+        }
+
+        if (sellingPriceMode == RecipeSellingPriceMode.ManualPrice && suggestedSellingPrice <= 0)
+        {
+            sellingPriceMode = RecipeSellingPriceMode.MarginBased;
+        }
+
+        if (sellingPriceMode == RecipeSellingPriceMode.MarginBased)
+        {
+            targetMarginPercent = Math.Clamp(targetMarginPercent, 0m, 500m);
         }
 
         return recipe with
@@ -1379,11 +1392,12 @@ public sealed class SeededBusinessDataStore
             OutputUnit = portionUnit,
             PortionYield = portionYield,
             PortionUnit = portionUnit,
-            TargetMarginPercent = recipe.TargetMarginPercent < 0 ? 0m : recipe.TargetMarginPercent,
-            SuggestedSellingPrice = recipe.SuggestedSellingPrice < 0 ? 0m : recipe.SuggestedSellingPrice,
+            TargetMarginPercent = targetMarginPercent,
+            SuggestedSellingPrice = suggestedSellingPrice,
             PortioningMode = portioningMode,
             PortionWeightGr = portionWeightGr,
-            PortionWeightGroupId = portionWeightGroupId
+            PortionWeightGroupId = portionWeightGroupId,
+            SellingPriceMode = sellingPriceMode
         };
     }
 

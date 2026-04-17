@@ -66,6 +66,67 @@ public sealed class PhaseTwoWorkflowTests
     }
 
     [Fact]
+    public async Task RecipeCatalogService_SaveAsync_WithManualSellingPrice_DerivesMarginFromSellingPrice()
+    {
+        using var scope = new TestStoreScope();
+        var store = scope.Store;
+        var cache = new MemoryCache(new MemoryCacheOptions());
+        var now = DateTime.Now;
+        SeedAuthenticatedStaff(store, now);
+        var material = SeedMaterial(store, now);
+        var service = new RecipeCatalogService(cache, store, new WorkspaceAccessService(store), new AuditTrailService(store));
+        var request = new RecipeUpsertRequest
+        {
+            Code = "RCP-002",
+            Name = "Saus Manual",
+            OutputQuantity = 10m,
+            OutputUnit = "pcs",
+            PortionYield = 10m,
+            PortionUnit = "pcs",
+            SellingPriceMode = RecipeSellingPriceMode.ManualPrice,
+            SuggestedSellingPrice = 5400m,
+            Status = RecipeStatus.Active,
+            Groups =
+            [
+                new RecipeGroupInput
+                {
+                    Name = "Utama",
+                    Materials =
+                    [
+                        new RecipeMaterialInput
+                        {
+                            MaterialId = material.Id,
+                            Quantity = 500m,
+                            Unit = "gr",
+                            WastePercent = 0m
+                        }
+                    ]
+                }
+            ],
+            Costs =
+            [
+                new RecipeCostInput
+                {
+                    Type = RecipeCostType.Production,
+                    Name = "Gas",
+                    Amount = 2000m
+                }
+            ]
+        };
+
+        var totals = service.CalculateTotals(request);
+        var result = await service.SaveAsync(request);
+        var saved = Assert.Single(store.Recipes);
+
+        Assert.True(result.Success);
+        Assert.Equal(5400m, totals.SuggestedSellingPrice);
+        Assert.Equal(100m, totals.TargetMarginPercent);
+        Assert.Equal(RecipeSellingPriceMode.ManualPrice, saved.SellingPriceMode);
+        Assert.Equal(5400m, saved.SuggestedSellingPrice);
+        Assert.Equal(100m, saved.TargetMarginPercent);
+    }
+
+    [Fact]
     public async Task WarehouseService_RecordMovementAsync_TracksSignedBalance()
     {
         using var scope = new TestStoreScope();

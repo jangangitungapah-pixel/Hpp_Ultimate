@@ -70,6 +70,7 @@ public sealed class RecipeCatalogService(
             PortioningMode = recipe.PortioningMode,
             PortionWeightGr = recipe.PortionWeightGr,
             PortionWeightGroupId = recipe.PortionWeightGroupId,
+            SellingPriceMode = recipe.SellingPriceMode,
             TargetMarginPercent = recipe.TargetMarginPercent,
             SuggestedSellingPrice = recipe.SuggestedSellingPrice,
             Status = recipe.Status,
@@ -151,7 +152,8 @@ public sealed class RecipeCatalogService(
             totals.SuggestedSellingPrice,
             request.PortioningMode,
             request.PortionWeightGr,
-            request.PortionWeightGroupId);
+            request.PortionWeightGroupId,
+            request.SellingPriceMode);
 
         if (request.Id is null)
         {
@@ -219,8 +221,18 @@ public sealed class RecipeCatalogService(
         var effectivePortionYield = overridePortionYield ?? request.PortionYield;
         var costPerOutput = effectivePortionYield <= 0 ? 0m : totalCost / effectivePortionYield;
         var costPerPortion = effectivePortionYield <= 0 ? 0m : totalCost / effectivePortionYield;
-        var marginPercent = Math.Clamp(request.TargetMarginPercent, 0m, 500m);
-        var suggestedSellingPrice = CalculateSuggestedSellingPrice(costPerPortion, marginPercent);
+        decimal marginPercent;
+        decimal suggestedSellingPrice;
+        if (request.SellingPriceMode == RecipeSellingPriceMode.ManualPrice)
+        {
+            suggestedSellingPrice = Math.Max(0m, request.SuggestedSellingPrice);
+            marginPercent = CalculateMarginPercent(costPerPortion, suggestedSellingPrice);
+        }
+        else
+        {
+            marginPercent = Math.Max(0m, request.TargetMarginPercent);
+            suggestedSellingPrice = CalculateSuggestedSellingPrice(costPerPortion, marginPercent);
+        }
 
         return new RecipeSummaryTotals(
             request.Groups.Count,
@@ -345,9 +357,15 @@ public sealed class RecipeCatalogService(
             return new RecipeMutationResult(false, "Satuan porsi wajib dipilih.");
         }
 
-        if (request.TargetMarginPercent < 0 || request.TargetMarginPercent > 500)
+        if (request.SellingPriceMode == RecipeSellingPriceMode.MarginBased
+            && (request.TargetMarginPercent < 0 || request.TargetMarginPercent > 500))
         {
-            return new RecipeMutationResult(false, "Margin resep harus di antara 0 sampai 500.");
+            return new RecipeMutationResult(false, "Margin target resep harus di antara 0 sampai 500.");
+        }
+
+        if (request.SellingPriceMode == RecipeSellingPriceMode.ManualPrice && request.SuggestedSellingPrice <= 0)
+        {
+            return new RecipeMutationResult(false, "Harga jual manual harus lebih besar dari 0.");
         }
 
         if (request.Groups.Count == 0)
@@ -437,8 +455,13 @@ public sealed class RecipeCatalogService(
     private static string? NormalizeOptional(string? value)
         => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    private static decimal CalculateSuggestedSellingPrice(decimal costPerPortion, decimal marginPercent)
+    public static decimal CalculateSuggestedSellingPrice(decimal costPerPortion, decimal marginPercent)
         => costPerPortion <= 0
             ? 0m
             : decimal.Round(costPerPortion * (1m + (marginPercent / 100m)), 0, MidpointRounding.AwayFromZero);
+
+    public static decimal CalculateMarginPercent(decimal costPerPortion, decimal suggestedSellingPrice)
+        => costPerPortion <= 0 || suggestedSellingPrice <= 0
+            ? 0m
+            : decimal.Round(((suggestedSellingPrice / costPerPortion) - 1m) * 100m, 2, MidpointRounding.AwayFromZero);
 }
